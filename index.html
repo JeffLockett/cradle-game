@@ -49,9 +49,13 @@
             top: 10px;
             left: 10px;
             color: white;
-            text-shadow: 2px 2px 0px black;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
             font-size: 14px;
             pointer-events: none;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .healthBar {
@@ -117,17 +121,20 @@
 
         #dialogue {
             position: absolute;
-            bottom: 20px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.9);
-            border: 2px solid #fff;
-            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.95);
+            border: 3px solid #00ff88;
+            border-radius: 10px;
+            padding: 15px 25px;
             color: white;
-            max-width: 600px;
+            max-width: 80%;
             display: none;
             text-align: center;
             font-size: 16px;
+            z-index: 500;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
         }
 
         .floatingText {
@@ -829,7 +836,7 @@
         // Controls overlay functions
         function toggleControls() {
             const controlsDiv = document.getElementById('fullControls');
-            if (controlsDiv.style.display === 'block') {
+            if (controlsDiv && controlsDiv.style.display === 'block') {
                 hideControls();
             } else {
                 showControls();
@@ -837,15 +844,22 @@
         }
         
         function showControls() {
-            document.getElementById('fullControls').style.display = 'block';
-            game.paused = true;
-            // Hide hint when controls are shown
-            document.getElementById('controlsHint').style.display = 'none';
+            const controlsDiv = document.getElementById('fullControls');
+            if (controlsDiv) {
+                controlsDiv.style.display = 'block';
+                game.paused = true;
+                // Hide hint when controls are shown
+                const hint = document.getElementById('controlsHint');
+                if (hint) hint.style.display = 'none';
+            }
         }
         
         function hideControls() {
-            document.getElementById('fullControls').style.display = 'none';
-            game.paused = false;
+            const controlsDiv = document.getElementById('fullControls');
+            if (controlsDiv) {
+                controlsDiv.style.display = 'none';
+                game.paused = false;
+            }
         }
         
         // Make functions global
@@ -1693,12 +1707,17 @@
 
         // Render functions
         function render() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Clear with black background
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            if (game.mode === 'exploration') {
-                renderExploration();
-            } else {
-                renderCombat();
+            // Only render game content if not showing Suriel vision
+            if (!document.querySelector('[style*="radial-gradient"]')) {
+                if (game.mode === 'exploration' || game.mode === 'tutorial') {
+                    renderExploration();
+                } else {
+                    renderCombat();
+                }
             }
         }
 
