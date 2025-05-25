@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cradle Adventure: Path of Sacred Valley</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        #gameContainer {
+            position: relative;
+            border: 3px solid #333;
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
+        }
+
+        #gameCanvas {
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            text-shadow: 2px 2px 0px black;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .healthBar {
+            width: 200px;
+            height: 20px;
+            background-color: #333;
+            border: 2px solid #fff;
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .healthFill {
+            height: 100%;
+            background-color: #0f0;
+            transition: width 0.3s;
+        }
+
+        .madraBar {
+            width: 200px;
+            height: 15px;
+            background-color: #222;
+            border: 2px solid #66f;
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .madraFill {
+            height: 100%;
+            background: linear-gradient(90deg, #0066ff, #00ccff);
+            transition: width 0.3s;
+        }
+
+        #combatUI {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            color: white;
+            display: none;
+            pointer-events: none;
+        }
+
+        .combatBars {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .fighterInfo {
+            text-align: center;
+        }
+
+        .comboCounter {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #ff0;
+            text-shadow: 3px 3px 0px #f00;
+            display: none;
+        }
+
+        #dialogue {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 2px solid #fff;
+            padding: 10px 20px;
+            color: white;
+            max-width: 600px;
+            display: none;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .floatingText {
+            position: absolute;
+            color: #ff0;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0px black;
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            to {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+        }
+
+        .screenFlash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: white;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #instructions {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #aaa;
+            font-size: 12px;
+            text-align: right;
+            text-shadow: 1px 1px 0px black;
+        }
+
+        #advancementNotice {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff0;
+            font-size: 36px;
+            text-shadow: 3px 3px 0px #f00;
+            display: none;
+            text-align: center;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <div id="ui">
+            <div>Wei Shi Lindon - <span id="advancement">Unsouled</span></div>
+            <div class="healthBar">
+                <div class="healthFill" id="playerHealth" style="width: 100%"></div>
+            </div>
+            <div class="madraBar">
+                <div class="madraFill" id="playerMadra" style="width: 100%"></div>
+            </div>
+            <div>Madra Collected: <span id="madraCount">0</span></div>
+            <div>Combat Wins: <span id="winCount">0</span></div>
+        </div>
+
+        <div id="combatUI">
+            <div class="combatBars">
+                <div class="fighterInfo">
+                    <h3>LINDON</h3>
+                    <div class="healthBar" style="width: 300px">
+                        <div class="healthFill" id="combatPlayerHealth" style="width: 100%"></div>
+                    </div>
+                    <div class="madraBar" style="width: 300px">
+                        <div class="madraFill" id="combatPlayerMadra" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="fighterInfo">
+                    <h3 id="enemyName">ENEMY</h3>
+                    <div class="healthBar" style="width: 300px">
+                        <div class="healthFill" id="combatEnemyHealth" style="width: 100%; background-color: #f00"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="comboCounter" id="comboCounter">COMBO x<span id="comboCount">0</span></div>
+        </div>
+
+        <div id="dialogue"></div>
+        <div class="screenFlash" id="screenFlash"></div>
+        <div id="advancementNotice"></div>
+
+        <div id="instructions">
+            <div id="explorationInstructions">
+                WASD/Arrows - Move<br>
+                SPACE - Interact<br>
+                F5 - Save | F9 - Load<br>
+                M - Save Menu<br>
+                Find madra orbs and enemies!
+            </div>
+            <div id="combatInstructions" style="display: none">
+                A/D - Move Left/Right<br>
+                J - Punch | K - Kick<br>
+                L - Block | SPACE - Empty Palm<br>
+                Build combos! Use madra wisely!
+            </div>
+        </div>
+        
+        <!-- Save Menu -->
+        <div id="saveMenu" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.95); border: 3px solid #fff; padding: 20px; color: white; text-align: center; z-index: 100;">
+            <h2 style="margin-top: 0;">SAVE MENU</h2>
+            <div id="saveSlots" style="margin: 20px 0;"></div>
+            <div style="margin-top: 20px;">
+                <button onclick="closeSaveMenu()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Close (ESC)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+
+        // Game State
+        const game = {
+            mode: 'exploration', // 'exploration' or 'combat'
+            player: {
+                x: 400,
+                y: 300,
+                health: 100,
+                maxHealth: 100,
+                madra: 100,
+                maxMadra: 100,
+                madraCollected: 0,
+                advancement: 'Unsouled',
+                speed: 3,
+                combatWins: 0,
+                techniques: ['punch', 'kick', 'emptyPalm']
+            },
+            camera: {
+                x: 0,
+                y: 0
+            },
+            combat: {
+                playerX: 200,
+                playerY: 400,
+                playerVelY: 0,
+                playerState: 'idle',
+                playerFacing: 1,
+                enemyX: 600,
+                enemyY: 400,
+                enemyHealth: 100,
+                enemyMaxHealth: 100,
+                enemyState: 'idle',
+                enemyType: null,
+                combo: 0,
+                lastHit: 0,
+                blockActive: false
+            },
+            world: {
+                width: 1600,
+                height: 1200,
+                tiles: [],
+                entities: [],
+                npcs: []
+            },
+            saveSlot: 1,
+            lastSaveTime: 0
+        };
+
+        // Save System Functions
+        let saveMethod = 'none';
+        
+        // Test which save method works
+        function testSaveMethod() {
+            // Try localStorage first
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                saveMethod = 'localStorage';
+                console.log('Using localStorage for saves');
+            } catch (e) {
+                // Fall back to memory saves
+                saveMethod = 'memory';
+                console.log('Using memory saves (temporary)');
+            }
+        }
+        
+        // In-memory save storage (backup)
+        const memorySaves = {};
+        
+        function saveGame(slot = game.saveSlot) {
+            const saveData = {
+                player: {
+                    x: game.player.x,
+                    y: game.player.y,
+                    health: game.player.health,
+                    maxHealth: game.player.maxHealth,
+                    madra: game.player.madra,
+                    maxMadra: game.player.maxMadra,
+                    madraCollected: game.player.madraCollected,
+                    advancement: game.player.advancement,
+                    speed: game.player.speed,
+                    combatWins: game.player.combatWins,
+                    techniques: [...game.player.techniques]
+                },
+                world: {
+                    entities: game.world.entities.map(e => ({
+                        type: e.type,
+                        x: e.x,
+                        y: e.y,
+                        collected: e.collected,
+                        enemyType: e.enemyType,
+                        health: e.health
+                    }))
+                },
+                timestamp: Date.now(),
+                playTime: Date.now() - game.lastSaveTime
+            };
+            
+            try {
+                if (saveMethod === 'localStorage') {
+                    localStorage.setItem(`cradleSave_${slot}`, JSON.stringify(saveData));
+                } else {
+                    // Use memory saves
+                    memorySaves[`cradleSave_${slot}`] = JSON.stringify(saveData);
+                }
+                
+                showSaveNotification('Game Saved!');
+                game.lastSaveTime = Date.now();
+                
+                // Also offer to download save
+                if (saveMethod === 'memory') {
+                    offerDownloadSave(saveData, slot);
+                }
+                
+                return true;
+            } catch (e) {
+                console.error('Save error:', e);
+                showSaveNotification('Save Failed! Check browser settings.', true);
+                return false;
+            }
+        }
+        
+        function offerDownloadSave(saveData, slot) {
+            // Create download link for save file
+            const dataStr = JSON.stringify(saveData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `cradle_save_slot_${slot}.json`;
+            
+            // Show download prompt
+            const downloadPrompt = document.createElement('div');
+            downloadPrompt.style.cssText = `
+                position: absolute;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #000;
+                border: 2px solid #0f0;
+                padding: 10px;
+                color: #0f0;
+                text-align: center;
+                z-index: 1000;
+            `;
+            downloadPrompt.innerHTML = `
+                <p>Browser storage unavailable!</p>
+                <button onclick="this.parentElement.querySelector('a').click()" style="padding: 5px 10px; cursor: pointer;">Download Save File</button>
+                <button onclick="this.parentElement.remove()" style="padding: 5px 10px; margin-left: 10px; cursor: pointer;">Cancel</button>
+            `;
+            downloadPrompt.appendChild(link);
+            document.getElementById('gameContainer').appendChild(downloadPrompt);
+            
+            setTimeout(() => downloadPrompt.remove(), 10000);
+        }
+
+        function loadGame(slot = 1) {
+            try {
+                let saveData;
+                
+                if (saveMethod === 'localStorage') {
+                    saveData = localStorage.getItem(`cradleSave_${slot}`);
+                } else {
+                    saveData = memorySaves[`cradleSave_${slot}`];
+                }
+                
+                if (!saveData) return false;
+                
+                const data = JSON.parse(saveData);
+                
+                // Load player data
+                Object.assign(game.player, data.player);
+                
+                // Regenerate world then apply saved state
+                generateWorld();
+                
+                // Apply saved entity states
+                if (data.world && data.world.entities) {
+                    // Remove entities that were collected/defeated
+                    game.world.entities = game.world.entities.filter(entity => {
+                        const savedEntity = data.world.entities.find(e => 
+                            e.type === entity.type && 
+                            Math.abs(e.x - entity.x) < 50 && 
+                            Math.abs(e.y - entity.y) < 50
+                        );
+                        
+                        if (savedEntity) {
+                            if (savedEntity.type === 'madra' && savedEntity.collected) {
+                                return false; // Remove collected madra
+                            }
+                            if (savedEntity.type === 'enemy' && !savedEntity.health) {
+                                return false; // Remove defeated enemies
+                            }
+                            // Update enemy health
+                            if (savedEntity.type === 'enemy') {
+                                entity.health = savedEntity.health;
+                            }
+                        }
+                        return true;
+                    });
+                }
+                
+                game.lastSaveTime = Date.now();
+                updateUI();
+                showSaveNotification('Game Loaded!');
+                return true;
+            } catch (e) {
+                console.error('Load error:', e);
+                showSaveNotification('Load Failed!', true);
+                return false;
+            }
+        }
+
+        function getSaveInfo(slot) {
+            try {
+                let saveData;
+                
+                if (saveMethod === 'localStorage') {
+                    saveData = localStorage.getItem(`cradleSave_${slot}`);
+                } else {
+                    saveData = memorySaves[`cradleSave_${slot}`];
+                }
+                
+                if (!saveData) return null;
+                
+                const data = JSON.parse(saveData);
+                return {
+                    advancement: data.player.advancement,
+                    madraCollected: data.player.madraCollected,
+                    combatWins: data.player.combatWins,
+                    timestamp: data.timestamp,
+                    playTime: data.playTime
+                };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function deleteSave(slot) {
+            try {
+                if (saveMethod === 'localStorage') {
+                    localStorage.removeItem(`cradleSave_${slot}`);
+                } else {
+                    delete memorySaves[`cradleSave_${slot}`];
+                }
+                showSaveNotification('Save Deleted!');
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function showSaveNotification(text, isError = false) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: ${isError ? '#ff0000' : '#00ff00'};
+                color: black;
+                padding: 10px 20px;
+                font-size: 20px;
+                font-weight: bold;
+                border: 2px solid white;
+                z-index: 1000;
+            `;
+            notification.textContent = text;
+            document.getElementById('gameContainer').appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 1500);
+        }
+
+        // Auto-save functionality
+        function autoSave() {
+            if (game.mode === 'exploration' && Date.now() - game.lastSaveTime > 30000) {
+                saveGame();
+            }
+        }
+
+        // Input handling
+        const keys = {};
+        window.addEventListener('keydown', (e) => {
+            keys[e.key.toLowerCase()] = true;
+            
+            // Save/Load hotkeys
+            if (e.key === 'F5') {
+                e.preventDefault();
+                saveGame();
+            }
+            if (e.key === 'F9') {
+                e.preventDefault();
+                loadGame(game.saveSlot);
+            }
+            if (e.key.toLowerCase() === 'm' && game.mode === 'exploration') {
+                e.preventDefault();
+                openSaveMenu();
+            }
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeSaveMenu();
+            }
+            
+            // Prevent default for game keys
+            if (['w', 'a', 's', 'd', 'j', 'k', 'l', ' ', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+            }
+        });
+        window.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+            e.preventDefault();
+        });
+
+        // Save Menu Functions
+        function openSaveMenu() {
+            const menu = document.getElementById('saveMenu');
+            const slotsDiv = document.getElementById('saveSlots');
+            
+            // Clear and populate slots
+            slotsDiv.innerHTML = '';
+            
+            for (let i = 1; i <= 3; i++) {
+                const slotDiv = document.createElement('div');
+                slotDiv.style.cssText = 'margin: 10px 0; padding: 15px; border: 2px solid #666; background: #111;';
+                
+                const saveInfo = getSaveInfo(i);
+                
+                if (saveInfo) {
+                    const date = new Date(saveInfo.timestamp);
+                    slotDiv.innerHTML = `
+                        <h3>Slot ${i} ${i === game.saveSlot ? '(Current)' : ''}</h3>
+                        <p>${saveInfo.advancement} - Madra: ${saveInfo.madraCollected} - Wins: ${saveInfo.combatWins}</p>
+                        <p>Saved: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}</p>
+                        <button onclick="saveToSlot(${i})" style="margin: 5px; padding: 5px 10px; cursor: pointer;">Save Here</button>
+                        <button onclick="loadFromSlot(${i})" style="margin: 5px; padding: 5px 10px; cursor: pointer;">Load</button>
+                        <button onclick="deleteSlot(${i})" style="margin: 5px; padding: 5px 10px; cursor: pointer; background: #f00;">Delete</button>
+                    `;
+                } else {
+                    slotDiv.innerHTML = `
+                        <h3>Slot ${i} - Empty</h3>
+                        <button onclick="saveToSlot(${i})" style="margin: 5px; padding: 5px 10px; cursor: pointer;">Save Here</button>
+                    `;
+                }
+                
+                slotsDiv.appendChild(slotDiv);
+            }
+            
+            menu.style.display = 'block';
+            game.paused = true;
+        }
+
+        function closeSaveMenu() {
+            document.getElementById('saveMenu').style.display = 'none';
+            game.paused = false;
+        }
+
+        function saveToSlot(slot) {
+            game.saveSlot = slot;
+            saveGame(slot);
+            openSaveMenu(); // Refresh menu
+        }
+
+        function loadFromSlot(slot) {
+            game.saveSlot = slot;
+            if (loadGame(slot)) {
+                closeSaveMenu();
+            }
+        }
+
+        function deleteSlot(slot) {
+            if (confirm(`Delete save in slot ${slot}?`)) {
+                deleteSave(slot);
+                openSaveMenu(); // Refresh menu
+            }
+        }
+
+        // Generate world
+        function generateWorld() {
+            // Create tile map
+            for (let y = 0; y < game.world.height; y += 40) {
+                for (let x = 0; x < game.world.width; x += 40) {
+                    const tile = {
+                        x: x,
+                        y: y,
+                        type: 'grass'
+                    };
+                    
+                    // Add some variety
+                    if (Math.random() < 0.1) tile.type = 'stone';
+                    if (Math.random() < 0.05) tile.type = 'flower';
+                    
+                    game.world.tiles.push(tile);
+                }
+            }
+
+            // Add walls (boundaries)
+            for (let x = 0; x < game.world.width; x += 40) {
+                game.world.tiles.push({ x: x, y: 0, type: 'wall' });
+                game.world.tiles.push({ x: x, y: game.world.height - 40, type: 'wall' });
+            }
+            for (let y = 0; y < game.world.height; y += 40) {
+                game.world.tiles.push({ x: 0, y: y, type: 'wall' });
+                game.world.tiles.push({ x: game.world.width - 40, y: y, type: 'wall' });
+            }
+
+            // Add madra orbs
+            for (let i = 0; i < 20; i++) {
+                game.world.entities.push({
+                    type: 'madra',
+                    x: Math.random() * (game.world.width - 100) + 50,
+                    y: Math.random() * (game.world.height - 100) + 50,
+                    collected: false,
+                    pulse: 0
+                });
+            }
+
+            // Add enemies
+            const enemyTypes = ['student', 'iron', 'jade'];
+            for (let i = 0; i < 8; i++) {
+                game.world.entities.push({
+                    type: 'enemy',
+                    enemyType: enemyTypes[Math.floor(Math.random() * enemyTypes.length)],
+                    x: Math.random() * (game.world.width - 200) + 100,
+                    y: Math.random() * (game.world.height - 200) + 100,
+                    health: 100,
+                    patrol: {
+                        startX: 0,
+                        startY: 0,
+                        direction: 1
+                    }
+                });
+            }
+
+            // Add NPCs
+            game.world.npcs.push({
+                name: 'Elder Whisper',
+                x: 800,
+                y: 600,
+                dialogue: [
+                    "The path of the Unsouled is difficult, but not impossible.",
+                    "Collect madra from the sacred orbs scattered across the valley.",
+                    "Prove yourself in combat, and perhaps you'll advance beyond Copper."
+                ]
+            });
+
+            // Initialize enemy patrols
+            game.world.entities.forEach(entity => {
+                if (entity.type === 'enemy') {
+                    entity.patrol.startX = entity.x;
+                    entity.patrol.startY = entity.y;
+                }
+            });
+        }
+
+        // Update exploration mode
+        function updateExploration() {
+            // Player movement
+            let dx = 0, dy = 0;
+            if (keys['w'] || keys['arrowup']) dy = -game.player.speed;
+            if (keys['s'] || keys['arrowdown']) dy = game.player.speed;
+            if (keys['a'] || keys['arrowleft']) dx = -game.player.speed;
+            if (keys['d'] || keys['arrowright']) dx = game.player.speed;
+
+            // Check collision with walls
+            const newX = game.player.x + dx;
+            const newY = game.player.y + dy;
+            
+            let canMove = true;
+            game.world.tiles.forEach(tile => {
+                if (tile.type === 'wall') {
+                    if (newX < tile.x + 40 && newX + 20 > tile.x &&
+                        newY < tile.y + 40 && newY + 20 > tile.y) {
+                        canMove = false;
+                    }
+                }
+            });
+
+            if (canMove) {
+                game.player.x = Math.max(20, Math.min(game.world.width - 40, newX));
+                game.player.y = Math.max(20, Math.min(game.world.height - 40, newY));
+            }
+
+            // Update camera to follow player
+            game.camera.x = Math.max(0, Math.min(game.world.width - canvas.width, 
+                game.player.x - canvas.width / 2));
+            game.camera.y = Math.max(0, Math.min(game.world.height - canvas.height, 
+                game.player.y - canvas.height / 2));
+
+            // Check entity interactions
+            game.world.entities.forEach(entity => {
+                const dist = Math.hypot(entity.x - game.player.x, entity.y - game.player.y);
+                
+                if (entity.type === 'madra' && !entity.collected && dist < 30) {
+                    entity.collected = true;
+                    game.player.madraCollected += 10;
+                    game.player.madra = Math.min(game.player.maxMadra, game.player.madra + 20);
+                    createFloatingText('+10 Madra', entity.x - game.camera.x, entity.y - game.camera.y);
+                    checkAdvancement();
+                }
+                
+                if (entity.type === 'enemy' && dist < 40) {
+                    startCombat(entity);
+                }
+
+                // Update entity animations
+                if (entity.type === 'madra' && !entity.collected) {
+                    entity.pulse += 0.1;
+                }
+                
+                if (entity.type === 'enemy') {
+                    // Simple patrol AI
+                    entity.x += entity.patrol.direction * 0.5;
+                    if (Math.abs(entity.x - entity.patrol.startX) > 100) {
+                        entity.patrol.direction *= -1;
+                    }
+                }
+            });
+
+            // NPC interaction
+            if (keys[' ']) {
+                game.world.npcs.forEach(npc => {
+                    const dist = Math.hypot(npc.x - game.player.x, npc.y - game.player.y);
+                    if (dist < 50) {
+                        showDialogue(npc.dialogue[Math.floor(Math.random() * npc.dialogue.length)]);
+                    }
+                });
+            }
+        }
+
+        // Start combat
+        function startCombat(enemy) {
+            game.mode = 'combat';
+            game.combat.enemyType = enemy.enemyType;
+            game.combat.enemyHealth = game.combat.enemyMaxHealth = enemy.health;
+            game.combat.playerX = 200;
+            game.combat.enemyX = 600;
+            game.combat.playerY = game.combat.enemyY = 400;
+            game.combat.playerState = game.combat.enemyState = 'idle';
+            game.combat.combo = 0;
+            
+            document.getElementById('explorationInstructions').style.display = 'none';
+            document.getElementById('combatInstructions').style.display = 'block';
+            document.getElementById('ui').style.display = 'none';
+            document.getElementById('combatUI').style.display = 'block';
+            document.getElementById('enemyName').textContent = enemy.enemyType.toUpperCase();
+            
+            flashScreen();
+            
+            // Remove enemy from world after combat starts
+            const index = game.world.entities.indexOf(enemy);
+            if (index > -1) {
+                game.world.entities.splice(index, 1);
+            }
+        }
+
+        // Update combat mode
+        function updateCombat() {
+            // Player controls
+            if (keys['a']) {
+                game.combat.playerX = Math.max(50, game.combat.playerX - 5);
+                game.combat.playerFacing = -1;
+            }
+            if (keys['d']) {
+                game.combat.playerX = Math.min(400, game.combat.playerX + 5);
+                game.combat.playerFacing = 1;
+            }
+            
+            // Combat actions
+            if (keys['j'] && game.combat.playerState === 'idle') {
+                performAttack('punch', 10, 15);
+            }
+            if (keys['k'] && game.combat.playerState === 'idle') {
+                performAttack('kick', 15, 20);
+            }
+            if (keys[' '] && game.combat.playerState === 'idle' && game.player.madra >= 30) {
+                performAttack('emptyPalm', 30, 40);
+                game.player.madra -= 30;
+            }
+            
+            game.combat.blockActive = keys['l'];
+
+            // Update combat states
+            if (game.combat.playerState === 'attacking') {
+                setTimeout(() => {
+                    game.combat.playerState = 'idle';
+                }, 300);
+            }
+
+            // Simple enemy AI
+            const distance = Math.abs(game.combat.enemyX - game.combat.playerX);
+            
+            if (game.combat.enemyState === 'idle') {
+                if (distance > 100) {
+                    // Move towards player
+                    game.combat.enemyX += game.combat.enemyX > game.combat.playerX ? -3 : 3;
+                } else if (Math.random() < 0.02) {
+                    // Attack
+                    game.combat.enemyState = 'attacking';
+                    setTimeout(() => {
+                        if (distance < 100 && !game.combat.blockActive) {
+                            game.player.health = Math.max(0, game.player.health - 10);
+                            game.combat.combo = 0;
+                            screenShake();
+                        }
+                        game.combat.enemyState = 'idle';
+                    }, 400);
+                }
+            }
+
+            // Check win/loss
+            if (game.combat.enemyHealth <= 0) {
+                endCombat(true);
+            } else if (game.player.health <= 0) {
+                endCombat(false);
+            }
+
+            // Update UI
+            document.getElementById('combatPlayerHealth').style.width = 
+                (game.player.health / game.player.maxHealth * 100) + '%';
+            document.getElementById('combatPlayerMadra').style.width = 
+                (game.player.madra / game.player.maxMadra * 100) + '%';
+            document.getElementById('combatEnemyHealth').style.width = 
+                (game.combat.enemyHealth / game.combat.enemyMaxHealth * 100) + '%';
+        }
+
+        // Perform attack
+        function performAttack(type, damage, madraCost) {
+            game.combat.playerState = 'attacking';
+            
+            const distance = Math.abs(game.combat.enemyX - game.combat.playerX);
+            if (distance < 100 || type === 'emptyPalm') {
+                game.combat.enemyHealth = Math.max(0, game.combat.enemyHealth - damage);
+                game.combat.combo++;
+                game.combat.lastHit = Date.now();
+                
+                // Show combo
+                if (game.combat.combo > 1) {
+                    document.getElementById('comboCount').textContent = game.combat.combo;
+                    document.getElementById('comboCounter').style.display = 'block';
+                }
+                
+                screenShake();
+                createFloatingText(damage + ' DMG', game.combat.enemyX, game.combat.enemyY - 50);
+                
+                if (type === 'emptyPalm') {
+                    flashScreen();
+                }
+            }
+        }
+
+        // End combat
+        function endCombat(victory) {
+            game.mode = 'exploration';
+            document.getElementById('explorationInstructions').style.display = 'block';
+            document.getElementById('combatInstructions').style.display = 'none';
+            document.getElementById('ui').style.display = 'block';
+            document.getElementById('combatUI').style.display = 'none';
+            document.getElementById('comboCounter').style.display = 'none';
+            
+            if (victory) {
+                game.player.combatWins++;
+                game.player.madraCollected += 50;
+                game.player.health = Math.min(game.player.maxHealth, game.player.health + 20);
+                showDialogue("Victory! You've gained strength from combat.");
+                checkAdvancement();
+                // Auto-save after victory
+                saveGame();
+            } else {
+                game.player.health = game.player.maxHealth;
+                game.player.x = 400;
+                game.player.y = 300;
+                showDialogue("Defeated... but you rise again, determined.");
+            }
+            
+            updateUI();
+        }
+
+        // Check for advancement
+        function checkAdvancement() {
+            const advancements = [
+                { name: 'Copper', madra: 100, wins: 2 },
+                { name: 'Iron', madra: 300, wins: 5 },
+                { name: 'Jade', madra: 600, wins: 10 },
+                { name: 'Gold', madra: 1000, wins: 20 }
+            ];
+            
+            advancements.forEach(level => {
+                if (game.player.advancement !== level.name && 
+                    game.player.madraCollected >= level.madra && 
+                    game.player.combatWins >= level.wins) {
+                    game.player.advancement = level.name;
+                    game.player.maxHealth += 50;
+                    game.player.maxMadra += 50;
+                    game.player.health = game.player.maxHealth;
+                    game.player.madra = game.player.maxMadra;
+                    game.player.speed += 1;
+                    
+                    showAdvancement(level.name);
+                }
+            });
+        }
+
+        // Show advancement notification
+        function showAdvancement(level) {
+            const notice = document.getElementById('advancementNotice');
+            notice.innerHTML = `ADVANCEMENT!<br>You have reached ${level}!`;
+            notice.style.display = 'block';
+            flashScreen();
+            
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3000);
+        }
+
+        // Render functions
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            if (game.mode === 'exploration') {
+                renderExploration();
+            } else {
+                renderCombat();
+            }
+        }
+
+        function renderExploration() {
+            // Render tiles
+            game.world.tiles.forEach(tile => {
+                const screenX = tile.x - game.camera.x;
+                const screenY = tile.y - game.camera.y;
+                
+                if (screenX > -40 && screenX < canvas.width && 
+                    screenY > -40 && screenY < canvas.height) {
+                    
+                    ctx.fillStyle = tile.type === 'grass' ? '#2d5016' : 
+                                   tile.type === 'stone' ? '#444' :
+                                   tile.type === 'flower' ? '#2d5016' : '#222';
+                    ctx.fillRect(screenX, screenY, 40, 40);
+                    
+                    if (tile.type === 'flower') {
+                        ctx.fillStyle = '#ff69b4';
+                        ctx.fillRect(screenX + 15, screenY + 15, 10, 10);
+                    }
+                }
+            });
+
+            // Render entities
+            game.world.entities.forEach(entity => {
+                const screenX = entity.x - game.camera.x;
+                const screenY = entity.y - game.camera.y;
+                
+                if (entity.type === 'madra' && !entity.collected) {
+                    const pulse = Math.sin(entity.pulse) * 5;
+                    ctx.fillStyle = '#00ccff';
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = '#00ccff';
+                    ctx.beginPath();
+                    ctx.arc(screenX, screenY, 15 + pulse, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+                
+                if (entity.type === 'enemy') {
+                    // Enemy body
+                    ctx.fillStyle = entity.enemyType === 'student' ? '#654321' :
+                                   entity.enemyType === 'iron' ? '#888' : '#0f0';
+                    ctx.fillRect(screenX - 15, screenY - 30, 30, 40);
+                    
+                    // Enemy head
+                    ctx.fillStyle = '#fdbcb4';
+                    ctx.fillRect(screenX - 10, screenY - 40, 20, 20);
+                }
+            });
+
+            // Render NPCs
+            game.world.npcs.forEach(npc => {
+                const screenX = npc.x - game.camera.x;
+                const screenY = npc.y - game.camera.y;
+                
+                // NPC body (Elder)
+                ctx.fillStyle = '#4a4a4a';
+                ctx.fillRect(screenX - 20, screenY - 40, 40, 50);
+                
+                // NPC head
+                ctx.fillStyle = '#fdbcb4';
+                ctx.fillRect(screenX - 15, screenY - 55, 30, 25);
+                
+                // Name tag
+                ctx.fillStyle = '#fff';
+                ctx.font = '12px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(npc.name, screenX, screenY - 65);
+            });
+
+            // Render player
+            const playerScreenX = game.player.x - game.camera.x;
+            const playerScreenY = game.player.y - game.camera.y;
+            
+            // Player body
+            ctx.fillStyle = game.player.advancement === 'Unsouled' ? '#333' :
+                           game.player.advancement === 'Copper' ? '#b87333' :
+                           game.player.advancement === 'Iron' ? '#888' :
+                           game.player.advancement === 'Jade' ? '#0f0' : '#ffd700';
+            ctx.fillRect(playerScreenX - 10, playerScreenY - 20, 20, 30);
+            
+            // Player head
+            ctx.fillStyle = '#fdbcb4';
+            ctx.fillRect(playerScreenX - 8, playerScreenY - 30, 16, 16);
+            
+            // Advancement aura
+            if (game.player.advancement !== 'Unsouled') {
+                ctx.strokeStyle = game.player.advancement === 'Copper' ? '#b87333' :
+                                 game.player.advancement === 'Iron' ? '#888' :
+                                 game.player.advancement === 'Jade' ? '#0f0' : '#ffd700';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(playerScreenX - 15, playerScreenY - 35, 30, 40);
+            }
+        }
+
+        function renderCombat() {
+            // Combat arena background
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Ground
+            ctx.fillStyle = '#333';
+            ctx.fillRect(0, 450, canvas.width, 150);
+            
+            // Render player
+            ctx.save();
+            ctx.translate(game.combat.playerX, game.combat.playerY);
+            ctx.scale(game.combat.playerFacing, 1);
+            
+            // Player sprite
+            ctx.fillStyle = game.player.advancement === 'Unsouled' ? '#333' :
+                           game.player.advancement === 'Copper' ? '#b87333' :
+                           game.player.advancement === 'Iron' ? '#888' :
+                           game.player.advancement === 'Jade' ? '#0f0' : '#ffd700';
+            ctx.fillRect(-20, -60, 40, 60);
+            
+            // Head
+            ctx.fillStyle = '#fdbcb4';
+            ctx.fillRect(-15, -75, 30, 25);
+            
+            // Attack effect
+            if (game.combat.playerState === 'attacking') {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fillRect(20, -40, 30, 10);
+            }
+            
+            // Block shield
+            if (game.combat.blockActive) {
+                ctx.strokeStyle = '#00f';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(-30, -80, 60, 80);
+            }
+            
+            ctx.restore();
+            
+            // Render enemy
+            ctx.save();
+            ctx.translate(game.combat.enemyX, game.combat.enemyY);
+            
+            // Enemy sprite
+            ctx.fillStyle = game.combat.enemyType === 'student' ? '#654321' :
+                           game.combat.enemyType === 'iron' ? '#888' : '#0f0';
+            ctx.fillRect(-20, -60, 40, 60);
+            
+            // Head
+            ctx.fillStyle = '#fdbcb4';
+            ctx.fillRect(-15, -75, 30, 25);
+            
+            // Attack effect
+            if (game.combat.enemyState === 'attacking') {
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.8)';
+                ctx.fillRect(-50, -40, 30, 10);
+            }
+            
+            ctx.restore();
+        }
+
+        // UI functions
+        function updateUI() {
+            document.getElementById('advancement').textContent = game.player.advancement;
+            document.getElementById('playerHealth').style.width = 
+                (game.player.health / game.player.maxHealth * 100) + '%';
+            document.getElementById('playerMadra').style.width = 
+                (game.player.madra / game.player.maxMadra * 100) + '%';
+            document.getElementById('madraCount').textContent = game.player.madraCollected;
+            document.getElementById('winCount').textContent = game.player.combatWins;
+        }
+
+        function showDialogue(text) {
+            const dialogue = document.getElementById('dialogue');
+            dialogue.textContent = text;
+            dialogue.style.display = 'block';
+            
+            setTimeout(() => {
+                dialogue.style.display = 'none';
+            }, 3000);
+        }
+
+        function createFloatingText(text, x, y) {
+            const div = document.createElement('div');
+            div.className = 'floatingText';
+            div.textContent = text;
+            div.style.left = x + 'px';
+            div.style.top = y + 'px';
+            document.getElementById('gameContainer').appendChild(div);
+            
+            setTimeout(() => {
+                div.remove();
+            }, 1000);
+        }
+
+        function flashScreen() {
+            const flash = document.getElementById('screenFlash');
+            flash.style.opacity = '0.8';
+            setTimeout(() => {
+                flash.style.opacity = '0';
+            }, 100);
+        }
+
+        let shakeAmount = 0;
+        function screenShake() {
+            shakeAmount = 10;
+        }
+
+        // Game loop
+        function gameLoop() {
+            // Skip updates if paused
+            if (!game.paused) {
+                // Update
+                if (game.mode === 'exploration') {
+                    updateExploration();
+                    autoSave(); // Check for auto-save
+                } else {
+                    updateCombat();
+                }
+                
+                updateUI();
+                
+                // Handle screen shake
+                if (shakeAmount > 0) {
+                    const shakeX = (Math.random() - 0.5) * shakeAmount;
+                    const shakeY = (Math.random() - 0.5) * shakeAmount;
+                    canvas.style.transform = `translate(${shakeX}px, ${shakeY}px)`;
+                    shakeAmount *= 0.9;
+                } else {
+                    canvas.style.transform = '';
+                }
+                
+                // Handle combo timeout
+                if (Date.now() - game.combat.lastHit > 2000) {
+                    game.combat.combo = 0;
+                    document.getElementById('comboCounter').style.display = 'none';
+                }
+                
+                // Render
+                render();
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Initialize game
+        testSaveMethod(); // Test which save method to use
+        generateWorld();
+        
+        // Try to load save on start
+        if (saveMethod !== 'none' && getSaveInfo(1)) {
+            const shouldLoad = confirm("Save file found! Load your progress?");
+            if (shouldLoad) {
+                loadGame(1);
+            }
+        }
+        
+        game.lastSaveTime = Date.now();
+        gameLoop();
+        
+        // Initial dialogue
+        setTimeout(() => {
+            if (saveMethod === 'memory') {
+                showDialogue("Note: Browser storage blocked. Saves are temporary - download to keep them!");
+            } else {
+                showDialogue("Welcome to Sacred Valley. Prove yourself worthy of advancement!");
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
