@@ -17,12 +17,21 @@
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
+            overflow: hidden;
         }
 
         #gameContainer {
             position: relative;
             border: 3px solid #333;
             box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
+            width: 100%;
+            height: 100vh;
+            max-width: 100%;
+            max-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
         }
 
         #gameCanvas {
@@ -30,6 +39,9 @@
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         #ui {
@@ -270,7 +282,9 @@
 </head>
 <body>
     <div id="gameContainer">
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <canvas id="gameCanvas"></canvas>
+        
+        <button id="fullscreenBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
         
         <div id="ui">
             <div>Wei Shi Lindon - <span id="advancement">Unsouled</span></div>
@@ -441,6 +455,45 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         ctx.imageSmoothingEnabled = false;
+        
+        // Responsive canvas sizing
+        function resizeCanvas() {
+            const container = document.getElementById('gameContainer');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            
+            // Maintain 4:3 aspect ratio (classic game ratio)
+            const aspectRatio = 4 / 3;
+            let newWidth, newHeight;
+            
+            if (containerWidth / containerHeight > aspectRatio) {
+                // Container is wider than aspect ratio
+                newHeight = containerHeight;
+                newWidth = newHeight * aspectRatio;
+            } else {
+                // Container is taller than aspect ratio
+                newWidth = containerWidth;
+                newHeight = newWidth / aspectRatio;
+            }
+            
+            // Set canvas internal resolution (game resolution)
+            canvas.width = 800;  // Internal game width
+            canvas.height = 600; // Internal game height
+            
+            // Set canvas display size
+            canvas.style.width = newWidth + 'px';
+            canvas.style.height = newHeight + 'px';
+            
+            // Center the canvas
+            canvas.style.position = 'absolute';
+            canvas.style.left = '50%';
+            canvas.style.top = '50%';
+            canvas.style.transform = 'translate(-50%, -50%)';
+        }
+        
+        // Call resize on load and window resize
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         // Game State
         const game = {
@@ -1969,6 +2022,31 @@
             shakeAmount = 10;
         }
 
+        // Fullscreen functionality
+        function toggleFullscreen() {
+            const container = document.getElementById('gameContainer');
+            
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().then(() => {
+                    document.getElementById('fullscreenBtn').textContent = '⛶ Exit Fullscreen';
+                    resizeCanvas();
+                }).catch(err => {
+                    console.error('Error entering fullscreen:', err);
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    document.getElementById('fullscreenBtn').textContent = '⛶ Fullscreen';
+                    resizeCanvas();
+                });
+            }
+        }
+        
+        // Update canvas on fullscreen change
+        document.addEventListener('fullscreenchange', resizeCanvas);
+        
+        // Make function global
+        window.toggleFullscreen = toggleFullscreen;
+        
         // Game loop
         function gameLoop() {
             // Skip updates if paused
@@ -1983,14 +2061,16 @@
                 
                 updateUI();
                 
-                // Handle screen shake
+                // Handle screen shake with proper transform
                 if (shakeAmount > 0) {
                     const shakeX = (Math.random() - 0.5) * shakeAmount;
                     const shakeY = (Math.random() - 0.5) * shakeAmount;
-                    canvas.style.transform = `translate(${shakeX}px, ${shakeY}px)`;
+                    const currentTransform = canvas.style.transform;
+                    canvas.style.transform = currentTransform + ` translate(${shakeX}px, ${shakeY}px)`;
                     shakeAmount *= 0.9;
                 } else {
-                    canvas.style.transform = '';
+                    // Reset to centered position
+                    canvas.style.transform = 'translate(-50%, -50%)';
                 }
                 
                 // Handle combo timeout
