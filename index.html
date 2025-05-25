@@ -315,13 +315,93 @@
                 SPACE - Interact<br>
                 F5 - Save | F9 - Load<br>
                 M - Save Menu<br>
-                Find madra orbs and enemies!
+                <span style="color: #00ff88;">C - Full Controls</span>
             </div>
             <div id="combatInstructions" style="display: none">
                 A/D - Move Left/Right<br>
                 J - Punch | K - Kick<br>
                 L - Block | SPACE - Empty Palm<br>
-                Build combos! Use madra wisely!
+                <span style="color: #00ff88;">C - Full Controls</span>
+            </div>
+        </div>
+        
+        <button id="controlsToggle" onclick="toggleControls()">Controls (C)</button>
+        
+        <div class="controls-hint" id="controlsHint">
+            Press C for Controls
+        </div>
+        
+        <!-- Full Controls Overlay -->
+        <div id="fullControls">
+            <span class="close-controls" onclick="hideControls()">×</span>
+            <h2>Sacred Artist Control Manual</h2>
+            
+            <div class="control-section">
+                <h3>🎮 Basic Movement</h3>
+                <div class="control-item">
+                    <span>Move</span>
+                    <span class="control-key">WASD / Arrow Keys</span>
+                </div>
+                <div class="control-item">
+                    <span>Interact/Talk</span>
+                    <span class="control-key">SPACE</span>
+                </div>
+                <div class="control-item">
+                    <span>Run (with certain paths)</span>
+                    <span class="control-key">SHIFT</span>
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <h3>⚔️ Combat Controls</h3>
+                <div class="control-item">
+                    <span>Move Left/Right</span>
+                    <span class="control-key">A / D</span>
+                </div>
+                <div class="control-item">
+                    <span>Punch</span>
+                    <span class="control-key">J</span>
+                </div>
+                <div class="control-item">
+                    <span>Kick</span>
+                    <span class="control-key">K</span>
+                </div>
+                <div class="control-item">
+                    <span>Block</span>
+                    <span class="control-key">L (Hold)</span>
+                </div>
+                <div class="control-item">
+                    <span>Empty Palm (Uses Madra)</span>
+                    <span class="control-key">SPACE</span>
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <h3>💾 System Controls</h3>
+                <div class="control-item">
+                    <span>Quick Save</span>
+                    <span class="control-key">F5</span>
+                </div>
+                <div class="control-item">
+                    <span>Quick Load</span>
+                    <span class="control-key">F9</span>
+                </div>
+                <div class="control-item">
+                    <span>Save Menu</span>
+                    <span class="control-key">M</span>
+                </div>
+                <div class="control-item">
+                    <span>Toggle Controls</span>
+                    <span class="control-key">C</span>
+                </div>
+                <div class="control-item">
+                    <span>Close Menus</span>
+                    <span class="control-key">ESC</span>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px; color: #00ff88;">
+                <em>"The dragon advances through understanding."</em>
             </div>
         </div>
         
@@ -676,6 +756,11 @@
             if (e.key === 'Escape') {
                 e.preventDefault();
                 closeSaveMenu();
+                hideControls();
+            }
+            if (e.key.toLowerCase() === 'c') {
+                e.preventDefault();
+                toggleControls();
             }
             
             // Prevent default for game keys
@@ -686,6 +771,45 @@
         window.addEventListener('keyup', (e) => {
             keys[e.key.toLowerCase()] = false;
             e.preventDefault();
+        });
+        
+        // Controls overlay functions
+        function toggleControls() {
+            const controlsDiv = document.getElementById('fullControls');
+            if (controlsDiv.style.display === 'block') {
+                hideControls();
+            } else {
+                showControls();
+            }
+        }
+        
+        function showControls() {
+            document.getElementById('fullControls').style.display = 'block';
+            game.paused = true;
+            // Hide hint when controls are shown
+            document.getElementById('controlsHint').style.display = 'none';
+        }
+        
+        function hideControls() {
+            document.getElementById('fullControls').style.display = 'none';
+            game.paused = false;
+        }
+        
+        // Make functions global
+        window.toggleControls = toggleControls;
+        window.showControls = showControls;
+        window.hideControls = hideControls;
+        
+        // Hide controls hint after first interaction
+        let firstInteraction = true;
+        window.addEventListener('keydown', () => {
+            if (firstInteraction) {
+                firstInteraction = false;
+                setTimeout(() => {
+                    const hint = document.getElementById('controlsHint');
+                    if (hint) hint.style.display = 'none';
+                }, 5000);
+            }
         });
         
         // Touch events
