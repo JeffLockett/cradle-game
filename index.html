@@ -863,8 +863,106 @@
             }
         }
 
-        // Generate world
+        // Generate world based on game mode
         function generateWorld() {
+            // Clear existing world
+            game.world.tiles = [];
+            game.world.entities = [];
+            game.world.npcs = [];
+            
+            if (game.mode === 'tutorial') {
+                generateTutorialWorld();
+            } else {
+                generateExplorationWorld();
+            }
+        }
+        
+        // Generate tutorial world (Sacred Valley)
+        function generateTutorialWorld() {
+            const stage = game.tutorialStage;
+            
+            if (stage === 'clanGrounds') {
+                // Wei Clan training grounds
+                game.world.width = 800;
+                game.world.height = 600;
+                
+                // Create training area
+                for (let y = 0; y < game.world.height; y += 40) {
+                    for (let x = 0; x < game.world.width; x += 40) {
+                        game.world.tiles.push({
+                            x: x,
+                            y: y,
+                            type: 'dojo'
+                        });
+                    }
+                }
+                
+                // Add training dummies
+                game.world.entities.push({
+                    type: 'trainingDummy',
+                    x: 200,
+                    y: 300,
+                    health: 999,
+                    respawn: true
+                });
+                
+                // Add Kelsa
+                game.world.npcs.push({
+                    name: 'Wei Shi Kelsa',
+                    x: 400,
+                    y: 200,
+                    dialogue: [
+                        "Little brother, you need to practice your Empty Palm.",
+                        "Focus your madra and strike the training dummy.",
+                        "Remember, pure madra disrupts, it doesn't destroy."
+                    ],
+                    path: 'White Fox'
+                });
+                
+                // Add path instructors
+                game.world.npcs.push({
+                    name: 'Wei Instructor',
+                    x: 600,
+                    y: 300,
+                    dialogue: [
+                        "Ready to choose your path?",
+                        "We have Empty Palm and White Fox available in the Wei clan."
+                    ],
+                    questTrigger: 'pathChoice'
+                });
+                
+            } else if (stage === 'tournament') {
+                // Tournament arena
+                game.world.width = 800;
+                game.world.height = 600;
+                
+                // Create arena floor
+                for (let y = 0; y < game.world.height; y += 40) {
+                    for (let x = 0; x < game.world.width; x += 40) {
+                        game.world.tiles.push({
+                            x: x,
+                            y: y,
+                            type: 'arena'
+                        });
+                    }
+                }
+                
+                // Add spectators (NPCs)
+                const spectatorNames = ['Wei Mon Keth', 'Elder Whisper', 'Wei Shi Jaran'];
+                spectatorNames.forEach((name, i) => {
+                    game.world.npcs.push({
+                        name: name,
+                        x: 100 + i * 200,
+                        y: 100,
+                        dialogue: ["The Seven-Year Festival begins!"],
+                        spectator: true
+                    });
+                });
+            }
+        }
+        
+        // Generate normal exploration world
+        function generateExplorationWorld() {
             // Create tile map
             for (let y = 0; y < game.world.height; y += 40) {
                 for (let x = 0; x < game.world.width; x += 40) {
@@ -943,6 +1041,8 @@
 
         // Update exploration mode
         function updateExploration() {
+            if (game.paused) return;
+            
             // Player movement
             let dx = 0, dy = 0;
             if (keys['w'] || keys['arrowup']) dy = -game.player.speed;
@@ -990,6 +1090,14 @@
                 if (entity.type === 'enemy' && dist < 40) {
                     startCombat(entity);
                 }
+                
+                if (entity.type === 'trainingDummy' && dist < 40 && keys[' ']) {
+                    // Practice on training dummy
+                    if (game.player.techniques.includes('emptyPalm')) {
+                        createFloatingText('DISRUPTED!', entity.x - game.camera.x, entity.y - game.camera.y);
+                        showDialogue("Good! The Empty Palm disrupts madra flow. Now speak to the instructor.", "Wei Shi Kelsa");
+                    }
+                }
 
                 // Update entity animations
                 if (entity.type === 'madra' && !entity.collected) {
@@ -1006,15 +1114,138 @@
             });
 
             // NPC interaction
-            if (keys[' ']) {
+            if (keys[' '] && (!game.dialogue || !game.dialogue.active)) {
                 game.world.npcs.forEach(npc => {
                     const dist = Math.hypot(npc.x - game.player.x, npc.y - game.player.y);
                     if (dist < 50) {
-                        showDialogue(npc.dialogue[Math.floor(Math.random() * npc.dialogue.length)]);
+                        if (npc.questTrigger === 'pathChoice' && game.player.path === 'none') {
+                            showPathChoice();
+                        } else if (npc.dialogue && npc.dialogue.length > 0) {
+                            const dialogueIndex = Math.floor(Math.random() * npc.dialogue.length);
+                            showDialogue(npc.dialogue[dialogueIndex], npc.name);
+                        }
                     }
                 });
             }
+            
+            // Close dialogue with space or escape
+            if ((keys[' '] || keys['escape']) && game.dialogue && game.dialogue.active && !game.dialogue.choices) {
+                hideDialogue();
+                keys[' '] = false; // Prevent immediate re-trigger
+            }
         }
+        
+        // Tutorial progression
+        function progressTutorial() {
+            if (game.tutorialStage === 'clanGrounds' && game.player.path !== 'none') {
+                game.tutorialStage = 'tournament';
+                generateWorld();
+                game.player.x = 400;
+                game.player.y = 400;
+                
+                setTimeout(() => {
+                    showDialogue("The Seven-Year Festival tournament begins! Face your first opponent!", "Wei Mon Keth");
+                    setTimeout(() => {
+                        startTournamentBattle(0);
+                    }, 3000);
+                }, 1000);
+            }
+        }
+        
+        // Start tournament battle
+        function startTournamentBattle(round) {
+            if (round >= game.tournament.opponents.length) {
+                // Tournament complete (or interrupted)
+                return;
+            }
+            
+            const opponent = game.tournament.opponents[round];
+            game.tournament.round = round;
+            game.combat.currentOpponent = opponent;
+            
+            // Special handling for Li Markuth
+            if (opponent.name === 'Li Markuth') {
+                showDialogue("IMPOSSIBLE! A Jade in Sacred Valley?!", "Wei Mon Keth");
+                setTimeout(() => {
+                    showSurielVision();
+                }, 3000);
+                return;
+            }
+            
+            // Start normal tournament fight
+            game.mode = 'combat';
+            game.combat.enemyType = opponent.path;
+            game.combat.enemyHealth = game.combat.enemyMaxHealth = opponent.health;
+            game.combat.playerX = 200;
+            game.combat.enemyX = 600;
+            game.combat.playerY = game.combat.enemyY = 400;
+            game.combat.playerState = game.combat.enemyState = 'idle';
+            game.combat.combo = 0;
+            
+            document.getElementById('explorationInstructions').style.display = 'none';
+            document.getElementById('combatInstructions').style.display = 'block';
+            document.getElementById('ui').style.display = 'none';
+            document.getElementById('combatUI').style.display = 'block';
+            document.getElementById('enemyName').textContent = opponent.name;
+            
+            // Switch mobile controls
+            if (isMobile) {
+                document.getElementById('explorationControls').style.display = 'none';
+                document.getElementById('combatControls').style.display = 'block';
+            }
+            
+            flashScreen();
+        }
+        
+        // Suriel's vision sequence
+        function showSurielVision() {
+            game.paused = true;
+            
+            // Create vision overlay
+            const visionDiv = document.createElement('div');
+            visionDiv.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle, rgba(0,100,200,0.8) 0%, rgba(0,0,50,0.95) 100%);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                font-size: 24px;
+                text-align: center;
+                z-index: 1000;
+                animation: fadeIn 2s;
+            `;
+            
+            visionDiv.innerHTML = `
+                <h1 style="color: #00ccff; margin-bottom: 30px;">FATE INTERVENTION</h1>
+                <p style="margin: 20px; max-width: 600px;">A presence beyond your comprehension freezes time itself...</p>
+                <p style="margin: 20px; max-width: 600px; color: #00ff88;">"Wei Shi Lindon. Your fate branches here. Will you remain Unsouled forever, or will you seek power beyond Sacred Valley?"</p>
+                <button onclick="endTutorial()" style="margin-top: 40px; padding: 20px 40px; font-size: 20px; background: #00ff88; border: none; cursor: pointer; color: black; font-weight: bold;">LEAVE SACRED VALLEY</button>
+            `;
+            
+            document.getElementById('gameContainer').appendChild(visionDiv);
+        }
+        
+        // End tutorial and start main game
+        window.endTutorial = function() {
+            game.mode = 'exploration';
+            game.tutorialStage = 'complete';
+            game.player.advancement = 'Copper'; // Advancement begins!
+            generateWorld(); // Generate the full world
+            
+            // Remove vision overlay
+            const visions = document.querySelectorAll('[style*="radial-gradient"]');
+            visions.forEach(v => v.remove());
+            
+            game.paused = false;
+            showDialogue("You have left Sacred Valley. Your true journey begins now!");
+            showAdvancement('Copper');
+        };
 
         // Start combat
         function startCombat(enemy) {
@@ -1062,14 +1293,13 @@
             
             // Combat actions
             if (keys['j'] && game.combat.playerState === 'idle') {
-                performAttack('punch', 10, 15);
+                performAttack('punch', 10, 0);
             }
             if (keys['k'] && game.combat.playerState === 'idle') {
-                performAttack('kick', 15, 20);
+                performAttack('kick', 15, 0);
             }
             if (keys[' '] && game.combat.playerState === 'idle' && game.player.madra >= 30) {
-                performAttack('emptyPalm', 30, 40);
-                game.player.madra -= 30;
+                performAttack('emptyPalm', 0, 30); // NO DAMAGE - Lore accurate!
             }
             
             game.combat.blockActive = keys['l'];
@@ -1081,9 +1311,20 @@
                 }, 300);
             }
 
-            // Simple enemy AI
+            // Enemy AI with stun handling
             const distance = Math.abs(game.combat.enemyX - game.combat.playerX);
             
+            // Check if enemy is stunned
+            if (game.combat.enemyStunnedUntil && Date.now() < game.combat.enemyStunnedUntil) {
+                game.combat.enemyState = 'stunned';
+                // Enemy can't act while stunned - this is your window!
+            } else if (game.combat.enemyState === 'stunned') {
+                // Stun wore off
+                game.combat.enemyState = 'idle';
+                game.combat.enemyStunnedUntil = null;
+            }
+            
+            // Normal enemy behavior (only if not stunned)
             if (game.combat.enemyState === 'idle') {
                 if (distance > 100) {
                     // Move towards player
@@ -1092,12 +1333,14 @@
                     // Attack
                     game.combat.enemyState = 'attacking';
                     setTimeout(() => {
-                        if (distance < 100 && !game.combat.blockActive) {
+                        if (distance < 100 && !game.combat.blockActive && game.combat.enemyState !== 'stunned') {
                             game.player.health = Math.max(0, game.player.health - 10);
                             game.combat.combo = 0;
                             screenShake();
                         }
-                        game.combat.enemyState = 'idle';
+                        if (game.combat.enemyState !== 'stunned') {
+                            game.combat.enemyState = 'idle';
+                        }
                     }, 400);
                 }
             }
@@ -1123,8 +1366,52 @@
             game.combat.playerState = 'attacking';
             
             const distance = Math.abs(game.combat.enemyX - game.combat.playerX);
-            if (distance < 100 || type === 'emptyPalm') {
-                game.combat.enemyHealth = Math.max(0, game.combat.enemyHealth - damage);
+            
+            if (type === 'emptyPalm') {
+                // LORE-ACCURATE EMPTY PALM - No damage, pure disruption
+                if (game.player.madra >= 30) {
+                    game.player.madra -= 30;
+                    
+                    // Calculate stun duration based on advancement
+                    let stunDuration = 500; // 0.5 seconds base
+                    if (game.player.advancement === 'Copper') stunDuration = 1000;
+                    if (game.player.advancement === 'Iron') stunDuration = 1500;
+                    if (game.player.advancement === 'Jade') stunDuration = 2000;
+                    if (game.player.advancement === 'Gold') stunDuration = 2500;
+                    
+                    // Apply disruption effects
+                    game.combat.enemyState = 'stunned';
+                    game.combat.enemyStunnedUntil = Date.now() + stunDuration;
+                    
+                    // Visual feedback
+                    flashScreen();
+                    createFloatingText('DISRUPTED!', game.combat.enemyX, game.combat.enemyY - 50);
+                    
+                    // Interrupt any enemy attack in progress
+                    if (game.combat.enemyState === 'attacking') {
+                        game.combat.enemyState = 'stunned';
+                    }
+                    
+                    // Drain enemy madra (if they have any)
+                    if (game.combat.enemyMadra !== undefined) {
+                        game.combat.enemyMadra = Math.max(0, game.combat.enemyMadra - 20);
+                    }
+                    
+                    // Window of opportunity for follow-up
+                    game.combat.emptyPalmWindow = true;
+                    setTimeout(() => {
+                        game.combat.emptyPalmWindow = false;
+                    }, stunDuration);
+                }
+            } else if (distance < 100) {
+                // Regular attacks do MORE damage during Empty Palm stun window
+                let finalDamage = damage;
+                if (game.combat.emptyPalmWindow) {
+                    finalDamage = Math.floor(damage * 1.5); // 50% more damage
+                    createFloatingText('CRITICAL!', game.combat.enemyX, game.combat.enemyY - 80);
+                }
+                
+                game.combat.enemyHealth = Math.max(0, game.combat.enemyHealth - finalDamage);
                 game.combat.combo++;
                 game.combat.lastHit = Date.now();
                 
@@ -1135,17 +1422,16 @@
                 }
                 
                 screenShake();
-                createFloatingText(damage + ' DMG', game.combat.enemyX, game.combat.enemyY - 50);
-                
-                if (type === 'emptyPalm') {
-                    flashScreen();
-                }
+                createFloatingText(finalDamage + ' DMG', game.combat.enemyX, game.combat.enemyY - 50);
             }
         }
 
         // End combat
         function endCombat(victory) {
-            game.mode = 'exploration';
+            // Store current mode before changing
+            const wasInTutorial = game.mode === 'tutorial';
+            
+            game.mode = wasInTutorial ? 'tutorial' : 'exploration';
             document.getElementById('explorationInstructions').style.display = 'block';
             document.getElementById('combatInstructions').style.display = 'none';
             document.getElementById('ui').style.display = 'block';
@@ -1159,13 +1445,28 @@
             }
             
             if (victory) {
-                game.player.combatWins++;
-                game.player.madraCollected += 50;
-                game.player.health = Math.min(game.player.maxHealth, game.player.health + 20);
-                showDialogue("Victory! You've gained strength from combat.");
-                checkAdvancement();
-                // Auto-save after victory
-                saveGame();
+                // Check if this was a tournament battle
+                if (wasInTutorial && game.combat.currentOpponent) {
+                    const round = game.tournament.round;
+                    showDialogue(`Victory against ${game.combat.currentOpponent.name}!`, "Wei Mon Keth");
+                    
+                    setTimeout(() => {
+                        if (round + 1 < game.tournament.opponents.length) {
+                            startTournamentBattle(round + 1);
+                        }
+                    }, 3000);
+                } else {
+                    // Normal combat victory
+                    game.player.combatWins++;
+                    game.player.madraCollected += 50;
+                    game.player.health = Math.min(game.player.maxHealth, game.player.health + 20);
+                    showDialogue("Victory! You've gained strength from combat.");
+                    checkAdvancement();
+                    // Auto-save after victory
+                    if (typeof saveGame === 'function') {
+                        saveGame();
+                    }
+                }
             } else {
                 game.player.health = game.player.maxHealth;
                 game.player.x = 400;
@@ -1371,6 +1672,24 @@
             ctx.fillStyle = '#fdbcb4';
             ctx.fillRect(-15, -75, 30, 25);
             
+            // Stun effect visual
+            if (game.combat.enemyState === 'stunned') {
+                ctx.strokeStyle = '#00ccff';
+                ctx.lineWidth = 3;
+                ctx.globalAlpha = 0.5 + Math.sin(Date.now() * 0.01) * 0.3;
+                ctx.strokeRect(-25, -80, 50, 80);
+                ctx.globalAlpha = 1;
+                
+                // Disruption particles
+                for (let i = 0; i < 3; i++) {
+                    const angle = (Date.now() * 0.01 + i * 2) % (Math.PI * 2);
+                    const x = Math.cos(angle) * 30;
+                    const y = Math.sin(angle) * 30 - 40;
+                    ctx.fillStyle = '#00ccff';
+                    ctx.fillRect(x - 2, y - 2, 4, 4);
+                }
+            }
+            
             // Attack effect
             if (game.combat.enemyState === 'attacking') {
                 ctx.fillStyle = 'rgba(255, 0, 0, 0.8)';
@@ -1391,15 +1710,114 @@
             document.getElementById('winCount').textContent = game.player.combatWins;
         }
 
-        function showDialogue(text) {
-            const dialogue = document.getElementById('dialogue');
-            dialogue.textContent = text;
-            dialogue.style.display = 'block';
+        // Dialogue system
+        function showDialogue(text, speaker = '') {
+            if (!game.dialogue) {
+                game.dialogue = {
+                    active: false,
+                    speaker: '',
+                    text: '',
+                    queue: [],
+                    choices: null
+                };
+            }
+            
+            game.dialogue.active = true;
+            game.dialogue.text = text;
+            game.dialogue.speaker = speaker;
+            game.paused = true;
+            
+            const dialogueDiv = document.getElementById('dialogue');
+            if (dialogueDiv) {
+                dialogueDiv.innerHTML = speaker ? `<strong>${speaker}:</strong> ${text}` : text;
+                dialogueDiv.style.display = 'block';
+            }
+        }
+        
+        function hideDialogue() {
+            if (game.dialogue) {
+                game.dialogue.active = false;
+            }
+            game.paused = false;
+            const dialogueDiv = document.getElementById('dialogue');
+            if (dialogueDiv) {
+                dialogueDiv.style.display = 'none';
+            }
+        }
+        
+        function showPathChoice() {
+            const choices = `
+                <div style="text-align: center;">
+                    <h3>Choose Your Sacred Valley Path</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                        <button onclick="choosePath('emptyPalm')" style="padding: 20px; cursor: pointer; background: #222; border: 2px solid #00ff88; color: white;">
+                            <strong>Empty Palm</strong><br>
+                            Pure madra disruption<br>
+                            <small>Wei Clan foundation</small>
+                        </button>
+                        <button onclick="choosePath('whiteFox')" style="padding: 20px; cursor: pointer; background: #222; border: 2px solid #ff69b4; color: white;">
+                            <strong>White Fox</strong><br>
+                            Illusion and deception<br>
+                            <small>Wei Clan dream path</small>
+                        </button>
+                        <button onclick="choosePath('ironHeart')" style="padding: 20px; cursor: pointer; background: #222; border: 2px solid #888; color: white;">
+                            <strong>Iron Heart</strong><br>
+                            Body reinforcement<br>
+                            <small>Kazan Clan strength</small>
+                        </button>
+                        <button onclick="choosePath('fallenLeaf')" style="padding: 20px; cursor: pointer; background: #222; border: 2px solid #8b4513; color: white;">
+                            <strong>Fallen Leaf</strong><br>
+                            Speed and stealth<br>
+                            <small>Li Clan movement</small>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            const dialogueDiv = document.getElementById('dialogue');
+            dialogueDiv.innerHTML = choices;
+            dialogueDiv.style.display = 'block';
+            dialogueDiv.style.maxWidth = '800px';
+            game.paused = true;
+        }
+        
+        function choosePath(path) {
+            game.player.path = path;
+            
+            // Update player based on path
+            switch(path) {
+                case 'emptyPalm':
+                    game.player.techniques = ['emptyPalm'];
+                    showDialogue("You continue on the Path of Empty Palm. Pure madra is your weapon.", "Wei Instructor");
+                    break;
+                case 'whiteFox':
+                    game.player.techniques = ['foxDream'];
+                    game.player.name = 'Wei Shi Student';
+                    showDialogue("You've chosen the White Fox path. Deception and illusion will be your tools.", "Wei Instructor");
+                    break;
+                case 'ironHeart':
+                    game.player.techniques = ['ironBody'];
+                    game.player.name = 'Kazan Student';
+                    game.player.maxHealth = 150;
+                    game.player.health = 150;
+                    showDialogue("The Iron Heart path strengthens your body beyond normal limits.", "Kazan Instructor");
+                    break;
+                case 'fallenLeaf':
+                    game.player.techniques = ['leafStep'];
+                    game.player.name = 'Li Student';
+                    game.player.speed = 5;
+                    showDialogue("The Fallen Leaf path grants speed and grace in movement.", "Li Instructor");
+                    break;
+            }
             
             setTimeout(() => {
-                dialogue.style.display = 'none';
+                hideDialogue();
+                progressTutorial();
             }, 3000);
         }
+        
+        // Make choosePath global
+        window.choosePath = choosePath;
 
         function createFloatingText(text, x, y) {
             const div = document.createElement('div');
@@ -1431,11 +1849,11 @@
         function gameLoop() {
             // Skip updates if paused
             if (!game.paused) {
-                // Update
-                if (game.mode === 'exploration') {
+                // Update based on game mode
+                if (game.mode === 'tutorial' || game.mode === 'exploration') {
                     updateExploration();
                     autoSave(); // Check for auto-save
-                } else {
+                } else if (game.mode === 'combat') {
                     updateCombat();
                 }
                 
@@ -1486,9 +1904,14 @@
         game.lastSaveTime = Date.now();
         gameLoop();
         
-        // Initial dialogue
+        // Initial dialogue for tutorial
         setTimeout(() => {
-            if (saveMethod === 'memory') {
+            if (game.mode === 'tutorial') {
+                showDialogue("Welcome to Sacred Valley, little brother. The Seven-Year Festival approaches.", "Wei Shi Kelsa");
+                setTimeout(() => {
+                    showDialogue("First, practice your Empty Palm technique on the training dummy. Press SPACE near it.", "Wei Shi Kelsa");
+                }, 4000);
+            } else if (saveMethod === 'memory') {
                 showDialogue("Note: Browser storage blocked. Saves are temporary - download to keep them!");
             } else {
                 showDialogue("Welcome to Sacred Valley. Prove yourself worthy of advancement!");
