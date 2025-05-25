@@ -332,17 +332,50 @@
 
         <div id="instructions">
             <div id="explorationInstructions">
-                WASD/Arrows - Move<br>
-                SPACE - Interact<br>
-                F5 - Save | F9 - Load<br>
-                M - Save Menu<br>
-                <span style="color: #00ff88;">C - Full Controls</span>
+                <div class="control-line">
+                    <span>Move:</span>
+                    <span class="key">WASD/Arrows</span>
+                </div>
+                <div class="control-line">
+                    <span>Interact:</span>
+                    <span class="key">SPACE</span>
+                </div>
+                <div class="control-line">
+                    <span>Save:</span>
+                    <span class="key">F5</span>
+                </div>
+                <div class="control-line">
+                    <span>Load:</span>
+                    <span class="key">F9</span>
+                </div>
+                <div class="control-line">
+                    <span>Save Menu:</span>
+                    <span class="key">M</span>
+                </div>
+                <div class="help-reminder">Press ? for Full Help</div>
             </div>
             <div id="combatInstructions" style="display: none">
-                A/D - Move Left/Right<br>
-                J - Punch | K - Kick<br>
-                L - Block | SPACE - Empty Palm<br>
-                <span style="color: #00ff88;">C - Full Controls</span>
+                <div class="control-line">
+                    <span>Move:</span>
+                    <span class="key">A/D</span>
+                </div>
+                <div class="control-line">
+                    <span>Punch:</span>
+                    <span class="key">J</span>
+                </div>
+                <div class="control-line">
+                    <span>Kick:</span>
+                    <span class="key">K</span>
+                </div>
+                <div class="control-line">
+                    <span>Block:</span>
+                    <span class="key">L (Hold)</span>
+                </div>
+                <div class="control-line">
+                    <span>Empty Palm:</span>
+                    <span class="key">SPACE</span>
+                </div>
+                <div class="help-reminder">Press ? for Full Help</div>
             </div>
         </div>
         
@@ -2046,17 +2079,36 @@
             const container = document.getElementById('gameContainer');
             
             if (!document.fullscreenElement) {
-                container.requestFullscreen().then(() => {
-                    document.getElementById('fullscreenBtn').textContent = '⛶ Exit Fullscreen';
-                    resizeCanvas();
-                }).catch(err => {
-                    console.error('Error entering fullscreen:', err);
-                });
+                // Try multiple methods for better compatibility
+                const requestFullscreen = container.requestFullscreen || 
+                                        container.mozRequestFullScreen || 
+                                        container.webkitRequestFullscreen || 
+                                        container.msRequestFullscreen;
+                
+                if (requestFullscreen) {
+                    requestFullscreen.call(container).then(() => {
+                        document.getElementById('fullscreenBtn').textContent = '⛶ Exit Fullscreen';
+                        resizeCanvas();
+                    }).catch(err => {
+                        // Silently fail or show user-friendly message
+                        console.log('Fullscreen not available in this environment');
+                        // Optionally hide the fullscreen button if not supported
+                        const btn = document.getElementById('fullscreenBtn');
+                        if (btn) btn.style.display = 'none';
+                    });
+                }
             } else {
-                document.exitFullscreen().then(() => {
-                    document.getElementById('fullscreenBtn').textContent = '⛶ Fullscreen';
-                    resizeCanvas();
-                });
+                const exitFullscreen = document.exitFullscreen || 
+                                     document.mozCancelFullScreen || 
+                                     document.webkitExitFullscreen || 
+                                     document.msExitFullscreen;
+                
+                if (exitFullscreen) {
+                    exitFullscreen.call(document).then(() => {
+                        document.getElementById('fullscreenBtn').textContent = '⛶ Fullscreen';
+                        resizeCanvas();
+                    });
+                }
             }
         }
         
@@ -2116,6 +2168,21 @@
             initializeMobileControls();
         }
         
+        // Show quick help on first load (define function before calling)
+        let helpShown = false;
+        window.showQuickHelp = function() {
+            if (!helpShown) {
+                const quickHelp = document.getElementById('quickHelp');
+                if (quickHelp) {
+                    quickHelp.style.display = 'block';
+                    setTimeout(() => {
+                        quickHelp.style.display = 'none';
+                    }, 5000);
+                    helpShown = true;
+                }
+            }
+        };
+        
         // Try to load save on start
         if (saveMethod !== 'none' && getSaveInfo(1)) {
             const shouldLoad = confirm("Save file found! Load your progress?");
@@ -2139,6 +2206,9 @@
             } else {
                 showDialogue("Welcome to Sacred Valley. Prove yourself worthy of advancement!");
             }
+            
+            // Show quick help hint
+            window.showQuickHelp();
         }, 1000);
         
         // Mobile control functions
