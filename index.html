@@ -146,14 +146,107 @@
             pointer-events: none;
         }
 
-        #instructions {
+        #mobileControls {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
-            color: #aaa;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            pointer-events: none;
+            display: none;
+        }
+        
+        .touch-zone {
+            position: absolute;
+            pointer-events: auto;
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+        
+        .touch-zone:active {
+            opacity: 0.6;
+        }
+        
+        #virtualJoystick {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            width: 120px;
+            height: 120px;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        #joystickKnob {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: none;
+            pointer-events: none;
+        }
+        
+        .action-button {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
             font-size: 12px;
-            text-align: right;
-            text-shadow: 1px 1px 0px black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 black;
+        }
+        
+        #actionA {
+            bottom: 100px;
+            right: 140px;
+        }
+        
+        #actionB {
+            bottom: 50px;
+            right: 80px;
+        }
+        
+        #actionSpecial {
+            bottom: 150px;
+            right: 80px;
+            background: rgba(0, 100, 255, 0.3);
+        }
+        
+        #combatMoveLeft {
+            bottom: 50px;
+            left: 50px;
+            width: 80px;
+            height: 80px;
+        }
+        
+        #combatMoveRight {
+            bottom: 50px;
+            left: 150px;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .mobile-instructions {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+            font-size: 14px;
+            text-shadow: 2px 2px 0 black;
+            pointer-events: none;
         }
 
         #advancementNotice {
@@ -229,6 +322,28 @@
                 J - Punch | K - Kick<br>
                 L - Block | SPACE - Empty Palm<br>
                 Build combos! Use madra wisely!
+            </div>
+        </div>
+        
+        <!-- Mobile Controls -->
+        <div id="mobileControls">
+            <!-- Exploration Controls -->
+            <div id="explorationControls">
+                <div id="virtualJoystick" class="touch-zone">
+                    <div id="joystickKnob"></div>
+                </div>
+                <div id="actionA" class="action-button touch-zone">Talk</div>
+                <div class="mobile-instructions">Move: Left side | Interact: Right side</div>
+            </div>
+            
+            <!-- Combat Controls -->
+            <div id="combatControls" style="display: none;">
+                <div id="combatMoveLeft" class="action-button touch-zone">←</div>
+                <div id="combatMoveRight" class="action-button touch-zone">→</div>
+                <div id="actionB" class="action-button touch-zone">Punch</div>
+                <div id="actionA" class="action-button touch-zone">Kick</div>
+                <div id="actionSpecial" class="action-button touch-zone">Palm</div>
+                <div class="mobile-instructions">Tap buttons to fight!</div>
             </div>
         </div>
         
@@ -529,6 +644,19 @@
 
         // Input handling
         const keys = {};
+        const touches = {
+            startX: 0,
+            startY: 0,
+            currentX: 0,
+            currentY: 0,
+            isMoving: false,
+            joystickActive: false
+        };
+        
+        // Detect if mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Keyboard events
         window.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
             
@@ -559,6 +687,118 @@
             keys[e.key.toLowerCase()] = false;
             e.preventDefault();
         });
+        
+        // Touch events
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+        
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            touches.startX = x;
+            touches.startY = y;
+            touches.currentX = x;
+            touches.currentY = y;
+            
+            if (game.mode === 'exploration') {
+                // Check if touch is in movement area (left side of screen)
+                if (x < canvas.width / 3) {
+                    touches.joystickActive = true;
+                    touches.isMoving = true;
+                }
+                // Right side for interaction
+                else if (x > canvas.width * 2/3) {
+                    // Simulate space key for interaction
+                    keys[' '] = true;
+                    setTimeout(() => keys[' '] = false, 100);
+                }
+            } else if (game.mode === 'combat') {
+                // Combat touch zones
+                if (x < canvas.width / 4) {
+                    // Left movement
+                    keys['a'] = true;
+                } else if (x > canvas.width * 3/4) {
+                    // Right movement
+                    keys['d'] = true;
+                } else if (y < canvas.height / 2) {
+                    // Upper middle - Empty Palm
+                    keys[' '] = true;
+                } else {
+                    // Lower middle - Attack
+                    if (x < canvas.width / 2) {
+                        keys['j'] = true; // Punch
+                    } else {
+                        keys['k'] = true; // Kick
+                    }
+                }
+            }
+        }
+        
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!touches.isMoving) return;
+            
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            touches.currentX = touch.clientX - rect.left;
+            touches.currentY = touch.clientY - rect.top;
+            
+            if (touches.joystickActive && game.mode === 'exploration') {
+                // Calculate direction from start point
+                const dx = touches.currentX - touches.startX;
+                const dy = touches.currentY - touches.startY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Reset all directions
+                keys['w'] = keys['s'] = keys['a'] = keys['d'] = false;
+                
+                if (distance > 20) { // Dead zone
+                    const angle = Math.atan2(dy, dx);
+                    
+                    // Convert angle to 8-way direction
+                    if (angle > -Math.PI/8 && angle <= Math.PI/8) {
+                        keys['d'] = true; // Right
+                    } else if (angle > Math.PI/8 && angle <= 3*Math.PI/8) {
+                        keys['d'] = true;
+                        keys['s'] = true; // Down-Right
+                    } else if (angle > 3*Math.PI/8 && angle <= 5*Math.PI/8) {
+                        keys['s'] = true; // Down
+                    } else if (angle > 5*Math.PI/8 && angle <= 7*Math.PI/8) {
+                        keys['a'] = true;
+                        keys['s'] = true; // Down-Left
+                    } else if (angle > 7*Math.PI/8 || angle <= -7*Math.PI/8) {
+                        keys['a'] = true; // Left
+                    } else if (angle > -7*Math.PI/8 && angle <= -5*Math.PI/8) {
+                        keys['a'] = true;
+                        keys['w'] = true; // Up-Left
+                    } else if (angle > -5*Math.PI/8 && angle <= -3*Math.PI/8) {
+                        keys['w'] = true; // Up
+                    } else if (angle > -3*Math.PI/8 && angle <= -Math.PI/8) {
+                        keys['d'] = true;
+                        keys['w'] = true; // Up-Right
+                    }
+                }
+            }
+        }
+        
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            touches.isMoving = false;
+            touches.joystickActive = false;
+            
+            // Clear all movement keys
+            if (game.mode === 'exploration') {
+                keys['w'] = keys['s'] = keys['a'] = keys['d'] = false;
+            } else if (game.mode === 'combat') {
+                // Clear combat keys
+                keys['a'] = keys['d'] = keys['j'] = keys['k'] = keys[' '] = false;
+            }
+        }
 
         // Save Menu Functions
         function openSaveMenu() {
@@ -793,6 +1033,12 @@
             document.getElementById('combatUI').style.display = 'block';
             document.getElementById('enemyName').textContent = enemy.enemyType.toUpperCase();
             
+            // Switch mobile controls
+            if (isMobile) {
+                document.getElementById('explorationControls').style.display = 'none';
+                document.getElementById('combatControls').style.display = 'block';
+            }
+            
             flashScreen();
             
             // Remove enemy from world after combat starts
@@ -905,6 +1151,12 @@
             document.getElementById('ui').style.display = 'block';
             document.getElementById('combatUI').style.display = 'none';
             document.getElementById('comboCounter').style.display = 'none';
+            
+            // Switch mobile controls back
+            if (isMobile) {
+                document.getElementById('explorationControls').style.display = 'block';
+                document.getElementById('combatControls').style.display = 'none';
+            }
             
             if (victory) {
                 game.player.combatWins++;
@@ -1216,6 +1468,13 @@
         testSaveMethod(); // Test which save method to use
         generateWorld();
         
+        // Initialize mobile controls
+        if (isMobile) {
+            document.getElementById('mobileControls').style.display = 'block';
+            document.getElementById('instructions').style.display = 'none';
+            initializeMobileControls();
+        }
+        
         // Try to load save on start
         if (saveMethod !== 'none' && getSaveInfo(1)) {
             const shouldLoad = confirm("Save file found! Load your progress?");
@@ -1235,6 +1494,131 @@
                 showDialogue("Welcome to Sacred Valley. Prove yourself worthy of advancement!");
             }
         }, 1000);
+        
+        // Mobile control functions
+        function initializeMobileControls() {
+            // Virtual joystick for exploration
+            const joystick = document.getElementById('virtualJoystick');
+            const knob = document.getElementById('joystickKnob');
+            
+            joystick.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = joystick.getBoundingClientRect();
+                touches.joystickActive = true;
+                touches.startX = rect.left + rect.width / 2;
+                touches.startY = rect.top + rect.height / 2;
+                updateJoystick(touch.clientX, touch.clientY);
+            });
+            
+            joystick.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (touches.joystickActive) {
+                    const touch = e.touches[0];
+                    updateJoystick(touch.clientX, touch.clientY);
+                }
+            });
+            
+            joystick.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                touches.joystickActive = false;
+                knob.style.transform = 'translate(-50%, -50%)';
+                keys['w'] = keys['s'] = keys['a'] = keys['d'] = false;
+            });
+            
+            // Action buttons
+            document.getElementById('actionA').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keys[' '] = true;
+            });
+            
+            document.getElementById('actionA').addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keys[' '] = false;
+            });
+            
+            // Combat buttons
+            document.getElementById('combatMoveLeft').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keys['a'] = true;
+            });
+            
+            document.getElementById('combatMoveLeft').addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keys['a'] = false;
+            });
+            
+            document.getElementById('combatMoveRight').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keys['d'] = true;
+            });
+            
+            document.getElementById('combatMoveRight').addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keys['d'] = false;
+            });
+            
+            document.getElementById('actionB').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keys['j'] = true;
+            });
+            
+            document.getElementById('actionB').addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keys['j'] = false;
+            });
+            
+            document.getElementById('actionSpecial').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keys[' '] = true;
+            });
+            
+            document.getElementById('actionSpecial').addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keys[' '] = false;
+            });
+        }
+        
+        function updateJoystick(touchX, touchY) {
+            const joystick = document.getElementById('virtualJoystick');
+            const knob = document.getElementById('joystickKnob');
+            const rect = joystick.getBoundingClientRect();
+            
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const dx = touchX - centerX;
+            const dy = touchY - centerY;
+            
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const maxDistance = rect.width / 2 - 20;
+            
+            let knobX = dx;
+            let knobY = dy;
+            
+            if (distance > maxDistance) {
+                knobX = (dx / distance) * maxDistance;
+                knobY = (dy / distance) * maxDistance;
+            }
+            
+            knob.style.transform = `translate(calc(-50% + ${knobX}px), calc(-50% + ${knobY}px))`;
+            
+            // Update movement keys
+            keys['w'] = keys['s'] = keys['a'] = keys['d'] = false;
+            
+            if (distance > 20) {
+                const angle = Math.atan2(dy, dx);
+                
+                if (angle > -Math.PI/4 && angle <= Math.PI/4) {
+                    keys['d'] = true;
+                } else if (angle > Math.PI/4 && angle <= 3*Math.PI/4) {
+                    keys['s'] = true;
+                } else if (angle > 3*Math.PI/4 || angle <= -3*Math.PI/4) {
+                    keys['a'] = true;
+                } else {
+                    keys['w'] = true;
+                }
+            }
+        }
     </script>
 </body>
 </html>
