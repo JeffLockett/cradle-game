@@ -1,4 +1,8 @@
-// PIN input keyboard support
+// Close dialogue on tap while it's showing
+            if (game.dialogue && game.dialogue.active) {
+                hideDialogue();
+                return; // Don't process other inputs
+            }            // PIN input keyboard support
             if (document.getElementById('devLoginModal').style.display === 'block') {
                 const input = document.getElementById('pinInput');
                 if (e.key >= '0' && e.key <= '9' && input.value.length < 4) {
@@ -529,7 +533,7 @@
 
         #dialogue {
             position: absolute;
-            bottom: 80px;
+            bottom: 200px;  /* Raised from 80px to avoid controls */
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.95);
@@ -543,6 +547,16 @@
             font-size: 16px;
             z-index: 500;
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            pointer-events: none;  /* Allow touch to pass through */
+        }
+        
+        @media (max-width: 768px) {
+            #dialogue {
+                bottom: 250px;  /* Even higher on mobile */
+                max-width: 90%;
+                font-size: 14px;
+                padding: 10px 15px;
+            }
         }
 
         .floatingText {
@@ -574,13 +588,14 @@
         }
 
         #mobileControls {
-            position: absolute;
+            position: fixed;  /* Changed from absolute to fixed */
             bottom: 0;
             left: 0;
             right: 0;
             top: 0;
             pointer-events: none;
             display: none;
+            z-index: 1000;  /* Ensure controls are above other elements */
         }
         
         .touch-zone {
@@ -588,6 +603,8 @@
             pointer-events: auto;
             opacity: 0.3;
             transition: opacity 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;  /* Prevent delays */
         }
         
         .touch-zone:active {
@@ -2305,12 +2322,25 @@
         canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
         canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
         
+        // Also add touch listeners to the game container for better coverage
+        document.getElementById('gameContainer').addEventListener('touchstart', function(e) {
+            if (e.target.classList.contains('touch-zone')) {
+                return; // Let the touch zone handle it
+            }
+            handleTouchStart(e);
+        }, { passive: false });
+        
         function handleTouchStart(e) {
+            // Don't handle if touching a UI button
+            if (e.target.classList && e.target.classList.contains('touch-zone')) {
+                return;
+            }
+            
             e.preventDefault();
             const touch = e.touches[0];
             const rect = canvas.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
+            const x = (touch.clientX - rect.left) / (rect.width / canvas.width);
+            const y = (touch.clientY - rect.top) / (rect.height / canvas.height);
             
             touches.startX = x;
             touches.startY = y;
@@ -2349,8 +2379,8 @@
             
             const touch = e.touches[0];
             const rect = canvas.getBoundingClientRect();
-            touches.currentX = touch.clientX - rect.left;
-            touches.currentY = touch.clientY - rect.top;
+            touches.currentX = (touch.clientX - rect.left) / (rect.width / canvas.width);
+            touches.currentY = (touch.clientY - rect.top) / (rect.height / canvas.height);
             
             if (touches.joystickActive && game.mode === 'exploration') {
                 const dx = touches.currentX - touches.startX;
@@ -3292,6 +3322,15 @@
             if (dialogueDiv) {
                 dialogueDiv.innerHTML = speaker ? `<strong>${speaker}:</strong> ${text}` : text;
                 dialogueDiv.style.display = 'block';
+                
+                // Auto-hide dialogue after 5 seconds on mobile
+                if (isMobile) {
+                    setTimeout(() => {
+                        if (game.dialogue && game.dialogue.active) {
+                            hideDialogue();
+                        }
+                    }, 5000);
+                }
             }
         }
         
