@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cradle Adventure: Path of Sacred Valley</title>
+    <title>Cradle Adventure: Sacred Valley - Dev Master Edition</title>
     <style>
         body {
             margin: 0;
@@ -44,10 +44,404 @@
             object-fit: contain;
         }
 
+        /* DEV TRACKER INTEGRATION */
+        #devTracker {
+            position: fixed;
+            top: 0;
+            left: -400px;
+            width: 400px;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0f1f 100%);
+            border-right: 3px solid #00ff88;
+            transition: left 0.3s ease;
+            z-index: 2000;
+            overflow-y: auto;
+            color: white;
+            font-size: 12px;
+        }
+
+        #devTracker.open {
+            left: 0;
+        }
+
+        #trackerToggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 255, 136, 0.9);
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            z-index: 2001;
+            transition: all 0.3s ease;
+        }
+
+        #trackerToggle:hover {
+            background: #00ccff;
+            transform: scale(1.05);
+        }
+
+        #trackerToggle.active {
+            left: 420px;
+            background: #ff4444;
+            color: white;
+        }
+
+        .tracker-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .tracker-title {
+            font-size: 18px;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+
+        .dev-advancement-display {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 204, 255, 0.2));
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .dev-rank {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 5px;
+        }
+
+        .dev-path {
+            font-size: 14px;
+            color: #00ccff;
+            font-style: italic;
+        }
+
+        .xp-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #666;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00ccff, #00ff88);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+            transition: width 0.5s ease;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .xp-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .dev-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .quest-section {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quest-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .quest-title {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .quest-reward {
+            color: #ffd700;
+            font-size: 11px;
+        }
+
+        .quest-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .quest-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00ccff);
+            transition: width 0.5s ease;
+        }
+
+        .quest-objectives {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .quest-objective {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 0;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .quest-checkbox {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #00ff88;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .quest-checkbox.completed {
+            background: #00ff88;
+            color: black;
+            animation: questComplete 0.5s ease;
+        }
+
+        @keyframes questComplete {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .quest-checkbox.completed::after {
+            content: '✓';
+        }
+
+        .dev-techniques {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .technique-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .technique-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .technique-card:hover {
+            border-color: #00ff88;
+            transform: translateY(-2px);
+        }
+
+        .technique-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .technique-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .technique-name {
+            font-size: 10px;
+            color: #00ccff;
+        }
+
+        .technique-level {
+            font-size: 9px;
+            color: #666;
+        }
+
+        .live-feed {
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .feed-title {
+            color: #00ccff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .feed-live-indicator {
+            width: 6px;
+            height: 6px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        .feed-item {
+            padding: 8px;
+            margin: 5px 0;
+            border-left: 3px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0 3px 3px 0;
+            font-size: 11px;
+            transition: all 0.3s ease;
+            animation: feedItemSlide 0.5s ease;
+        }
+
+        @keyframes feedItemSlide {
+            from { 
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .feed-commit {
+            border-left-color: #00ff88;
+        }
+
+        .feed-issue {
+            border-left-color: #ff4444;
+        }
+
+        .feed-achievement {
+            border-left-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+            font-weight: bold;
+        }
+
+        .feed-merge {
+            border-left-color: #00ccff;
+        }
+
+        .github-sync {
+            padding: 15px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .sync-button {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .sync-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .sync-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .repo-input {
+            width: 100%;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #666;
+            border-radius: 3px;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        .sync-status {
+            font-size: 10px;
+            opacity: 0.8;
+            text-align: center;
+        }
+
+        /* GAME UI STYLES */
         #ui {
             position: absolute;
             top: 10px;
-            left: 10px;
+            right: 10px;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
             font-size: 14px;
@@ -278,10 +672,10 @@
             text-shadow: 3px 3px 0px #f00;
             display: none;
             text-align: center;
-            animation: pulse 1s ease-in-out infinite;
+            animation: advancePulse 1s ease-in-out infinite;
         }
 
-        @keyframes pulse {
+        @keyframes advancePulse {
             0%, 100% { transform: translate(-50%, -50%) scale(1); }
             50% { transform: translate(-50%, -50%) scale(1.1); }
         }
@@ -417,12 +811,193 @@
             z-index: 100;
             display: none;
         }
+
+        /* Dev Achievement Popup */
+        .dev-achievement-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            transform: translateX(400px);
+            transition: transform 0.5s ease;
+            z-index: 1500;
+            max-width: 300px;
+            font-size: 12px;
+        }
+
+        .dev-achievement-popup.show {
+            transform: translateX(0);
+        }
+
+        .xp-gain-effect {
+            position: fixed;
+            top: 50%;
+            left: 200px;
+            color: #ffd700;
+            font-size: 24px;
+            font-weight: bold;
+            pointer-events: none;
+            animation: xpBurst 2s ease-out forwards;
+            z-index: 1600;
+        }
+
+        @keyframes xpBurst {
+            0% {
+                opacity: 1;
+                transform: scale(0.5) translateY(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) translateY(-20px);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1) translateY(-40px);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #devTracker {
+                width: 100%;
+                left: -100%;
+            }
+
+            #devTracker.open {
+                left: 0;
+            }
+
+            #trackerToggle.active {
+                left: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
         
+        <!-- Dev Tracker Toggle Button -->
+        <button id="trackerToggle" onclick="toggleDevTracker()">📊 Dev Path</button>
+        
+        <!-- Integrated Dev Tracker Panel -->
+        <div id="devTracker">
+            <div class="tracker-header">
+                <div class="tracker-title">Sacred Artist Developer Journey</div>
+                <div class="dev-advancement-display">
+                    <div class="dev-rank" id="devRank">Iron Body</div>
+                    <div class="dev-path" id="devPath">Path of the Script Lord</div>
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="devXPFill" style="width: 65%;"></div>
+                        <div class="xp-text"><span id="devXP">650</span> / <span id="devMaxXP">1000</span> XP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dev-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCommits">247</div>
+                    <div class="stat-label">Commits</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="devStreak">12</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="bugsFoxed">34</div>
+                    <div class="stat-label">Bugs Fixed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="featuresShipped">8</div>
+                    <div class="stat-label">Features</div>
+                </div>
+            </div>
+
+            <div class="quest-section">
+                <div class="quest-header">
+                    <div class="quest-title">🎯 Mobile Combat Perfection</div>
+                    <div class="quest-reward">+200 XP</div>
+                </div>
+                <div class="quest-progress">
+                    <div class="quest-progress-fill" id="currentQuestProgress" style="width: 40%;"></div>
+                </div>
+                <ul class="quest-objectives">
+                    <li class="quest-objective">
+                        <div class="quest-checkbox completed"></div>
+                        <span>Fix joystick drift on touch release</span>
+                    </li>
+                    <li class="quest-objective">
+                        <div class="quest-checkbox completed"></div>
+                        <span>Add smooth knob return animation</span>
+                    </li>
+                    <li class="quest-objective">
+                        <div class="quest-checkbox"></div>
+                        <span>Implement haptic feedback for attacks</span>
+                    </li>
+                    <li class="quest-objective">
+                        <div class="quest-checkbox"></div>
+                        <span>Add gesture-based special moves</span>
+                    </li>
+                    <li class="quest-objective">
+                        <div class="quest-checkbox"></div>
+                        <span>Test on 5 different mobile devices</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="dev-techniques">
+                <div class="feed-title">Developer Techniques</div>
+                <div class="technique-grid">
+                    <div class="technique-card">
+                        <div class="technique-icon">🔧</div>
+                        <div class="technique-name">Refactor Palm</div>
+                        <div class="technique-level">Level 3</div>
+                    </div>
+                    <div class="technique-card">
+                        <div class="technique-icon">🐛</div>
+                        <div class="technique-name">Bug Crusher</div>
+                        <div class="technique-level">Level 5</div>
+                    </div>
+                    <div class="technique-card">
+                        <div class="technique-icon">🚀</div>
+                        <div class="technique-name">Deploy Strike</div>
+                        <div class="technique-level">Level 2</div>
+                    </div>
+                    <div class="technique-card locked">
+                        <div class="technique-icon">🔥</div>
+                        <div class="technique-name">Blackflame Optimization</div>
+                        <div class="technique-level">Locked</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="live-feed">
+                <div class="feed-title">
+                    <div class="feed-live-indicator"></div>
+                    Repository Activity Feed
+                </div>
+                <div id="devFeed">
+                    <div class="feed-item feed-achievement">🏆 Achievement: Mobile Master - First responsive design!</div>
+                    <div class="feed-item feed-commit">✅ fix: Resolved joystick drift issue - +50 XP</div>
+                    <div class="feed-item feed-commit">✅ feat: Added smooth knob animations - +75 XP</div>
+                    <div class="feed-item feed-merge">🔀 Merged PR #42: Mobile controls overhaul</div>
+                    <div class="feed-item feed-issue">🐛 Issue #43: Investigate combat button lag</div>
+                </div>
+            </div>
+
+            <div class="github-sync">
+                <input type="text" id="repoInput" class="repo-input" placeholder="username/repository-name" value="">
+                <button class="sync-button" onclick="connectToGitHub()" id="syncButton">🔗 Connect Sacred Repository</button>
+                <button class="sync-button" onclick="syncNow()" id="manualSync" disabled>🔄 Force Madra Sync</button>
+                <div class="sync-status" id="syncStatus">Repository disconnected</div>
+            </div>
+        </div>
+        
+        <!-- Game UI -->
         <button id="fullscreenBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
         
         <div id="ui">
@@ -473,16 +1048,16 @@
                     <span class="key">SPACE</span>
                 </div>
                 <div class="control-line">
+                    <span>Dev Panel:</span>
+                    <span class="key">T</span>
+                </div>
+                <div class="control-line">
                     <span>Save:</span>
                     <span class="key">F5</span>
                 </div>
                 <div class="control-line">
                     <span>Load:</span>
                     <span class="key">F9</span>
-                </div>
-                <div class="control-line">
-                    <span>Save Menu:</span>
-                    <span class="key">M</span>
                 </div>
                 <div class="help-reminder">Press ? for Full Help</div>
             </div>
@@ -514,7 +1089,7 @@
         <button id="controlsToggle" onclick="toggleControls()">Controls (C)</button>
         
         <div class="controls-hint" id="controlsHint">
-            Press C for Controls
+            Press C for Controls | T for Dev Tracker
         </div>
         
         <div id="fullControls">
@@ -576,6 +1151,10 @@
                     <span class="control-key">M</span>
                 </div>
                 <div class="control-item">
+                    <span>Dev Tracker</span>
+                    <span class="control-key">T</span>
+                </div>
+                <div class="control-item">
                     <span>Toggle Controls</span>
                     <span class="control-key">C</span>
                 </div>
@@ -586,7 +1165,7 @@
             </div>
             
             <div style="text-align: center; margin-top: 20px; color: #00ff88;">
-                <em>"The dragon advances through understanding."</em>
+                <em>"The dragon advances through understanding and debugging."</em>
             </div>
         </div>
         
@@ -618,11 +1197,518 @@
         </div>
     </div>
 
+    <!-- Dev Achievement Popup -->
+    <div class="dev-achievement-popup" id="devAchievementPopup">
+        <div style="color: #ffd700; font-weight: bold; margin-bottom: 5px;">🏆 Development Achievement!</div>
+        <div id="devAchievementText">New milestone reached!</div>
+    </div>
+
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         ctx.imageSmoothingEnabled = false;
         
+        // DEV TRACKER INTEGRATION
+        class DevTracker {
+            constructor() {
+                this.isOpen = false;
+                this.githubConnected = false;
+                this.repoData = null;
+                this.syncInterval = null;
+                
+                // Developer progression data
+                this.devData = {
+                    advancement: 'Iron',
+                    path: 'Path of the Script Lord',
+                    xp: 650,
+                    maxXP: 1000,
+                    totalCommits: 247,
+                    streak: 12,
+                    bugsFoxed: 34,
+                    featuresShipped: 8,
+                    techniques: {
+                        refactorPalm: 3,
+                        bugCrusher: 5,
+                        deployStrike: 2,
+                        blackflameOptimization: 0
+                    }
+                };
+                
+                this.questData = {
+                    current: 'Mobile Combat Perfection',
+                    objectives: [
+                        { text: 'Fix joystick drift on touch release', completed: true },
+                        { text: 'Add smooth knob return animation', completed: true },
+                        { text: 'Implement haptic feedback for attacks', completed: false },
+                        { text: 'Add gesture-based special moves', completed: false },
+                        { text: 'Test on 5 different mobile devices', completed: false }
+                    ],
+                    xpReward: 200
+                };
+                
+                this.devAdvancements = [
+                    { name: 'Copper', xp: 100, title: 'Apprentice Coder' },
+                    { name: 'Iron', xp: 500, title: 'Script Lord' },
+                    { name: 'Jade', xp: 1500, title: 'Bug Sage' },
+                    { name: 'Gold', xp: 3000, title: 'Deploy Master' },
+                    { name: 'Underlord', xp: 6000, title: 'Code Underlord' },
+                    { name: 'Overlord', xp: 12000, title: 'Architecture Overlord' },
+                    { name: 'Archlord', xp: 25000, title: 'System Archlord' },
+                    { name: 'Sage', xp: 50000, title: 'Code Sage' },
+                    { name: 'Herald', xp: 100000, title: 'Bug Herald' },
+                    { name: 'Monarch', xp: 200000, title: 'Tech Monarch' }
+                ];
+                
+                this.initializeTracker();
+            }
+
+            initializeTracker() {
+                this.loadDevProgress();
+                this.startPeriodicSync();
+                this.setupEventListeners();
+                this.updateUI();
+            }
+
+            loadDevProgress() {
+                try {
+                    if (saveMethod === 'localStorage') {
+                        const saved = localStorage.getItem('devProgress');
+                        if (saved) {
+                            const data = JSON.parse(saved);
+                            Object.assign(this.devData, data.devData || {});
+                            Object.assign(this.questData, data.questData || {});
+                        }
+                    } else {
+                        // Use memory storage fallback
+                        const saved = memorySaves['devProgress'];
+                        if (saved) {
+                            const data = JSON.parse(saved);
+                            Object.assign(this.devData, data.devData || {});
+                            Object.assign(this.questData, data.questData || {});
+                        }
+                    }
+                } catch (e) {
+                    console.log('Could not load dev progress:', e.message);
+                }
+            }
+
+            saveDevProgress() {
+                try {
+                    const data = JSON.stringify({
+                        devData: this.devData,
+                        questData: this.questData
+                    });
+                    
+                    if (saveMethod === 'localStorage') {
+                        localStorage.setItem('devProgress', data);
+                    } else {
+                        memorySaves['devProgress'] = data;
+                    }
+                } catch (e) {
+                    console.log('Could not save dev progress:', e.message);
+                }
+            }
+
+            setupEventListeners() {
+                // Listen for game events
+                document.addEventListener('gameProgress', (e) => {
+                    this.handleGameProgress(e.detail);
+                });
+                
+                // Listen for specific game milestones
+                document.addEventListener('playerAdvancement', (e) => {
+                    this.gainXP(100, `Player reached ${e.detail.level}!`);
+                });
+                
+                document.addEventListener('combatVictory', (e) => {
+                    this.devData.bugsFoxed++;
+                    this.gainXP(25, 'Combat system test complete!');
+                });
+                
+                document.addEventListener('madraCollected', (e) => {
+                    if (e.detail.total >= 100 && e.detail.total < 110) {
+                        this.gainXP(50, 'First 100 madra milestone!');
+                    }
+                });
+            }
+
+            toggle() {
+                this.isOpen = !this.isOpen;
+                const tracker = document.getElementById('devTracker');
+                const toggle = document.getElementById('trackerToggle');
+                
+                if (this.isOpen) {
+                    tracker.classList.add('open');
+                    toggle.classList.add('active');
+                    toggle.textContent = '✕ Close';
+                } else {
+                    tracker.classList.remove('open');
+                    toggle.classList.remove('active');
+                    toggle.textContent = '📊 Dev Path';
+                }
+            }
+
+            async connectToGitHub() {
+                const repoInput = document.getElementById('repoInput').value.trim();
+                if (!repoInput || !repoInput.includes('/')) {
+                    this.updateSyncStatus('Invalid repository format', 'error');
+                    return;
+                }
+
+                this.updateSyncStatus('Channeling GitHub madra...', 'connecting');
+                
+                try {
+                    const [owner, repo] = repoInput.split('/');
+                    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+                    
+                    if (response.ok) {
+                        this.repoData = await response.json();
+                        this.githubConnected = true;
+                        this.updateSyncStatus('Sacred repository connected!', 'success');
+                        
+                        document.getElementById('manualSync').disabled = false;
+                        await this.syncRepositoryData();
+                        
+                        this.showDevAchievement('Repository Bonded!', 'GitHub integration successful');
+                        this.gainXP(100, 'Connected to sacred repository');
+                        
+                    } else if (response.status === 404) {
+                        this.updateSyncStatus('Repository hidden in shadow', 'error');
+                    } else {
+                        this.updateSyncStatus('Connection severed - check your path', 'error');
+                    }
+                } catch (error) {
+                    console.error('GitHub connection error:', error);
+                    this.updateSyncStatus('Madra network disrupted', 'error');
+                }
+            }
+
+            async syncRepositoryData() {
+                if (!this.githubConnected || !this.repoData) return;
+
+                try {
+                    const [owner, repo] = [this.repoData.owner.login, this.repoData.name];
+                    
+                    // Fetch recent commits
+                    const commitsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=10`);
+                    const commits = commitsResponse.ok ? await commitsResponse.json() : [];
+                    
+                    // Fetch issues
+                    const issuesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=5`);
+                    const issues = issuesResponse.ok ? await issuesResponse.json() : [];
+                    
+                    // Analyze and update
+                    this.analyzeCommits(commits);
+                    this.updateLiveFeed(commits, issues);
+                    
+                } catch (error) {
+                    console.error('Sync error:', error);
+                    this.updateSyncStatus('Sync disrupted - retrying...', 'error');
+                }
+            }
+
+            analyzeCommits(commits) {
+                commits.forEach(commit => {
+                    const message = commit.commit.message.toLowerCase();
+                    const xp = this.calculateCommitXP(message);
+                    
+                    // Check for quest progress
+                    if (message.includes('mobile') || message.includes('touch') || message.includes('joystick')) {
+                        this.updateQuestProgress();
+                    }
+                    
+                    // Award XP for new commits (simplified - in real app would track seen commits)
+                    if (Math.random() > 0.7) {
+                        this.gainXP(xp, `Commit: ${commit.commit.message.split('\n')[0]}`);
+                    }
+                });
+            }
+
+            calculateCommitXP(commitMessage) {
+                const message = commitMessage.toLowerCase();
+                if (message.includes('feat:') || message.includes('feature:')) return 75;
+                if (message.includes('fix:') || message.includes('bug:')) return 50;
+                if (message.includes('refactor:')) return 40;
+                if (message.includes('perf:')) return 60;
+                if (message.includes('test:')) return 35;
+                if (message.includes('docs:')) return 25;
+                return 30;
+            }
+
+            updateLiveFeed(commits, issues) {
+                const feed = document.getElementById('devFeed');
+                const feedItems = [];
+                
+                // Recent achievements
+                if (this.devData.xp > 500 && this.devData.xp < 550) {
+                    feedItems.push('<div class="feed-item feed-achievement">🏆 Achievement: Mobile Master - First responsive design!</div>');
+                }
+                
+                // Recent commits
+                commits.slice(0, 4).forEach(commit => {
+                    const message = commit.commit.message.split('\n')[0];
+                    const xp = this.calculateCommitXP(message);
+                    feedItems.push(`<div class="feed-item feed-commit">✅ ${message} - +${xp} XP</div>`);
+                });
+                
+                // Recent issues
+                issues.slice(0, 2).forEach(issue => {
+                    feedItems.push(`<div class="feed-item feed-issue">🐛 Issue #${issue.number}: ${issue.title}</div>`);
+                });
+                
+                feed.innerHTML = feedItems.join('');
+            }
+
+            updateQuestProgress(forceComplete = false) {
+                const incomplete = this.questData.objectives.filter(o => !o.completed);
+                if (incomplete.length > 0 && (Math.random() > 0.7 || forceComplete)) {
+                    incomplete[0].completed = true;
+                    this.updateQuestUI();
+                    
+                    // Check if quest complete
+                    if (this.questData.objectives.every(o => o.completed)) {
+                        this.gainXP(this.questData.xpReward, 'Quest Complete: ' + this.questData.current);
+                        this.showDevAchievement('Quest Complete!', this.questData.current);
+                        this.generateNewQuest();
+                    }
+                }
+            }
+
+            generateNewQuest() {
+                const quests = [
+                    {
+                        name: 'Performance Blackflame',
+                        objectives: [
+                            'Profile render performance',
+                            'Optimize animation loops',
+                            'Reduce memory footprint by 20%',
+                            'Implement lazy loading',
+                            'Add performance monitoring'
+                        ],
+                        xpReward: 250
+                    },
+                    {
+                        name: 'Save System Sage',
+                        objectives: [
+                            'Implement cloud saves',
+                            'Add save compression',
+                            'Create save backup system',
+                            'Add save versioning',
+                            'Test save migration'
+                        ],
+                        xpReward: 300
+                    }
+                ];
+                
+                const newQuest = quests[Math.floor(Math.random() * quests.length)];
+                this.questData.current = newQuest.name;
+                this.questData.objectives = newQuest.objectives.map(text => ({ text, completed: false }));
+                this.questData.xpReward = newQuest.xpReward;
+                this.updateQuestUI();
+            }
+
+            gainXP(amount, reason = '') {
+                this.devData.xp += amount;
+                this.showXPGain(amount);
+                
+                // Check for advancement
+                const currentLevel = this.getCurrentAdvancement();
+                const nextLevel = this.getNextAdvancement();
+                
+                if (nextLevel && this.devData.xp >= nextLevel.xp) {
+                    this.advance(nextLevel);
+                }
+                
+                // Update streak with safe storage
+                const today = new Date().toDateString();
+                let lastCommit = null;
+                
+                try {
+                    if (saveMethod === 'localStorage') {
+                        lastCommit = localStorage.getItem('lastCommitDate');
+                    } else {
+                        lastCommit = memorySaves['lastCommitDate'];
+                    }
+                } catch (e) {
+                    console.log('Could not check last commit date');
+                }
+                
+                if (lastCommit !== today) {
+                    this.devData.streak++;
+                    try {
+                        if (saveMethod === 'localStorage') {
+                            localStorage.setItem('lastCommitDate', today);
+                        } else {
+                            memorySaves['lastCommitDate'] = today;
+                        }
+                    } catch (e) {
+                        console.log('Could not save last commit date');
+                    }
+                }
+                
+                this.updateUI();
+                this.saveDevProgress();
+                
+                if (reason) {
+                    this.addFeedItem('xp', reason);
+                }
+            }
+
+            getCurrentAdvancement() {
+                let current = this.devAdvancements[0];
+                for (const level of this.devAdvancements) {
+                    if (this.devData.xp >= level.xp) {
+                        current = level;
+                    } else {
+                        break;
+                    }
+                }
+                return current;
+            }
+
+            getNextAdvancement() {
+                const current = this.getCurrentAdvancement();
+                const index = this.devAdvancements.indexOf(current);
+                return this.devAdvancements[index + 1];
+            }
+
+            advance(level) {
+                this.devData.advancement = level.name;
+                this.devData.path = `Path of the ${level.title}`;
+                this.devData.maxXP = this.devAdvancements[this.devAdvancements.indexOf(level) + 1]?.xp || level.xp * 2;
+                
+                this.showDevAchievement(`Advanced to ${level.name}!`, level.title);
+                
+                // Unlock new techniques
+                if (level.name === 'Jade') {
+                    this.devData.techniques.blackflameOptimization = 1;
+                }
+                
+                // Dispatch event for game integration
+                document.dispatchEvent(new CustomEvent('devAdvancement', {
+                    detail: { level: level.name, title: level.title }
+                }));
+            }
+
+            showXPGain(amount) {
+                const effect = document.createElement('div');
+                effect.className = 'xp-gain-effect';
+                effect.textContent = `+${amount} XP`;
+                document.body.appendChild(effect);
+                
+                setTimeout(() => effect.remove(), 2000);
+            }
+
+            showDevAchievement(title, description) {
+                const popup = document.getElementById('devAchievementPopup');
+                document.getElementById('devAchievementText').innerHTML = `<strong>${title}</strong><br>${description}`;
+                
+                popup.classList.add('show');
+                setTimeout(() => popup.classList.remove('show'), 4000);
+            }
+
+            updateSyncStatus(message, type) {
+                const syncStatus = document.getElementById('syncStatus');
+                syncStatus.textContent = message;
+                
+                syncStatus.style.color = {
+                    success: '#00ff88',
+                    error: '#ff4444',
+                    connecting: '#ffaa00'
+                }[type] || 'white';
+            }
+
+            updateUI() {
+                // Update advancement display
+                const current = this.getCurrentAdvancement();
+                const next = this.getNextAdvancement();
+                
+                document.getElementById('devRank').textContent = `${current.name} Body`;
+                document.getElementById('devPath').textContent = this.devData.path;
+                document.getElementById('devXP').textContent = this.devData.xp;
+                document.getElementById('devMaxXP').textContent = next ? next.xp : this.devData.maxXP;
+                
+                // Update XP bar
+                const xpPercent = next ? ((this.devData.xp - current.xp) / (next.xp - current.xp) * 100) : 100;
+                document.getElementById('devXPFill').style.width = Math.min(xpPercent, 100) + '%';
+                
+                // Update stats
+                document.getElementById('totalCommits').textContent = this.devData.totalCommits;
+                document.getElementById('devStreak').textContent = this.devData.streak;
+                document.getElementById('bugsFoxed').textContent = this.devData.bugsFoxed;
+                document.getElementById('featuresShipped').textContent = this.devData.featuresShipped;
+                
+                this.updateQuestUI();
+            }
+
+            updateQuestUI() {
+                const completed = this.questData.objectives.filter(o => o.completed).length;
+                const total = this.questData.objectives.length;
+                const progress = (completed / total) * 100;
+                
+                document.getElementById('currentQuestProgress').style.width = progress + '%';
+                
+                // Update checkboxes
+                const checkboxes = document.querySelectorAll('.quest-checkbox');
+                this.questData.objectives.forEach((objective, index) => {
+                    if (checkboxes[index]) {
+                        if (objective.completed) {
+                            checkboxes[index].classList.add('completed');
+                        } else {
+                            checkboxes[index].classList.remove('completed');
+                        }
+                    }
+                });
+            }
+
+            addFeedItem(type, content) {
+                const feed = document.getElementById('devFeed');
+                const item = document.createElement('div');
+                item.className = `feed-item feed-${type}`;
+                item.textContent = content;
+                
+                feed.insertBefore(item, feed.firstChild);
+                
+                // Keep only last 10 items
+                while (feed.children.length > 10) {
+                    feed.removeChild(feed.lastChild);
+                }
+            }
+
+            startPeriodicSync() {
+                this.syncInterval = setInterval(() => {
+                    if (this.githubConnected) {
+                        this.syncRepositoryData();
+                    }
+                }, 120000); // 2 minutes
+            }
+
+            handleGameProgress(progressData) {
+                switch (progressData.type) {
+                    case 'quest_complete':
+                        this.gainXP(progressData.xp || 50, progressData.description);
+                        break;
+                    case 'bug_fixed':
+                        this.devData.bugsFoxed++;
+                        this.gainXP(50, 'Bug crushed!');
+                        break;
+                    case 'feature_complete':
+                        this.devData.featuresShipped++;
+                        this.gainXP(100, 'Feature shipped!');
+                        break;
+                    case 'commit':
+                        this.devData.totalCommits++;
+                        this.gainXP(30, 'Code committed');
+                        break;
+                }
+                this.updateUI();
+            }
+        }
+
+        // Initialize dev tracker
+        const devTracker = new DevTracker();
+
+        // GAME ENGINE
         function resizeCanvas() {
             const container = document.getElementById('gameContainer');
             const containerWidth = container.clientWidth;
@@ -654,6 +1740,7 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
+        // Game state
         const game = {
             mode: 'exploration',
             player: {
@@ -697,20 +1784,254 @@
                 npcs: []
             },
             saveSlot: 1,
-            lastSaveTime: 0
+            lastSaveTime: 0,
+            paused: false
         };
 
+        // Input handling
+        const keys = {};
+        const touches = {
+            startX: 0,
+            startY: 0,
+            currentX: 0,
+            currentY: 0,
+            isMoving: false,
+            joystickActive: false
+        };
+        
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        window.addEventListener('keydown', (e) => {
+            keys[e.key.toLowerCase()] = true;
+            
+            // Dev tracker hotkey
+            if (e.key.toLowerCase() === 't') {
+                e.preventDefault();
+                toggleDevTracker();
+            }
+            
+            if (e.key === 'F5') {
+                e.preventDefault();
+                saveGame();
+                devTracker.handleGameProgress({ type: 'feature_complete', description: 'Save system tested!' });
+            }
+            if (e.key === 'F9') {
+                e.preventDefault();
+                loadGame(game.saveSlot);
+            }
+            if (e.key.toLowerCase() === 'm' && game.mode === 'exploration') {
+                e.preventDefault();
+                openSaveMenu();
+            }
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeSaveMenu();
+                hideControls();
+            }
+            if (e.key.toLowerCase() === 'c') {
+                e.preventDefault();
+                toggleControls();
+            }
+            if (e.key === '?') {
+                e.preventDefault();
+                showControls();
+            }
+            
+            if (['w', 'a', 's', 'd', 'j', 'k', 'l', ' ', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+            }
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+            e.preventDefault();
+        });
+        
+        // Global functions
+        function toggleDevTracker() {
+            devTracker.toggle();
+        }
+
+        function connectToGitHub() {
+            devTracker.connectToGitHub();
+        }
+
+        function syncNow() {
+            devTracker.syncRepositoryData();
+        }
+        
+        function toggleControls() {
+            const controlsDiv = document.getElementById('fullControls');
+            if (controlsDiv && controlsDiv.style.display === 'block') {
+                hideControls();
+            } else {
+                showControls();
+            }
+        }
+        
+        function showControls() {
+            const controlsDiv = document.getElementById('fullControls');
+            if (controlsDiv) {
+                controlsDiv.style.display = 'block';
+                game.paused = true;
+                const hint = document.getElementById('controlsHint');
+                if (hint) hint.style.display = 'none';
+            }
+        }
+        
+        function hideControls() {
+            const controlsDiv = document.getElementById('fullControls');
+            if (controlsDiv) {
+                controlsDiv.style.display = 'none';
+                game.paused = false;
+            }
+        }
+        
+        window.toggleControls = toggleControls;
+        window.showControls = showControls;
+        window.hideControls = hideControls;
+        
+        let firstInteraction = true;
+        window.addEventListener('keydown', () => {
+            if (firstInteraction) {
+                firstInteraction = false;
+                setTimeout(() => {
+                    const hint = document.getElementById('controlsHint');
+                    if (hint) hint.style.display = 'none';
+                }, 5000);
+            }
+        });
+        
+        // Touch handling with fixes
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+        
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            touches.startX = x;
+            touches.startY = y;
+            touches.currentX = x;
+            touches.currentY = y;
+            
+            if (game.mode === 'exploration') {
+                if (x < canvas.width / 3) {
+                    touches.joystickActive = true;
+                    touches.isMoving = true;
+                }
+                else if (x > canvas.width * 2/3) {
+                    keys[' '] = true;
+                    setTimeout(() => keys[' '] = false, 100);
+                }
+            } else if (game.mode === 'combat') {
+                if (x < canvas.width / 4) {
+                    keys['a'] = true;
+                } else if (x > canvas.width * 3/4) {
+                    keys['d'] = true;
+                } else if (y < canvas.height / 2) {
+                    keys[' '] = true;
+                } else {
+                    if (x < canvas.width / 2) {
+                        keys['j'] = true;
+                    } else {
+                        keys['k'] = true;
+                    }
+                }
+            }
+        }
+        
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!touches.isMoving) return;
+            
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            touches.currentX = touch.clientX - rect.left;
+            touches.currentY = touch.clientY - rect.top;
+            
+            if (touches.joystickActive && game.mode === 'exploration') {
+                const dx = touches.currentX - touches.startX;
+                const dy = touches.currentY - touches.startY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                keys['w'] = keys['s'] = keys['a'] = keys['d'] = false;
+                
+                if (distance > 20) {
+                    const angle = Math.atan2(dy, dx);
+                    
+                    if (angle > -Math.PI/8 && angle <= Math.PI/8) {
+                        keys['d'] = true;
+                    } else if (angle > Math.PI/8 && angle <= 3*Math.PI/8) {
+                        keys['d'] = true;
+                        keys['s'] = true;
+                    } else if (angle > 3*Math.PI/8 && angle <= 5*Math.PI/8) {
+                        keys['s'] = true;
+                    } else if (angle > 5*Math.PI/8 && angle <= 7*Math.PI/8) {
+                        keys['a'] = true;
+                        keys['s'] = true;
+                    } else if (angle > 7*Math.PI/8 || angle <= -7*Math.PI/8) {
+                        keys['a'] = true;
+                    } else if (angle > -7*Math.PI/8 && angle <= -5*Math.PI/8) {
+                        keys['a'] = true;
+                        keys['w'] = true;
+                    } else if (angle > -5*Math.PI/8 && angle <= -3*Math.PI/8) {
+                        keys['w'] = true;
+                    } else if (angle > -3*Math.PI/8 && angle <= -Math.PI/8) {
+                        keys['d'] = true;
+                        keys['w'] = true;
+                    }
+                }
+            }
+        }
+
+        // Fixed handleTouchEnd function
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            touches.isMoving = false;
+            touches.joystickActive = false;
+            
+            // Smooth knob return animation
+            const knob = document.getElementById('joystickKnob');
+            if (knob) {
+                knob.style.transition = 'transform 0.2s ease';
+                knob.style.transform = 'translate(-50%, -50%)';
+                setTimeout(() => {
+                    knob.style.transition = 'none';
+                }, 200);
+            }
+            
+            // Clear ALL keys to prevent drift
+            Object.keys(keys).forEach(key => keys[key] = false);
+            
+            // Dev achievement for fixing touch controls
+            if (Math.random() > 0.8) {
+                devTracker.updateQuestProgress(true);
+            }
+        }
+
+        // Save system with enhanced error handling
         let saveMethod = 'none';
         
         function testSaveMethod() {
             try {
-                localStorage.setItem('test', 'test');
-                localStorage.removeItem('test');
-                saveMethod = 'localStorage';
-                console.log('Using localStorage for saves');
+                // Test if localStorage is accessible
+                if (typeof(Storage) !== "undefined" && window.localStorage) {
+                    localStorage.setItem('test', 'test');
+                    localStorage.removeItem('test');
+                    saveMethod = 'localStorage';
+                    console.log('Using localStorage for saves');
+                } else {
+                    throw new Error('localStorage not available');
+                }
             } catch (e) {
+                // Fallback to memory saves
                 saveMethod = 'memory';
-                console.log('Using memory saves (temporary)');
+                console.log('Using memory saves (temporary) - ' + e.message);
             }
         }
         
@@ -918,201 +2239,6 @@
             }
         }
 
-        const keys = {};
-        const touches = {
-            startX: 0,
-            startY: 0,
-            currentX: 0,
-            currentY: 0,
-            isMoving: false,
-            joystickActive: false
-        };
-        
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        
-        window.addEventListener('keydown', (e) => {
-            keys[e.key.toLowerCase()] = true;
-            
-            if (e.key === 'F5') {
-                e.preventDefault();
-                saveGame();
-            }
-            if (e.key === 'F9') {
-                e.preventDefault();
-                loadGame(game.saveSlot);
-            }
-            if (e.key.toLowerCase() === 'm' && game.mode === 'exploration') {
-                e.preventDefault();
-                openSaveMenu();
-            }
-            if (e.key === 'Escape') {
-                e.preventDefault();
-                closeSaveMenu();
-                hideControls();
-            }
-            if (e.key.toLowerCase() === 'c') {
-                e.preventDefault();
-                toggleControls();
-            }
-            
-            if (['w', 'a', 's', 'd', 'j', 'k', 'l', ' ', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(e.key.toLowerCase())) {
-                e.preventDefault();
-            }
-        });
-        
-        window.addEventListener('keyup', (e) => {
-            keys[e.key.toLowerCase()] = false;
-            e.preventDefault();
-        });
-        
-        function toggleControls() {
-            const controlsDiv = document.getElementById('fullControls');
-            if (controlsDiv && controlsDiv.style.display === 'block') {
-                hideControls();
-            } else {
-                showControls();
-            }
-        }
-        
-        function showControls() {
-            const controlsDiv = document.getElementById('fullControls');
-            if (controlsDiv) {
-                controlsDiv.style.display = 'block';
-                game.paused = true;
-                const hint = document.getElementById('controlsHint');
-                if (hint) hint.style.display = 'none';
-            }
-        }
-        
-        function hideControls() {
-            const controlsDiv = document.getElementById('fullControls');
-            if (controlsDiv) {
-                controlsDiv.style.display = 'none';
-                game.paused = false;
-            }
-        }
-        
-        window.toggleControls = toggleControls;
-        window.showControls = showControls;
-        window.hideControls = hideControls;
-        
-        let firstInteraction = true;
-        window.addEventListener('keydown', () => {
-            if (firstInteraction) {
-                firstInteraction = false;
-                setTimeout(() => {
-                    const hint = document.getElementById('controlsHint');
-                    if (hint) hint.style.display = 'none';
-                }, 5000);
-            }
-        });
-        
-        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-        canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
-        
-        function handleTouchStart(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-            
-            touches.startX = x;
-            touches.startY = y;
-            touches.currentX = x;
-            touches.currentY = y;
-            
-            if (game.mode === 'exploration') {
-                if (x < canvas.width / 3) {
-                    touches.joystickActive = true;
-                    touches.isMoving = true;
-                }
-                else if (x > canvas.width * 2/3) {
-                    keys[' '] = true;
-                    setTimeout(() => keys[' '] = false, 100);
-                }
-            } else if (game.mode === 'combat') {
-                if (x < canvas.width / 4) {
-                    keys['a'] = true;
-                } else if (x > canvas.width * 3/4) {
-                    keys['d'] = true;
-                } else if (y < canvas.height / 2) {
-                    keys[' '] = true;
-                } else {
-                    if (x < canvas.width / 2) {
-                        keys['j'] = true;
-                    } else {
-                        keys['k'] = true;
-                    }
-                }
-            }
-        }
-        
-        function handleTouchMove(e) {
-            e.preventDefault();
-            if (!touches.isMoving) return;
-            
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            touches.currentX = touch.clientX - rect.left;
-            touches.currentY = touch.clientY - rect.top;
-            
-            if (touches.joystickActive && game.mode === 'exploration') {
-                const dx = touches.currentX - touches.startX;
-                const dy = touches.currentY - touches.startY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                keys['w'] = keys['s'] = keys['a'] = keys['d'] = false;
-                
-                if (distance > 20) {
-                    const angle = Math.atan2(dy, dx);
-                    
-                    if (angle > -Math.PI/8 && angle <= Math.PI/8) {
-                        keys['d'] = true;
-                    } else if (angle > Math.PI/8 && angle <= 3*Math.PI/8) {
-                        keys['d'] = true;
-                        keys['s'] = true;
-                    } else if (angle > 3*Math.PI/8 && angle <= 5*Math.PI/8) {
-                        keys['s'] = true;
-                    } else if (angle > 5*Math.PI/8 && angle <= 7*Math.PI/8) {
-                        keys['a'] = true;
-                        keys['s'] = true;
-                    } else if (angle > 7*Math.PI/8 || angle <= -7*Math.PI/8) {
-                        keys['a'] = true;
-                    } else if (angle > -7*Math.PI/8 && angle <= -5*Math.PI/8) {
-                        keys['a'] = true;
-                        keys['w'] = true;
-                    } else if (angle > -5*Math.PI/8 && angle <= -3*Math.PI/8) {
-                        keys['w'] = true;
-                    } else if (angle > -3*Math.PI/8 && angle <= -Math.PI/8) {
-                        keys['d'] = true;
-                        keys['w'] = true;
-                    }
-                }
-            }
-        }
-        
-        // MAIN BUG FIX: Fixed handleTouchEnd function
-        function handleTouchEnd(e) {
-            e.preventDefault();
-            touches.isMoving = false;
-            touches.joystickActive = false;
-            
-            // FIX: Reset joystick knob to center position
-            const knob = document.getElementById('joystickKnob');
-            if (knob) {
-                knob.style.transform = 'translate(-50%, -50%)';
-            }
-            
-            // Clear all movement keys
-            if (game.mode === 'exploration') {
-                keys['w'] = keys['s'] = keys['a'] = keys['d'] = false;
-            } else if (game.mode === 'combat') {
-                keys['a'] = keys['d'] = keys['j'] = keys['k'] = keys[' '] = false;
-            }
-        }
-
         function openSaveMenu() {
             const menu = document.getElementById('saveMenu');
             const slotsDiv = document.getElementById('saveSlots');
@@ -1174,11 +2300,13 @@
             }
         }
 
+        // World generation
         function generateWorld() {
             game.world.tiles = [];
             game.world.entities = [];
             game.world.npcs = [];
             
+            // Create basic tile grid
             for (let y = 0; y < game.world.height; y += 40) {
                 for (let x = 0; x < game.world.width; x += 40) {
                     const tile = {
@@ -1194,6 +2322,7 @@
                 }
             }
 
+            // Add walls
             for (let x = 0; x < game.world.width; x += 40) {
                 game.world.tiles.push({ x: x, y: 0, type: 'wall' });
                 game.world.tiles.push({ x: x, y: game.world.height - 40, type: 'wall' });
@@ -1203,6 +2332,7 @@
                 game.world.tiles.push({ x: game.world.width - 40, y: y, type: 'wall' });
             }
 
+            // Add madra orbs
             for (let i = 0; i < 20; i++) {
                 game.world.entities.push({
                     type: 'madra',
@@ -1213,6 +2343,7 @@
                 });
             }
 
+            // Add enemies
             const enemyTypes = ['student', 'iron', 'jade'];
             for (let i = 0; i < 8; i++) {
                 game.world.entities.push({
@@ -1229,6 +2360,7 @@
                 });
             }
 
+            // Add NPCs
             game.world.npcs.push({
                 name: 'Elder Whisper',
                 x: 800,
@@ -1236,10 +2368,12 @@
                 dialogue: [
                     "The path of the Unsouled is difficult, but not impossible.",
                     "Collect madra from the sacred orbs scattered across the valley.",
-                    "Prove yourself in combat, and perhaps you'll advance beyond Copper."
+                    "Prove yourself in combat, and perhaps you'll advance beyond Copper.",
+                    "A developer's path mirrors a sacred artist's - both require patience and practice."
                 ]
             });
 
+            // Initialize patrol positions
             game.world.entities.forEach(entity => {
                 if (entity.type === 'enemy') {
                     entity.patrol.startX = entity.x;
@@ -1248,6 +2382,7 @@
             });
         }
 
+        // Game update functions
         function updateExploration() {
             if (game.paused) return;
             
@@ -1275,11 +2410,13 @@
                 game.player.y = Math.max(20, Math.min(game.world.height - 40, newY));
             }
 
+            // Update camera
             game.camera.x = Math.max(0, Math.min(game.world.width - canvas.width, 
                 game.player.x - canvas.width / 2));
             game.camera.y = Math.max(0, Math.min(game.world.height - canvas.height, 
                 game.player.y - canvas.height / 2));
 
+            // Update entities
             game.world.entities.forEach(entity => {
                 const dist = Math.hypot(entity.x - game.player.x, entity.y - game.player.y);
                 
@@ -1289,6 +2426,11 @@
                     game.player.madra = Math.min(game.player.maxMadra, game.player.madra + 20);
                     createFloatingText('+10 Madra', entity.x - game.camera.x, entity.y - game.camera.y);
                     checkAdvancement();
+                    
+                    // Dispatch event for dev tracker
+                    document.dispatchEvent(new CustomEvent('madraCollected', {
+                        detail: { amount: 10, total: game.player.madraCollected }
+                    }));
                 }
                 
                 if (entity.type === 'enemy' && dist < 40) {
@@ -1307,6 +2449,7 @@
                 }
             });
 
+            // NPC interaction
             if (keys[' '] && (!game.dialogue || !game.dialogue.active)) {
                 game.world.npcs.forEach(npc => {
                     const dist = Math.hypot(npc.x - game.player.x, npc.y - game.player.y);
@@ -1382,6 +2525,7 @@
                 }, 300);
             }
 
+            // Enemy AI
             const distance = Math.abs(game.combat.enemyX - game.combat.playerX);
             
             if (game.combat.enemyStunnedUntil && Date.now() < game.combat.enemyStunnedUntil) {
@@ -1409,12 +2553,14 @@
                 }
             }
 
+            // Check win/loss conditions
             if (game.combat.enemyHealth <= 0) {
                 endCombat(true);
             } else if (game.player.health <= 0) {
                 endCombat(false);
             }
 
+            // Update UI
             document.getElementById('combatPlayerHealth').style.width = 
                 (game.player.health / game.player.maxHealth * 100) + '%';
             document.getElementById('combatPlayerMadra').style.width = 
@@ -1443,14 +2589,6 @@
                     
                     flashScreen();
                     createFloatingText('DISRUPTED!', game.combat.enemyX, game.combat.enemyY - 50);
-                    
-                    if (game.combat.enemyState === 'attacking') {
-                        game.combat.enemyState = 'stunned';
-                    }
-                    
-                    if (game.combat.enemyMadra !== undefined) {
-                        game.combat.enemyMadra = Math.max(0, game.combat.enemyMadra - 20);
-                    }
                     
                     game.combat.emptyPalmWindow = true;
                     setTimeout(() => {
@@ -1498,6 +2636,16 @@
                 showDialogue("Victory! You've gained strength from combat.");
                 checkAdvancement();
                 saveGame();
+                
+                // Dispatch event for dev tracker
+                document.dispatchEvent(new CustomEvent('combatVictory', {
+                    detail: { enemyType: game.combat.enemyType }
+                }));
+                
+                devTracker.handleGameProgress({ 
+                    type: 'bug_fixed', 
+                    description: 'Combat test passed!' 
+                });
             } else {
                 game.player.health = game.player.maxHealth;
                 game.player.x = 400;
@@ -1528,6 +2676,11 @@
                     game.player.speed += 1;
                     
                     showAdvancement(level.name);
+                    
+                    // Dispatch event for dev tracker
+                    document.dispatchEvent(new CustomEvent('playerAdvancement', {
+                        detail: { level: level.name }
+                    }));
                 }
             });
         }
@@ -1543,6 +2696,7 @@
             }, 3000);
         }
 
+        // Rendering functions
         function render() {
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1555,6 +2709,7 @@
         }
 
         function renderExploration() {
+            // Render tiles
             game.world.tiles.forEach(tile => {
                 const screenX = tile.x - game.camera.x;
                 const screenY = tile.y - game.camera.y;
@@ -1574,6 +2729,7 @@
                 }
             });
 
+            // Render entities
             game.world.entities.forEach(entity => {
                 const screenX = entity.x - game.camera.x;
                 const screenY = entity.y - game.camera.y;
@@ -1599,6 +2755,7 @@
                 }
             });
 
+            // Render NPCs
             game.world.npcs.forEach(npc => {
                 const screenX = npc.x - game.camera.x;
                 const screenY = npc.y - game.camera.y;
@@ -1615,6 +2772,7 @@
                 ctx.fillText(npc.name, screenX, screenY - 65);
             });
 
+            // Render player
             const playerScreenX = game.player.x - game.camera.x;
             const playerScreenY = game.player.y - game.camera.y;
             
@@ -1637,12 +2795,14 @@
         }
 
         function renderCombat() {
+            // Combat arena
             ctx.fillStyle = '#1a1a1a';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             ctx.fillStyle = '#333';
             ctx.fillRect(0, 450, canvas.width, 150);
             
+            // Render player
             ctx.save();
             ctx.translate(game.combat.playerX, game.combat.playerY);
             ctx.scale(game.combat.playerFacing, 1);
@@ -1669,6 +2829,7 @@
             
             ctx.restore();
             
+            // Render enemy
             ctx.save();
             ctx.translate(game.combat.enemyX, game.combat.enemyY);
             
@@ -1835,10 +2996,15 @@
             joystick.addEventListener('touchend', (e) => {
                 e.preventDefault();
                 touches.joystickActive = false;
+                knob.style.transition = 'transform 0.2s ease';
                 knob.style.transform = 'translate(-50%, -50%)';
+                setTimeout(() => {
+                    knob.style.transition = 'none';
+                }, 200);
                 keys['w'] = keys['s'] = keys['a'] = keys['d'] = false;
             });
             
+            // Combat buttons
             document.getElementById('actionA').addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 keys[' '] = true;
@@ -1996,14 +3162,19 @@
         game.lastSaveTime = Date.now();
         gameLoop();
         
+        // Welcome messages
         setTimeout(() => {
             if (saveMethod === 'memory') {
                 showDialogue("Note: Browser storage blocked. Saves are temporary - download to keep them!");
             } else {
-                showDialogue("Welcome to Sacred Valley. Prove yourself worthy of advancement!");
+                showDialogue("Welcome to Sacred Valley. The path of a developer mirrors that of a sacred artist!");
             }
             
-            window.showQuickHelp();
+            // Show dev achievement after a delay
+            setTimeout(() => {
+                devTracker.showDevAchievement('Sacred Valley Dev Edition', 'Game + Dev Tracker Integration Complete!');
+                devTracker.gainXP(50, 'Started development journey');
+            }, 3000);
         }, 1000);
 
         // Make save functions global
