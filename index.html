@@ -89,11 +89,19 @@
         @media (min-width: 1024px) {
             #gameContainer {
                 display: grid;
-                grid-template-columns: 300px 1fr 300px;
+                grid-template-columns: 280px 1fr 280px;
                 gap: 20px;
                 padding: 20px;
                 max-width: 1600px;
                 margin: 0 auto;
+                height: 100vh;
+                box-sizing: border-box;
+            }
+            
+            #leftPanel, #rightPanel {
+                display: block;
+                height: 100%;
+                max-height: calc(100vh - 40px);
             }
         }
 
@@ -134,12 +142,27 @@
             box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
             background: #000;
             border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 1024px) {
+            #canvasWrapper {
+                grid-column: 2;
+                margin: 0 auto;
+                max-width: 900px;
+            }
         }
 
         @media (max-width: 1023px) {
             #canvasWrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 border: none;
                 box-shadow: none;
+                border-radius: 0;
             }
         }
 
@@ -148,11 +171,10 @@
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
-            width: 100%;
-            height: 100%;
-            max-width: 800px;
-            max-height: 600px;
-            object-fit: contain;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         /* Panel sections */
@@ -2279,7 +2301,9 @@
                 memorySaves['devModeUnlocked'] = 'true';
                 
                 // Show success notification
-                devTracker.showDevAchievement('Developer Mode Unlocked!', 'Full access granted');
+                if (devTracker) {
+                    devTracker.showDevAchievement('Developer Mode Unlocked!', 'Full access granted');
+                }
             } else {
                 document.getElementById('pinError').style.display = 'block';
                 input.value = '';
@@ -2850,35 +2874,59 @@
             }
         }
 
-        // Initialize dev tracker
-        const devTracker = new DevTracker();
+        // Initialize dev tracker AFTER save system is ready
+        let devTracker;
+        
+        // Defer DevTracker initialization
+        function initializeDevTracker() {
+            devTracker = new DevTracker();
+        }
 
         // GAME ENGINE
         function resizeCanvas() {
             const wrapper = document.getElementById('canvasWrapper');
+            if (!wrapper) return;
+            
             const wrapperWidth = wrapper.clientWidth;
             const wrapperHeight = wrapper.clientHeight;
             
-            // Maintain 4:3 aspect ratio
-            const aspectRatio = 4 / 3;
-            let canvasWidth = 800;
-            let canvasHeight = 600;
+            // Internal canvas resolution
+            const canvasWidth = 800;
+            const canvasHeight = 600;
+            const aspectRatio = canvasWidth / canvasHeight;
             
-            // Scale based on wrapper size
-            const scaleX = wrapperWidth / canvasWidth;
-            const scaleY = wrapperHeight / canvasHeight;
-            const scale = Math.min(scaleX, scaleY, 1.5); // Cap at 1.5x to prevent too large on big screens
+            // Calculate scale to fit within wrapper
+            let displayWidth, displayHeight;
             
-            // Set internal canvas resolution
+            if (wrapperWidth / wrapperHeight > aspectRatio) {
+                // Wrapper is wider than canvas aspect ratio
+                displayHeight = Math.min(wrapperHeight * 0.9, 900); // Cap max height
+                displayWidth = displayHeight * aspectRatio;
+            } else {
+                // Wrapper is taller than canvas aspect ratio
+                displayWidth = Math.min(wrapperWidth * 0.9, 1200); // Cap max width
+                displayHeight = displayWidth / aspectRatio;
+            }
+            
+            // Set internal resolution
             canvas.width = canvasWidth;
             canvas.height = canvasHeight;
             
             // Set display size
-            canvas.style.width = (canvasWidth * scale) + 'px';
-            canvas.style.height = (canvasHeight * scale) + 'px';
+            canvas.style.width = Math.floor(displayWidth) + 'px';
+            canvas.style.height = Math.floor(displayHeight) + 'px';
+            
+            // Ensure canvas stays centered
+            canvas.style.position = 'absolute';
+            canvas.style.top = '50%';
+            canvas.style.left = '50%';
+            canvas.style.transform = 'translate(-50%, -50%)';
         }
         
-        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('resize', () => {
+            clearTimeout(window.resizeTimeout);
+            window.resizeTimeout = setTimeout(resizeCanvas, 100);
+        });
         resizeCanvas();
 
         // Game state
@@ -2974,7 +3022,9 @@
             if (e.key === 'F5') {
                 e.preventDefault();
                 saveGame();
-                devTracker.handleGameProgress({ type: 'feature_complete', description: 'Save system tested!' });
+                if (devTracker) {
+                    devTracker.handleGameProgress({ type: 'feature_complete', description: 'Save system tested!' });
+                }
             }
             if (e.key === 'F9') {
                 e.preventDefault();
@@ -3010,19 +3060,23 @@
         
         // Global functions
         function toggleDevTracker() {
-            if (devModeUnlocked) {
+            if (devTracker && devModeUnlocked) {
                 devTracker.toggle();
-            } else {
+            } else if (devTracker) {
                 showDevLogin();
             }
         }
 
         function connectToGitHub() {
-            devTracker.connectToGitHub();
+            if (devTracker) {
+                devTracker.connectToGitHub();
+            }
         }
 
         function syncNow() {
-            devTracker.syncRepositoryData();
+            if (devTracker) {
+                devTracker.syncRepositoryData();
+            }
         }
         
         function toggleControls() {
@@ -3187,7 +3241,7 @@
             Object.keys(keys).forEach(key => keys[key] = false);
             
             // Dev achievement for fixing touch controls
-            if (Math.random() > 0.8) {
+            if (Math.random() > 0.8 && devTracker) {
                 devTracker.updateQuestProgress(true);
             }
         }
@@ -3820,10 +3874,12 @@
                     detail: { enemyType: game.combat.enemyType }
                 }));
                 
-                devTracker.handleGameProgress({ 
-                    type: 'bug_fixed', 
-                    description: 'Combat test passed!' 
-                });
+                if (devTracker) {
+                    devTracker.handleGameProgress({ 
+                        type: 'bug_fixed', 
+                        description: 'Combat test passed!' 
+                    });
+                }
             } else {
                 game.player.health = game.player.maxHealth;
                 game.player.x = 400;
@@ -4348,7 +4404,13 @@
 
         // Initialize game
         generateWorld();
-        checkDevModeStatus(); // Check if dev mode was previously unlocked
+        checkDevModeStatus();
+        initializeDevTracker(); // Initialize dev tracker after save system
+        
+        // Ensure proper resize on load
+        setTimeout(() => {
+            resizeCanvas();
+        }, 100);
         
         if (isMobile) {
             document.getElementById('mobileControls').style.display = 'block';
@@ -4390,8 +4452,10 @@
             
             // Show dev achievement after a delay
             setTimeout(() => {
-                devTracker.showDevAchievement('Sacred Valley Dev Edition', 'Game + Dev Tracker Integration Complete!');
-                devTracker.gainXP(50, 'Started development journey');
+                if (devTracker) {
+                    devTracker.showDevAchievement('Sacred Valley Dev Edition', 'Game + Dev Tracker Integration Complete!');
+                    devTracker.gainXP(50, 'Started development journey');
+                }
             }, 3000);
         }, 1000);
 
