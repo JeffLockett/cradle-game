@@ -40,16 +40,217 @@
 
         #gameContainer {
             position: relative;
-            border: 3px solid #333;
-            box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
             width: 100%;
             height: 100vh;
-            max-width: 100%;
-            max-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             background: #000;
+        }
+
+        /* Desktop layout with side panels */
+        @media (min-width: 1024px) {
+            #gameContainer {
+                display: grid;
+                grid-template-columns: 300px 1fr 300px;
+                gap: 20px;
+                padding: 20px;
+                max-width: 1600px;
+                margin: 0 auto;
+            }
+        }
+
+        #leftPanel {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            overflow-y: auto;
+        }
+
+        #rightPanel {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            overflow-y: auto;
+        }
+
+        @media (min-width: 1024px) {
+            #leftPanel, #rightPanel {
+                display: block;
+            }
+        }
+
+        #canvasWrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #333;
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
+            background: #000;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 1023px) {
+            #canvasWrapper {
+                border: none;
+                box-shadow: none;
+            }
+        }
+
+        #gameCanvas {
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            width: 100%;
+            height: 100%;
+            max-width: 800px;
+            max-height: 600px;
+            object-fit: contain;
+        }
+
+        /* Panel sections */
+        .panel-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .panel-section:last-child {
+            border-bottom: none;
+        }
+
+        .panel-title {
+            color: #00ff88;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Player stats for desktop */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        /* Inventory grid */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+
+        .inventory-slot {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #444;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .inventory-slot:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+
+        /* Techniques list for desktop */
+        .technique-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .technique-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .technique-name {
+            color: #00ccff;
+        }
+
+        .technique-key {
+            background: rgba(0, 255, 136, 0.2);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            color: #00ff88;
+        }
+
+        /* Quest tracker for desktop */
+        .quest-tracker {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .quest-name {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .quest-objectives {
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .quest-objective {
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .quest-objective::before {
+            content: '○';
+            position: absolute;
+            left: 0;
+            color: #666;
+        }
+
+        .quest-objective.completed::before {
+            content: '●';
+            color: #00ff88;
         }
 
         #gameCanvas {
@@ -470,6 +671,13 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
+        /* Hide mobile UI on desktop */
+        @media (min-width: 1024px) {
+            #ui {
+                display: none;
+            }
+        }
+
         .healthBar {
             width: 200px;
             height: 20px;
@@ -722,6 +930,13 @@
             color: white;
             font-size: 12px;
             max-width: 200px;
+        }
+
+        /* Hide mobile instructions on desktop */
+        @media (min-width: 1024px) {
+            #instructions {
+                display: none;
+            }
         }
 
         .control-line {
@@ -1120,13 +1335,433 @@
 </head>
 <body>
     <div id="gameContainer">
-        <canvas id="gameCanvas"></canvas>
+        <!-- Left Panel - Desktop Only -->
+        <div id="leftPanel">
+            <div class="panel-section">
+                <div class="panel-title">Sacred Artist Status</div>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Advancement</div>
+                        <div class="stat-value" id="desktopAdvancement">Unsouled</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Path</div>
+                        <div class="stat-value" style="font-size: 14px;">Sacred Valley</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Health</div>
+                        <div class="stat-value"><span id="desktopHealth">100</span>/<span id="desktopMaxHealth">100</span></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Madra</div>
+                        <div class="stat-value"><span id="desktopMadra">100</span>/<span id="desktopMaxMadra">100</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-title">Progress</div>
+                <div style="margin: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Madra Collected</span>
+                        <span style="color: #00ccff;" id="desktopMadraCount">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Combat Wins</span>
+                        <span style="color: #ffd700;" id="desktopWinCount">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-title">Current Quest</div>
+                <div class="quest-tracker">
+                    <div class="quest-name">Path to Copper</div>
+                    <div class="quest-objectives">
+                        <div class="quest-objective" id="quest1">Collect 100 Madra</div>
+                        <div class="quest-objective" id="quest2">Win 2 Combat Trials</div>
+                        <div class="quest-objective" id="quest3">Speak to Elder Whisper</div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <!-- Dev Tracker Toggle Button (Hidden until authenticated) -->
+        <!-- Center Canvas -->
+        <div id="canvasWrapper">
+            <canvas id="gameCanvas"></canvas>
+            
+            <!-- Dev Mode Button -->
+            <button id="devModeButton" onclick="showDevLogin()">🔒</button>
+            
+            <!-- Mobile UI (Hidden on Desktop) -->
+            <button id="fullscreenBtn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+            
+            <div id="ui">
+                <div>Wei Shi Lindon - <span id="advancement">Unsouled</span></div>
+                <div class="healthBar">
+                    <div class="healthFill" id="playerHealth" style="width: 100%"></div>
+                </div>
+                <div class="madraBar">
+                    <div class="madraFill" id="playerMadra" style="width: 100%"></div>
+                </div>
+                <div>Madra Collected: <span id="madraCount">0</span></div>
+                <div>Combat Wins: <span id="winCount">0</span></div>
+            </div>
+            
+            <!-- All other UI elements here -->
+            <div id="combatUI">
+                <div class="combatBars">
+                    <div class="fighterInfo">
+                        <h3>LINDON</h3>
+                        <div class="healthBar" style="width: 300px">
+                            <div class="healthFill" id="combatPlayerHealth" style="width: 100%"></div>
+                        </div>
+                        <div class="madraBar" style="width: 300px">
+                            <div class="madraFill" id="combatPlayerMadra" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="fighterInfo">
+                        <h3 id="enemyName">ENEMY</h3>
+                        <div class="healthBar" style="width: 300px">
+                            <div class="healthFill" id="combatEnemyHealth" style="width: 100%; background-color: #f00"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comboCounter" id="comboCounter">COMBO x<span id="comboCount">0</span></div>
+            </div>
+            
+            <div id="dialogue"></div>
+            <div class="screenFlash" id="screenFlash"></div>
+            <div id="advancementNotice"></div>
+            
+            <div id="instructions">
+                <div id="explorationInstructions">
+                    <div class="control-line">
+                        <span>Move:</span>
+                        <span class="key">WASD/Arrows</span>
+                    </div>
+                    <div class="control-line">
+                        <span>Interact:</span>
+                        <span class="key">SPACE</span>
+                    </div>
+                    <div class="control-line">
+                        <span>Dev Panel:</span>
+                        <span class="key">T</span>
+                    </div>
+                    <div class="control-line">
+                        <span>Save:</span>
+                        <span class="key">F5</span>
+                    </div>
+                    <div class="control-line">
+                        <span>Load:</span>
+                        <span class="key">F9</span>
+                    </div>
+                    <div class="help-reminder">Press ? for Full Help</div>
+                </div>
+                <div id="combatInstructions" style="display: none">
+                    <div class="control-line">
+                        <span>Move:</span>
+                        <span class="key">A/D</span>
+                    </div>
+                    <div class="control-line">
+                        <span>Punch:</span>
+                        <span class="key">J</span>
+                    </div>
+                    <div class="control-line">
+                        <span>Kick:</span>
+                        <span class="key">K</span>
+                    </div>
+                    <div class="control-line">
+                        <span>Block:</span>
+                        <span class="key">L (Hold)</span>
+                    </div>
+                    <div class="control-line">
+                        <span>Empty Palm:</span>
+                        <span class="key">SPACE</span>
+                    </div>
+                    <div class="help-reminder">Press ? for Full Help</div>
+                </div>
+            </div>
+            
+            <button id="controlsToggle" onclick="toggleControls()">Controls (C)</button>
+            
+            <div class="controls-hint" id="controlsHint">
+                Press C for Controls | T for Dev Tracker
+            </div>
+            
+            <div id="fullControls">
+                <span class="close-controls" onclick="hideControls()">×</span>
+                <h2>Sacred Artist Control Manual</h2>
+                
+                <div class="control-section">
+                    <h3>🎮 Basic Movement</h3>
+                    <div class="control-item">
+                        <span>Move</span>
+                        <span class="control-key">WASD / Arrow Keys</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Interact/Talk</span>
+                        <span class="control-key">SPACE</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Run (with certain paths)</span>
+                        <span class="control-key">SHIFT</span>
+                    </div>
+                </div>
+                
+                <div class="control-section">
+                    <h3>⚔️ Combat Controls</h3>
+                    <div class="control-item">
+                        <span>Move Left/Right</span>
+                        <span class="control-key">A / D</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Punch</span>
+                        <span class="control-key">J</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Kick</span>
+                        <span class="control-key">K</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Block</span>
+                        <span class="control-key">L (Hold)</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Empty Palm (Uses Madra)</span>
+                        <span class="control-key">SPACE</span>
+                    </div>
+                </div>
+                
+                <div class="control-section">
+                    <h3>💾 System Controls</h3>
+                    <div class="control-item">
+                        <span>Quick Save</span>
+                        <span class="control-key">F5</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Quick Load</span>
+                        <span class="control-key">F9</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Save Menu</span>
+                        <span class="control-key">M</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Dev Tracker</span>
+                        <span class="control-key">T</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Toggle Controls</span>
+                        <span class="control-key">C</span>
+                    </div>
+                    <div class="control-item">
+                        <span>Close Menus</span>
+                        <span class="control-key">ESC</span>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px; color: #00ff88;">
+                    <em>"The dragon advances through understanding and debugging."</em>
+                </div>
+            </div>
+            
+            <div id="mobileControls">
+                <div id="explorationControls">
+                    <div id="virtualJoystick" class="touch-zone">
+                        <div id="joystickKnob"></div>
+                    </div>
+                    <div id="actionA" class="action-button touch-zone">Talk</div>
+                    <div class="mobile-instructions">Move: Left side | Interact: Right side</div>
+                </div>
+                
+                <div id="combatControls" style="display: none;">
+                    <div id="combatMoveLeft" class="action-button touch-zone">←</div>
+                    <div id="combatMoveRight" class="action-button touch-zone">→</div>
+                    <div id="actionB" class="action-button touch-zone">Punch</div>
+                    <div id="actionA" class="action-button touch-zone">Kick</div>
+                    <div id="actionSpecial" class="action-button touch-zone">Palm</div>
+                    <div class="mobile-instructions">Tap buttons to fight!</div>
+                </div>
+            </div>
+            
+            <div id="saveMenu">
+                <h2 style="margin-top: 0;">SAVE MENU</h2>
+                <div id="saveSlots" style="margin: 20px 0;"></div>
+                <div style="margin-top: 20px;">
+                    <button onclick="closeSaveMenu()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Close (ESC)</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel - Desktop Only -->
+        <div id="rightPanel">
+            <div class="panel-section">
+                <div class="panel-title">Combat Techniques</div>
+                <div class="technique-list">
+                    <div class="technique-item">
+                        <span class="technique-name">Punch</span>
+                        <span class="technique-key">J</span>
+                    </div>
+                    <div class="technique-item">
+                        <span class="technique-name">Kick</span>
+                        <span class="technique-key">K</span>
+                    </div>
+                    <div class="technique-item">
+                        <span class="technique-name">Block</span>
+                        <span class="technique-key">L</span>
+                    </div>
+                    <div class="technique-item" id="emptyPalmTechnique">
+                        <span class="technique-name">Empty Palm</span>
+                        <span class="technique-key">SPACE</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-title">Inventory</div>
+                <div class="inventory-grid">
+                    <div class="inventory-slot" title="Empty">-</div>
+                    <div class="inventory-slot" title="Empty">-</div>
+                    <div class="inventory-slot" title="Empty">-</div>
+                    <div class="inventory-slot" title="Empty">-</div>
+                    <div class="inventory-slot" title="Empty">-</div>
+                    <div class="inventory-slot" title="Empty">-</div>
+                    <div class="inventory-slot" title="Empty">-</div>
+                    <div class="inventory-slot" title="Empty">-</div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-title">Controls Guide</div>
+                <div style="font-size: 12px; color: #999;">
+                    <div style="margin: 5px 0;"><strong>Movement:</strong> WASD/Arrows</div>
+                    <div style="margin: 5px 0;"><strong>Interact:</strong> SPACE</div>
+                    <div style="margin: 5px 0;"><strong>Save:</strong> F5</div>
+                    <div style="margin: 5px 0;"><strong>Load:</strong> F9</div>
+                    <div style="margin: 5px 0;"><strong>Menu:</strong> M</div>
+                    <div style="margin: 5px 0;"><strong>Dev Mode:</strong> Click 🔒</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dev Tracker Toggle (Hidden until authenticated) -->
         <button id="trackerToggle" onclick="toggleDevTracker()" style="display: none;">📊 Dev Path</button>
         
-        <!-- Dev Mode Unlock Button -->
-        <button id="devModeButton" onclick="showDevLogin()">🔒</button>
+        <!-- Integrated Dev Tracker Panel -->
+        <div id="devTracker">
+            <!-- Dev tracker content remains the same -->
+            <div class="tracker-header">
+                <div class="tracker-title">Sacred Artist Developer Journey</div>
+                <div class="dev-advancement-display">
+                    <div class="dev-rank" id="devRank">Iron Body</div>
+                    <div class="dev-path" id="devPath">Path of the Script Lord</div>
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="devXPFill" style="width: 65%;"></div>
+                        <div class="xp-text"><span id="devXP">650</span> / <span id="devMaxXP">1000</span> XP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dev-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCommits">247</div>
+                    <div class="stat-label">Commits</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="devStreak">12</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="bugsFoxed">34</div>
+                    <div class="stat-label">Bugs Fixed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="featuresShipped">8</div>
+                    <div class="stat-label">Features</div>
+                </div>
+            </div>
+
+            <div class="quest-section">
+                <div class="quest-header">
+                    <div class="quest-title">🎯 Mobile Combat Perfection</div>
+                    <div class="quest-reward">+200 XP</div>
+                </div>
+                <div class="quest-progress">
+                    <div class="quest-progress-fill" id="currentQuestProgress" style="width: 40%;"></div>
+                </div>
+                <ul class="quest-objectives">
+                    <li class="quest-objective">
+                        <div class="quest-checkbox completed"></div>
+                        <span>Fix joystick drift on touch release</span>
+                    </li>
+                    <li class="quest-objective">
+                        <div class="quest-checkbox completed"></div>
+                        <span>Add smooth knob return animation</span>
+                    </li>
+                    <li class="quest-objective">
+                        <div class="quest-checkbox"></div>
+                        <span>Implement haptic feedback for attacks</span>
+                    </li>
+                    <li class="quest-objective">
+                        <div class="quest-checkbox"></div>
+                        <span>Add gesture-based special moves</span>
+                    </li>
+                    <li class="quest-objective">
+                        <div class="quest-checkbox"></div>
+                        <span>Test on 5 different mobile devices</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="dev-techniques">
+                <div class="feed-title">Developer Techniques</div>
+                <div class="technique-grid">
+                    <div class="technique-card">
+                        <div class="technique-icon">🔧</div>
+                        <div class="technique-name">Refactor Palm</div>
+                        <div class="technique-level">Level 3</div>
+                    </div>
+                    <div class="technique-card">
+                        <div class="technique-icon">🐛</div>
+                        <div class="technique-name">Bug Crusher</div>
+                        <div class="technique-level">Level 5</div>
+                    </div>
+                    <div class="technique-card">
+                        <div class="technique-icon">🚀</div>
+                        <div class="technique-name">Deploy Strike</div>
+                        <div class="technique-level">Level 2</div>
+                    </div>
+                    <div class="technique-card locked">
+                        <div class="technique-icon">🔥</div>
+                        <div class="technique-name">Blackflame Optimization</div>
+                        <div class="technique-level">Locked</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="live-feed">
+                <div class="feed-title">
+                    <div class="feed-live-indicator"></div>
+                    Repository Activity Feed
+                </div>
+                <div id="devFeed">
+                    <div class="feed-item feed-achievement">🏆 Achievement: Mobile Master - First responsive design!</div>
+                    <div class="feed-item feed-commit">✅ fix: Resolved joystick drift issue - +50 XP</div>
+                    <div class="feed-item feed-commit">✅ feat: Added smooth knob animations - +75 XP</div>
+                    <div class="feed-item feed-merge">🔀 Merged PR #42: Mobile controls overhaul</div>
+                    <div class="feed-item feed-issue">🐛 Issue #43: Investigate combat button lag</div>
+                </div>
+            </div>
+
+            <div class="github-sync">
+                <input type="text" id="repoInput" class="repo-input" placeholder="username/repository-name" value="">
+                <button class="sync-button" onclick="connectToGitHub()" id="syncButton">🔗 Connect Sacred Repository</button>
+                <button class="sync-button" onclick="syncNow()" id="manualSync" disabled>🔄 Force Madra Sync</button>
+                <div class="sync-status" id="syncStatus">Repository disconnected</div>
+            </div>
+        </div>
+    </div>
         
         <!-- Integrated Dev Tracker Panel -->
         <div id="devTracker">
@@ -2101,31 +2736,27 @@
 
         // GAME ENGINE
         function resizeCanvas() {
-            const container = document.getElementById('gameContainer');
-            const containerWidth = container.clientWidth;
-            const containerHeight = container.clientHeight;
+            const wrapper = document.getElementById('canvasWrapper');
+            const wrapperWidth = wrapper.clientWidth;
+            const wrapperHeight = wrapper.clientHeight;
             
+            // Maintain 4:3 aspect ratio
             const aspectRatio = 4 / 3;
-            let newWidth, newHeight;
+            let canvasWidth = 800;
+            let canvasHeight = 600;
             
-            if (containerWidth / containerHeight > aspectRatio) {
-                newHeight = containerHeight;
-                newWidth = newHeight * aspectRatio;
-            } else {
-                newWidth = containerWidth;
-                newHeight = newWidth / aspectRatio;
-            }
+            // Scale based on wrapper size
+            const scaleX = wrapperWidth / canvasWidth;
+            const scaleY = wrapperHeight / canvasHeight;
+            const scale = Math.min(scaleX, scaleY, 1.5); // Cap at 1.5x to prevent too large on big screens
             
-            canvas.width = 800;
-            canvas.height = 600;
+            // Set internal canvas resolution
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
             
-            canvas.style.width = newWidth + 'px';
-            canvas.style.height = newHeight + 'px';
-            
-            canvas.style.position = 'absolute';
-            canvas.style.left = '50%';
-            canvas.style.top = '50%';
-            canvas.style.transform = 'translate(-50%, -50%)';
+            // Set display size
+            canvas.style.width = (canvasWidth * scale) + 'px';
+            canvas.style.height = (canvasHeight * scale) + 'px';
         }
         
         window.addEventListener('resize', resizeCanvas);
@@ -3293,6 +3924,7 @@
         }
 
         function updateUI() {
+            // Update mobile UI
             document.getElementById('advancement').textContent = game.player.advancement;
             document.getElementById('playerHealth').style.width = 
                 (game.player.health / game.player.maxHealth * 100) + '%';
@@ -3300,6 +3932,26 @@
                 (game.player.madra / game.player.maxMadra * 100) + '%';
             document.getElementById('madraCount').textContent = game.player.madraCollected;
             document.getElementById('winCount').textContent = game.player.combatWins;
+            
+            // Update desktop UI if visible
+            const desktopAdvancement = document.getElementById('desktopAdvancement');
+            if (desktopAdvancement) {
+                desktopAdvancement.textContent = game.player.advancement;
+                document.getElementById('desktopHealth').textContent = game.player.health;
+                document.getElementById('desktopMaxHealth').textContent = game.player.maxHealth;
+                document.getElementById('desktopMadra').textContent = game.player.madra;
+                document.getElementById('desktopMaxMadra').textContent = game.player.maxMadra;
+                document.getElementById('desktopMadraCount').textContent = game.player.madraCollected;
+                document.getElementById('desktopWinCount').textContent = game.player.combatWins;
+                
+                // Update quest progress
+                if (game.player.madraCollected >= 100) {
+                    document.getElementById('quest1').classList.add('completed');
+                }
+                if (game.player.combatWins >= 2) {
+                    document.getElementById('quest2').classList.add('completed');
+                }
+            }
         }
 
         function showDialogue(text, speaker = '') {
