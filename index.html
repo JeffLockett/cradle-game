@@ -1,4 +1,41 @@
-// Close dialogue on tap while it's showing
+/* Combat controls positioning */
+        #combatActionB {
+            bottom: 15px;
+            right: 70px;
+        }
+        
+        #combatActionA {
+            bottom: 15px;
+            right: 15px;
+        }
+        
+        #combatActionSpecial {
+            bottom: 70px;
+            right: 42px;
+        }
+        
+        @media (max-width: 1023px) and (orientation: landscape) {
+            #combatActionB {
+                bottom: 10px;
+                right: 70px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            #combatActionA {
+                bottom: 10px;
+                right: 15px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            #combatActionSpecial {
+                bottom: 10px;
+                right: 125px;
+                width: 50px;
+                height: 50px;
+            }
+        }            // Close dialogue on tap while it's showing
             if (game.dialogue && game.dialogue.active) {
                 hideDialogue();
                 return; // Don't process other inputs
@@ -968,6 +1005,19 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 12px;
+            z-index: 100;
+        }
+        
+        @media (min-width: 1024px) {
+            #fullscreenBtn {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 1023px) and (orientation: landscape) {
+            #fullscreenBtn {
+                display: none;
+            }
         }
 
         #controlsToggle {
@@ -1108,8 +1158,8 @@
 
         #devModeButton {
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 5px;
+            left: 5px;
             background: rgba(0, 0, 0, 0.5);
             color: #666;
             border: 1px solid #333;
@@ -1120,6 +1170,15 @@
             font-size: 16px;
             z-index: 2001;
             transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 1023px) and (orientation: landscape) {
+            #devModeButton {
+                top: 5px;
+                left: 5px;
+                padding: 3px 6px;
+                font-size: 12px;
+            }
         }
 
         #devModeButton:hover {
@@ -1239,96 +1298,155 @@
             z-index: 2000;
         }
 
-        /* Enhanced mobile styles for iPhone */
-        @media (max-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
-            /* Prevent iOS zoom on input focus */
-            input[type="text"], input[type="password"], input[type="number"] {
-                font-size: 16px !important;
-            }
-            
-            #gameCanvas {
-                touch-action: none;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-            }
-            
-            #mobileControls {
-                pointer-events: none;
-            }
-            
-            .touch-zone {
-                pointer-events: auto;
-                -webkit-tap-highlight-color: transparent;
-            }
-            
+        /* Mobile controls positioning fixes */
+        @media (max-width: 1023px) {
             #virtualJoystick {
                 position: fixed;
-                bottom: 60px;
-                left: 40px;
-                width: 140px;
-                height: 140px;
+                bottom: 20px;
+                left: 20px;
+                width: 100px;
+                height: 100px;
             }
             
             .action-button {
                 position: fixed;
-                width: 70px;
-                height: 70px;
-                font-size: 14px;
+                width: 50px;
+                height: 50px;
+                font-size: 11px;
             }
             
             #actionA {
-                bottom: 120px;
-                right: 160px;
+                bottom: 30px;
+                right: 20px;
             }
             
             #actionB {
-                bottom: 60px;
-                right: 90px;
+                bottom: 30px;
+                right: 80px;
             }
             
             #actionSpecial {
-                bottom: 180px;
-                right: 90px;
+                bottom: 90px;
+                right: 50px;
+            }
+        }
+        
+        /* Landscape mobile specific */
+        @media (max-width: 1023px) and (orientation: landscape) {
+            #ui {
+                top: 5px;
+                right: 5px;
+                font-size: 12px;
+                padding: 5px;
+            }
+            
+            #instructions {
+                display: none !important;
+            }
+            
+            #controlsToggle {
+                bottom: 5px;
+                left: 5px;
+                padding: 3px 8px;
+                font-size: 10px;
+            }
+            
+            .controls-hint {
+                display: none !important;
+            }
+            
+            #virtualJoystick {
+                bottom: 10px;
+                left: 10px;
+                width: 80px;
+                height: 80px;
+                opacity: 0.5;
+            }
+            
+            #joystickKnob {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .action-button {
+                width: 45px;
+                height: 45px;
+                font-size: 10px;
+                opacity: 0.7;
+            }
+            
+            #actionA {
+                bottom: 15px;
+                right: 15px;
             }
             
             #combatMoveLeft {
-                bottom: 60px;
-                left: 40px;
-                width: 90px;
-                height: 90px;
+                bottom: 10px;
+                left: 10px;
+                width: 60px;
+                height: 60px;
             }
             
             #combatMoveRight {
-                bottom: 60px;
-                left: 150px;
-                width: 90px;
-                height: 90px;
+                bottom: 10px;
+                left: 80px;
+                width: 60px;
+                height: 60px;
             }
             
-            #devLoginModal {
-                width: 90%;
-                max-width: 350px;
+            #actionB {
+                bottom: 10px;
+                right: 70px;
+                width: 50px;
+                height: 50px;
             }
             
-            .pin-button {
-                padding: 25px;
-                font-size: 24px;
+            #actionSpecial {
+                bottom: 10px;
+                right: 130px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            .mobile-instructions {
+                display: none !important;
+            }
+            
+            #dialogue {
+                bottom: 100px;
+                font-size: 12px;
+                padding: 8px 15px;
+                max-width: 70%;
             }
         }
-
-        /* iOS specific fixes */
-        @supports (-webkit-touch-callout: none) {
-            body {
-                -webkit-text-size-adjust: 100%;
+        
+        /* Hide duplicate controls */
+        #canvasWrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Ensure combat UI doesn't overlap in landscape */
+        @media (max-width: 1023px) and (orientation: landscape) {
+            #combatUI {
+                top: 5px;
+                transform: scale(0.8);
+                transform-origin: top center;
             }
             
-            #gameContainer {
-                -webkit-overflow-scrolling: touch;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
+            .healthBar {
+                width: 150px !important;
+                height: 15px;
+            }
+            
+            .madraBar {
+                width: 150px !important;
+                height: 12px;
+            }
+            
+            .comboCounter {
+                bottom: 20px;
+                font-size: 18px;
             }
         }
     </style>
@@ -2057,12 +2175,13 @@
                 <div class="mobile-instructions">Move: Left side | Interact: Right side</div>
             </div>
             
+            <!-- Combat controls - hidden by default, shown in combat -->
             <div id="combatControls" style="display: none;">
                 <div id="combatMoveLeft" class="action-button touch-zone">←</div>
                 <div id="combatMoveRight" class="action-button touch-zone">→</div>
-                <div id="actionB" class="action-button touch-zone">Punch</div>
-                <div id="actionA" class="action-button touch-zone">Kick</div>
-                <div id="actionSpecial" class="action-button touch-zone">Palm</div>
+                <div id="combatActionB" class="action-button touch-zone">Punch</div>
+                <div id="combatActionA" class="action-button touch-zone">Kick</div>
+                <div id="combatActionSpecial" class="action-button touch-zone">Palm</div>
                 <div class="mobile-instructions">Tap buttons to fight!</div>
             </div>
         </div>
@@ -4124,22 +4243,32 @@
                 keys['d'] = false;
             });
             
-            document.getElementById('actionB').addEventListener('touchstart', (e) => {
+            document.getElementById('combatActionB').addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 keys['j'] = true;
             });
             
-            document.getElementById('actionB').addEventListener('touchend', (e) => {
+            document.getElementById('combatActionB').addEventListener('touchend', (e) => {
                 e.preventDefault();
                 keys['j'] = false;
             });
             
-            document.getElementById('actionSpecial').addEventListener('touchstart', (e) => {
+            document.getElementById('combatActionA').addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keys['k'] = true;
+            });
+            
+            document.getElementById('combatActionA').addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keys['k'] = false;
+            });
+            
+            document.getElementById('combatActionSpecial').addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 keys[' '] = true;
             });
             
-            document.getElementById('actionSpecial').addEventListener('touchend', (e) => {
+            document.getElementById('combatActionSpecial').addEventListener('touchend', (e) => {
                 e.preventDefault();
                 keys[' '] = false;
             });
