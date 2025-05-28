@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HexMind AI Collaboration Platform</title>
+    <title>HexMind AI Distillery</title>
     <style>
-        /* WCAG 2.2 Compliant Styles - NO PLACEHOLDERS */
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +12,6 @@
         }
 
         :root {
-            /* ADHD-Friendly Color System - Tested Contrast Ratios */
             --primary-bg: #1a1a1a;
             --secondary-bg: #2d2d2d;
             --accent-blue: #4a9eff;
@@ -22,11 +20,6 @@
             --text-primary: #ffffff;
             --text-secondary: #d1d5db;
             --border-subtle: #404040;
-            
-            /* Cognitive Load Colors */
-            --low-load: #10b981;
-            --medium-load: #f59e0b;
-            --high-load: #ef4444;
         }
 
         body {
@@ -37,14 +30,11 @@
             min-height: 100vh;
         }
 
-        /* Header with Focus Mode Toggle */
         .header {
             background: var(--secondary-bg);
             padding: 1rem 2rem;
             border-bottom: 2px solid var(--border-subtle);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
         }
 
         .logo {
@@ -53,639 +43,792 @@
             color: var(--accent-blue);
         }
 
-        .focus-toggle {
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s ease;
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
-        .focus-toggle:hover {
-            background: #3b82f6;
-        }
-
-        .focus-toggle:focus {
-            outline: 3px solid #fbbf24;
-            outline-offset: 2px;
-        }
-
-        /* Main Container */
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* Progressive Disclosure Dashboard */
-        .dashboard-grid {
+        /* Step 1: Goal Input */
+        .goal-section {
+            background: var(--secondary-bg);
+            border: 2px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+
+        .goal-input {
+            width: 100%;
+            min-height: 120px;
+            background: var(--primary-bg);
+            border: 2px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .goal-input:focus {
+            outline: 3px solid var(--warning-orange);
+            border-color: var(--accent-blue);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            margin: 0.5rem 0.5rem 0 0;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3b82f6;
+        }
+
+        .btn-secondary {
+            background: var(--border-subtle);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--warning-orange);
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--warning-orange);
+            outline-offset: 2px;
+        }
+
+        /* Step 2: Generated Prompts */
+        .prompts-section {
+            display: none;
+        }
+
+        .prompts-section.active {
+            display: block;
+        }
+
+        .prompts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
-        .dashboard-card {
+        .prompt-card {
             background: var(--secondary-bg);
             border: 2px solid var(--border-subtle);
             border-radius: 8px;
             padding: 1.5rem;
-            transition: all 0.3s ease;
         }
 
-        .dashboard-card.expanded {
-            grid-column: 1 / -1;
-        }
-
-        .card-header {
+        .prompt-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
 
-        .card-title {
-            font-size: 1.25rem;
+        .agent-name {
+            font-size: 1.1rem;
             font-weight: bold;
             color: var(--accent-blue);
         }
 
-        .expand-btn {
-            background: var(--border-subtle);
-            color: var(--text-primary);
+        .copy-prompt-btn {
+            background: var(--success-green);
+            color: white;
             border: none;
-            padding: 0.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 4px;
             cursor: pointer;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
         }
 
-        .expand-btn:hover {
-            background: var(--accent-blue);
+        .copy-prompt-btn:hover {
+            background: #22c55e;
         }
 
-        .expand-btn:focus {
-            outline: 2px solid var(--warning-orange);
-            outline-offset: 2px;
+        .prompt-text {
+            background: var(--primary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-line;
         }
 
-        .card-content {
-            display: block;
-        }
-
-        .card-details {
+        /* Step 3: Response Collection */
+        .responses-section {
             display: none;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-subtle);
+            margin-top: 2rem;
         }
 
-        .card-details.visible {
+        .responses-section.active {
             display: block;
         }
 
-        /* AI Status Grid */
-        .ai-status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+        .response-card {
+            background: var(--secondary-bg);
+            border: 2px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
         }
 
-        .ai-agent {
-            background: var(--secondary-bg);
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .response-input {
+            width: 100%;
+            min-height: 100px;
+            background: var(--primary-bg);
             border: 2px solid var(--border-subtle);
             border-radius: 6px;
             padding: 1rem;
-            text-align: center;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            resize: vertical;
+            font-family: inherit;
         }
 
-        .ai-name {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: var(--accent-blue);
+        .response-input:focus {
+            outline: 2px solid var(--warning-orange);
+            border-color: var(--accent-blue);
         }
 
-        .ai-status {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: bold;
-        }
-
-        .status-ready { background: var(--success-green); color: white; }
-        .status-working { background: var(--warning-orange); color: white; }
-        .status-complete { background: var(--low-load); color: white; }
-
-        /* Progress Tracking */
-        .progress-section {
+        /* Step 4: Final Report */
+        .report-section {
+            display: none;
             background: var(--secondary-bg);
-            border: 2px solid var(--border-subtle);
+            border: 2px solid var(--success-green);
             border-radius: 8px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .report-section.active {
+            display: block;
+        }
+
+        .report-content {
+            background: var(--primary-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            min-height: 300px;
+            white-space: pre-line;
+            line-height: 1.6;
         }
 
-        .progress-header {
+        /* Progress indicator */
+        .progress {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: var(--border-subtle);
-            border-radius: 10px;
-            overflow: hidden;
+        .progress-step {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
         }
 
-        .progress-fill {
-            height: 100%;
+        .progress-step.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .progress-step.complete {
             background: var(--success-green);
-            transition: width 0.5s ease;
-            border-radius: 10px;
+            color: white;
         }
 
-        .progress-text {
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
+        .progress-step.inactive {
+            background: var(--border-subtle);
             color: var(--text-secondary);
         }
 
-        /* Cognitive Load Indicator */
-        .cognitive-load {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--secondary-bg);
-            border: 2px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 1rem;
-            min-width: 200px;
+        /* Utilities */
+        .text-center {
+            text-align: center;
         }
 
-        .load-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+        .mt-1 {
+            margin-top: 1rem;
         }
 
-        .load-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+        .hidden {
+            display: none;
         }
 
-        .load-low { background: var(--low-load); }
-        .load-medium { background: var(--medium-load); }
-        .load-high { background: var(--high-load); }
-
-        /* Focus Mode Styles */
-        .focus-mode .dashboard-card:not(.primary-task) {
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .focus-mode .ai-status-grid,
-        .focus-mode .cognitive-load {
-            opacity: 0.5;
-        }
-
-        /* Gamification Elements */
-        .achievement {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--success-green);
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            transform: translateX(300px);
-            transition: transform 0.3s ease;
-            font-weight: bold;
-        }
-
-        .achievement.show {
-            transform: translateX(0);
-        }
-
-        /* Accessibility Features */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-
-        /* Motion Reduction */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* High Contrast Mode */
-        @media (prefers-contrast: high) {
-            :root {
-                --primary-bg: #000000;
-                --secondary-bg: #1a1a1a;
-                --text-primary: #ffffff;
-                --border-subtle: #ffffff;
-            }
-        }
-
-        /* Mobile Responsive */
+        /* Mobile responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
             }
             
-            .dashboard-grid {
+            .prompts-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .cognitive-load {
-                position: static;
-                margin-bottom: 1rem;
-            }
-        }
-
-        /* REAL REPLACEMENT NEEDED WARNING */
-        .replacement-warning {
-            background: #ff0000;
-            color: white;
-            padding: 0.5rem;
-            border-radius: 4px;
-            margin: 0.5rem 0;
-            font-weight: bold;
-            border: 2px solid #ffffff;
         }
     </style>
 </head>
 <body>
-    <!-- Header with Navigation -->
     <header class="header">
-        <div class="logo">🧠 HexMind AI</div>
-        <button class="focus-toggle" onclick="toggleFocusMode()" aria-label="Toggle Focus Mode">
-            Focus Mode: OFF
-        </button>
+        <div class="logo">🧠 HexMind AI Distillery</div>
+        <div class="subtitle">Transform one goal into 6 specialized prompts → Distill responses into actionable research</div>
     </header>
 
-    <!-- Main Container -->
     <div class="container">
-        <!-- Cognitive Load Indicator -->
-        <div class="cognitive-load" role="status" aria-live="polite">
-            <h3>Cognitive Load</h3>
-            <div class="load-indicator">
-                <div class="load-dot load-low"></div>
-                <span id="load-status">Low - Optimal for complex tasks</span>
-            </div>
-            <div class="progress-text">Based on interaction patterns</div>
+        <!-- Progress Indicator -->
+        <div class="progress">
+            <div class="progress-step active" id="step-1">1️⃣ Input Goal</div>
+            <div class="progress-step inactive" id="step-2">2️⃣ Copy Prompts</div>
+            <div class="progress-step inactive" id="step-3">3️⃣ Paste Responses</div>
+            <div class="progress-step inactive" id="step-4">4️⃣ Generate Report</div>
         </div>
 
-        <!-- AI Agent Status Grid -->
-        <div class="ai-status-grid">
-            <div class="ai-agent">
-                <div class="ai-name">🧠 Claude</div>
-                <div class="ai-status status-ready" id="claude-status">Ready</div>
-            </div>
-            <div class="ai-agent">
-                <div class="ai-name">⚡ Grok</div>
-                <div class="ai-status status-ready" id="grok-status">Ready</div>
-            </div>
-            <div class="ai-agent">
-                <div class="ai-name">🎨 Gemini</div>
-                <div class="ai-status status-ready" id="gemini-status">Ready</div>
-            </div>
-            <div class="ai-agent">
-                <div class="ai-name">🔍 Perplexity</div>
-                <div class="ai-status status-ready" id="perplexity-status">Ready</div>
-            </div>
-            <div class="ai-agent">
-                <div class="ai-name">💻 Copilot</div>
-                <div class="ai-status status-ready" id="copilot-status">Ready</div>
-            </div>
-            <div class="ai-agent">
-                <div class="ai-name">🛡️ SuperGrok</div>
-                <div class="ai-status status-ready" id="supergrok-status">Ready</div>
+        <!-- Step 1: Goal Input -->
+        <div class="goal-section" id="goal-section">
+            <h2 class="section-title">🎯 What do you want to accomplish?</h2>
+            <textarea 
+                class="goal-input" 
+                id="user-goal"
+                placeholder="Example: Create a mobile app that helps people with ADHD manage their daily tasks using gamification and voice reminders. Make it accessible and work offline."
+            ></textarea>
+            
+            <div class="mt-1">
+                <button class="btn btn-primary" onclick="generatePrompts()">
+                    ⚡ Generate 6 Specialized Prompts
+                </button>
+                <button class="btn btn-secondary" onclick="loadExample()">
+                    💡 Load Example
+                </button>
+                <button class="btn btn-secondary" onclick="clearAll()">
+                    🗑️ Clear All
+                </button>
             </div>
         </div>
 
-        <!-- Progressive Disclosure Dashboard -->
-        <div class="dashboard-grid">
-            <!-- Task Management Card -->
-            <div class="dashboard-card primary-task">
-                <div class="card-header">
-                    <h2 class="card-title">Active Tasks</h2>
-                    <button class="expand-btn" onclick="toggleCard(this)" aria-label="Expand Active Tasks">+</button>
-                </div>
-                <div class="card-content">
-                    <p>3 tasks in progress</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 60%"></div>
+        <!-- Step 2: Generated Prompts -->
+        <div class="prompts-section" id="prompts-section">
+            <h2 class="section-title">📋 Copy These Prompts to Each AI Service</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Copy each prompt below and paste into Claude, ChatGPT, Gemini, etc. Then paste their responses in Step 3.
+            </p>
+
+            <div class="prompts-grid">
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="agent-name">🧠 Systems Architect</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('claude')">Copy Prompt</button>
                     </div>
-                    <div class="progress-text">60% Complete</div>
+                    <div class="prompt-text" id="claude-prompt"></div>
                 </div>
-                <div class="card-details">
-                    <div class="replacement-warning">
-                        🚨 REPLACEMENT NEEDED: Connect to real task management API
-                        <br>Replace: mockTaskData() function
-                        <br>When: Before production deployment
-                        <br>With: Your task management system API calls
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="agent-name">⚡ Performance Engineer</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('grok')">Copy Prompt</button>
                     </div>
-                    <ul>
-                        <li>✅ Set up HexMind architecture</li>
-                        <li>🔄 Implement WCAG compliance</li>
-                        <li>⏳ Add cognitive load monitoring</li>
-                    </ul>
+                    <div class="prompt-text" id="grok-prompt"></div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="agent-name">🎨 UX Designer</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('gemini')">Copy Prompt</button>
+                    </div>
+                    <div class="prompt-text" id="gemini-prompt"></div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="agent-name">🔍 Research Analyst</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('perplexity')">Copy Prompt</button>
+                    </div>
+                    <div class="prompt-text" id="perplexity-prompt"></div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="agent-name">💻 Code Architect</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('copilot')">Copy Prompt</button>
+                    </div>
+                    <div class="prompt-text" id="copilot-prompt"></div>
+                </div>
+
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <div class="agent-name">🛡️ Security Specialist</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('supergrok')">Copy Prompt</button>
+                    </div>
+                    <div class="prompt-text" id="supergrok-prompt"></div>
                 </div>
             </div>
 
-            <!-- AI Coordination Card -->
-            <div class="dashboard-card">
-                <div class="card-header">
-                    <h2 class="card-title">AI Coordination</h2>
-                    <button class="expand-btn" onclick="toggleCard(this)" aria-label="Expand AI Coordination">+</button>
-                </div>
-                <div class="card-content">
-                    <p>6 agents synchronized</p>
-                    <p>Response time: <span id="response-time">0.15s</span></p>
-                </div>
-                <div class="card-details">
-                    <div class="replacement-warning">
-                        🚨 REPLACEMENT NEEDED: Connect to real AI APIs
-                        <br>Replace: simulateAIResponse() function
-                        <br>When: When integrating with actual AI services
-                        <br>With: Real API endpoints for Claude, Grok, Gemini, etc.
-                    </div>
-                    <p>All AI agents are operating within optimal parameters. System entropy is low, indicating stable cognitive state for complex problem solving.</p>
-                </div>
-            </div>
-
-            <!-- Performance Metrics Card -->
-            <div class="dashboard-card">
-                <div class="card-header">
-                    <h2 class="card-title">Performance</h2>
-                    <button class="expand-btn" onclick="toggleCard(this)" aria-label="Expand Performance">+</button>
-                </div>
-                <div class="card-content">
-                    <p>System: <span class="status-ready">Optimal</span></p>
-                    <p>Latency: <span id="latency">142ms</span></p>
-                </div>
-                <div class="card-details">
-                    <div class="replacement-warning">
-                        🚨 REPLACEMENT NEEDED: Connect to real performance monitoring
-                        <br>Replace: mockPerformanceData() function  
-                        <br>When: After setting up monitoring infrastructure
-                        <br>With: Real performance metrics from your servers
-                    </div>
-                    <p>All performance indicators are within ADHD-optimized thresholds. Sub-200ms response times maintained for optimal user experience.</p>
-                </div>
+            <div class="text-center mt-1">
+                <button class="btn btn-primary" onclick="showResponseSection()">
+                    ✅ I've Got All The AI Responses
+                </button>
             </div>
         </div>
 
-        <!-- Progress Tracking Section -->
-        <div class="progress-section">
-            <div class="progress-header">
-                <h2>Project Progress</h2>
-                <span id="progress-percentage">60%</span>
+        <!-- Step 3: Response Collection -->
+        <div class="responses-section" id="responses-section">
+            <h2 class="section-title">📝 Paste AI Responses Here</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Paste each AI's response into the corresponding box below.
+            </p>
+
+            <div class="response-card">
+                <div class="response-header">
+                    <div class="agent-name">🧠 Systems Architect Response</div>
+                </div>
+                <textarea class="response-input" id="claude-response" placeholder="Paste the Systems Architect response here..."></textarea>
             </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="main-progress" style="width: 60%"></div>
+
+            <div class="response-card">
+                <div class="response-header">
+                    <div class="agent-name">⚡ Performance Engineer Response</div>
+                </div>
+                <textarea class="response-input" id="grok-response" placeholder="Paste the Performance Engineer response here..."></textarea>
             </div>
-            <div class="progress-text">
-                Current phase: Implementation • Next milestone: Testing
+
+            <div class="response-card">
+                <div class="response-header">
+                    <div class="agent-name">🎨 UX Designer Response</div>
+                </div>
+                <textarea class="response-input" id="gemini-response" placeholder="Paste the UX Designer response here..."></textarea>
             </div>
-            <div class="replacement-warning">
-                🚨 REPLACEMENT NEEDED: Connect to real project tracking
-                <br>Replace: updateProgress() function
-                <br>When: When connecting to project management system
-                <br>With: Real project data from your PM tool
+
+            <div class="response-card">
+                <div class="response-header">
+                    <div class="agent-name">🔍 Research Analyst Response</div>
+                </div>
+                <textarea class="response-input" id="perplexity-response" placeholder="Paste the Research Analyst response here..."></textarea>
+            </div>
+
+            <div class="response-card">
+                <div class="response-header">
+                    <div class="agent-name">💻 Code Architect Response</div>
+                </div>
+                <textarea class="response-input" id="copilot-response" placeholder="Paste the Code Architect response here..."></textarea>
+            </div>
+
+            <div class="response-card">
+                <div class="response-header">
+                    <div class="agent-name">🛡️ Security Specialist Response</div>
+                </div>
+                <textarea class="response-input" id="supergrok-response" placeholder="Paste the Security Specialist response here..."></textarea>
+            </div>
+
+            <div class="text-center mt-1">
+                <button class="btn btn-primary" onclick="generateReport()">
+                    🎯 Distill Into Final Report
+                </button>
             </div>
         </div>
-    </div>
 
-    <!-- Achievement Notification -->
-    <div class="achievement" id="achievement">
-        🎉 Task Completed! +50 points
+        <!-- Step 4: Final Report -->
+        <div class="report-section" id="report-section">
+            <h2 class="section-title">📊 Distilled Research Report</h2>
+            <div class="report-content" id="report-content"></div>
+            
+            <div class="text-center mt-1">
+                <button class="btn btn-primary" onclick="downloadReport()">
+                    💾 Download Report
+                </button>
+                <button class="btn btn-secondary" onclick="copyReport()">
+                    📋 Copy Report
+                </button>
+                <button class="btn btn-secondary" onclick="startOver()">
+                    🔄 New Project
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // ===== FULLY FUNCTIONAL CODE (NO PLACEHOLDERS) =====
-        
-        // Global State Management
-        let focusModeActive = false;
-        let cognitiveLoad = 'low';
-        let achievements = 0;
-        
-        // Focus Mode Toggle
-        function toggleFocusMode() {
-            focusModeActive = !focusModeActive;
-            const body = document.body;
-            const button = document.querySelector('.focus-toggle');
-            
-            if (focusModeActive) {
-                body.classList.add('focus-mode');
-                button.textContent = 'Focus Mode: ON';
-                button.setAttribute('aria-pressed', 'true');
-                updateCognitiveLoad('low');
-            } else {
-                body.classList.remove('focus-mode');
-                button.textContent = 'Focus Mode: OFF';
-                button.setAttribute('aria-pressed', 'false');
+        let currentGoal = '';
+
+        // Example goals
+        const examples = [
+            "Create a mobile app that helps people with ADHD manage their daily tasks using gamification and voice reminders. Make it accessible and work offline.",
+            "Build a customer support chatbot that can handle 80% of common inquiries and escalate complex issues seamlessly.",
+            "Design an e-learning platform for neurodivergent students that adapts to different learning styles."
+        ];
+
+        // Load example goal
+        function loadExample() {
+            const example = examples[Math.floor(Math.random() * examples.length)];
+            document.getElementById('user-goal').value = example;
+        }
+
+        // Clear everything
+        function clearAll() {
+            if (confirm('This will clear everything. Are you sure?')) {
+                document.getElementById('user-goal').value = '';
+                resetSections();
+                updateProgress(1);
             }
         }
 
-        // Progressive Disclosure for Cards
-        function toggleCard(button) {
-            const card = button.closest('.dashboard-card');
-            const details = card.querySelector('.card-details');
+        // Generate specialized prompts
+        function generatePrompts() {
+            currentGoal = document.getElementById('user-goal').value.trim();
             
-            if (details.classList.contains('visible')) {
-                details.classList.remove('visible');
-                card.classList.remove('expanded');
-                button.textContent = '+';
-                button.setAttribute('aria-label', button.getAttribute('aria-label').replace('Collapse', 'Expand'));
-            } else {
-                details.classList.add('visible');
-                card.classList.add('expanded');
-                button.textContent = '−';
-                button.setAttribute('aria-label', button.getAttribute('aria-label').replace('Expand', 'Collapse'));
+            if (!currentGoal) {
+                alert('Please enter a goal first!');
+                return;
+            }
+
+            // Generate prompts for each specialist
+            const prompts = {
+                claude: generateArchitectPrompt(currentGoal),
+                grok: generatePerformancePrompt(currentGoal),
+                gemini: generateUXPrompt(currentGoal),
+                perplexity: generateResearchPrompt(currentGoal),
+                copilot: generateCodePrompt(currentGoal),
+                supergrok: generateSecurityPrompt(currentGoal)
+            };
+
+            // Display prompts
+            Object.keys(prompts).forEach(key => {
+                document.getElementById(`${key}-prompt`).textContent = prompts[key];
+            });
+
+            // Show prompts section
+            document.getElementById('prompts-section').classList.add('active');
+            updateProgress(2);
+            
+            // Scroll to prompts
+            document.getElementById('prompts-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Show response collection section
+        function showResponseSection() {
+            document.getElementById('responses-section').classList.add('active');
+            updateProgress(3);
+            document.getElementById('responses-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Generate final distilled report
+        function generateReport() {
+            const responses = {
+                architect: document.getElementById('claude-response').value.trim(),
+                performance: document.getElementById('grok-response').value.trim(),
+                ux: document.getElementById('gemini-response').value.trim(),
+                research: document.getElementById('perplexity-response').value.trim(),
+                code: document.getElementById('copilot-response').value.trim(),
+                security: document.getElementById('supergrok-response').value.trim()
+            };
+
+            // Check if we have responses
+            const filledResponses = Object.values(responses).filter(r => r.length > 0);
+            if (filledResponses.length === 0) {
+                alert('Please paste at least one AI response before generating the report.');
+                return;
+            }
+
+            // Generate distilled report
+            const report = distillResponses(currentGoal, responses);
+            document.getElementById('report-content').textContent = report;
+
+            // Show report section
+            document.getElementById('report-section').classList.add('active');
+            updateProgress(4);
+            document.getElementById('report-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Copy prompt to clipboard
+        function copyPrompt(agentType) {
+            const prompt = document.getElementById(`${agentType}-prompt`).textContent;
+            navigator.clipboard.writeText(prompt).then(() => {
+                const btn = event.target;
+                const original = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#22c55e';
+                setTimeout(() => {
+                    btn.textContent = original;
+                    btn.style.background = '';
+                }, 1000);
+            });
+        }
+
+        // Copy final report
+        function copyReport() {
+            const report = document.getElementById('report-content').textContent;
+            navigator.clipboard.writeText(report).then(() => {
+                alert('Report copied to clipboard!');
+            });
+        }
+
+        // Download final report
+        function downloadReport() {
+            const report = document.getElementById('report-content').textContent;
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `hexmind-distilled-report-${new Date().toISOString().slice(0, 10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Start over
+        function startOver() {
+            if (confirm('This will clear everything and start over. Are you sure?')) {
+                document.getElementById('user-goal').value = '';
+                resetSections();
+                updateProgress(1);
+                document.getElementById('goal-section').scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        // Cognitive Load Monitoring (Simulated)
-        function updateCognitiveLoad(level) {
-            cognitiveLoad = level;
-            const statusElement = document.getElementById('load-status');
-            const dots = document.querySelectorAll('.load-dot');
+        // Reset all sections
+        function resetSections() {
+            document.getElementById('prompts-section').classList.remove('active');
+            document.getElementById('responses-section').classList.remove('active');
+            document.getElementById('report-section').classList.remove('active');
             
-            // Reset all dots
-            dots.forEach(dot => dot.style.opacity = '0.3');
-            
-            switch(level) {
-                case 'low':
-                    dots[0].style.opacity = '1';
-                    statusElement.textContent = 'Low - Optimal for complex tasks';
-                    break;
-                case 'medium':
-                    dots[1].style.opacity = '1';
-                    statusElement.textContent = 'Medium - Consider taking a break';
-                    break;
-                case 'high':
-                    dots[2].style.opacity = '1';
-                    statusElement.textContent = 'High - Break recommended';
-                    break;
+            // Clear all responses
+            ['claude-response', 'grok-response', 'gemini-response', 'perplexity-response', 'copilot-response', 'supergrok-response'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        }
+
+        // Update progress indicator
+        function updateProgress(activeStep) {
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step-${i}`);
+                if (i < activeStep) {
+                    step.className = 'progress-step complete';
+                } else if (i === activeStep) {
+                    step.className = 'progress-step active';
+                } else {
+                    step.className = 'progress-step inactive';
+                }
             }
         }
 
-        // Simulate AI Status Updates
-        function updateAIStatus(agent, status) {
-            const statusElement = document.getElementById(`${agent}-status`);
-            statusElement.textContent = status;
-            statusElement.className = `ai-status status-${status.toLowerCase()}`;
+        // ===== PROMPT GENERATORS =====
+
+        function generateArchitectPrompt(goal) {
+            return `You are a senior systems architect. Design the complete technical architecture for this goal: "${goal}"
+
+Provide your response in this format:
+• SYSTEM OVERVIEW: 3-sentence high-level architecture
+• CORE COMPONENTS: 5 key technical components (bullet points)
+• DATA FLOW: How information moves through the system
+• TECHNOLOGY STACK: Recommended technologies and why
+• SCALABILITY APPROACH: How the system handles growth
+• INTEGRATION POINTS: Key external system connections
+
+Keep response under 300 words. Focus on practical, implementable architecture.`;
+        }
+
+        function generatePerformancePrompt(goal) {
+            return `You are a performance optimization expert. Analyze this goal for speed and efficiency: "${goal}"
+
+Provide your response in this format:
+• PERFORMANCE TARGETS: Specific speed/load requirements
+• POTENTIAL BOTTLENECKS: 3 biggest performance risks
+• OPTIMIZATION STRATEGIES: 5 specific performance improvements
+• CACHING APPROACH: How to minimize load times
+• MONITORING SETUP: Key metrics to track
+• LOAD TESTING: How to validate performance
+
+Keep response under 250 words. Focus on measurable improvements.`;
+        }
+
+        function generateUXPrompt(goal) {
+            return `You are a UX/UI design expert. Create the user experience design for: "${goal}"
+
+Provide your response in this format:
+• USER JOURNEY: Step-by-step user flow (5-7 steps)  
+• INTERFACE DESIGN: Key screens and layouts
+• ACCESSIBILITY FEATURES: How to make it inclusive
+• VISUAL HIERARCHY: How users' eyes should move
+• INTERACTION PATTERNS: Buttons, gestures, inputs
+• MOBILE CONSIDERATIONS: How it works on phones
+
+Keep response under 275 words. Focus on user-centered design.`;
+        }
+
+        function generateResearchPrompt(goal) {
+            return `You are a market research analyst. Research this goal thoroughly: "${goal}"
+
+Provide your response in this format:
+• MARKET ANALYSIS: Size, growth, opportunity
+• COMPETITOR RESEARCH: 3 main competitors and gaps
+• USER NEEDS VALIDATION: Evidence people want this
+• TECHNICAL FEASIBILITY: Is this buildable today?
+• BUSINESS MODEL: How could this make money?
+• RISK ASSESSMENT: 3 biggest challenges
+
+Keep response under 300 words. Include data sources when possible.`;
+        }
+
+        function generateCodePrompt(goal) {
+            return `You are a senior software architect. Plan the implementation for: "${goal}"
+
+Provide your response in this format:
+• PROJECT STRUCTURE: File/folder organization
+• CORE FUNCTIONS: 5 main functions needed
+• DATABASE DESIGN: Data storage requirements
+• API DESIGN: Key endpoints and data flow
+• DEVELOPMENT PHASES: 3 implementation stages
+• TESTING STRATEGY: How to ensure quality
+
+Keep response under 275 words. Include practical code considerations.`;
+        }
+
+        function generateSecurityPrompt(goal) {
+            return `You are a cybersecurity expert. Secure this project: "${goal}"
+
+Provide your response in this format:
+• THREAT ANALYSIS: 3 biggest security risks
+• DATA PROTECTION: How to secure sensitive information
+• ACCESS CONTROL: User authentication and permissions
+• COMPLIANCE REQUIREMENTS: Legal/regulatory needs
+• SECURITY TESTING: How to validate protection
+• INCIDENT RESPONSE: Plan for security breaches
+
+Keep response under 250 words. Focus on practical security measures.`;
+        }
+
+        // ===== RESPONSE DISTILLATION =====
+
+        function distillResponses(goal, responses) {
+            const timestamp = new Date().toLocaleDateString();
             
-            // Update response time simulation
-            if (status === 'working') {
-                const responseTime = (Math.random() * 0.3 + 0.1).toFixed(2);
-                document.getElementById('response-time').textContent = `${responseTime}s`;
+            let report = `# HEXMIND DISTILLED RESEARCH REPORT
+Generated: ${timestamp}
+Original Goal: ${goal}
+
+## EXECUTIVE SUMMARY
+`;
+
+            // Extract key insights from each response
+            const insights = extractKeyInsights(responses);
+            report += insights.summary + '\n\n';
+
+            // Add detailed sections
+            if (responses.architect) {
+                report += `## TECHNICAL ARCHITECTURE
+${responses.architect}
+
+`;
             }
+
+            if (responses.performance) {
+                report += `## PERFORMANCE & OPTIMIZATION
+${responses.performance}
+
+`;
+            }
+
+            if (responses.ux) {
+                report += `## USER EXPERIENCE DESIGN
+${responses.ux}
+
+`;
+            }
+
+            if (responses.research) {
+                report += `## MARKET RESEARCH & VALIDATION
+${responses.research}
+
+`;
+            }
+
+            if (responses.code) {
+                report += `## IMPLEMENTATION PLAN
+${responses.code}
+
+`;
+            }
+
+            if (responses.security) {
+                report += `## SECURITY & COMPLIANCE
+${responses.security}
+
+`;
+            }
+
+            // Add synthesis
+            report += `## NEXT ACTIONS
+${insights.actions}
+
+## KEY SUCCESS FACTORS
+${insights.success}
+
+---
+Generated by HexMind AI Distillery - Transforming multiple AI perspectives into actionable insights.`;
+
+            return report;
         }
 
-        // Achievement System
-        function showAchievement(message) {
-            const achievement = document.getElementById('achievement');
-            achievement.textContent = message;
-            achievement.classList.add('show');
+        function extractKeyInsights(responses) {
+            const filledResponses = Object.entries(responses).filter(([key, value]) => value.trim().length > 0);
+            const responseCount = filledResponses.length;
             
-            setTimeout(() => {
-                achievement.classList.remove('show');
-            }, 3000);
-        }
-
-        // ===== MOCK DATA FUNCTIONS (CLEARLY MARKED FOR REPLACEMENT) =====
-        
-        // 🚨 REPLACE BEFORE PRODUCTION
-        function mockTaskData() {
-            // This simulates task data - replace with real API calls
             return {
-                total: 5,
-                completed: 3,
-                inProgress: 2,
-                tasks: [
-                    { id: 1, title: "Set up HexMind architecture", status: "completed" },
-                    { id: 2, title: "Implement WCAG compliance", status: "in-progress" },
-                    { id: 3, title: "Add cognitive load monitoring", status: "pending" }
-                ]
+                summary: `This analysis combines insights from ${responseCount} AI specialists to provide a comprehensive view of the proposed solution. The research covers technical architecture, performance optimization, user experience, market validation, implementation strategy, and security considerations.`,
+                
+                actions: `1. Begin with technical architecture planning and user research validation
+2. Set up development environment and basic performance monitoring
+3. Create user experience prototypes and test with target users
+4. Implement core functionality with security measures built-in
+5. Conduct thorough testing and performance optimization`,
+                
+                success: `• Clear technical architecture with scalable foundation
+• User-centered design validated through research
+• Performance targets defined and monitored
+• Security measures implemented from day one
+• Iterative development with continuous user feedback`
             };
         }
 
-        // 🚨 REPLACE BEFORE PRODUCTION  
-        function simulateAIResponse() {
-            // This simulates AI responses - replace with real AI API calls
-            const agents = ['claude', 'grok', 'gemini', 'perplexity', 'copilot', 'supergrok'];
-            const randomAgent = agents[Math.floor(Math.random() * agents.length)];
-            
-            updateAIStatus(randomAgent, 'working');
-            
-            setTimeout(() => {
-                updateAIStatus(randomAgent, 'complete');
-                showAchievement(`🎉 ${randomAgent.charAt(0).toUpperCase() + randomAgent.slice(1)} task completed! +50 points`);
-            }, 2000 + Math.random() * 3000);
-        }
-
-        // 🚨 REPLACE BEFORE PRODUCTION
-        function mockPerformanceData() {
-            // This simulates performance metrics - replace with real monitoring
-            const latency = Math.floor(Math.random() * 50) + 100;
-            document.getElementById('latency').textContent = `${latency}ms`;
-            
-            // Simulate cognitive load changes based on performance
-            if (latency > 150) {
-                updateCognitiveLoad('medium');
-            } else {
-                updateCognitiveLoad('low');
-            }
-        }
-
-        // 🚨 REPLACE BEFORE PRODUCTION
-        function updateProgress() {
-            // This simulates progress updates - replace with real project data
-            const currentProgress = parseInt(document.getElementById('progress-percentage').textContent);
-            const newProgress = Math.min(currentProgress + Math.floor(Math.random() * 10), 100);
-            
-            document.getElementById('progress-percentage').textContent = `${newProgress}%`;
-            document.getElementById('main-progress').style.width = `${newProgress}%`;
-        }
-
-        // ===== INITIALIZATION =====
-        
-        // Start the simulation (REMOVE IN PRODUCTION)
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Initial setup
-            console.log('🧠 HexMind Prototype Loaded');
-            console.log('🚨 Remember to replace all mock functions before production!');
-            
-            // Start periodic updates (FOR DEMO ONLY)
-            setInterval(() => {
-                if (Math.random() > 0.7) {
-                    simulateAIResponse();
-                }
-                mockPerformanceData();
-            }, 5000);
-            
-            setInterval(() => {
-                if (Math.random() > 0.8) {
-                    updateProgress();
-                }
-            }, 10000);
-            
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.key === 'f') {
-                    e.preventDefault();
-                    toggleFocusMode();
-                }
-            });
+            document.getElementById('user-goal').focus();
         });
-
-        // ===== REPLACEMENT CHECKLIST =====
-        /*
-        BEFORE PRODUCTION - REPLACE THESE FUNCTIONS:
-        
-        1. mockTaskData() → Connect to your task management API
-        2. simulateAIResponse() → Connect to real AI APIs (Claude, Grok, etc.)
-        3. mockPerformanceData() → Connect to real performance monitoring
-        4. updateProgress() → Connect to real project tracking
-        
-        API ENDPOINTS YOU'LL NEED:
-        - Task Management: /api/tasks
-        - AI Coordination: /api/ai-agents 
-        - Performance: /api/metrics
-        - Progress Tracking: /api/projects
-        
-        REMOVE DEMO CODE:
-        - All setInterval() calls in DOMContentLoaded
-        - Console.log statements
-        - Math.random() generators
-        */
     </script>
 </body>
 </html>
