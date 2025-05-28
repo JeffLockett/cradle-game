@@ -96,12 +96,14 @@
             border: 1px solid rgba(255,255,255,0.1);
             position: relative;
             animation: slideIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .readme-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
+            position: sticky;
+            top: 0;
+            float: right;
             background: rgba(255,255,255,0.1);
             border: none;
             color: white;
@@ -111,11 +113,18 @@
             cursor: pointer;
             font-size: 1.5rem;
             transition: all 0.3s ease;
+            z-index: 10;
         }
 
         .readme-close:hover {
             background: rgba(255,255,255,0.2);
             transform: rotate(90deg);
+        }
+
+        .readme-content h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            clear: both;
         }
 
         .readme-content h2 {
@@ -166,6 +175,9 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .header::before {
@@ -491,16 +503,18 @@
         /* Copy Button */
         .copy-button {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 0.5rem;
+            right: 0.5rem;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
             color: var(--light);
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            z-index: 10;
+            white-space: nowrap;
         }
 
         .copy-button:hover {
@@ -510,6 +524,37 @@
         .copy-button.copied {
             background: var(--success);
             color: white;
+        }
+
+        /* AI Service Info */
+        .ai-service-info {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .search-level {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        /* Prompt content with proper spacing for copy button */
+        .prompt-content {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         /* Final Report */
@@ -544,20 +589,105 @@
         /* Responsive */
         @media (max-width: 768px) {
             .header h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+                padding: 0 3rem;
+            }
+            
+            .help-button {
+                position: static;
+                margin-top: 1rem;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
             }
             
             .progress-container {
                 gap: 0.5rem;
+                padding: 0 1rem;
             }
             
             .step {
                 width: 40px;
                 height: 40px;
-                margin: 0 0.5rem;
+                margin: 0 0.3rem;
+            }
+            
+            .step-label {
+                font-size: 0.7rem;
+                bottom: -20px;
             }
             
             .depth-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .button {
+                width: 100%;
+            }
+            
+            .readme-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .readme-content h1 {
+                font-size: 1.5rem;
+            }
+            
+            .readme-content ul {
+                margin-left: 1rem;
+            }
+            
+            .prompt-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+            
+            .copy-button {
+                position: static;
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .step {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+            
+            .ai-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .facet-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -893,7 +1023,49 @@
             finalReport: ''
         };
 
-        // Facet definitions
+        // AI service configurations with search levels
+        const aiServices = {
+            'Claude': { 
+                searchLevel: 'Advanced Research', 
+                description: 'Deep analysis with multiple sources and comprehensive reasoning',
+                icon: '🧠'
+            },
+            'Grok': { 
+                searchLevel: 'Real-time Web Search', 
+                description: 'Live data access with current information and trends',
+                icon: '⚡'
+            },
+            'Gemini': { 
+                searchLevel: 'Creative Research', 
+                description: 'Visual and creative analysis with broad context',
+                icon: '🎨'
+            },
+            'Perplexity': { 
+                searchLevel: 'Academic Research', 
+                description: 'Scholarly sources with citations and deep research',
+                icon: '🔍'
+            },
+            'Copilot': { 
+                searchLevel: 'Technical Documentation', 
+                description: 'Code repositories and technical documentation search',
+                icon: '💻'
+            },
+            'SuperGrok': { 
+                searchLevel: 'Security Intelligence', 
+                description: 'Threat databases and security-focused research',
+                icon: '🛡️'
+            },
+            'ChatGPT': { 
+                searchLevel: 'Conversational Analysis', 
+                description: 'Interactive discussion and iterative refinement',
+                icon: '💬'
+            },
+            'Llama': { 
+                searchLevel: 'Open Source Research', 
+                description: 'Community-driven insights and open source solutions',
+                icon: '🦙'
+            }
+        };
         const facets = {
             architecture: {
                 name: 'Architecture',
@@ -1086,17 +1258,25 @@
             container.innerHTML = '';
             
             Object.entries(state.prompts).forEach(([ai, data]) => {
+                const aiInfo = aiServices[ai];
                 const promptCard = document.createElement('div');
                 promptCard.className = 'prompt-card';
                 promptCard.innerHTML = `
+                    <div class="ai-service-info">
+                        <strong>${aiInfo.icon} ${ai}</strong>
+                        <span class="search-level">${aiInfo.searchLevel}</span>
+                        <br>
+                        <small>${aiInfo.description}</small>
+                    </div>
                     <div class="prompt-header">
-                        <div class="prompt-ai">${ai}</div>
                         <div class="prompt-facets">
                             ${data.facets.map(f => `<span class="facet-tag">${facets[f].icon} ${facets[f].name}</span>`).join('')}
                         </div>
                     </div>
-                    <div class="prompt-content">${data.prompt}</div>
-                    <button class="copy-button" onclick="copyPrompt('${ai}')">Copy Prompt</button>
+                    <div style="position: relative;">
+                        <div class="prompt-content">${data.prompt}</div>
+                        <button class="copy-button" onclick="copyPrompt('${ai}')">Copy Prompt</button>
+                    </div>
                     <textarea class="response-input" id="response-${ai}" placeholder="Paste ${ai}'s response here..."></textarea>
                 `;
                 container.appendChild(promptCard);
@@ -1294,6 +1474,12 @@
             const modal = document.getElementById('readmeModal');
             if (modal) {
                 modal.classList.toggle('active');
+                // Prevent body scroll when modal is open
+                if (modal.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'auto';
+                }
             }
         }
 
@@ -1325,6 +1511,131 @@
                 });
             }
         });
+    </script>
+
+    <!-- README Modal -->
+    <div id="readmeModal" class="readme-modal">
+        <div class="readme-content">
+            <button class="readme-close" onclick="toggleReadme()">×</button>
+            
+            <h1>🧠 HexMind AI Distillery - How to Use</h1>
+            
+            <h2>What It Actually Does</h2>
+            <p><strong>Think of it as a "smart AI project manager" that takes any big idea and breaks it into 6 specialized tasks, then combines all the results into one actionable report.</strong></p>
+            
+            <h3>THE PROBLEM IT SOLVES:</h3>
+            <p>When you have a complex project idea, you'd normally have to:</p>
+            <ul>
+                <li>Think of all the different angles yourself</li>
+                <li>Ask each AI service different questions</li>
+                <li>Try to remember what each one said</li>
+                <li>Figure out how to combine it all</li>
+                <li>Miss important considerations</li>
+            </ul>
+            <p><strong>HexMind does all that thinking FOR you.</strong></p>
+            
+            <h2>HOW IT WORKS (4 SIMPLE STEPS):</h2>
+            
+            <h3>1. INPUT YOUR IDEA</h3>
+            <ul>
+                <li>"Build a secure customer portal for financial advisors"</li>
+                <li>"Create a mobile app for tracking construction project safety"</li>
+                <li>Any project concept, no matter how complex</li>
+            </ul>
+            
+            <h3>2. GET 6 SPECIALIZED PROMPTS</h3>
+            <ul>
+                <li>🧠 <strong>Claude</strong> gets the architecture prompt (system design)</li>
+                <li>⚡ <strong>Grok</strong> gets the performance prompt (speed/optimization)</li>
+                <li>🎨 <strong>Gemini</strong> gets the UX prompt (user interface design)</li>
+                <li>🔍 <strong>Perplexity</strong> gets the research prompt (market validation)</li>
+                <li>💻 <strong>Copilot</strong> gets the code prompt (implementation plan)</li>
+                <li>🛡️ <strong>SuperGrok</strong> gets the security prompt (threat analysis)</li>
+            </ul>
+            
+            <h3>3. COPY/PASTE TO EACH AI</h3>
+            <ul>
+                <li>Take each prompt to the specified AI service</li>
+                <li>Paste the responses back into HexMind</li>
+            </ul>
+            
+            <h3>4. GET UNIFIED REPORT</h3>
+            <ul>
+                <li>HexMind removes duplicate ideas between responses</li>
+                <li>Combines unique insights from all 6 specialists</li>
+                <li>Generates one comprehensive action plan</li>
+            </ul>
+            
+            <h2>EXAMPLE: Network Security/Development Work</h2>
+            
+            <h3>Example Input:</h3>
+            <p><em>"Design a secure API gateway for microservices that handles 10,000+ requests/second"</em></p>
+            
+            <h3>You'd Get:</h3>
+            <ul>
+                <li><strong>Architecture</strong> from Claude (system components, data flow)</li>
+                <li><strong>Performance</strong> from Grok (caching, load balancing, bottlenecks)</li>
+                <li><strong>UX</strong> from Gemini (admin dashboard, monitoring interface)</li>
+                <li><strong>Research</strong> from Perplexity (industry standards, competitor analysis)</li>
+                <li><strong>Code</strong> from Copilot (implementation structure, key functions)</li>
+                <li><strong>Security</strong> from SuperGrok (threat model, authentication, compliance)</li>
+            </ul>
+            
+            <h3>Final Report:</h3>
+            <p>One document with architecture diagrams, performance specs, security requirements, implementation timeline, and code structure - everything needed to actually build it.</p>
+            
+            <h2>WHY IT'S POWERFUL:</h2>
+            <ul>
+                <li><strong>No blind spots</strong> - 6 different AI perspectives catch what you might miss</li>
+                <li><strong>No redundancy</strong> - Filters out repeated information</li>
+                <li><strong>Actionable output</strong> - Not just ideas, but specific steps to build</li>
+                <li><strong>Saves hours</strong> - Does the research coordination work for you</li>
+            </ul>
+            
+            <p><strong>It's like having a team of 6 specialists analyze your project, then a project manager combine their findings into one clear plan.</strong></p>
+            
+            <p>Perfect for complex projects where you need architecture, performance, security, and implementation all considered together.</p>
+            
+            <h2>STEP-BY-STEP GUIDE:</h2>
+            
+            <h3>Step 1: Select Your Available AIs</h3>
+            <p>Choose which AI services you have access to. The system will automatically distribute research facets across your selections.</p>
+            
+            <h3>Step 2: Choose Analysis Depth</h3>
+            <ul>
+                <li><strong>Quick Technical</strong> (3 facets): Architecture, Implementation, Security</li>
+                <li><strong>MVP Analysis</strong> (4 facets): Architecture, UX Design, Implementation, Research</li>
+                <li><strong>Business Launch</strong> (6 facets): All technical + Financial Analysis + Business Strategy</li>
+                <li><strong>Full Think Tank</strong> (9 facets): All business + Legal/Compliance + Complete Strategy</li>
+                <li><strong>Custom Selection</strong>: Choose exactly which facets you need</li>
+            </ul>
+            
+            <h3>Step 3: Describe Your Project Idea</h3>
+            <p>Be as detailed or as brief as you'd like. The AI will ask clarifying questions if needed.</p>
+            
+            <h3>Step 4: Copy Prompts to Each AI</h3>
+            <p>Copy each generated prompt to the corresponding AI service, then paste their responses back here.</p>
+            
+            <h3>Step 5: Get Your Unified Report</h3>
+            <p>Receive a comprehensive project analysis combining all AI perspectives with actionable next steps.</p>
+            
+            <h2>TIPS FOR BEST RESULTS:</h2>
+            <ul>
+                <li>Be specific about your technical requirements and constraints</li>
+                <li>Include information about your target users or market</li>
+                <li>Mention any compliance or security requirements upfront</li>
+                <li>Don't worry about being comprehensive - the AI will ask for clarification</li>
+                <li>Review each AI's response before pasting to ensure quality</li>
+            </ul>
+            
+            <h2>KEYBOARD SHORTCUTS:</h2>
+            <ul>
+                <li><code>Ctrl + Enter</code> - Continue to next step</li>
+                <li><code>Escape</code> - Close this help modal</li>
+            </ul>
+        </div>
+    </div>
+
     </script>
 </body>
 </html>
