@@ -348,54 +348,54 @@
         <div class="prompts-section" id="prompts-section">
             <h2 class="section-title">📋 Copy These Prompts to Each AI Service</h2>
             <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                Copy each prompt below and paste into Claude, ChatGPT, Gemini, etc. Then paste their responses in Step 3.
+                Copy each prompt below → Paste into the specific AI service → Bring responses back to Step 3
             </p>
 
             <div class="prompts-grid">
                 <div class="prompt-card">
                     <div class="prompt-header">
-                        <div class="agent-name">🧠 Systems Architect</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('claude')">Copy Prompt</button>
+                        <div class="agent-name">🧠 Claude - Systems Architect</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('claude')">Copy for Claude</button>
                     </div>
                     <div class="prompt-text" id="claude-prompt"></div>
                 </div>
 
                 <div class="prompt-card">
                     <div class="prompt-header">
-                        <div class="agent-name">⚡ Performance Engineer</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('grok')">Copy Prompt</button>
+                        <div class="agent-name">⚡ ChatGPT - Performance Engineer</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('grok')">Copy for ChatGPT</button>
                     </div>
                     <div class="prompt-text" id="grok-prompt"></div>
                 </div>
 
                 <div class="prompt-card">
                     <div class="prompt-header">
-                        <div class="agent-name">🎨 UX Designer</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('gemini')">Copy Prompt</button>
+                        <div class="agent-name">🎨 Gemini - UX Designer</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('gemini')">Copy for Gemini</button>
                     </div>
                     <div class="prompt-text" id="gemini-prompt"></div>
                 </div>
 
                 <div class="prompt-card">
                     <div class="prompt-header">
-                        <div class="agent-name">🔍 Research Analyst</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('perplexity')">Copy Prompt</button>
+                        <div class="agent-name">🔍 Perplexity - Research Analyst</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('perplexity')">Copy for Perplexity</button>
                     </div>
                     <div class="prompt-text" id="perplexity-prompt"></div>
                 </div>
 
                 <div class="prompt-card">
                     <div class="prompt-header">
-                        <div class="agent-name">💻 Code Architect</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('copilot')">Copy Prompt</button>
+                        <div class="agent-name">💻 GitHub Copilot - Code Architect</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('copilot')">Copy for Copilot</button>
                     </div>
                     <div class="prompt-text" id="copilot-prompt"></div>
                 </div>
 
                 <div class="prompt-card">
                     <div class="prompt-header">
-                        <div class="agent-name">🛡️ Security Specialist</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('supergrok')">Copy Prompt</button>
+                        <div class="agent-name">🛡️ Claude - Security Specialist</div>
+                        <button class="copy-prompt-btn" onclick="copyPrompt('supergrok')">Copy for Claude</button>
                     </div>
                     <div class="prompt-text" id="supergrok-prompt"></div>
                 </div>
@@ -417,44 +417,44 @@
 
             <div class="response-card">
                 <div class="response-header">
-                    <div class="agent-name">🧠 Systems Architect Response</div>
+                    <div class="agent-name">🧠 Claude Response (Systems Architect)</div>
                 </div>
-                <textarea class="response-input" id="claude-response" placeholder="Paste the Systems Architect response here..."></textarea>
+                <textarea class="response-input" id="claude-response" placeholder="Paste Claude's systems architecture response here..."></textarea>
             </div>
 
             <div class="response-card">
                 <div class="response-header">
-                    <div class="agent-name">⚡ Performance Engineer Response</div>
+                    <div class="agent-name">⚡ ChatGPT Response (Performance Engineer)</div>
                 </div>
-                <textarea class="response-input" id="grok-response" placeholder="Paste the Performance Engineer response here..."></textarea>
+                <textarea class="response-input" id="grok-response" placeholder="Paste ChatGPT's performance optimization response here..."></textarea>
             </div>
 
             <div class="response-card">
                 <div class="response-header">
-                    <div class="agent-name">🎨 UX Designer Response</div>
+                    <div class="agent-name">🎨 Gemini Response (UX Designer)</div>
                 </div>
-                <textarea class="response-input" id="gemini-response" placeholder="Paste the UX Designer response here..."></textarea>
+                <textarea class="response-input" id="gemini-response" placeholder="Paste Gemini's UX design response here..."></textarea>
             </div>
 
             <div class="response-card">
                 <div class="response-header">
-                    <div class="agent-name">🔍 Research Analyst Response</div>
+                    <div class="agent-name">🔍 Perplexity Response (Research Analyst)</div>
                 </div>
-                <textarea class="response-input" id="perplexity-response" placeholder="Paste the Research Analyst response here..."></textarea>
+                <textarea class="response-input" id="perplexity-response" placeholder="Paste Perplexity's research analysis response here..."></textarea>
             </div>
 
             <div class="response-card">
                 <div class="response-header">
-                    <div class="agent-name">💻 Code Architect Response</div>
+                    <div class="agent-name">💻 GitHub Copilot Response (Code Architect)</div>
                 </div>
-                <textarea class="response-input" id="copilot-response" placeholder="Paste the Code Architect response here..."></textarea>
+                <textarea class="response-input" id="copilot-response" placeholder="Paste GitHub Copilot's code architecture response here..."></textarea>
             </div>
 
             <div class="response-card">
                 <div class="response-header">
-                    <div class="agent-name">🛡️ Security Specialist Response</div>
+                    <div class="agent-name">🛡️ Claude Response (Security Specialist)</div>
                 </div>
-                <textarea class="response-input" id="supergrok-response" placeholder="Paste the Security Specialist response here..."></textarea>
+                <textarea class="response-input" id="supergrok-response" placeholder="Paste Claude's security analysis response here..."></textarea>
             </div>
 
             <div class="text-center mt-1">
