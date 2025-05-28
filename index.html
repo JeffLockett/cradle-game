@@ -339,49 +339,52 @@
         
         <div class="grid-container">
             <div class="section">
-                <h2>🤖 AI Delegation Matrix</h2>
+                <h2>🤖 AI Mind Hive - Specialized Delegation</h2>
+                <div style="font-size: 12px; color: #888; margin-bottom: 15px;">
+                    Each AI focuses on their top 2 abilities + consensus validation areas
+                </div>
                 <table id="aiTable">
                     <thead>
                         <tr>
-                            <th>AI</th>
-                            <th>Task</th>
+                            <th>AI Specialist</th>
+                            <th>Primary | Secondary | Consensus Tasks</th>
                             <th>Status</th>
-                            <th>Response</th>
+                            <th>Done</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr data-ai="Claude">
-                            <td>Claude</td>
+                            <td><strong>Claude</strong><br><small>Architecture & Analysis</small></td>
                             <td><input type="text" class="task-input" id="claude-task"></td>
                             <td><span class="status" onclick="toggleStatus(this)">⏳</span></td>
                             <td><input type="checkbox" class="checkbox" onchange="updateProgress()"></td>
                         </tr>
                         <tr data-ai="Grok">
-                            <td>Grok</td>
+                            <td><strong>Grok</strong><br><small>Performance & Real-time</small></td>
                             <td><input type="text" class="task-input" id="grok-task"></td>
                             <td><span class="status" onclick="toggleStatus(this)">⏳</span></td>
                             <td><input type="checkbox" class="checkbox" onchange="updateProgress()"></td>
                         </tr>
                         <tr data-ai="Gemini">
-                            <td>Gemini</td>
+                            <td><strong>Gemini</strong><br><small>UX & Multi-modal</small></td>
                             <td><input type="text" class="task-input" id="gemini-task"></td>
                             <td><span class="status" onclick="toggleStatus(this)">⏳</span></td>
                             <td><input type="checkbox" class="checkbox" onchange="updateProgress()"></td>
                         </tr>
                         <tr data-ai="Perplexity">
-                            <td>Perplexity</td>
+                            <td><strong>Perplexity</strong><br><small>Research & Intelligence</small></td>
                             <td><input type="text" class="task-input" id="perplexity-task"></td>
                             <td><span class="status" onclick="toggleStatus(this)">⏳</span></td>
                             <td><input type="checkbox" class="checkbox" onchange="updateProgress()"></td>
                         </tr>
                         <tr data-ai="Copilot">
-                            <td>Copilot</td>
+                            <td><strong>Copilot</strong><br><small>Code & Dev Experience</small></td>
                             <td><input type="text" class="task-input" id="copilot-task"></td>
                             <td><span class="status" onclick="toggleStatus(this)">⏳</span></td>
                             <td><input type="checkbox" class="checkbox" onchange="updateProgress()"></td>
                         </tr>
                         <tr data-ai="SuperGrok">
-                            <td>SuperGrok</td>
+                            <td><strong>SuperGrok</strong><br><small>Security & Integration</small></td>
                             <td><input type="text" class="task-input" id="supergrok-task"></td>
                             <td><span class="status" onclick="toggleStatus(this)">⏳</span></td>
                             <td><input type="checkbox" class="checkbox" onchange="updateProgress()"></td>
@@ -421,9 +424,23 @@
         </div>
         
         <div class="synthesis-box">
-            <h2>📋 Synthesis Notes</h2>
+            <h2>📋 Consensus Synthesis Hub</h2>
+            <div style="font-size: 12px; color: #888; margin-bottom: 10px;">
+                Compare overlapping responses to build consensus and identify the strongest solutions
+            </div>
             <textarea class="synthesis-textarea" id="synthesisNotes" 
-                      placeholder="Paste AI responses here for synthesis..."></textarea>
+                      placeholder="🔍 CONSENSUS VALIDATION NEEDED:
+
+Compare responses from AIs working on overlapping areas...
+
+📋 SYNTHESIS CHECKLIST:
+□ Do all AIs agree on core approach?
+□ Are there conflicting recommendations?
+□ Which AI provided the most detailed solution?
+□ Are there gaps that need additional research?
+□ Can solutions be combined for better results?
+
+💡 Paste AI responses below for comparison..."></textarea>
         </div>
         
         <div class="export-format" id="exportPreview" style="display: none;">
@@ -442,32 +459,54 @@
     </div>
     
     <script>
-        // Task templates for common commands
-        const taskTemplates = {
-            'attention': {
-                'Claude': 'Design architectural pattern for attention tracking',
-                'Grok': 'Optimize timer performance for 15/30/45s intervals',
-                'Gemini': 'Create engaging nudge content and animations',
-                'Perplexity': 'Research ADHD attention span best practices',
-                'Copilot': 'Build UI components for nudges',
-                'SuperGrok': 'Ensure nudges don\'t interrupt critical operations'
+        // AI Specialization Matrix - Each AI's top 2 abilities
+        const aiSpecializations = {
+            'Claude': {
+                primary: 'System Architecture & Logic',
+                secondary: 'Complex Problem Analysis',
+                strengths: ['design patterns', 'logical reasoning', 'system thinking', 'documentation'],
+                overlap_areas: ['user experience', 'data analysis', 'strategic planning']
             },
-            'feature': {
-                'Claude': 'Architecture design for feature',
-                'Grok': 'Performance optimization approach',
-                'Gemini': 'Content/interaction design',
-                'Perplexity': 'Research best practices',
-                'Copilot': 'UI component implementation',
-                'SuperGrok': 'Security considerations'
+            'Grok': {
+                primary: 'Performance Optimization',
+                secondary: 'Real-time Systems',
+                strengths: ['speed optimization', 'resource management', 'live data', 'efficiency'],
+                overlap_areas: ['technical implementation', 'system monitoring', 'data processing']
             },
-            'bug': {
-                'Claude': 'Root cause analysis',
-                'Grok': 'Performance profiling',
-                'Gemini': 'User experience impact',
-                'Perplexity': 'Similar issues research',
-                'Copilot': 'UI reproduction steps',
-                'SuperGrok': 'Security implications'
+            'Gemini': {
+                primary: 'Creative Content & UX',
+                secondary: 'Multi-modal Integration',
+                strengths: ['visual design', 'user psychology', 'content creation', 'accessibility'],
+                overlap_areas: ['user research', 'interaction design', 'behavioral analysis']
+            },
+            'Perplexity': {
+                primary: 'Research & Data Analysis',
+                secondary: 'Market Intelligence',
+                strengths: ['fact-finding', 'trend analysis', 'competitive research', 'validation'],
+                overlap_areas: ['user needs', 'best practices', 'industry standards']
+            },
+            'Copilot': {
+                primary: 'Code Implementation',
+                secondary: 'Developer Experience',
+                strengths: ['rapid prototyping', 'code generation', 'debugging', 'integration'],
+                overlap_areas: ['technical feasibility', 'implementation strategy', 'testing']
+            },
+            'SuperGrok': {
+                primary: 'Security & Risk Assessment',
+                secondary: 'System Integration',
+                strengths: ['vulnerability analysis', 'privacy protection', 'compliance', 'scalability'],
+                overlap_areas: ['architecture review', 'performance impact', 'user safety']
             }
+        };
+
+        // Consensus research areas for cross-validation
+        const consensusAreas = {
+            'user_experience': ['Claude', 'Gemini', 'Perplexity'],
+            'performance': ['Grok', 'Copilot', 'SuperGrok'],
+            'implementation': ['Claude', 'Copilot', 'SuperGrok'],
+            'research_validation': ['Perplexity', 'Gemini', 'Claude'],
+            'technical_feasibility': ['Grok', 'Copilot', 'Claude'],
+            'security_privacy': ['SuperGrok', 'Claude', 'Perplexity']
         };
         
         function parseCommand() {
@@ -481,41 +520,251 @@
                 }
             });
             
-            // Extract key elements from the command
-            const isADHD = commandLower.includes('adhd');
-            const hasNudges = commandLower.includes('nudge');
-            const isCalendar = commandLower.includes('calendar');
-            const notLikeOutlook = commandLower.includes('outlook');
+            // Extract project context and requirements
+            const projectContext = analyzeProject(command);
+            const consensusNeeded = identifyConsensusAreas(projectContext);
             
-            // Generate intelligent, context-aware tasks based on the ACTUAL command
-            if (isCalendar && isADHD) {
-                fillTasks({
-                    'Claude': `Design calendar architecture that addresses ADHD time blindness, with ${hasNudges ? 'smart nudge system' : 'attention management'} - avoid Outlook's cluttered approach`,
-                    'Grok': `Optimize for instant load times and responsive nudges - ADHD users need immediate feedback, not Outlook's lag`,
-                    'Gemini': `Create visual time representation for ADHD (color coding, time blocks) with ${hasNudges ? 'gentle nudge animations' : 'focus indicators'} - simpler than Outlook`,
-                    'Perplexity': `Research ADHD-specific calendar needs: time blindness, task initiation, hyperfocus protection - what makes Outlook fail for ADHD`,
-                    'Copilot': `Build React components: visual time blocks, ${hasNudges ? 'nudge system' : 'reminder system'}, quick-add tasks, focus mode - anti-Outlook UI`,
-                    'SuperGrok': `Ensure privacy for ADHD-related data, secure nudge preferences, protect focus time blocks from external calendar spam`
-                });
-            } else {
-                // For any other command, dynamically generate based on the actual words used
-                const mainSubject = extractMainSubject(command);
-                const requirements = extractRequirements(command);
-                
-                fillTasks({
-                    'Claude': `Design the architecture for ${mainSubject}${requirements ? ' with ' + requirements : ''}`,
-                    'Grok': `Optimize performance and efficiency for ${mainSubject}${requirements ? ' focusing on ' + requirements : ''}`,
-                    'Gemini': `Create engaging UX/content for ${mainSubject}${requirements ? ' incorporating ' + requirements : ''}`,
-                    'Perplexity': `Research best practices and user needs for ${mainSubject}${requirements ? ' especially ' + requirements : ''}`,
-                    'Copilot': `Implement UI components for ${mainSubject}${requirements ? ' including ' + requirements : ''}`,
-                    'SuperGrok': `Address security and privacy concerns for ${mainSubject}${requirements ? ' regarding ' + requirements : ''}`
-                });
-            }
+            // Generate specialized tasks based on each AI's top abilities
+            const tasks = generateSpecializedTasks(projectContext, consensusNeeded);
+            
+            // Fill in the task assignments
+            fillTasks(tasks);
             
             // Reset all statuses and checkboxes for new command
             document.querySelectorAll('.status').forEach(status => status.textContent = '⏳');
             document.querySelectorAll('.checkbox').forEach(cb => cb.checked = false);
             updateProgress();
+            
+            // Show consensus areas in synthesis notes
+            updateSynthesisGuidance(consensusNeeded);
+        }
+        
+        function analyzeProject(command) {
+            const commandLower = command.toLowerCase();
+            
+            return {
+                type: getProjectType(commandLower),
+                complexity: getComplexity(commandLower),
+                userFocus: getUserFocus(commandLower),
+                techRequirements: getTechRequirements(commandLower),
+                businessNeeds: getBusinessNeeds(commandLower),
+                riskFactors: getRiskFactors(commandLower)
+            };
+        }
+        
+        function getProjectType(cmd) {
+            if (cmd.includes('calendar') || cmd.includes('scheduling')) return 'productivity_app';
+            if (cmd.includes('game') || cmd.includes('interactive')) return 'interactive_experience';
+            if (cmd.includes('dashboard') || cmd.includes('analytics')) return 'data_visualization';
+            if (cmd.includes('api') || cmd.includes('backend')) return 'backend_system';
+            if (cmd.includes('mobile') || cmd.includes('app')) return 'mobile_application';
+            if (cmd.includes('website') || cmd.includes('landing')) return 'web_presence';
+            return 'general_software';
+        }
+        
+        function getComplexity(cmd) {
+            const complexityMarkers = ['enterprise', 'scalable', 'complex', 'advanced', 'sophisticated'];
+            const simpleMarkers = ['simple', 'basic', 'quick', 'minimal', 'prototype'];
+            
+            if (complexityMarkers.some(marker => cmd.includes(marker))) return 'high';
+            if (simpleMarkers.some(marker => cmd.includes(marker))) return 'low';
+            return 'medium';
+        }
+        
+        function getUserFocus(cmd) {
+            const focuses = [];
+            if (cmd.includes('adhd') || cmd.includes('accessibility')) focuses.push('accessibility');
+            if (cmd.includes('mobile') || cmd.includes('touch')) focuses.push('mobile');
+            if (cmd.includes('speed') || cmd.includes('fast')) focuses.push('performance');
+            if (cmd.includes('beautiful') || cmd.includes('design')) focuses.push('aesthetics');
+            if (cmd.includes('secure') || cmd.includes('privacy')) focuses.push('security');
+            return focuses.length > 0 ? focuses : ['general_usability'];
+        }
+        
+        function getTechRequirements(cmd) {
+            const tech = [];
+            if (cmd.includes('real-time') || cmd.includes('live')) tech.push('real_time');
+            if (cmd.includes('database') || cmd.includes('data')) tech.push('data_storage');
+            if (cmd.includes('ai') || cmd.includes('ml')) tech.push('machine_learning');
+            if (cmd.includes('api') || cmd.includes('integration')) tech.push('api_integration');
+            if (cmd.includes('responsive') || cmd.includes('mobile')) tech.push('responsive_design');
+            return tech;
+        }
+        
+        function getBusinessNeeds(cmd) {
+            const needs = [];
+            if (cmd.includes('monetize') || cmd.includes('revenue')) needs.push('monetization');
+            if (cmd.includes('scale') || cmd.includes('growth')) needs.push('scalability');
+            if (cmd.includes('market') || cmd.includes('competitive')) needs.push('market_analysis');
+            if (cmd.includes('user') || cmd.includes('customer')) needs.push('user_acquisition');
+            return needs;
+        }
+        
+        function getRiskFactors(cmd) {
+            const risks = [];
+            if (cmd.includes('personal') || cmd.includes('private')) risks.push('privacy');
+            if (cmd.includes('payment') || cmd.includes('financial')) risks.push('financial');
+            if (cmd.includes('health') || cmd.includes('medical')) risks.push('compliance');
+            if (cmd.includes('enterprise') || cmd.includes('business')) risks.push('reliability');
+            return risks;
+        }
+        
+        function identifyConsensusAreas(context) {
+            const needed = [];
+            
+            // Always need UX consensus for user-facing projects
+            if (context.userFocus.includes('accessibility') || context.userFocus.includes('mobile')) {
+                needed.push('user_experience');
+            }
+            
+            // Performance consensus for complex or real-time systems
+            if (context.complexity === 'high' || context.techRequirements.includes('real_time')) {
+                needed.push('performance');
+            }
+            
+            // Implementation consensus for technical projects
+            if (context.techRequirements.length > 2) {
+                needed.push('implementation');
+            }
+            
+            // Research validation for business-focused projects
+            if (context.businessNeeds.length > 0) {
+                needed.push('research_validation');
+            }
+            
+            // Security consensus for risky projects
+            if (context.riskFactors.length > 0) {
+                needed.push('security_privacy');
+            }
+            
+            // Technical feasibility for complex projects
+            if (context.complexity === 'high') {
+                needed.push('technical_feasibility');
+            }
+            
+            return needed;
+        }
+        
+        function generateSpecializedTasks(context, consensusAreas) {
+            const tasks = {};
+            
+            // Generate primary and secondary tasks for each AI based on their specializations
+            Object.keys(aiSpecializations).forEach(ai => {
+                const spec = aiSpecializations[ai];
+                tasks[ai] = generateAITask(ai, spec, context, consensusAreas);
+            });
+            
+            return tasks;
+        }
+        
+        function generateAITask(ai, specialization, context, consensusAreas) {
+            const primaryTask = generatePrimaryTask(ai, specialization.primary, context);
+            const secondaryTask = generateSecondaryTask(ai, specialization.secondary, context);
+            const consensusTask = generateConsensusTask(ai, consensusAreas);
+            
+            // Combine into a comprehensive task
+            let fullTask = `PRIMARY: ${primaryTask}`;
+            if (secondaryTask) {
+                fullTask += ` | SECONDARY: ${secondaryTask}`;
+            }
+            if (consensusTask) {
+                fullTask += ` | CONSENSUS: ${consensusTask}`;
+            }
+            
+            return fullTask;
+        }
+        
+        function generatePrimaryTask(ai, primaryAbility, context) {
+            const subject = extractMainSubject(document.getElementById('commandInput').value);
+            
+            switch (ai) {
+                case 'Claude':
+                    return `Design the complete system architecture for ${subject}, focusing on logical flow and component relationships`;
+                case 'Grok':
+                    return `Optimize performance bottlenecks and resource usage for ${subject}, ensure sub-200ms response times`;
+                case 'Gemini':
+                    return `Create engaging UX/UI design for ${subject}, focusing on user psychology and visual hierarchy`;
+                case 'Perplexity':
+                    return `Research industry best practices and user needs for ${subject}, validate market assumptions`;
+                case 'Copilot':
+                    return `Implement core functionality for ${subject}, provide working code examples and integration patterns`;
+                case 'SuperGrok':
+                    return `Assess security vulnerabilities and privacy risks for ${subject}, define protection strategies`;
+                default:
+                    return `Apply ${primaryAbility} expertise to ${subject}`;
+            }
+        }
+        
+        function generateSecondaryTask(ai, secondaryAbility, context) {
+            const subject = extractMainSubject(document.getElementById('commandInput').value);
+            
+            switch (ai) {
+                case 'Claude':
+                    return `Analyze complex edge cases and failure scenarios`;
+                case 'Grok':
+                    return `Design real-time monitoring and alerting systems`;
+                case 'Gemini':
+                    return `Integrate multi-modal interactions (voice, touch, visual)`;
+                case 'Perplexity':
+                    return `Provide competitive analysis and market positioning`;
+                case 'Copilot':
+                    return `Enhance developer experience with clear documentation`;
+                case 'SuperGrok':
+                    return `Plan system integration and scalability concerns`;
+                default:
+                    return `Apply ${secondaryAbility} to enhance solution`;
+            }
+        }
+        
+        function generateConsensusTask(ai, consensusAreas) {
+            const aiConsensusRoles = [];
+            
+            consensusAreas.forEach(area => {
+                if (consensusAreas[area] && consensusAreas[area].includes(ai)) {
+                    switch (area) {
+                        case 'user_experience':
+                            aiConsensusRoles.push('Validate UX decisions');
+                            break;
+                        case 'performance':
+                            aiConsensusRoles.push('Cross-check performance claims');
+                            break;
+                        case 'implementation':
+                            aiConsensusRoles.push('Verify technical feasibility');
+                            break;
+                        case 'research_validation':
+                            aiConsensusRoles.push('Fact-check research findings');
+                            break;
+                        case 'security_privacy':
+                            aiConsensusRoles.push('Review security implications');
+                            break;
+                        case 'technical_feasibility':
+                            aiConsensusRoles.push('Validate technical approach');
+                            break;
+                    }
+                }
+            });
+            
+            return aiConsensusRoles.join(', ');
+        }
+        
+        function updateSynthesisGuidance(consensusAreas) {
+            const textarea = document.getElementById('synthesisNotes');
+            let guidance = '🔍 CONSENSUS VALIDATION NEEDED:\n\n';
+            
+            consensusAreas.forEach(area => {
+                const ais = consensusAreas[area] || [];
+                guidance += `${area.toUpperCase().replace('_', ' ')}: Compare responses from ${ais.join(', ')}\n`;
+            });
+            
+            guidance += '\n📋 SYNTHESIS CHECKLIST:\n';
+            guidance += '□ Do all AIs agree on core approach?\n';
+            guidance += '□ Are there conflicting recommendations?\n';
+            guidance += '□ Which AI provided the most detailed solution?\n';
+            guidance += '□ Are there gaps that need additional research?\n';
+            guidance += '□ Can solutions be combined for better results?\n\n';
+            guidance += '💡 Paste AI responses below for comparison...';
+            
+            textarea.placeholder = guidance;
         }
         
         function extractMainSubject(command) {
