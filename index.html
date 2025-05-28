@@ -1224,16 +1224,36 @@
             state.prompts = {};
             state.responses = {};
             
-            // Distribute facets across available AIs
+            // Ensure we have both selected AIs and facets
+            if (state.selectedAIs.length === 0 || state.selectedFacets.length === 0) {
+                alert('Please ensure you have selected both AI services and analysis facets.');
+                return;
+            }
+            
+            // Distribute facets across available AIs more evenly
             const facetsPerAI = Math.ceil(state.selectedFacets.length / state.selectedAIs.length);
             let facetIndex = 0;
             
+            // Make sure we include all selected AIs
             state.selectedAIs.forEach((ai, aiIndex) => {
                 const aiFacets = [];
-                for (let i = 0; i < facetsPerAI && facetIndex < state.selectedFacets.length; i++) {
+                
+                // Distribute facets, ensuring each AI gets at least one if possible
+                const startIndex = Math.floor(aiIndex * (state.selectedFacets.length / state.selectedAIs.length));
+                const endIndex = Math.min(startIndex + facetsPerAI, state.selectedFacets.length);
+                
+                for (let i = startIndex; i < endIndex; i++) {
+                    if (i < state.selectedFacets.length) {
+                        aiFacets.push(state.selectedFacets[i]);
+                    }
+                }
+                
+                // If this AI didn't get facets due to rounding, give it remaining ones
+                if (aiFacets.length === 0 && facetIndex < state.selectedFacets.length) {
                     aiFacets.push(state.selectedFacets[facetIndex++]);
                 }
                 
+                // Generate prompt for this AI if it has facets
                 if (aiFacets.length > 0) {
                     // Combine prompts for multiple facets
                     const combinedPrompt = aiFacets.map(facetId => {
@@ -1247,6 +1267,9 @@
                     };
                 }
             });
+            
+            // Debug: Log the prompt distribution
+            console.log('Prompt distribution:', state.prompts);
             
             // Display prompts
             displayPrompts();
@@ -1294,19 +1317,71 @@
                     button.textContent = 'Copy Prompt';
                     button.classList.remove('copied');
                 }, 2000);
-            });
-        }
-
-        function copyReport() {
-            navigator.clipboard.writeText(state.finalReport).then(() => {
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(prompt);
                 const button = event.target;
                 button.textContent = 'Copied!';
                 button.classList.add('copied');
                 setTimeout(() => {
-                    button.textContent = 'Copy Report';
+                    button.textContent = 'Copy Prompt';
                     button.classList.remove('copied');
                 }, 2000);
             });
+        }
+
+        function copyReport() {
+            if (!state.finalReport) {
+                alert('No report to copy yet!');
+                return;
+            }
+            
+            navigator.clipboard.writeText(state.finalReport).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy report: ', err);
+                // Fallback for older browsers
+                fallbackCopyTextToClipboard(state.finalReport);
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Fallback copy function for older browsers
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Avoid scrolling to bottom
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            
+            document.body.removeChild(textArea);
         }
 
         // Generate final report
