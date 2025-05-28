@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HexMind AI Distillery</title>
+    <title>HexMind AI Distillery - Smart AI Project Manager</title>
     <style>
         * {
             margin: 0;
@@ -12,137 +12,279 @@
         }
 
         :root {
-            --primary-bg: #1a1a1a;
-            --secondary-bg: #2d2d2d;
-            --accent-blue: #4a9eff;
-            --success-green: #4ade80;
-            --warning-orange: #fb923c;
-            --text-primary: #ffffff;
-            --text-secondary: #d1d5db;
-            --border-subtle: #404040;
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: var(--primary-bg);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--dark);
+            color: var(--light);
             line-height: 1.6;
-            min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Header */
         .header {
-            background: var(--secondary-bg);
-            padding: 1rem 2rem;
-            border-bottom: 2px solid var(--border-subtle);
+            background: var(--gradient);
+            padding: 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-blue);
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
         }
 
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* Step 1: Goal Input */
-        .goal-section {
-            background: var(--secondary-bg);
-            border: 2px solid var(--accent-blue);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+        /* Progress Steps */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
         }
 
-        .section-title {
-            font-size: 1.25rem;
-            color: var(--accent-blue);
-            margin-bottom: 1rem;
-        }
-
-        .goal-input {
-            width: 100%;
-            min-height: 120px;
-            background: var(--primary-bg);
-            border: 2px solid var(--border-subtle);
-            border-radius: 6px;
-            padding: 1rem;
-            color: var(--text-primary);
-            font-size: 1rem;
-            resize: vertical;
-            font-family: inherit;
-        }
-
-        .goal-input:focus {
-            outline: 3px solid var(--warning-orange);
-            border-color: var(--accent-blue);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 6px;
+        .step {
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 1rem;
+            position: relative;
+            transition: all 0.3s ease;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 1rem;
-            margin: 0.5rem 0.5rem 0 0;
-            transition: all 0.2s ease;
         }
 
-        .btn-primary {
-            background: var(--accent-blue);
-            color: white;
+        .step.active {
+            background: var(--primary);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
         }
 
-        .btn-primary:hover {
-            background: #3b82f6;
+        .step.completed {
+            background: var(--success);
         }
 
-        .btn-secondary {
-            background: var(--border-subtle);
-            color: var(--text-primary);
+        .step-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 0.8rem;
+            white-space: nowrap;
         }
 
-        .btn-secondary:hover {
-            background: var(--warning-orange);
-        }
-
-        .btn:focus {
-            outline: 3px solid var(--warning-orange);
-            outline-offset: 2px;
-        }
-
-        /* Step 2: Generated Prompts */
-        .prompts-section {
+        /* Sections */
+        .section {
             display: none;
+            animation: slideIn 0.5s ease-out;
         }
 
-        .prompts-section.active {
+        .section.active {
             display: block;
         }
 
-        .prompts-grid {
+        /* Cards */
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* AI Selection */
+        .ai-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
             margin-bottom: 2rem;
         }
 
-        .prompt-card {
-            background: var(--secondary-bg);
-            border: 2px solid var(--border-subtle);
+        .ai-option {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ai-option input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .ai-option label {
+            display: block;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
             border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ai-option input[type="checkbox"]:checked + label {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .ai-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Depth Selection */
+        .depth-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .depth-option {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .depth-option.selected {
+            transform: scale(1.05);
+        }
+
+        .depth-option.selected .card {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Facet Selection */
+        .facet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .facet-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .facet-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Input Section */
+        .input-container {
+            margin-bottom: 2rem;
+        }
+
+        .input-container textarea {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--light);
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .input-container textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* Prompts Display */
+        .prompts-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .prompt-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
             padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient);
         }
 
         .prompt-header {
@@ -152,682 +294,890 @@
             margin-bottom: 1rem;
         }
 
-        .agent-name {
-            font-size: 1.1rem;
+        .prompt-ai {
+            font-size: 1.2rem;
             font-weight: bold;
-            color: var(--accent-blue);
+            color: var(--primary);
         }
 
-        .copy-prompt-btn {
-            background: var(--success-green);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-
-        .copy-prompt-btn:hover {
-            background: #22c55e;
-        }
-
-        .prompt-text {
-            background: var(--primary-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 6px;
-            padding: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            max-height: 200px;
-            overflow-y: auto;
-            white-space: pre-line;
-        }
-
-        /* Step 3: Response Collection */
-        .responses-section {
-            display: none;
-            margin-top: 2rem;
-        }
-
-        .responses-section.active {
-            display: block;
-        }
-
-        .response-card {
-            background: var(--secondary-bg);
-            border: 2px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .response-header {
+        .prompt-facets {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .facet-tag {
+            background: rgba(99, 102, 241, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .prompt-content {
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 8px;
             margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .response-input {
             width: 100%;
             min-height: 100px;
-            background: var(--primary-bg);
-            border: 2px solid var(--border-subtle);
-            border-radius: 6px;
-            padding: 1rem;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            resize: vertical;
-            font-family: inherit;
-        }
-
-        .response-input:focus {
-            outline: 2px solid var(--warning-orange);
-            border-color: var(--accent-blue);
-        }
-
-        /* Step 4: Final Report */
-        .report-section {
-            display: none;
-            background: var(--secondary-bg);
-            border: 2px solid var(--success-green);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 8px;
+            padding: 0.5rem;
+            color: var(--light);
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .button-secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .button-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* Copy Button */
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--light);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .copy-button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .copy-button.copied {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Final Report */
+        .report-container {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
             padding: 2rem;
             margin-top: 2rem;
         }
 
-        .report-section.active {
-            display: block;
-        }
-
         .report-content {
-            background: var(--primary-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 6px;
-            padding: 1.5rem;
-            min-height: 300px;
-            white-space: pre-line;
-            line-height: 1.6;
+            white-space: pre-wrap;
+            line-height: 1.8;
         }
 
-        /* Progress indicator */
-        .progress {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
         }
 
-        .progress-step {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .progress-step.active {
-            background: var(--accent-blue);
-            color: white;
-        }
-
-        .progress-step.complete {
-            background: var(--success-green);
-            color: white;
-        }
-
-        .progress-step.inactive {
-            background: var(--border-subtle);
-            color: var(--text-secondary);
-        }
-
-        /* Utilities */
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-1 {
-            margin-top: 1rem;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Mobile responsive */
+        /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
+            .header h1 {
+                font-size: 2rem;
             }
             
-            .prompts-grid {
+            .progress-container {
+                gap: 0.5rem;
+            }
+            
+            .step {
+                width: 40px;
+                height: 40px;
+                margin: 0 0.5rem;
+            }
+            
+            .depth-grid {
                 grid-template-columns: 1fr;
             }
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">🧠 HexMind AI Distillery</div>
-        <div class="subtitle">Transform one goal into 6 specialized prompts → Distill responses into actionable research</div>
-    </header>
+    <div class="header">
+        <h1>🧠 HexMind AI Distillery</h1>
+        <p>Transform any idea into a comprehensive project plan using multiple AI perspectives</p>
+    </div>
 
     <div class="container">
-        <!-- Progress Indicator -->
-        <div class="progress">
-            <div class="progress-step active" id="step-1">1️⃣ Input Goal</div>
-            <div class="progress-step inactive" id="step-2">2️⃣ Copy Prompts</div>
-            <div class="progress-step inactive" id="step-3">3️⃣ Paste Responses</div>
-            <div class="progress-step inactive" id="step-4">4️⃣ Generate Report</div>
+        <!-- Progress Steps -->
+        <div class="progress-container">
+            <div class="step active" onclick="goToStep(1)">
+                <span>1</span>
+                <span class="step-label">Select AIs</span>
+            </div>
+            <div class="step" onclick="goToStep(2)">
+                <span>2</span>
+                <span class="step-label">Choose Depth</span>
+            </div>
+            <div class="step" onclick="goToStep(3)">
+                <span>3</span>
+                <span class="step-label">Input Idea</span>
+            </div>
+            <div class="step" onclick="goToStep(4)">
+                <span>4</span>
+                <span class="step-label">Get Prompts</span>
+            </div>
+            <div class="step" onclick="goToStep(5)">
+                <span>5</span>
+                <span class="step-label">Final Report</span>
+            </div>
         </div>
 
-        <!-- Step 1: Goal Input -->
-        <div class="goal-section" id="goal-section">
-            <h2 class="section-title">🎯 What do you want to accomplish?</h2>
-            <textarea 
-                class="goal-input" 
-                id="user-goal"
-                placeholder="Example: Create a mobile app that helps people with ADHD manage their daily tasks using gamification and voice reminders. Make it accessible and work offline."
-            ></textarea>
+        <!-- Step 1: AI Selection -->
+        <div id="step1" class="section active">
+            <h2>Step 1: Select Your Available AIs</h2>
+            <p style="margin-bottom: 1.5rem;">Choose which AI services you have access to. The system will automatically distribute research facets across your selections.</p>
             
-            <div class="mt-1">
-                <button class="btn btn-primary" onclick="generatePrompts()">
-                    ⚡ Generate 6 Specialized Prompts
-                </button>
-                <button class="btn btn-secondary" onclick="loadExample()">
-                    💡 Load Example
-                </button>
-                <button class="btn btn-secondary" onclick="clearAll()">
-                    🗑️ Clear All
-                </button>
+            <div class="ai-grid">
+                <div class="ai-option">
+                    <input type="checkbox" id="claude" value="Claude" checked>
+                    <label for="claude">
+                        <div class="ai-icon">🧠</div>
+                        <div>Claude</div>
+                        <small>Anthropic</small>
+                    </label>
+                </div>
+                
+                <div class="ai-option">
+                    <input type="checkbox" id="grok" value="Grok" checked>
+                    <label for="grok">
+                        <div class="ai-icon">⚡</div>
+                        <div>Grok</div>
+                        <small>X/Twitter</small>
+                    </label>
+                </div>
+                
+                <div class="ai-option">
+                    <input type="checkbox" id="gemini" value="Gemini" checked>
+                    <label for="gemini">
+                        <div class="ai-icon">🎨</div>
+                        <div>Gemini</div>
+                        <small>Google</small>
+                    </label>
+                </div>
+                
+                <div class="ai-option">
+                    <input type="checkbox" id="perplexity" value="Perplexity" checked>
+                    <label for="perplexity">
+                        <div class="ai-icon">🔍</div>
+                        <div>Perplexity</div>
+                        <small>Research AI</small>
+                    </label>
+                </div>
+                
+                <div class="ai-option">
+                    <input type="checkbox" id="copilot" value="Copilot" checked>
+                    <label for="copilot">
+                        <div class="ai-icon">💻</div>
+                        <div>Copilot</div>
+                        <small>Microsoft</small>
+                    </label>
+                </div>
+                
+                <div class="ai-option">
+                    <input type="checkbox" id="supergrok" value="SuperGrok" checked>
+                    <label for="supergrok">
+                        <div class="ai-icon">🛡️</div>
+                        <div>SuperGrok</div>
+                        <small>X/Twitter</small>
+                    </label>
+                </div>
+                
+                <div class="ai-option">
+                    <input type="checkbox" id="chatgpt" value="ChatGPT">
+                    <label for="chatgpt">
+                        <div class="ai-icon">💬</div>
+                        <div>ChatGPT</div>
+                        <small>OpenAI</small>
+                    </label>
+                </div>
+                
+                <div class="ai-option">
+                    <input type="checkbox" id="llama" value="Llama">
+                    <label for="llama">
+                        <div class="ai-icon">🦙</div>
+                        <div>Llama</div>
+                        <small>Meta</small>
+                    </label>
+                </div>
             </div>
-        </div>
-
-        <!-- Step 2: Generated Prompts -->
-        <div class="prompts-section" id="prompts-section">
-            <h2 class="section-title">📋 Copy These Prompts to Each AI Service</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                Copy each prompt below → Paste into the specific AI service → Bring responses back to Step 3
-            </p>
-
-            <div class="prompts-grid">
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <div class="agent-name">🧠 Claude - Systems Architect</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('claude')">Copy for Claude</button>
-                    </div>
-                    <div class="prompt-text" id="claude-prompt"></div>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <div class="agent-name">⚡ ChatGPT - Performance Engineer</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('grok')">Copy for ChatGPT</button>
-                    </div>
-                    <div class="prompt-text" id="grok-prompt"></div>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <div class="agent-name">🎨 Gemini - UX Designer</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('gemini')">Copy for Gemini</button>
-                    </div>
-                    <div class="prompt-text" id="gemini-prompt"></div>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <div class="agent-name">🔍 Perplexity - Research Analyst</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('perplexity')">Copy for Perplexity</button>
-                    </div>
-                    <div class="prompt-text" id="perplexity-prompt"></div>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <div class="agent-name">💻 GitHub Copilot - Code Architect</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('copilot')">Copy for Copilot</button>
-                    </div>
-                    <div class="prompt-text" id="copilot-prompt"></div>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-header">
-                        <div class="agent-name">🛡️ Claude - Security Specialist</div>
-                        <button class="copy-prompt-btn" onclick="copyPrompt('supergrok')">Copy for Claude</button>
-                    </div>
-                    <div class="prompt-text" id="supergrok-prompt"></div>
-                </div>
-            </div>
-
-            <div class="text-center mt-1">
-                <button class="btn btn-primary" onclick="showResponseSection()">
-                    ✅ I've Got All The AI Responses
-                </button>
-            </div>
-        </div>
-
-        <!-- Step 3: Response Collection -->
-        <div class="responses-section" id="responses-section">
-            <h2 class="section-title">📝 Paste AI Responses Here</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                Paste each AI's response into the corresponding box below.
-            </p>
-
-            <div class="response-card">
-                <div class="response-header">
-                    <div class="agent-name">🧠 Claude Response (Systems Architect)</div>
-                </div>
-                <textarea class="response-input" id="claude-response" placeholder="Paste Claude's systems architecture response here..."></textarea>
-            </div>
-
-            <div class="response-card">
-                <div class="response-header">
-                    <div class="agent-name">⚡ ChatGPT Response (Performance Engineer)</div>
-                </div>
-                <textarea class="response-input" id="grok-response" placeholder="Paste ChatGPT's performance optimization response here..."></textarea>
-            </div>
-
-            <div class="response-card">
-                <div class="response-header">
-                    <div class="agent-name">🎨 Gemini Response (UX Designer)</div>
-                </div>
-                <textarea class="response-input" id="gemini-response" placeholder="Paste Gemini's UX design response here..."></textarea>
-            </div>
-
-            <div class="response-card">
-                <div class="response-header">
-                    <div class="agent-name">🔍 Perplexity Response (Research Analyst)</div>
-                </div>
-                <textarea class="response-input" id="perplexity-response" placeholder="Paste Perplexity's research analysis response here..."></textarea>
-            </div>
-
-            <div class="response-card">
-                <div class="response-header">
-                    <div class="agent-name">💻 GitHub Copilot Response (Code Architect)</div>
-                </div>
-                <textarea class="response-input" id="copilot-response" placeholder="Paste GitHub Copilot's code architecture response here..."></textarea>
-            </div>
-
-            <div class="response-card">
-                <div class="response-header">
-                    <div class="agent-name">🛡️ Claude Response (Security Specialist)</div>
-                </div>
-                <textarea class="response-input" id="supergrok-response" placeholder="Paste Claude's security analysis response here..."></textarea>
-            </div>
-
-            <div class="text-center mt-1">
-                <button class="btn btn-primary" onclick="generateReport()">
-                    🎯 Distill Into Final Report
-                </button>
-            </div>
-        </div>
-
-        <!-- Step 4: Final Report -->
-        <div class="report-section" id="report-section">
-            <h2 class="section-title">📊 Distilled Research Report</h2>
-            <div class="report-content" id="report-content"></div>
             
-            <div class="text-center mt-1">
-                <button class="btn btn-primary" onclick="downloadReport()">
-                    💾 Download Report
-                </button>
-                <button class="btn btn-secondary" onclick="copyReport()">
-                    📋 Copy Report
-                </button>
-                <button class="btn btn-secondary" onclick="startOver()">
-                    🔄 New Project
-                </button>
+            <div class="card" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">
+                <p><strong>⚠️ Note:</strong> You must select at least one AI to continue.</p>
+            </div>
+            
+            <div class="button-group">
+                <button class="button" onclick="nextStep()">Continue →</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Depth Selection -->
+        <div id="step2" class="section">
+            <h2>Step 2: Choose Analysis Depth</h2>
+            <p style="margin-bottom: 1.5rem;">Select how comprehensive you want the analysis to be.</p>
+            
+            <div class="depth-grid">
+                <div class="depth-option" onclick="selectDepth('quick')">
+                    <div class="card">
+                        <h3>🔧 Quick Technical</h3>
+                        <p style="margin: 1rem 0;">3 Core Facets</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>✓ Architecture</li>
+                            <li>✓ Implementation</li>
+                            <li>✓ Security</li>
+                        </ul>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">Perfect for rapid prototypes and technical proof-of-concepts</p>
+                    </div>
+                </div>
+                
+                <div class="depth-option" onclick="selectDepth('mvp')">
+                    <div class="card">
+                        <h3>🚀 MVP Analysis</h3>
+                        <p style="margin: 1rem 0;">4 Essential Facets</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>✓ Architecture</li>
+                            <li>✓ UX Design</li>
+                            <li>✓ Implementation</li>
+                            <li>✓ Research</li>
+                        </ul>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">Ideal for minimum viable products and early-stage projects</p>
+                    </div>
+                </div>
+                
+                <div class="depth-option" onclick="selectDepth('business')">
+                    <div class="card">
+                        <h3>📈 Business Launch</h3>
+                        <p style="margin: 1rem 0;">6 Comprehensive Facets</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>✓ All Technical Facets</li>
+                            <li>✓ Financial Analysis</li>
+                            <li>✓ Business Strategy</li>
+                        </ul>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">Complete analysis for market-ready products</p>
+                    </div>
+                </div>
+                
+                <div class="depth-option" onclick="selectDepth('enterprise')">
+                    <div class="card">
+                        <h3>🏢 Full Think Tank</h3>
+                        <p style="margin: 1rem 0;">9 Expert Facets</p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li>✓ All Business Facets</li>
+                            <li>✓ Legal/Compliance</li>
+                            <li>✓ Complete Strategy</li>
+                        </ul>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">Enterprise-grade analysis for complex ventures</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Custom Selection -->
+            <div class="card" style="margin-top: 2rem;">
+                <h3>🎨 Custom Selection</h3>
+                <p style="margin-bottom: 1rem;">Or choose exactly which facets you need:</p>
+                <div class="facet-grid">
+                    <div class="facet-checkbox">
+                        <input type="checkbox" id="facet-architecture" checked>
+                        <label for="facet-architecture">🧠 Architecture</label>
+                    </div>
+                    <div class="facet-checkbox">
+                        <input type="checkbox" id="facet-implementation" checked>
+                        <label for="facet-implementation">💻 Implementation</label>
+                    </div>
+                    <div class="facet-checkbox">
+                        <input type="checkbox" id="facet-performance">
+                        <label for="facet-performance">⚡ Performance</label>
+                    </div>
+                    <div class="facet-checkbox">
+                        <input type="checkbox" id="facet-ux">
+                        <label for="facet-ux">🎨 UX Design</label>
+                    </div>
+                    <div class="facet-checkbox">
+                        <input type="checkbox" id="facet-research">
+                        <label for="facet-research">🔍 Research</label>
+                    </div>
+                    <div class="facet-checkbox">
+                        <input type="checkbox" id="facet-security" checked>
+                        <label for="facet-security">🛡️ Security</label>
+                    </div>
+                    <div class="facet-checkbox">
+                        <input type="checkbox" id="facet-financial">
+                        <label for="facet-financial">💰 Financial</label>
+                    </div>
+                    <div class="facet-checkbox">
+                        <input type="checkbox" id="facet-strategy">
+                        <label for="facet-strategy">📈 Strategy</label>
+                    </div>
+                    <div class="facet-checkbox">
+                        <input type="checkbox" id="facet-legal">
+                        <label for="facet-legal">⚖️ Legal</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="button button-secondary" onclick="previousStep()">← Back</button>
+                <button class="button" onclick="nextStep()">Continue →</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Input Idea -->
+        <div id="step3" class="section">
+            <h2>Step 3: Describe Your Project Idea</h2>
+            <p style="margin-bottom: 1.5rem;">Be as detailed or as brief as you'd like. The AI will ask clarifying questions if needed.</p>
+            
+            <div class="input-container">
+                <textarea id="projectIdea" placeholder="Example: Build a secure customer portal for financial advisors that handles real-time portfolio tracking, client communications, and regulatory compliance reporting..."></textarea>
+            </div>
+            
+            <div class="card" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
+                <h4>💡 Example Ideas:</h4>
+                <ul style="margin-top: 0.5rem;">
+                    <li>"Mobile app for tracking construction site safety with photo documentation"</li>
+                    <li>"API gateway for microservices handling 10,000+ requests/second"</li>
+                    <li>"E-learning platform with AI-powered personalized curriculum"</li>
+                    <li>"Blockchain-based supply chain verification system"</li>
+                </ul>
+            </div>
+            
+            <div class="button-group">
+                <button class="button button-secondary" onclick="previousStep()">← Back</button>
+                <button class="button" onclick="generatePrompts()">Generate Prompts →</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Generated Prompts -->
+        <div id="step4" class="section">
+            <h2>Step 4: Copy Prompts to Each AI</h2>
+            <p style="margin-bottom: 1.5rem;">Copy each prompt to the corresponding AI service, then paste their responses back here.</p>
+            
+            <div id="promptsContainer" class="prompts-container">
+                <!-- Prompts will be dynamically generated here -->
+            </div>
+            
+            <div class="button-group">
+                <button class="button button-secondary" onclick="previousStep()">← Back</button>
+                <button class="button" onclick="generateReport()">Generate Final Report →</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Final Report -->
+        <div id="step5" class="section">
+            <h2>Step 5: Unified Project Report</h2>
+            <p style="margin-bottom: 1.5rem;">Here's your comprehensive project analysis combining all AI perspectives.</p>
+            
+            <div class="report-container">
+                <button class="copy-button" onclick="copyReport()">Copy Report</button>
+                <div id="reportContent" class="report-content">
+                    <!-- Report will be generated here -->
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="button button-secondary" onclick="startOver()">Start New Project</button>
+                <button class="button" onclick="window.print()">Print Report</button>
             </div>
         </div>
     </div>
 
     <script>
-        let currentGoal = '';
+        // State management
+        let state = {
+            currentStep: 1,
+            selectedAIs: [],
+            selectedDepth: '',
+            selectedFacets: [],
+            projectIdea: '',
+            prompts: {},
+            responses: {},
+            finalReport: ''
+        };
 
-        // Example goals
-        const examples = [
-            "Create a mobile app that helps people with ADHD manage their daily tasks using gamification and voice reminders. Make it accessible and work offline.",
-            "Build a customer support chatbot that can handle 80% of common inquiries and escalate complex issues seamlessly.",
-            "Design an e-learning platform for neurodivergent students that adapts to different learning styles."
-        ];
+        // Facet definitions
+        const facets = {
+            architecture: {
+                name: 'Architecture',
+                icon: '🧠',
+                description: 'System design, components, data flow, scalability patterns',
+                promptTemplate: 'As a system architect, analyze this project idea and provide: 1) High-level system architecture, 2) Key components and their interactions, 3) Data flow and storage strategy, 4) Scalability considerations, 5) Technology stack recommendations. Project: {idea}'
+            },
+            implementation: {
+                name: 'Implementation',
+                icon: '💻',
+                description: 'Code structure, development approach, key algorithms',
+                promptTemplate: 'As a senior developer, provide an implementation plan including: 1) Code structure and organization, 2) Key algorithms and data structures, 3) Development phases and milestones, 4) Testing strategy, 5) Code examples for critical components. Project: {idea}'
+            },
+            performance: {
+                name: 'Performance',
+                icon: '⚡',
+                description: 'Optimization strategies, bottleneck analysis, scaling',
+                promptTemplate: 'As a performance engineer, analyze: 1) Potential performance bottlenecks, 2) Optimization strategies, 3) Caching and CDN strategy, 4) Load balancing approach, 5) Performance metrics and monitoring. Project: {idea}'
+            },
+            ux: {
+                name: 'UX Design',
+                icon: '🎨',
+                description: 'User experience, interface design, user flows',
+                promptTemplate: 'As a UX designer, provide: 1) User personas and journey maps, 2) Key UI/UX principles for this project, 3) Wireframe suggestions for main screens, 4) Accessibility considerations, 5) User feedback and iteration process. Project: {idea}'
+            },
+            research: {
+                name: 'Research',
+                icon: '🔍',
+                description: 'Market analysis, competitor research, validation',
+                promptTemplate: 'As a research analyst, provide: 1) Market analysis and size, 2) Competitor analysis, 3) Target audience validation, 4) Industry trends and opportunities, 5) Unique value proposition. Project: {idea}'
+            },
+            security: {
+                name: 'Security',
+                icon: '🛡️',
+                description: 'Threat modeling, security measures, compliance',
+                promptTemplate: 'As a security expert, analyze: 1) Threat model and attack vectors, 2) Security architecture and controls, 3) Authentication and authorization strategy, 4) Data protection and encryption, 5) Compliance requirements. Project: {idea}'
+            },
+            financial: {
+                name: 'Financial',
+                icon: '💰',
+                description: 'Cost analysis, revenue model, ROI projections',
+                promptTemplate: 'As a financial analyst, provide: 1) Development cost estimates, 2) Operational cost projections, 3) Revenue model and pricing strategy, 4) ROI timeline, 5) Funding requirements and sources. Project: {idea}'
+            },
+            strategy: {
+                name: 'Strategy',
+                icon: '📈',
+                description: 'Business strategy, go-to-market, competitive positioning',
+                promptTemplate: 'As a business strategist, analyze: 1) Business model canvas, 2) Go-to-market strategy, 3) Competitive positioning, 4) Growth strategy and milestones, 5) Risk analysis and mitigation. Project: {idea}'
+            },
+            legal: {
+                name: 'Legal',
+                icon: '⚖️',
+                description: 'Regulatory compliance, IP considerations, legal risks',
+                promptTemplate: 'As a legal advisor, review: 1) Regulatory compliance requirements, 2) Intellectual property considerations, 3) Terms of service and privacy policy needs, 4) Liability and risk assessment, 5) Required licenses and permits. Project: {idea}'
+            }
+        };
 
-        // Load example goal
-        function loadExample() {
-            const example = examples[Math.floor(Math.random() * examples.length)];
-            document.getElementById('user-goal').value = example;
-        }
+        // Depth presets
+        const depthPresets = {
+            quick: ['architecture', 'implementation', 'security'],
+            mvp: ['architecture', 'ux', 'implementation', 'research'],
+            business: ['architecture', 'implementation', 'performance', 'ux', 'research', 'security'],
+            enterprise: Object.keys(facets)
+        };
 
-        // Clear everything
-        function clearAll() {
-            if (confirm('This will clear everything. Are you sure?')) {
-                document.getElementById('user-goal').value = '';
-                resetSections();
-                updateProgress(1);
+        // Navigation functions
+        function goToStep(step) {
+            if (step <= state.currentStep || validateCurrentStep()) {
+                state.currentStep = step;
+                updateUI();
             }
         }
 
-        // Generate specialized prompts
-        function generatePrompts() {
-            currentGoal = document.getElementById('user-goal').value.trim();
-            
-            if (!currentGoal) {
-                alert('Please enter a goal first!');
-                return;
+        function nextStep() {
+            if (validateCurrentStep()) {
+                state.currentStep++;
+                updateUI();
             }
+        }
 
-            // Generate prompts for each specialist
-            const prompts = {
-                claude: generateArchitectPrompt(currentGoal),
-                grok: generatePerformancePrompt(currentGoal),
-                gemini: generateUXPrompt(currentGoal),
-                perplexity: generateResearchPrompt(currentGoal),
-                copilot: generateCodePrompt(currentGoal),
-                supergrok: generateSecurityPrompt(currentGoal)
-            };
+        function previousStep() {
+            state.currentStep--;
+            updateUI();
+        }
 
-            // Display prompts
-            Object.keys(prompts).forEach(key => {
-                document.getElementById(`${key}-prompt`).textContent = prompts[key];
+        function updateUI() {
+            // Update progress steps
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 === state.currentStep) {
+                    step.classList.add('active');
+                } else if (index + 1 < state.currentStep) {
+                    step.classList.add('completed');
+                }
             });
 
-            // Show prompts section
-            document.getElementById('prompts-section').classList.add('active');
-            updateProgress(2);
+            // Update sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`step${state.currentStep}`).classList.add('active');
+        }
+
+        // Validation
+        function validateCurrentStep() {
+            switch (state.currentStep) {
+                case 1:
+                    state.selectedAIs = Array.from(document.querySelectorAll('.ai-option input:checked')).map(input => input.value);
+                    if (state.selectedAIs.length === 0) {
+                        alert('Please select at least one AI service.');
+                        return false;
+                    }
+                    return true;
+                case 2:
+                    state.selectedFacets = Array.from(document.querySelectorAll('.facet-checkbox input:checked')).map(input => input.id.replace('facet-', ''));
+                    if (state.selectedFacets.length === 0) {
+                        alert('Please select at least one analysis facet.');
+                        return false;
+                    }
+                    return true;
+                case 3:
+                    state.projectIdea = document.getElementById('projectIdea').value.trim();
+                    if (!state.projectIdea) {
+                        alert('Please describe your project idea.');
+                        return false;
+                    }
+                    return true;
+                default:
+                    return true;
+            }
+        }
+
+        // Depth selection
+        function selectDepth(depthType) {
+            state.selectedDepth = depthType;
             
-            // Scroll to prompts
-            document.getElementById('prompts-section').scrollIntoView({ behavior: 'smooth' });
+            // Update UI
+            document.querySelectorAll('.depth-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            // Update facet checkboxes
+            const selectedFacets = depthPresets[depthType];
+            document.querySelectorAll('.facet-checkbox input').forEach(checkbox => {
+                const facetId = checkbox.id.replace('facet-', '');
+                checkbox.checked = selectedFacets.includes(facetId);
+            });
         }
 
-        // Show response collection section
-        function showResponseSection() {
-            document.getElementById('responses-section').classList.add('active');
-            updateProgress(3);
-            document.getElementById('responses-section').scrollIntoView({ behavior: 'smooth' });
+        // Generate prompts
+        function generatePrompts() {
+            if (!validateCurrentStep()) return;
+            
+            // Clear previous prompts
+            state.prompts = {};
+            state.responses = {};
+            
+            // Distribute facets across available AIs
+            const facetsPerAI = Math.ceil(state.selectedFacets.length / state.selectedAIs.length);
+            let facetIndex = 0;
+            
+            state.selectedAIs.forEach((ai, aiIndex) => {
+                const aiFacets = [];
+                for (let i = 0; i < facetsPerAI && facetIndex < state.selectedFacets.length; i++) {
+                    aiFacets.push(state.selectedFacets[facetIndex++]);
+                }
+                
+                if (aiFacets.length > 0) {
+                    // Combine prompts for multiple facets
+                    const combinedPrompt = aiFacets.map(facetId => {
+                        const facet = facets[facetId];
+                        return `\n\n[${facet.icon} ${facet.name} Analysis]\n${facet.promptTemplate.replace('{idea}', state.projectIdea)}`;
+                    }).join('');
+                    
+                    state.prompts[ai] = {
+                        facets: aiFacets,
+                        prompt: `You are analyzing the following project from multiple expert perspectives. Please provide comprehensive analysis for each section:${combinedPrompt}`
+                    };
+                }
+            });
+            
+            // Display prompts
+            displayPrompts();
+            nextStep();
         }
 
-        // Generate final distilled report
+        function displayPrompts() {
+            const container = document.getElementById('promptsContainer');
+            container.innerHTML = '';
+            
+            Object.entries(state.prompts).forEach(([ai, data]) => {
+                const promptCard = document.createElement('div');
+                promptCard.className = 'prompt-card';
+                promptCard.innerHTML = `
+                    <div class="prompt-header">
+                        <div class="prompt-ai">${ai}</div>
+                        <div class="prompt-facets">
+                            ${data.facets.map(f => `<span class="facet-tag">${facets[f].icon} ${facets[f].name}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="prompt-content">${data.prompt}</div>
+                    <button class="copy-button" onclick="copyPrompt('${ai}')">Copy Prompt</button>
+                    <textarea class="response-input" id="response-${ai}" placeholder="Paste ${ai}'s response here..."></textarea>
+                `;
+                container.appendChild(promptCard);
+            });
+        }
+
+        // Copy functions
+        function copyPrompt(ai) {
+            const prompt = state.prompts[ai].prompt;
+            navigator.clipboard.writeText(prompt).then(() => {
+                const button = event.target;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Copy Prompt';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function copyReport() {
+            navigator.clipboard.writeText(state.finalReport).then(() => {
+                const button = event.target;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Copy Report';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Generate final report
         function generateReport() {
-            const responses = {
-                architect: document.getElementById('claude-response').value.trim(),
-                performance: document.getElementById('grok-response').value.trim(),
-                ux: document.getElementById('gemini-response').value.trim(),
-                research: document.getElementById('perplexity-response').value.trim(),
-                code: document.getElementById('copilot-response').value.trim(),
-                security: document.getElementById('supergrok-response').value.trim()
-            };
-
-            // Check if we have responses
-            const filledResponses = Object.values(responses).filter(r => r.length > 0);
-            if (filledResponses.length === 0) {
+            // Collect all responses
+            Object.keys(state.prompts).forEach(ai => {
+                const responseElement = document.getElementById(`response-${ai}`);
+                if (responseElement) {
+                    state.responses[ai] = responseElement.value.trim();
+                }
+            });
+            
+            // Check if we have at least some responses
+            const hasResponses = Object.values(state.responses).some(r => r.length > 0);
+            if (!hasResponses) {
                 alert('Please paste at least one AI response before generating the report.');
                 return;
             }
-
-            // Generate distilled report
-            const report = distillResponses(currentGoal, responses);
-            document.getElementById('report-content').textContent = report;
-
-            // Show report section
-            document.getElementById('report-section').classList.add('active');
-            updateProgress(4);
-            document.getElementById('report-section').scrollIntoView({ behavior: 'smooth' });
+            
+            // Generate comprehensive report
+            generateComprehensiveReport();
+            nextStep();
         }
 
-        // Copy prompt to clipboard
-        function copyPrompt(agentType) {
-            const prompt = document.getElementById(`${agentType}-prompt`).textContent;
-            navigator.clipboard.writeText(prompt).then(() => {
-                const btn = event.target;
-                const original = btn.textContent;
-                btn.textContent = 'Copied!';
-                btn.style.background = '#22c55e';
-                setTimeout(() => {
-                    btn.textContent = original;
-                    btn.style.background = '';
-                }, 1000);
+        function generateComprehensiveReport() {
+            const reportSections = [];
+            
+            // Header
+            reportSections.push(`# 🧠 HexMind AI Distillery Report`);
+            reportSections.push(`\n## Project Overview`);
+            reportSections.push(state.projectIdea);
+            reportSections.push(`\nGenerated: ${new Date().toLocaleString()}`);
+            reportSections.push(`Analysis Depth: ${state.selectedFacets.length} facets across ${state.selectedAIs.length} AI services`);
+            
+            // Executive Summary
+            reportSections.push(`\n## Executive Summary`);
+            reportSections.push(`This comprehensive analysis combines insights from ${state.selectedAIs.join(', ')} across ${state.selectedFacets.length} critical facets of your project.`);
+            
+            // Facet-based sections
+            state.selectedFacets.forEach(facetId => {
+                const facet = facets[facetId];
+                reportSections.push(`\n## ${facet.icon} ${facet.name}`);
+                
+                // Find which AI covered this facet
+                Object.entries(state.prompts).forEach(([ai, data]) => {
+                    if (data.facets.includes(facetId) && state.responses[ai]) {
+                        // Extract relevant section from AI response
+                        const response = state.responses[ai];
+                        const facetSection = extractFacetSection(response, facet.name);
+                        if (facetSection) {
+                            reportSections.push(`\n### Insights from ${ai}:`);
+                            reportSections.push(facetSection);
+                        }
+                    }
+                });
             });
+            
+            // Action Items
+            reportSections.push(`\n## 🎯 Consolidated Action Items`);
+            reportSections.push(generateActionItems());
+            
+            // Next Steps
+            reportSections.push(`\n## 📋 Recommended Next Steps`);
+            reportSections.push(generateNextSteps());
+            
+            // Risk Summary
+            if (state.selectedFacets.includes('security') || state.selectedFacets.includes('legal')) {
+                reportSections.push(`\n## ⚠️ Risk Summary`);
+                reportSections.push(generateRiskSummary());
+            }
+            
+            state.finalReport = reportSections.join('\n');
+            document.getElementById('reportContent').textContent = state.finalReport;
         }
 
-        // Copy final report
-        function copyReport() {
-            const report = document.getElementById('report-content').textContent;
-            navigator.clipboard.writeText(report).then(() => {
-                alert('Report copied to clipboard!');
-            });
+        function extractFacetSection(response, facetName) {
+            // Simple extraction logic - can be enhanced
+            const lines = response.split('\n');
+            const startIndex = lines.findIndex(line => 
+                line.toLowerCase().includes(facetName.toLowerCase()) ||
+                line.includes(facets[Object.keys(facets).find(k => facets[k].name === facetName)].icon)
+            );
+            
+            if (startIndex === -1) return response; // Return full response if section not found
+            
+            // Find next section or end
+            let endIndex = lines.length;
+            for (let i = startIndex + 1; i < lines.length; i++) {
+                if (lines[i].match(/^#+\s|^\[.*\]\s*$/)) {
+                    endIndex = i;
+                    break;
+                }
+            }
+            
+            return lines.slice(startIndex, endIndex).join('\n');
         }
 
-        // Download final report
-        function downloadReport() {
-            const report = document.getElementById('report-content').textContent;
-            const blob = new Blob([report], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `hexmind-distilled-report-${new Date().toISOString().slice(0, 10)}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
+        function generateActionItems() {
+            const actionItems = [];
+            
+            if (state.selectedFacets.includes('architecture')) {
+                actionItems.push('1. Finalize system architecture and technology stack');
+                actionItems.push('2. Set up development environment and CI/CD pipeline');
+            }
+            if (state.selectedFacets.includes('ux')) {
+                actionItems.push('3. Create detailed wireframes and user flow diagrams');
+                actionItems.push('4. Conduct user research and usability testing');
+            }
+            if (state.selectedFacets.includes('security')) {
+                actionItems.push('5. Implement security framework and authentication system');
+                actionItems.push('6. Set up monitoring and incident response procedures');
+            }
+            if (state.selectedFacets.includes('financial')) {
+                actionItems.push('7. Secure initial funding or budget allocation');
+                actionItems.push('8. Set up financial tracking and reporting systems');
+            }
+            
+            return actionItems.join('\n');
+        }
+
+        function generateNextSteps() {
+            const steps = [
+                '1. **Week 1-2**: Architecture finalization and team assembly',
+                '2. **Week 3-4**: Initial prototype development and testing setup',
+                '3. **Week 5-8**: Core feature implementation and iteration',
+                '4. **Week 9-10**: Security audit and performance optimization',
+                '5. **Week 11-12**: User testing and launch preparation'
+            ];
+            return steps.join('\n');
+        }
+
+        function generateRiskSummary() {
+            const risks = [
+                '• **Technical Risks**: Scalability challenges, integration complexity',
+                '• **Security Risks**: Data breach potential, compliance violations',
+                '• **Business Risks**: Market competition, funding shortfalls',
+                '• **Operational Risks**: Team scaling, knowledge transfer'
+            ];
+            return risks.join('\n');
         }
 
         // Start over
         function startOver() {
-            if (confirm('This will clear everything and start over. Are you sure?')) {
-                document.getElementById('user-goal').value = '';
-                resetSections();
-                updateProgress(1);
-                document.getElementById('goal-section').scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        // Reset all sections
-        function resetSections() {
-            document.getElementById('prompts-section').classList.remove('active');
-            document.getElementById('responses-section').classList.remove('active');
-            document.getElementById('report-section').classList.remove('active');
-            
-            // Clear all responses
-            ['claude-response', 'grok-response', 'gemini-response', 'perplexity-response', 'copilot-response', 'supergrok-response'].forEach(id => {
-                document.getElementById(id).value = '';
-            });
-        }
-
-        // Update progress indicator
-        function updateProgress(activeStep) {
-            for (let i = 1; i <= 4; i++) {
-                const step = document.getElementById(`step-${i}`);
-                if (i < activeStep) {
-                    step.className = 'progress-step complete';
-                } else if (i === activeStep) {
-                    step.className = 'progress-step active';
-                } else {
-                    step.className = 'progress-step inactive';
-                }
-            }
-        }
-
-        // ===== PROMPT GENERATORS =====
-
-        function generateArchitectPrompt(goal) {
-            return `You are a senior systems architect. Design the complete technical architecture for this goal: "${goal}"
-
-Provide your response in this format:
-• SYSTEM OVERVIEW: 3-sentence high-level architecture
-• CORE COMPONENTS: 5 key technical components (bullet points)
-• DATA FLOW: How information moves through the system
-• TECHNOLOGY STACK: Recommended technologies and why
-• SCALABILITY APPROACH: How the system handles growth
-• INTEGRATION POINTS: Key external system connections
-
-Keep response under 300 words. Focus on practical, implementable architecture.`;
-        }
-
-        function generatePerformancePrompt(goal) {
-            return `You are a performance optimization expert. Analyze this goal for speed and efficiency: "${goal}"
-
-Provide your response in this format:
-• PERFORMANCE TARGETS: Specific speed/load requirements
-• POTENTIAL BOTTLENECKS: 3 biggest performance risks
-• OPTIMIZATION STRATEGIES: 5 specific performance improvements
-• CACHING APPROACH: How to minimize load times
-• MONITORING SETUP: Key metrics to track
-• LOAD TESTING: How to validate performance
-
-Keep response under 250 words. Focus on measurable improvements.`;
-        }
-
-        function generateUXPrompt(goal) {
-            return `You are a UX/UI design expert. Create the user experience design for: "${goal}"
-
-Provide your response in this format:
-• USER JOURNEY: Step-by-step user flow (5-7 steps)  
-• INTERFACE DESIGN: Key screens and layouts
-• ACCESSIBILITY FEATURES: How to make it inclusive
-• VISUAL HIERARCHY: How users' eyes should move
-• INTERACTION PATTERNS: Buttons, gestures, inputs
-• MOBILE CONSIDERATIONS: How it works on phones
-
-Keep response under 275 words. Focus on user-centered design.`;
-        }
-
-        function generateResearchPrompt(goal) {
-            return `You are a market research analyst. Research this goal thoroughly: "${goal}"
-
-Provide your response in this format:
-• MARKET ANALYSIS: Size, growth, opportunity
-• COMPETITOR RESEARCH: 3 main competitors and gaps
-• USER NEEDS VALIDATION: Evidence people want this
-• TECHNICAL FEASIBILITY: Is this buildable today?
-• BUSINESS MODEL: How could this make money?
-• RISK ASSESSMENT: 3 biggest challenges
-
-Keep response under 300 words. Include data sources when possible.`;
-        }
-
-        function generateCodePrompt(goal) {
-            return `You are a senior software architect. Plan the implementation for: "${goal}"
-
-Provide your response in this format:
-• PROJECT STRUCTURE: File/folder organization
-• CORE FUNCTIONS: 5 main functions needed
-• DATABASE DESIGN: Data storage requirements
-• API DESIGN: Key endpoints and data flow
-• DEVELOPMENT PHASES: 3 implementation stages
-• TESTING STRATEGY: How to ensure quality
-
-Keep response under 275 words. Include practical code considerations.`;
-        }
-
-        function generateSecurityPrompt(goal) {
-            return `You are a cybersecurity expert. Secure this project: "${goal}"
-
-Provide your response in this format:
-• THREAT ANALYSIS: 3 biggest security risks
-• DATA PROTECTION: How to secure sensitive information
-• ACCESS CONTROL: User authentication and permissions
-• COMPLIANCE REQUIREMENTS: Legal/regulatory needs
-• SECURITY TESTING: How to validate protection
-• INCIDENT RESPONSE: Plan for security breaches
-
-Keep response under 250 words. Focus on practical security measures.`;
-        }
-
-        // ===== RESPONSE DISTILLATION =====
-
-        function distillResponses(goal, responses) {
-            const timestamp = new Date().toLocaleDateString();
-            
-            let report = `# HEXMIND DISTILLED RESEARCH REPORT
-Generated: ${timestamp}
-Original Goal: ${goal}
-
-## EXECUTIVE SUMMARY
-`;
-
-            // Extract key insights from each response
-            const insights = extractKeyInsights(responses);
-            report += insights.summary + '\n\n';
-
-            // Add detailed sections
-            if (responses.architect) {
-                report += `## TECHNICAL ARCHITECTURE
-${responses.architect}
-
-`;
-            }
-
-            if (responses.performance) {
-                report += `## PERFORMANCE & OPTIMIZATION
-${responses.performance}
-
-`;
-            }
-
-            if (responses.ux) {
-                report += `## USER EXPERIENCE DESIGN
-${responses.ux}
-
-`;
-            }
-
-            if (responses.research) {
-                report += `## MARKET RESEARCH & VALIDATION
-${responses.research}
-
-`;
-            }
-
-            if (responses.code) {
-                report += `## IMPLEMENTATION PLAN
-${responses.code}
-
-`;
-            }
-
-            if (responses.security) {
-                report += `## SECURITY & COMPLIANCE
-${responses.security}
-
-`;
-            }
-
-            // Add synthesis
-            report += `## NEXT ACTIONS
-${insights.actions}
-
-## KEY SUCCESS FACTORS
-${insights.success}
-
----
-Generated by HexMind AI Distillery - Transforming multiple AI perspectives into actionable insights.`;
-
-            return report;
-        }
-
-        function extractKeyInsights(responses) {
-            const filledResponses = Object.entries(responses).filter(([key, value]) => value.trim().length > 0);
-            const responseCount = filledResponses.length;
-            
-            return {
-                summary: `This analysis combines insights from ${responseCount} AI specialists to provide a comprehensive view of the proposed solution. The research covers technical architecture, performance optimization, user experience, market validation, implementation strategy, and security considerations.`,
-                
-                actions: `1. Begin with technical architecture planning and user research validation
-2. Set up development environment and basic performance monitoring
-3. Create user experience prototypes and test with target users
-4. Implement core functionality with security measures built-in
-5. Conduct thorough testing and performance optimization`,
-                
-                success: `• Clear technical architecture with scalable foundation
-• User-centered design validated through research
-• Performance targets defined and monitored
-• Security measures implemented from day one
-• Iterative development with continuous user feedback`
+            state = {
+                currentStep: 1,
+                selectedAIs: [],
+                selectedDepth: '',
+                selectedFacets: [],
+                projectIdea: '',
+                prompts: {},
+                responses: {},
+                finalReport: ''
             };
+            
+            // Reset form
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('projectIdea').value = '';
+            
+            // Go to step 1
+            goToStep(1);
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('user-goal').focus();
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
         });
     </script>
 </body>
