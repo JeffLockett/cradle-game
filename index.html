@@ -7,18 +7,15 @@
   <!-- SortableJS for drag-and-drop -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
-    * { box-sizing: border-box; margin:0; padding:0 }
+    * { box-sizing:border-box; margin:0; padding:0 }
     body {
-      font-family: sans-serif;
+      font-family:sans-serif;
       padding:1rem;
       background:#fafafa;
       min-height:100vh;
     }
     h1 { text-align:center; margin-bottom:1rem; font-size:1.5rem }
-    #controls {
-      text-align:center;
-      margin-bottom:1rem;
-    }
+    #controls { text-align:center; margin-bottom:1rem }
     button {
       margin:0 .3rem;
       padding:.5rem 1rem;
@@ -26,10 +23,11 @@
       cursor:pointer;
     }
     .section { margin-bottom:2rem }
-    .section h2 {
+    .section-header {
       font-size:1.2rem;
       margin-bottom:.5rem;
-      cursor:text;
+      cursor:pointer;
+      outline:none;
     }
     .grid {
       display:grid;
@@ -50,28 +48,19 @@
     }
     .tile:active { cursor:grabbing }
     .tile img.favicon {
-      width:32px;
-      height:32px;
-      margin-bottom:.4rem;
-      border-radius:4px;
-    }
-    .tile i {
-      font-size:2rem;
-      margin-bottom:.4rem;
+      width:32px; height:32px; margin-bottom:.4rem; border-radius:4px;
     }
     .tile span {
       font-size:.85rem;
       word-break:break-word;
     }
-    /* Drag-and-drop hint */
+    /* Drop-hint overlay */
     #drop-hint {
-      position:fixed;
-      top:0; left:0; right:0; bottom:0;
-      background:rgba(0,0,0,0.1);
+      position:fixed; top:0; left:0; right:0; bottom:0;
       display:flex; align-items:center; justify-content:center;
-      pointer-events:none;
+      background:rgba(0,0,0,0.1);
       font-size:2rem; color:#333;
-      opacity:0; transition:opacity .2s;
+      pointer-events:none; opacity:0; transition:opacity .2s;
     }
     #drop-hint.visible { opacity:1 }
   </style>
@@ -85,40 +74,57 @@
   </div>
   <div id="sections"></div>
   <input type="file" id="fileInput" accept=".html,application/json" style="display:none" onchange="handleFile(event)" />
-  <div id="drop-hint">📂 Drop your Bookmarks.html here to import</div>
+  <div id="drop-hint">📂 Drop your Bookmarks.html here</div>
 
   <script>
     let data = [];
     const sectionsEl = document.getElementById('sections');
-    const fileInput = document.getElementById('fileInput');
-    const dropHint = document.getElementById('drop-hint');
+    const fileInput  = document.getElementById('fileInput');
+    const dropHint   = document.getElementById('drop-hint');
 
-    // Load & save
+    // Load & Save
     function load() {
       const saved = localStorage.getItem('quickBookmarks');
       data = saved ? JSON.parse(saved) : [];
-      if (!data.length) data = [{ title:'Bookmarks bar', items:[] }];
+      if (!data.length) {
+        data = [{ title:'Bookmarks bar', collapsed:false, items:[] }];
+      }
       render();
     }
     function save() {
       localStorage.setItem('quickBookmarks', JSON.stringify(data));
     }
 
-    // Render everything
+    // Render all sections
     function render() {
       sectionsEl.innerHTML = '';
       data.forEach((sec, si) => {
         const secEl = document.createElement('div');
         secEl.className = 'section';
+        const isClosed = sec.collapsed;
         secEl.innerHTML = `
-          <h2 contenteditable onblur="renameSection(${si}, this.textContent)">
-            ${sec.title}
-          </h2>
-          <div id="grid${si}" class="grid"></div>
-          <button onclick="addBookmark(${si})">+ Add Bookmark</button>
+          <div>
+            <h2 class="section-header" contenteditable>${sec.title}</h2>
+          </div>
+          <div id="grid${si}" class="grid" style="display:${isClosed?'none':'grid'}"></div>
+          <button onclick="addBookmark(${si})" style="display:${isClosed?'none':'inline-block'}">
+            + Add Bookmark
+          </button>
         `;
         sectionsEl.appendChild(secEl);
 
+        // Header: rename on blur, toggle collapse on click
+        const header = secEl.querySelector('.section-header');
+        header.addEventListener('blur', () => {
+          sec.title = header.textContent.trim() || 'Untitled';
+          save(); render();
+        });
+        header.addEventListener('click', () => {
+          sec.collapsed = !sec.collapsed;
+          save(); render();
+        });
+
+        // Populate grid
         const grid = secEl.querySelector('.grid');
         sec.items.forEach((item, ii) => {
           const tile = document.createElement('a');
@@ -129,50 +135,57 @@
           if (item.icon) {
             tile.innerHTML = `<i class="${item.icon}"></i><span>${item.name}</span>`;
           } else {
-            const domain = new URL(item.url).hostname;
-            const fav = `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
+            const d = new URL(item.url).hostname;
             tile.innerHTML = `
-              <img class="favicon" src="${fav}"
-                   onerror="this.onerror=null; this.src='https://via.placeholder.com/32?text=?'">
-              <span>${item.name}</span>`;
+              <img class="favicon"
+                   src="https://www.google.com/s2/favicons?sz=64&domain=${d}"
+                   onerror="this.onerror=null;this.src='https://via.placeholder.com/32?text=?'">
+              <span>${item.name}</span>
+            `;
           }
           // right-click to edit
           tile.addEventListener('contextmenu', e => {
-            e.preventDefault();
-            editBookmark(si, ii);
+            e.preventDefault(); editBookmark(si, ii);
           });
           grid.appendChild(tile);
         });
 
+        // Enable drag & drop between all sections
         Sortable.create(grid, {
-          animation:150,
+          group: 'sections',
+          animation: 150,
           onEnd: evt => {
-            const arr = data[si].items;
-            arr.splice(evt.newIndex, 0, arr.splice(evt.oldIndex,1)[0]);
-            save();
+            const src = data[si].items;
+            const [moved] = src.splice(evt.oldIndex, 1);
+            data[si].items = src;
+            // if dropped into same list, newIndex works; if into another list, find that target
+            if (evt.to.id !== `grid${si}`) {
+              const destIndex = Array.from(sectionsEl.children).findIndex((c, i) =>
+                c.querySelector(`#grid${i}`) === evt.to
+              );
+              data[destIndex].items.splice(evt.newIndex, 0, moved);
+            } else {
+              data[si].items.splice(evt.newIndex, 0, moved);
+            }
+            save(); render();
           }
         });
       });
     }
 
     // Section actions
-    function renameSection(idx, newName) {
-      data[idx].title = newName.trim() || 'Untitled';
-      save(); render();
-    }
     function addSection() {
       const title = prompt('Section name:', 'New Section');
       if (!title) return;
-      data.unshift({ title, items: [] });  // <-- add at top
+      data.unshift({ title, collapsed:false, items:[] });
       save(); render();
     }
 
     // Bookmark actions
     function addBookmark(secIdx) {
-      const url  = prompt('Bookmark URL:');
-      if (!url) return;
+      const url  = prompt('Bookmark URL:'); if (!url) return;
       const name = prompt('Name/label:', url) || url;
-      const icon = prompt('Custom FontAwesome icon class (or leave blank):','') || '';
+      const icon = prompt('FontAwesome icon class (leave blank for favicon):','') || '';
       data[secIdx].items.push({ name, url, icon });
       save(); render();
     }
@@ -180,12 +193,12 @@
       const bm = data[secIdx].items[idx];
       const url  = prompt('Edit URL:', bm.url); if (!url) return;
       const name = prompt('Edit name:', bm.name) || url;
-      const icon = prompt('Edit icon class (leave blank for favicon):', bm.icon) || '';
+      const icon = prompt('Edit icon class (blank=auto favicon):', bm.icon) || '';
       data[secIdx].items[idx] = { name, url, icon };
       save(); render();
     }
 
-    // Import (JSON or HTML)
+    // Import JSON or HTML (all <a> → single section)
     function importBookmarks() {
       fileInput.click();
     }
@@ -196,30 +209,36 @@
       const reader = new FileReader();
       reader.onload = () => {
         const text = reader.result;
-        // JSON?
+        // try JSON
         try {
           const arr = JSON.parse(text);
-          if (Array.isArray(arr)) {
-            data = arr;
-            save(); render();
-            return;
-          }
+          if (Array.isArray(arr)) { data = arr; save(); render(); return; }
         } catch {}
-        // else HTML export: grab *all* <a>
+        // else HTML: grab every <a>
         const doc = new DOMParser().parseFromString(text,'text/html');
         const anchors = Array.from(doc.getElementsByTagName('a'));
-        const items = anchors.map(a => ({
+        const items = anchors.map(a=>({
           name: a.textContent.trim(),
-          url: a.href,
+          url:  a.href,
           icon: ''
         }));
-        data = [{ title:'Bookmarks bar', items }];
+        data = [{ title:'Bookmarks bar', collapsed:false, items }];
         save(); render();
       };
       reader.readAsText(file);
     }
 
-    // JSON export
+    // Drag-and-drop file import
+    document.addEventListener('dragover', e => {
+      e.preventDefault(); dropHint.classList.add('visible');
+    });
+    document.addEventListener('dragleave', e => dropHint.classList.remove('visible'));
+    document.addEventListener('drop', e => {
+      e.preventDefault(); dropHint.classList.remove('visible');
+      if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
+    });
+
+    // Export
     function exportBookmarks() {
       const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
       const url  = URL.createObjectURL(blob);
@@ -228,23 +247,7 @@
       a.click(); URL.revokeObjectURL(url);
     }
 
-    // Drag-and-drop support
-    document.addEventListener('dragover', e => {
-      e.preventDefault();
-      dropHint.classList.add('visible');
-    });
-    document.addEventListener('dragleave', e => {
-      dropHint.classList.remove('visible');
-    });
-    document.addEventListener('drop', e => {
-      e.preventDefault();
-      dropHint.classList.remove('visible');
-      if (e.dataTransfer.files.length) {
-        processFile(e.dataTransfer.files[0]);
-      }
-    });
-
-    // Initialize
+    // Init
     load();
   </script>
 </body>
