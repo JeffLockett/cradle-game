@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <title>My Quick Bookmarks</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- SortableJS for drag-and-drop -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-  <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
+  <!-- Font Awesome (replace YOUR_KIT_ID with your own) -->
+  <script src="https://kit.fontawesome.com/YOUR_KIT_ID.js" crossorigin="anonymous"></script>
   <style>
     * { box-sizing: border-box; margin:0; padding:0 }
     body { font-family: sans-serif; padding:1rem; background:#fafafa }
@@ -37,10 +39,12 @@
   <input type="file" id="fileInput" accept=".html,application/json" style="display:none" onchange="handleFile(event)" />
 
   <script>
+    // Data and DOM refs
     let data = [];
     const sectionsEl = document.getElementById('sections');
     const fileInput = document.getElementById('fileInput');
 
+    // Load & save
     function load() {
       const saved = localStorage.getItem('quickBookmarks');
       data = saved ? JSON.parse(saved) : [{ title:'General', items:[] }];
@@ -50,6 +54,7 @@
       localStorage.setItem('quickBookmarks', JSON.stringify(data));
     }
 
+    // Render sections & tiles
     function render() {
       sectionsEl.innerHTML = '';
       data.forEach((sec, si) => {
@@ -72,8 +77,7 @@
           tile.target = '_blank';
           tile.innerHTML = `
             <i class="${item.icon||'fas fa-bookmark'}"></i>
-            <span>${item.name}</span>
-          `;
+            <span>${item.name}</span>`;
           tile.addEventListener('contextmenu', e => {
             e.preventDefault();
             editBookmark(si, ii);
@@ -92,6 +96,7 @@
       });
     }
 
+    // Section actions
     function renameSection(idx, newName) {
       data[idx].title = newName || 'Untitled';
       save(); render();
@@ -102,6 +107,8 @@
       data.push({ title, items: [] });
       save(); render();
     }
+
+    // Bookmark actions
     function addBookmark(secIdx) {
       const url = prompt('Bookmark URL:'); if (!url) return;
       const name = prompt('Name/label:', url) || url;
@@ -118,7 +125,7 @@
       save(); render();
     }
 
-    // Import (JSON or HTML)
+    // Import (JSON or HTML) — NEW: brute-force HTML parse
     function importBookmarks() {
       fileInput.click();
     }
@@ -127,8 +134,8 @@
       const reader = new FileReader();
       reader.onload = () => {
         const text = reader.result;
+        // try JSON first
         try {
-          // Try JSON first
           const arr = JSON.parse(text);
           if (Array.isArray(arr)) {
             data = arr;
@@ -136,41 +143,21 @@
             return;
           }
         } catch {}
-        // Fallback: parse HTML export
+        // else parse HTML export: grab all <a>
         const doc = new DOMParser().parseFromString(text,'text/html');
-        const topDL = doc.querySelector('dl');
-        if (!topDL) return alert('No bookmarks found in that file.');
-        const sections = [];
-        // Chrome format: <DT><H3>Folder</H3><DL>…links…</DL>
-        topDL.querySelectorAll(':scope > dt').forEach(dt => {
-          const h3 = dt.querySelector('h3');
-          if (h3) {
-            const title = h3.textContent;
-            const nextDL = dt.nextElementSibling;
-            const items = [];
-            if (nextDL && nextDL.tagName.toLowerCase()==='dl') {
-              nextDL.querySelectorAll('a').forEach(a => {
-                items.push({
-                  name: a.textContent,
-                  url: a.href,
-                  icon: 'fas fa-bookmark'
-                });
-              });
-            }
-            sections.push({ title, items });
-          }
-        });
-        if (sections.length) {
-          data = sections;
-          save(); render();
-        } else {
-          alert('Couldn’t parse any folders/links from that HTML.');
-        }
+        const anchors = Array.from(doc.getElementsByTagName('a'));
+        const items = anchors.map(a => ({
+          name: a.textContent.trim(),
+          url: a.href,
+          icon: 'fas fa-bookmark'
+        }));
+        data = [{ title: 'Bookmarks bar', items }];
+        save(); render();
       };
       reader.readAsText(file);
     }
 
-    // Export JSON backup
+    // JSON export
     function exportBookmarks() {
       const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
       const url = URL.createObjectURL(blob);
@@ -179,6 +166,7 @@
       a.click(); URL.revokeObjectURL(url);
     }
 
+    // Init
     load();
   </script>
 </body>
