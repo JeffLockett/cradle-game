@@ -4,75 +4,64 @@
   <meta charset="UTF-8">
   <title>My Quick Bookmarks</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- SortableJS for drag-and-drop -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-  <!-- Font Awesome for icons -->
   <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
   <style>
     * { box-sizing: border-box; margin:0; padding:0 }
-    body { font-family: sans-serif; padding:1rem; background:#fafafa; }
-    h1 { margin-bottom:1rem; font-size:1.5rem; text-align:center; }
-    #controls { text-align:center; margin-bottom:1rem; }
-    button { margin:0 .3rem; padding:.5rem 1rem; font-size:1rem; }
-    .section { margin-bottom:2rem; }
-    .section h2 { font-size:1.2rem; margin-bottom:.5rem; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr)); gap:.8rem; }
+    body { font-family: sans-serif; padding:1rem; background:#fafafa }
+    h1 { margin-bottom:1rem; font-size:1.5rem; text-align:center }
+    #controls { text-align:center; margin-bottom:1rem }
+    button { margin:0 .3rem; padding:.5rem 1rem; font-size:1rem }
+    .section { margin-bottom:2rem }
+    .section h2 { font-size:1.2rem; margin-bottom:.5rem }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr)); gap:.8rem }
     .tile {
-      background:#fff;
-      border-radius:8px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      padding:.8rem;
-      text-align:center;
-      cursor:grab;
+      background:#fff; border-radius:8px; display:flex;
+      flex-direction:column; align-items:center; justify-content:center;
+      padding:.8rem; text-align:center; cursor:grab;
       box-shadow:0 2px 4px rgba(0,0,0,0.1);
     }
-    .tile:active { cursor:grabbing; }
-    .tile i { font-size:2rem; margin-bottom:.4rem; }
-    .tile span { font-size:.85rem; word-break:break-word; }
+    .tile:active { cursor:grabbing }
+    .tile i { font-size:2rem; margin-bottom:.4rem }
+    .tile span { font-size:.85rem; word-break:break-word }
   </style>
 </head>
 <body>
   <h1>⚡ My Quick Bookmarks ⚡</h1>
   <div id="controls">
-    <button onclick="importBookmarks()">Import JSON</button>
+    <button onclick="importBookmarks()">Import Bookmarks</button>
     <button onclick="exportBookmarks()">Export JSON</button>
     <button onclick="addSection()">+ Section</button>
   </div>
   <div id="sections"></div>
-
-  <input type="file" id="fileInput" accept="application/json" style="display:none" onchange="handleFile(event)" />
+  <input type="file" id="fileInput" accept=".html,application/json" style="display:none" onchange="handleFile(event)" />
 
   <script>
-    // Data model: array of sections, each { title: string, items: [{name,url,icon}] }
     let data = [];
-
-    // DOM refs
     const sectionsEl = document.getElementById('sections');
     const fileInput = document.getElementById('fileInput');
 
-    // Load from localStorage
     function load() {
       const saved = localStorage.getItem('quickBookmarks');
-      if (saved) data = JSON.parse(saved);
-      else data = [{ title:'General', items:[] }];
+      data = saved ? JSON.parse(saved) : [{ title:'General', items:[] }];
       render();
     }
     function save() {
       localStorage.setItem('quickBookmarks', JSON.stringify(data));
     }
 
-    // Render all sections
     function render() {
       sectionsEl.innerHTML = '';
       data.forEach((sec, si) => {
         const secEl = document.createElement('div');
         secEl.className = 'section';
-        secEl.innerHTML = `<h2 contenteditable onblur="renameSection(${si},this.textContent)">${sec.title}</h2>
-                           <div id="grid${si}" class="grid"></div>
-                           <button onclick="addBookmark(${si})">+ Add Bookmark</button>`;
+        secEl.innerHTML = `
+          <h2 contenteditable onblur="renameSection(${si},this.textContent)">
+            ${sec.title}
+          </h2>
+          <div id="grid${si}" class="grid"></div>
+          <button onclick="addBookmark(${si})">+ Add Bookmark</button>
+        `;
         sectionsEl.appendChild(secEl);
 
         const grid = secEl.querySelector('.grid');
@@ -82,8 +71,9 @@
           tile.href = item.url;
           tile.target = '_blank';
           tile.innerHTML = `
-            <i class="${item.icon || 'fas fa-bookmark'}"></i>
-            <span>${item.name}</span>`;
+            <i class="${item.icon||'fas fa-bookmark'}"></i>
+            <span>${item.name}</span>
+          `;
           tile.addEventListener('contextmenu', e => {
             e.preventDefault();
             editBookmark(si, ii);
@@ -91,7 +81,6 @@
           grid.appendChild(tile);
         });
 
-        // Make this grid sortable
         Sortable.create(grid, {
           animation: 150,
           onEnd: evt => {
@@ -103,76 +92,93 @@
       });
     }
 
-    // Section rename
     function renameSection(idx, newName) {
       data[idx].title = newName || 'Untitled';
-      save();
-      render();
+      save(); render();
     }
-
-    // Add section
     function addSection() {
       const title = prompt('Section name:', 'New Section');
       if (!title) return;
       data.push({ title, items: [] });
-      save();
-      render();
+      save(); render();
     }
-
-    // Add bookmark
     function addBookmark(secIdx) {
-      const url = prompt('Bookmark URL:');
-      if (!url) return;
-      const name = prompt('Name/label:') || url;
-      const icon = prompt('Font Awesome icon class (e.g. fab fa-github):','') || 'fas fa-link';
+      const url = prompt('Bookmark URL:'); if (!url) return;
+      const name = prompt('Name/label:', url) || url;
+      const icon = prompt('Font Awesome icon (e.g. fab fa-github):','fas fa-link');
       data[secIdx].items.push({ name, url, icon });
-      save();
-      render();
+      save(); render();
     }
-
-    // Edit bookmark (via right-click)
     function editBookmark(secIdx, idx) {
       const bm = data[secIdx].items[idx];
-      const url = prompt('Edit URL:', bm.url);
-      if (!url) return;
+      const url  = prompt('Edit URL:', bm.url);  if (!url) return;
       const name = prompt('Edit name:', bm.name) || url;
-      const icon = prompt('Edit icon class:', bm.icon) || 'fas fa-link';
+      const icon = prompt('Edit icon:', bm.icon) || 'fas fa-link';
       data[secIdx].items[idx] = { name, url, icon };
-      save();
-      render();
+      save(); render();
     }
 
-    // Import/Export
+    // Import (JSON or HTML)
     function importBookmarks() {
       fileInput.click();
     }
-    function handleFile(e) {
-      const fr = new FileReader();
-      fr.onload = () => {
+    function handleFile(ev) {
+      const file = ev.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = reader.result;
         try {
-          const imported = JSON.parse(fr.result);
-          if (Array.isArray(imported)) {
-            data = imported;
-            save();
-            render();
-          } else alert('JSON must be an array of sections.');
-        } catch {
-          alert('Invalid JSON.');
+          // Try JSON first
+          const arr = JSON.parse(text);
+          if (Array.isArray(arr)) {
+            data = arr;
+            save(); render();
+            return;
+          }
+        } catch {}
+        // Fallback: parse HTML export
+        const doc = new DOMParser().parseFromString(text,'text/html');
+        const topDL = doc.querySelector('dl');
+        if (!topDL) return alert('No bookmarks found in that file.');
+        const sections = [];
+        // Chrome format: <DT><H3>Folder</H3><DL>…links…</DL>
+        topDL.querySelectorAll(':scope > dt').forEach(dt => {
+          const h3 = dt.querySelector('h3');
+          if (h3) {
+            const title = h3.textContent;
+            const nextDL = dt.nextElementSibling;
+            const items = [];
+            if (nextDL && nextDL.tagName.toLowerCase()==='dl') {
+              nextDL.querySelectorAll('a').forEach(a => {
+                items.push({
+                  name: a.textContent,
+                  url: a.href,
+                  icon: 'fas fa-bookmark'
+                });
+              });
+            }
+            sections.push({ title, items });
+          }
+        });
+        if (sections.length) {
+          data = sections;
+          save(); render();
+        } else {
+          alert('Couldn’t parse any folders/links from that HTML.');
         }
       };
-      fr.readAsText(e.target.files[0]);
-    }
-    function exportBookmarks() {
-      const blob = new Blob([JSON.stringify(data, null,2)], {type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'bookmarks.json';
-      a.click();
-      URL.revokeObjectURL(url);
+      reader.readAsText(file);
     }
 
-    // init
+    // Export JSON backup
+    function exportBookmarks() {
+      const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'bookmarks.json';
+      a.click(); URL.revokeObjectURL(url);
+    }
+
     load();
   </script>
 </body>
