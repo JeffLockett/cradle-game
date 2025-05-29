@@ -2,94 +2,178 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HexMind Console</title>
+  <title>My Quick Bookmarks</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- SortableJS for drag-and-drop -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <!-- Font Awesome for icons -->
+  <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #1e1e2f;
-      color: #f8f8f2;
-      margin: 0;
-      padding: 0;
+    * { box-sizing: border-box; margin:0; padding:0 }
+    body { font-family: sans-serif; padding:1rem; background:#fafafa; }
+    h1 { margin-bottom:1rem; font-size:1.5rem; text-align:center; }
+    #controls { text-align:center; margin-bottom:1rem; }
+    button { margin:0 .3rem; padding:.5rem 1rem; font-size:1rem; }
+    .section { margin-bottom:2rem; }
+    .section h2 { font-size:1.2rem; margin-bottom:.5rem; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr)); gap:.8rem; }
+    .tile {
+      background:#fff;
+      border-radius:8px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:.8rem;
+      text-align:center;
+      cursor:grab;
+      box-shadow:0 2px 4px rgba(0,0,0,0.1);
     }
-    header {
-      background: linear-gradient(90deg, #6366f1, #8b5cf6);
-      padding: 1rem;
-      text-align: center;
-    }
-    h1 {
-      margin: 0;
-      font-size: 1.75rem;
-    }
-    .section {
-      padding: 2rem;
-    }
-    .card {
-      background: #2c2c3c;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      border: 1px solid #444;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    }
-    .button {
-      background: #6366f1;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: 0.3s ease;
-    }
-    .button:hover {
-      background: #4f46e5;
-    }
+    .tile:active { cursor:grabbing; }
+    .tile i { font-size:2rem; margin-bottom:.4rem; }
+    .tile span { font-size:.85rem; word-break:break-word; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🧠 HexMind Command Console</h1>
-    <p>Single Page HTML App for Orchestrating Multi-AI Project Execution</p>
-  </header>
-
-  <div class="section">
-    <div class="card">
-      <h2>Select AIs</h2>
-      <label><input type="checkbox" value="Claude" checked> Claude</label>
-      <label><input type="checkbox" value="ChatGPT" checked> ChatGPT</label>
-      <label><input type="checkbox" value="Grok" checked> Grok</label>
-      <label><input type="checkbox" value="Gemini" checked> Gemini</label>
-      <label><input type="checkbox" value="Perplexity"> Perplexity</label>
-      <label><input type="checkbox" value="Copilot"> Copilot</label>
-    </div>
-
-    <div class="card">
-      <h2>Input Idea</h2>
-      <textarea id="projectIdea" rows="6" style="width:100%; padding:1rem; border-radius:8px; border:none;"></textarea>
-      <br><br>
-      <button class="button" onclick="generatePrompt()">Generate Prompts</button>
-    </div>
-
-    <div class="card" id="output">
-      <h2>Generated Prompts</h2>
-      <pre id="promptResult" style="white-space:pre-wrap"></pre>
-    </div>
+  <h1>⚡ My Quick Bookmarks ⚡</h1>
+  <div id="controls">
+    <button onclick="importBookmarks()">Import JSON</button>
+    <button onclick="exportBookmarks()">Export JSON</button>
+    <button onclick="addSection()">+ Section</button>
   </div>
+  <div id="sections"></div>
+
+  <input type="file" id="fileInput" accept="application/json" style="display:none" onchange="handleFile(event)" />
 
   <script>
-    function generatePrompt() {
-      const idea = document.getElementById('projectIdea').value.trim();
-      const selected = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-                            .map(cb => cb.value);
-      if (!idea) {
-        alert("Please enter a project idea.");
-        return;
-      }
+    // Data model: array of sections, each { title: string, items: [{name,url,icon}] }
+    let data = [];
 
-      let prompts = selected.map(ai => `---\n[${ai}]\nDescribe how to build: ${idea}\n`);
-      document.getElementById('promptResult').innerText = prompts.join('\n');
+    // DOM refs
+    const sectionsEl = document.getElementById('sections');
+    const fileInput = document.getElementById('fileInput');
+
+    // Load from localStorage
+    function load() {
+      const saved = localStorage.getItem('quickBookmarks');
+      if (saved) data = JSON.parse(saved);
+      else data = [{ title:'General', items:[] }];
+      render();
     }
+    function save() {
+      localStorage.setItem('quickBookmarks', JSON.stringify(data));
+    }
+
+    // Render all sections
+    function render() {
+      sectionsEl.innerHTML = '';
+      data.forEach((sec, si) => {
+        const secEl = document.createElement('div');
+        secEl.className = 'section';
+        secEl.innerHTML = `<h2 contenteditable onblur="renameSection(${si},this.textContent)">${sec.title}</h2>
+                           <div id="grid${si}" class="grid"></div>
+                           <button onclick="addBookmark(${si})">+ Add Bookmark</button>`;
+        sectionsEl.appendChild(secEl);
+
+        const grid = secEl.querySelector('.grid');
+        sec.items.forEach((item, ii) => {
+          const tile = document.createElement('a');
+          tile.className = 'tile';
+          tile.href = item.url;
+          tile.target = '_blank';
+          tile.innerHTML = `
+            <i class="${item.icon || 'fas fa-bookmark'}"></i>
+            <span>${item.name}</span>`;
+          tile.addEventListener('contextmenu', e => {
+            e.preventDefault();
+            editBookmark(si, ii);
+          });
+          grid.appendChild(tile);
+        });
+
+        // Make this grid sortable
+        Sortable.create(grid, {
+          animation: 150,
+          onEnd: evt => {
+            const arr = data[si].items;
+            arr.splice(evt.newIndex, 0, arr.splice(evt.oldIndex,1)[0]);
+            save();
+          }
+        });
+      });
+    }
+
+    // Section rename
+    function renameSection(idx, newName) {
+      data[idx].title = newName || 'Untitled';
+      save();
+      render();
+    }
+
+    // Add section
+    function addSection() {
+      const title = prompt('Section name:', 'New Section');
+      if (!title) return;
+      data.push({ title, items: [] });
+      save();
+      render();
+    }
+
+    // Add bookmark
+    function addBookmark(secIdx) {
+      const url = prompt('Bookmark URL:');
+      if (!url) return;
+      const name = prompt('Name/label:') || url;
+      const icon = prompt('Font Awesome icon class (e.g. fab fa-github):','') || 'fas fa-link';
+      data[secIdx].items.push({ name, url, icon });
+      save();
+      render();
+    }
+
+    // Edit bookmark (via right-click)
+    function editBookmark(secIdx, idx) {
+      const bm = data[secIdx].items[idx];
+      const url = prompt('Edit URL:', bm.url);
+      if (!url) return;
+      const name = prompt('Edit name:', bm.name) || url;
+      const icon = prompt('Edit icon class:', bm.icon) || 'fas fa-link';
+      data[secIdx].items[idx] = { name, url, icon };
+      save();
+      render();
+    }
+
+    // Import/Export
+    function importBookmarks() {
+      fileInput.click();
+    }
+    function handleFile(e) {
+      const fr = new FileReader();
+      fr.onload = () => {
+        try {
+          const imported = JSON.parse(fr.result);
+          if (Array.isArray(imported)) {
+            data = imported;
+            save();
+            render();
+          } else alert('JSON must be an array of sections.');
+        } catch {
+          alert('Invalid JSON.');
+        }
+      };
+      fr.readAsText(e.target.files[0]);
+    }
+    function exportBookmarks() {
+      const blob = new Blob([JSON.stringify(data, null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bookmarks.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // init
+    load();
   </script>
 </body>
 </html>
