@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Icon-Only Quick Bookmarks (Dark Mode)</title>
+  <title>Icon-Only Quick Bookmarks (Dark & PIN Locked)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <!-- SortableJS -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" defer></script>
@@ -14,6 +14,7 @@
       color:#e0e0e0;
       padding:1rem;
       min-height:100vh;
+      overflow:hidden;
     }
     h1 { text-align:center; margin-bottom:1rem; font-size:1.5rem }
     #controls { text-align:center; margin-bottom:1rem }
@@ -81,6 +82,30 @@
       cursor:pointer;
       z-index:2;
     }
+    /* PIN Overlay */
+    #pin-overlay {
+      position:fixed;
+      top:0; left:0; right:0; bottom:0;
+      background:rgba(0,0,0,0.9);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      z-index:999;
+    }
+    #pin-overlay input {
+      padding:.5rem;
+      font-size:1.2rem;
+      width:200px;
+      margin-bottom:1rem;
+      border:1px solid #444;
+      border-radius:4px;
+      background:#121212;
+      color:#e0e0e0;
+    }
+    #pin-overlay button {
+      padding:.5rem 1rem;
+    }
     #drop-hint {
       position:fixed; top:0; left:0; right:0; bottom:0;
       display:flex; align-items:center; justify-content:center;
@@ -92,213 +117,160 @@
   </style>
 </head>
 <body>
-  <h1>📱 My Icon-Only Bookmarks (Dark) 📱</h1>
-  <div id="controls">
+  <div id="pin-overlay">
+    <h1>Enter PIN to Unlock</h1>
+    <input type="password" id="pin-input" placeholder="4-digit PIN" maxlength="6" />
+    <button id="pin-submit">Unlock</button>
+  </div>
+  <h1>📱 My Icon-Only Bookmarks (Dark & Locked) 📱</h1>
+  <div id="controls" style="visibility:hidden;">
     <button id="btnImport">Import Bookmarks</button>
     <button id="btnExport">Export JSON</button>
     <button id="btnAddSection">+ Section (Top)</button>
     <button id="btnDelete">Delete Selected</button>
   </div>
-  <div id="sections"></div>
+  <div id="sections" style="visibility:hidden;"></div>
 
   <input type="file" id="fileInput" accept=".html,application/json" style="display:none"/>
   <div id="drop-hint">📂 Drop Bookmarks.html Here to Import</div>
 
   <script defer>
   document.addEventListener('DOMContentLoaded', () => {
-    const btnImport     = document.getElementById('btnImport');
-    const btnExport     = document.getElementById('btnExport');
-    const btnAddSection = document.getElementById('btnAddSection');
-    const btnDelete     = document.getElementById('btnDelete');
-    const fileInput     = document.getElementById('fileInput');
-    const sectionsEl    = document.getElementById('sections');
-    const dropHint      = document.getElementById('drop-hint');
-
-    let data = [];
-
-    function save() {
-      localStorage.setItem('quickBookmarks', JSON.stringify(data));
+    const PIN_KEY = 'bookmarkPIN';
+    const overlay     = document.getElementById('pin-overlay');
+    const pinInput    = document.getElementById('pin-input');
+    const pinSubmit   = document.getElementById('pin-submit');
+    const controlsEl  = document.getElementById('controls');
+    const sectionsEl  = document.getElementById('sections');
+    
+    // Reveal UI after correct PIN
+    function unlock() {
+      overlay.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      controlsEl.style.visibility = 'visible';
+      sectionsEl.style.visibility = 'visible';
+      initApp();
     }
-    function load() {
-      try {
-        const raw = localStorage.getItem('quickBookmarks');
-        data = raw ? JSON.parse(raw) : [];
-      } catch {
-        data = [];
+    
+    // First-time setup: ask to set PIN if none stored
+    let stored = localStorage.getItem(PIN_KEY);
+    if (!stored) {
+      let newPin = '';
+      while (!newPin || newPin.length < 4) {
+        newPin = prompt('Set a new 4-digit PIN:');
+        if (newPin === null) break;
       }
-      if (!Array.isArray(data) || data.length === 0) {
-        data = [{ title:'Bookmarks bar', collapsed:false, items:[] }];
+      if (newPin) {
+        localStorage.setItem(PIN_KEY, newPin);
+        stored = newPin;
       }
-      render();
     }
+    
+    // Submit PIN handler
+    pinSubmit.addEventListener('click', () => {
+      const val = pinInput.value;
+      if (val === stored) {
+        unlock();
+      } else {
+        alert('Incorrect PIN');
+        pinInput.value = '';
+      }
+    });
+    pinInput.addEventListener('keyup', e => {
+      if (e.key === 'Enter') pinSubmit.click();
+    });
 
-    function render() {
-      sectionsEl.innerHTML = '';
-      data.forEach((sec, si) => {
-        const secDiv = document.createElement('div');
-        secDiv.className = 'section';
+    // App variables (initialized after unlock)
+    function initApp() {
+      const btnImport     = document.getElementById('btnImport');
+      const btnExport     = document.getElementById('btnExport');
+      const btnAddSection = document.getElementById('btnAddSection');
+      const btnDelete     = document.getElementById('btnDelete');
+      const fileInput     = document.getElementById('fileInput');
+      const dropHint      = document.getElementById('drop-hint');
+      let data = [];
 
-        // Header
-        const hdr = document.createElement('div');
-        hdr.className = 'section-header';
-        hdr.textContent = sec.title;
-        hdr.title = sec.title;
-        hdr.addEventListener('click', () => {
-          sec.collapsed = !sec.collapsed;
-          save(); render();
-        });
-        secDiv.appendChild(hdr);
-
-        // Grid container
-        const grid = document.createElement('div');
-        grid.className = 'grid';
-        grid.id = `grid-${si}`;
-        grid.style.display = sec.collapsed ? 'none' : 'grid';
-        secDiv.appendChild(grid);
-
-        // Add bookmark button
-        if (!sec.collapsed) {
-          const addBm = document.createElement('button');
-          addBm.textContent = '+';
-          addBm.title = 'Add bookmark';
-          addBm.style.marginTop = '4px';
-          addBm.addEventListener('click', () => {
-            const url  = prompt('Bookmark URL:'); if (!url) return;
-            const name = prompt('Name (max 15 chars):', url) || url;
-            sec.items.push({ name, url });
-            save(); render();
-          });
-          secDiv.appendChild(addBm);
+      // Save/load
+      function save() { localStorage.setItem('quickBookmarks', JSON.stringify(data)); }
+      function load() {
+        try { data = JSON.parse(localStorage.getItem('quickBookmarks')) || []; }
+        catch { data = []; }
+        if (!Array.isArray(data) || data.length === 0) {
+          data = [{ title:'Bookmarks bar', collapsed:false, items:[] }];
         }
+        render();
+      }
 
-        // Tiles
-        sec.items.forEach((item, ii) => {
-          const tile = document.createElement('a');
-          tile.className = 'tile';
-          tile.href     = item.url;
-          tile.target   = '_blank';
-          tile.title    = item.name;
-
-          // Selection checkbox
-          const cb = document.createElement('input');
-          cb.type            = 'checkbox';
-          cb.className       = 'select-box';
-          cb.dataset.sec     = si;
-          cb.dataset.idx     = ii;
-          tile.appendChild(cb);
-
-          // Favicon
-          let domain = '';
-          try { domain = new URL(item.url).hostname; } catch {}
-          const img = document.createElement('img');
-          img.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-          img.onerror = () => img.src = 'https://via.placeholder.com/48?text=?';
-          tile.appendChild(img);
-
-          // Site name truncated
-          const label = document.createElement('span');
-          const txt = item.name.length > 15
-            ? item.name.slice(0,12) + '...'
-            : item.name;
-          label.textContent = txt;
-          tile.appendChild(label);
-
-          // Right-click to edit
-          tile.addEventListener('contextmenu', e => {
-            e.preventDefault();
-            const url2  = prompt('Edit URL:', item.url); if (!url2) return;
-            const name2 = prompt('Edit name (max 15 chars):', item.name) || url2;
-            item.url  = url2;
-            item.name = name2;
-            save(); render();
-          });
-
-          grid.appendChild(tile);
-        });
-
-        sectionsEl.appendChild(secDiv);
-
-        // Make sortable (cross-section)
-        Sortable.create(grid, {
-          group: 'shared', animation:150,
-          onEnd: evt => {
-            const fromList = data[si].items;
-            const [moved] = fromList.splice(evt.oldIndex,1);
-            let toIdx = si;
-            if (evt.to.id !== `grid-${si}`) {
-              toIdx = parseInt(evt.to.id.split('-')[1],10);
-            }
-            data[toIdx].items.splice(evt.newIndex,0,moved);
-            save(); render();
+      // Render UI
+      function render() {
+        sectionsEl.innerHTML = '';
+        data.forEach((sec, si) => {
+          const secDiv = document.createElement('div'); secDiv.className = 'section';
+          // Header
+          const hdr = document.createElement('div'); hdr.className = 'section-header';
+          hdr.textContent = sec.title; hdr.title = sec.title;
+          hdr.addEventListener('click', () => { sec.collapsed = !sec.collapsed; save(); render(); });
+          secDiv.appendChild(hdr);
+          // Grid
+          const grid = document.createElement('div'); grid.className='grid';
+          grid.id = `grid-${si}`;
+          grid.style.display = sec.collapsed ? 'none' : 'grid';
+          secDiv.appendChild(grid);
+          // Add button
+          if (!sec.collapsed) {
+            const addBm = document.createElement('button'); addBm.textContent = '+';
+            addBm.title = 'Add bookmark'; addBm.style.marginTop='4px';
+            addBm.addEventListener('click', () => {
+              const url = prompt('Bookmark URL:'); if(!url) return;
+              const name = prompt('Name (max 15 chars):', url) || url;
+              sec.items.push({ name, url }); save(); render();
+            }); secDiv.appendChild(addBm);
           }
+          // Tiles
+          sec.items.forEach((item, ii) => {
+            const tile = document.createElement('a'); tile.className='tile';
+            tile.href=item.url; tile.target='_blank'; tile.title=item.name;
+            const cb = document.createElement('input'); cb.type='checkbox'; cb.className='select-box';
+            cb.dataset.sec=si; cb.dataset.idx=ii; tile.appendChild(cb);
+            let d=''; try{ d=new URL(item.url).hostname;}catch{}
+            const img=document.createElement('img');
+            img.src=`https://www.google.com/s2/favicons?domain=${d}&sz=64`;
+            img.onerror=()=>img.src='https://via.placeholder.com/48?text=?'; tile.appendChild(img);
+            const label=document.createElement('span');
+            const txt=item.name.length>15?item.name.slice(0,12)+'...':item.name;
+            label.textContent=txt; tile.appendChild(label);
+            tile.addEventListener('contextmenu', e=>{ e.preventDefault();
+              const url2=prompt('Edit URL:',item.url); if(!url2)return;
+              const name2=prompt('Edit name:',item.name)||url2;
+              item.url=url2; item.name=name2; save(); render(); });
+            grid.appendChild(tile);
+          });
+          sectionsEl.appendChild(secDiv);
+          Sortable.create(grid,{ group:'shared', animation:150, onEnd:evt=>{
+            const from=data[si].items; const [moved]=from.splice(evt.oldIndex,1);
+            let toIdx=si; if(evt.to.id!==`grid-${si}`)toIdx=parseInt(evt.to.id.split('-')[1],10);
+            data[toIdx].items.splice(evt.newIndex,0,moved); save(); render();
+          }});
         });
+      }
+
+      // Delete
+      btnDelete.addEventListener('click',()=>{
+        const toRemove={};
+        document.querySelectorAll('.select-box:checked').forEach(cb=>{
+          const si=cb.dataset.sec,ii=cb.dataset.idx;
+          toRemove[si]=toRemove[si]||[]; toRemove[si].push(parseInt(ii,10));
+        });
+        Object.keys(toRemove).forEach(si=>{
+          toRemove[si].sort((a,b)=>b-a).forEach(ii=>data[si].items.splice(ii,1));
+        }); save(); render();
       });
-    }
 
-    // Delete selected
-    btnDelete.addEventListener('click', () => {
-      const toRemove = {};
-      document.querySelectorAll('.select-box:checked').forEach(cb => {
-        const si = cb.dataset.sec, ii = cb.dataset.idx;
-        toRemove[si] = toRemove[si] || [];
-        toRemove[si].push(parseInt(ii,10));
-      });
-      // Remove in each section from highest index
-      Object.keys(toRemove).forEach(si => {
-        const idxs = toRemove[si].sort((a,b)=>b-a);
-        idxs.forEach(ii => data[si].items.splice(ii,1));
-      });
-      save(); render();
-    });
-
-    // Import
-    btnImport.addEventListener('click', () => fileInput.click());
-    fileInput.addEventListener('change', () => {
-      const f = fileInput.files[0];
-      if (f) processFile(f);
-      fileInput.value = '';
-    });
-    function processFile(file) {
-      const r = new FileReader();
-      r.onload = () => {
-        const txt = r.result;
-        try {
-          const arr = JSON.parse(txt);
-          if (Array.isArray(arr)) { data = arr; save(); render(); return; }
-        } catch {}
-        const doc = new DOMParser().parseFromString(txt,'text/html');
-        const anchors = Array.from(doc.querySelectorAll('a'));
-        const items = anchors.map(a=>({ name:a.textContent.trim(), url:a.href }));
-        data = [{ title:'Bookmarks bar', collapsed:false, items }];
-        save(); render();
-      };
-      r.readAsText(file);
-    }
-
-    // Drag-and-drop file
-    document.addEventListener('dragover', e => { e.preventDefault(); dropHint.classList.add('visible'); });
-    document.addEventListener('dragleave', () => dropHint.classList.remove('visible'));
-    document.addEventListener('drop', e => {
-      e.preventDefault(); dropHint.classList.remove('visible');
-      if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
-    });
-
-    // Export
-    btnExport.addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href = url; a.download='bookmarks.json'; a.click(); URL.revokeObjectURL(url);
-    });
-
-    // Add section top
-    btnAddSection.addEventListener('click', () => {
-      const name = prompt('New section name:','New Section'); if (!name) return;
-      data.unshift({ title:name, collapsed:false, items:[] }); save(); render();
-    });
-
-    load();
-  });
-  </script>
-</body>
-</html>
+      // Import
+      btnImport.addEventListener('click',()=>fileInput.click());
+      fileInput.addEventListener('change',()=>{ const f=fileInput.files[0]; if(f)processFile(f); fileInput.value='';});
+      function processFile(file){
+        const r=new FileReader(); r.onload=()=>{
+          const txt=r.result;
+          try{ const arr=JSON.parse(txt); if(Array.isArray(arr)){data=arr;save();render();return;} }catch{}
+          const doc=new DOMParser().parseFromString(txt,'text/html');
