@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Icon-Only Quick Bookmarks</title>
+  <title>Icon-Only Quick Bookmarks (Dark Mode)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <!-- SortableJS -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" defer></script>
@@ -10,7 +10,8 @@
     * { box-sizing:border-box; margin:0; padding:0 }
     body {
       font-family:sans-serif;
-      background:#fafafa;
+      background:#121212;
+      color:#e0e0e0;
       padding:1rem;
       min-height:100vh;
     }
@@ -21,64 +22,94 @@
       padding:.5rem 1rem;
       font-size:1rem;
       cursor:pointer;
+      background:#1f1f1f;
+      color:#e0e0e0;
+      border:1px solid #333;
+      border-radius:4px;
     }
+    button:hover { background:#2a2a2a }
     .section { margin-bottom:2rem }
     .section-header {
       font-size:1.2rem;
       margin-bottom:.5rem;
       cursor:pointer;
       user-select:none;
+      color:#e0e0e0;
     }
     .grid {
       display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
-      gap:1rem;
+      grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
+      gap:.8rem;
     }
     .tile {
-      width:96px;
-      height:96px;
-      background:#fff;
-      border-radius:16px;
+      position:relative;
+      background:#1e1e1e;
+      border-radius:12px;
+      overflow:hidden;
+      width:80px;
+      height:100px;
       display:flex;
+      flex-direction:column;
       align-items:center;
       justify-content:center;
-      box-shadow:0 2px 4px rgba(0,0,0,0.1);
+      box-shadow:0 2px 4px rgba(0,0,0,0.5);
       cursor:grab;
       text-decoration:none;
     }
     .tile:active { cursor:grabbing }
     .tile img {
-      width:64px;
-      height:64px;
-      border-radius:12px;
+      width:48px;
+      height:48px;
+      border-radius:8px;
+      margin-bottom:4px;
+    }
+    .tile span {
+      display:block;
+      font-size:.7rem;
+      text-align:center;
+      color:#e0e0e0;
+      padding:0 2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .select-box {
+      position:absolute;
+      top:4px;
+      left:4px;
+      transform:scale(1.2);
+      cursor:pointer;
+      z-index:2;
     }
     #drop-hint {
       position:fixed; top:0; left:0; right:0; bottom:0;
       display:flex; align-items:center; justify-content:center;
-      background:rgba(0,0,0,0.1);
-      font-size:2rem; color:#333;
+      background:rgba(0,0,0,0.3);
+      font-size:2rem; color:#fff;
       pointer-events:none; opacity:0; transition:opacity .2s;
     }
     #drop-hint.visible { opacity:1 }
   </style>
 </head>
 <body>
-  <h1>📱 My Icon-Only Bookmarks 📱</h1>
+  <h1>📱 My Icon-Only Bookmarks (Dark) 📱</h1>
   <div id="controls">
     <button id="btnImport">Import Bookmarks</button>
     <button id="btnExport">Export JSON</button>
     <button id="btnAddSection">+ Section (Top)</button>
+    <button id="btnDelete">Delete Selected</button>
   </div>
   <div id="sections"></div>
 
   <input type="file" id="fileInput" accept=".html,application/json" style="display:none"/>
-  <div id="drop-hint">📂 Drop Bookmarks.html Here</div>
+  <div id="drop-hint">📂 Drop Bookmarks.html Here to Import</div>
 
   <script defer>
   document.addEventListener('DOMContentLoaded', () => {
     const btnImport     = document.getElementById('btnImport');
     const btnExport     = document.getElementById('btnExport');
     const btnAddSection = document.getElementById('btnAddSection');
+    const btnDelete     = document.getElementById('btnDelete');
     const fileInput     = document.getElementById('fileInput');
     const sectionsEl    = document.getElementById('sections');
     const dropHint      = document.getElementById('drop-hint');
@@ -89,8 +120,8 @@
       localStorage.setItem('quickBookmarks', JSON.stringify(data));
     }
     function load() {
-      const raw = localStorage.getItem('quickBookmarks');
       try {
+        const raw = localStorage.getItem('quickBookmarks');
         data = raw ? JSON.parse(raw) : [];
       } catch {
         data = [];
@@ -104,7 +135,6 @@
     function render() {
       sectionsEl.innerHTML = '';
       data.forEach((sec, si) => {
-        // Section container
         const secDiv = document.createElement('div');
         secDiv.className = 'section';
 
@@ -119,142 +149,154 @@
         });
         secDiv.appendChild(hdr);
 
-        // Grid
+        // Grid container
         const grid = document.createElement('div');
         grid.className = 'grid';
         grid.id = `grid-${si}`;
         grid.style.display = sec.collapsed ? 'none' : 'grid';
         secDiv.appendChild(grid);
 
-        // “+” for adding bookmarks
+        // Add bookmark button
         if (!sec.collapsed) {
           const addBm = document.createElement('button');
           addBm.textContent = '+';
           addBm.title = 'Add bookmark';
+          addBm.style.marginTop = '4px';
           addBm.addEventListener('click', () => {
-            const url  = prompt('Bookmark URL:');
-            if (!url) return;
-            const name = prompt('Name (hover to see):', url) || url;
+            const url  = prompt('Bookmark URL:'); if (!url) return;
+            const name = prompt('Name (max 15 chars):', url) || url;
             sec.items.push({ name, url });
             save(); render();
           });
           secDiv.appendChild(addBm);
         }
 
-        // Fill in tiles
+        // Tiles
         sec.items.forEach((item, ii) => {
-          const a = document.createElement('a');
-          a.className = 'tile';
-          a.href = item.url;
-          a.target = '_blank';
-          a.title = item.name;
+          const tile = document.createElement('a');
+          tile.className = 'tile';
+          tile.href     = item.url;
+          tile.target   = '_blank';
+          tile.title    = item.name;
+
+          // Selection checkbox
+          const cb = document.createElement('input');
+          cb.type            = 'checkbox';
+          cb.className       = 'select-box';
+          cb.dataset.sec     = si;
+          cb.dataset.idx     = ii;
+          tile.appendChild(cb);
+
+          // Favicon
           let domain = '';
-          try { domain = new URL(item.url).hostname } catch {}
+          try { domain = new URL(item.url).hostname; } catch {}
           const img = document.createElement('img');
-          img.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-          img.onerror = () => img.src = 'https://via.placeholder.com/64?text=?';
-          a.appendChild(img);
+          img.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+          img.onerror = () => img.src = 'https://via.placeholder.com/48?text=?';
+          tile.appendChild(img);
+
+          // Site name truncated
+          const label = document.createElement('span');
+          const txt = item.name.length > 15
+            ? item.name.slice(0,12) + '...'
+            : item.name;
+          label.textContent = txt;
+          tile.appendChild(label);
 
           // Right-click to edit
-          a.addEventListener('contextmenu', e => {
+          tile.addEventListener('contextmenu', e => {
             e.preventDefault();
-            const url2  = prompt('Edit URL:', item.url);
-            if (!url2) return;
-            const name2 = prompt('Edit name:', item.name) || url2;
-            item.url = url2;
+            const url2  = prompt('Edit URL:', item.url); if (!url2) return;
+            const name2 = prompt('Edit name (max 15 chars):', item.name) || url2;
+            item.url  = url2;
             item.name = name2;
             save(); render();
           });
 
-          grid.appendChild(a);
+          grid.appendChild(tile);
         });
 
         sectionsEl.appendChild(secDiv);
 
-        // Make grid sortable (cross-section)
+        // Make sortable (cross-section)
         Sortable.create(grid, {
-          group: 'shared',
-          animation: 150,
+          group: 'shared', animation:150,
           onEnd: evt => {
             const fromList = data[si].items;
-            const [moved] = fromList.splice(evt.oldIndex, 1);
+            const [moved] = fromList.splice(evt.oldIndex,1);
             let toIdx = si;
             if (evt.to.id !== `grid-${si}`) {
-              toIdx = parseInt(evt.to.id.split('-')[1], 10);
+              toIdx = parseInt(evt.to.id.split('-')[1],10);
             }
-            data[toIdx].items.splice(evt.newIndex, 0, moved);
+            data[toIdx].items.splice(evt.newIndex,0,moved);
             save(); render();
           }
         });
       });
     }
 
-    // IMPORT
+    // Delete selected
+    btnDelete.addEventListener('click', () => {
+      const toRemove = {};
+      document.querySelectorAll('.select-box:checked').forEach(cb => {
+        const si = cb.dataset.sec, ii = cb.dataset.idx;
+        toRemove[si] = toRemove[si] || [];
+        toRemove[si].push(parseInt(ii,10));
+      });
+      // Remove in each section from highest index
+      Object.keys(toRemove).forEach(si => {
+        const idxs = toRemove[si].sort((a,b)=>b-a);
+        idxs.forEach(ii => data[si].items.splice(ii,1));
+      });
+      save(); render();
+    });
+
+    // Import
     btnImport.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', () => {
       const f = fileInput.files[0];
       if (f) processFile(f);
       fileInput.value = '';
     });
-
     function processFile(file) {
       const r = new FileReader();
       r.onload = () => {
         const txt = r.result;
-        // try JSON
         try {
           const arr = JSON.parse(txt);
-          if (Array.isArray(arr)) {
-            data = arr; save(); render(); return;
-          }
+          if (Array.isArray(arr)) { data = arr; save(); render(); return; }
         } catch {}
-        // fallback: parse every <a>
-        const doc = new DOMParser().parseFromString(txt, 'text/html');
+        const doc = new DOMParser().parseFromString(txt,'text/html');
         const anchors = Array.from(doc.querySelectorAll('a'));
-        const items = anchors.map(a => ({
-          name: a.textContent.trim(),
-          url: a.href
-        }));
+        const items = anchors.map(a=>({ name:a.textContent.trim(), url:a.href }));
         data = [{ title:'Bookmarks bar', collapsed:false, items }];
         save(); render();
       };
       r.readAsText(file);
     }
 
-    // DRAG-AND-DROP FILE
-    document.addEventListener('dragover', e => {
-      e.preventDefault();
-      dropHint.classList.add('visible');
-    });
-    document.addEventListener('dragleave', () => {
-      dropHint.classList.remove('visible');
-    });
+    // Drag-and-drop file
+    document.addEventListener('dragover', e => { e.preventDefault(); dropHint.classList.add('visible'); });
+    document.addEventListener('dragleave', () => dropHint.classList.remove('visible'));
     document.addEventListener('drop', e => {
-      e.preventDefault();
-      dropHint.classList.remove('visible');
-      if (e.dataTransfer.files.length) {
-        processFile(e.dataTransfer.files[0]);
-      }
+      e.preventDefault(); dropHint.classList.remove('visible');
+      if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
     });
 
-    // EXPORT
+    // Export
     btnExport.addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
-      a.href = url; a.download = 'bookmarks.json';
-      a.click(); URL.revokeObjectURL(url);
+      a.href = url; a.download='bookmarks.json'; a.click(); URL.revokeObjectURL(url);
     });
 
-    // + SECTION (Top)
+    // Add section top
     btnAddSection.addEventListener('click', () => {
-      const name = prompt('New section name:', 'New Section');
-      if (!name) return;
-      data.unshift({ title: name, collapsed: false, items: [] });
-      save(); render();
+      const name = prompt('New section name:','New Section'); if (!name) return;
+      data.unshift({ title:name, collapsed:false, items:[] }); save(); render();
     });
 
-    // INIT
     load();
   });
   </script>
