@@ -2,79 +2,86 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Quick Bookmarks</title>
+  <title>Icon-Only Quick Bookmarks</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- SortableJS for drag-and-drop -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
     * { box-sizing:border-box; margin:0; padding:0 }
     body {
       font-family:sans-serif;
-      padding:1rem;
       background:#fafafa;
+      padding:1rem;
       min-height:100vh;
     }
-    h1 { text-align:center; margin-bottom:1rem; font-size:1.5rem }
-    #controls { text-align:center; margin-bottom:1rem }
+    h1 {
+      text-align:center;
+      margin-bottom:1rem;
+      font-size:1.5rem;
+    }
+    #controls {
+      text-align:center;
+      margin-bottom:1rem;
+    }
     button {
       margin:0 .3rem;
       padding:.5rem 1rem;
       font-size:1rem;
       cursor:pointer;
     }
-    .section { margin-bottom:2rem }
+    .section {
+      margin-bottom:2rem;
+    }
     .section-header {
       font-size:1.2rem;
       margin-bottom:.5rem;
       cursor:pointer;
-      outline:none;
+      user-select:none;
     }
     .grid {
       display:grid;
-      grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
-      gap:.8rem;
+      grid-template-columns:repeat(auto-fill, minmax(96px,1fr));
+      gap:1rem;
     }
     .tile {
+      width:96px;
+      height:96px;
       background:#fff;
-      border-radius:8px;
+      border-radius:16px;
       display:flex;
-      flex-direction:column;
       align-items:center;
       justify-content:center;
-      padding:.8rem;
-      text-align:center;
-      cursor:grab;
       box-shadow:0 2px 4px rgba(0,0,0,0.1);
+      cursor:grab;
+      text-decoration:none;
     }
     .tile:active { cursor:grabbing }
-    .tile img.favicon {
-      width:32px; height:32px; margin-bottom:.4rem; border-radius:4px;
+    .tile img {
+      width:64px;
+      height:64px;
+      border-radius:12px;
     }
-    .tile span {
-      font-size:.85rem;
-      word-break:break-word;
-    }
-    /* Drop-hint overlay */
+    /* Hide labels completely */
+    .tile span { display:none }
+    /* Drag-and-drop hint */
     #drop-hint {
       position:fixed; top:0; left:0; right:0; bottom:0;
       display:flex; align-items:center; justify-content:center;
-      background:rgba(0,0,0,0.1);
-      font-size:2rem; color:#333;
+      background:rgba(0,0,0,0.1); font-size:2rem; color:#333;
       pointer-events:none; opacity:0; transition:opacity .2s;
     }
     #drop-hint.visible { opacity:1 }
   </style>
 </head>
 <body>
-  <h1>⚡ My Quick Bookmarks ⚡</h1>
+  <h1>📱 My Icon-Only Bookmarks 📱</h1>
   <div id="controls">
     <button onclick="importBookmarks()">Import Bookmarks</button>
     <button onclick="exportBookmarks()">Export JSON</button>
     <button onclick="addSection()">+ Section (Top)</button>
   </div>
   <div id="sections"></div>
-  <input type="file" id="fileInput" accept=".html,application/json" style="display:none" onchange="handleFile(event)" />
-  <div id="drop-hint">📂 Drop your Bookmarks.html here</div>
+  <input type="file" id="fileInput" accept=".html,application/json" style="display:none" onchange="handleFile(event)"/>
+  <div id="drop-hint">📂 Drop Bookmarks.html Here</div>
 
   <script>
     let data = [];
@@ -82,173 +89,10 @@
     const fileInput  = document.getElementById('fileInput');
     const dropHint   = document.getElementById('drop-hint');
 
-    // Load & Save
+    // load & save
     function load() {
       const saved = localStorage.getItem('quickBookmarks');
       data = saved ? JSON.parse(saved) : [];
       if (!data.length) {
         data = [{ title:'Bookmarks bar', collapsed:false, items:[] }];
       }
-      render();
-    }
-    function save() {
-      localStorage.setItem('quickBookmarks', JSON.stringify(data));
-    }
-
-    // Render all sections
-    function render() {
-      sectionsEl.innerHTML = '';
-      data.forEach((sec, si) => {
-        const secEl = document.createElement('div');
-        secEl.className = 'section';
-        const isClosed = sec.collapsed;
-        secEl.innerHTML = `
-          <div>
-            <h2 class="section-header" contenteditable>${sec.title}</h2>
-          </div>
-          <div id="grid${si}" class="grid" style="display:${isClosed?'none':'grid'}"></div>
-          <button onclick="addBookmark(${si})" style="display:${isClosed?'none':'inline-block'}">
-            + Add Bookmark
-          </button>
-        `;
-        sectionsEl.appendChild(secEl);
-
-        // Header: rename on blur, toggle collapse on click
-        const header = secEl.querySelector('.section-header');
-        header.addEventListener('blur', () => {
-          sec.title = header.textContent.trim() || 'Untitled';
-          save(); render();
-        });
-        header.addEventListener('click', () => {
-          sec.collapsed = !sec.collapsed;
-          save(); render();
-        });
-
-        // Populate grid
-        const grid = secEl.querySelector('.grid');
-        sec.items.forEach((item, ii) => {
-          const tile = document.createElement('a');
-          tile.className = 'tile';
-          tile.href = item.url;
-          tile.target = '_blank';
-          // favicon vs custom icon
-          if (item.icon) {
-            tile.innerHTML = `<i class="${item.icon}"></i><span>${item.name}</span>`;
-          } else {
-            const d = new URL(item.url).hostname;
-            tile.innerHTML = `
-              <img class="favicon"
-                   src="https://www.google.com/s2/favicons?sz=64&domain=${d}"
-                   onerror="this.onerror=null;this.src='https://via.placeholder.com/32?text=?'">
-              <span>${item.name}</span>
-            `;
-          }
-          // right-click to edit
-          tile.addEventListener('contextmenu', e => {
-            e.preventDefault(); editBookmark(si, ii);
-          });
-          grid.appendChild(tile);
-        });
-
-        // Enable drag & drop between all sections
-        Sortable.create(grid, {
-          group: 'sections',
-          animation: 150,
-          onEnd: evt => {
-            const src = data[si].items;
-            const [moved] = src.splice(evt.oldIndex, 1);
-            data[si].items = src;
-            // if dropped into same list, newIndex works; if into another list, find that target
-            if (evt.to.id !== `grid${si}`) {
-              const destIndex = Array.from(sectionsEl.children).findIndex((c, i) =>
-                c.querySelector(`#grid${i}`) === evt.to
-              );
-              data[destIndex].items.splice(evt.newIndex, 0, moved);
-            } else {
-              data[si].items.splice(evt.newIndex, 0, moved);
-            }
-            save(); render();
-          }
-        });
-      });
-    }
-
-    // Section actions
-    function addSection() {
-      const title = prompt('Section name:', 'New Section');
-      if (!title) return;
-      data.unshift({ title, collapsed:false, items:[] });
-      save(); render();
-    }
-
-    // Bookmark actions
-    function addBookmark(secIdx) {
-      const url  = prompt('Bookmark URL:'); if (!url) return;
-      const name = prompt('Name/label:', url) || url;
-      const icon = prompt('FontAwesome icon class (leave blank for favicon):','') || '';
-      data[secIdx].items.push({ name, url, icon });
-      save(); render();
-    }
-    function editBookmark(secIdx, idx) {
-      const bm = data[secIdx].items[idx];
-      const url  = prompt('Edit URL:', bm.url); if (!url) return;
-      const name = prompt('Edit name:', bm.name) || url;
-      const icon = prompt('Edit icon class (blank=auto favicon):', bm.icon) || '';
-      data[secIdx].items[idx] = { name, url, icon };
-      save(); render();
-    }
-
-    // Import JSON or HTML (all <a> → single section)
-    function importBookmarks() {
-      fileInput.click();
-    }
-    function handleFile(ev) {
-      processFile(ev.target.files[0]);
-    }
-    function processFile(file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const text = reader.result;
-        // try JSON
-        try {
-          const arr = JSON.parse(text);
-          if (Array.isArray(arr)) { data = arr; save(); render(); return; }
-        } catch {}
-        // else HTML: grab every <a>
-        const doc = new DOMParser().parseFromString(text,'text/html');
-        const anchors = Array.from(doc.getElementsByTagName('a'));
-        const items = anchors.map(a=>({
-          name: a.textContent.trim(),
-          url:  a.href,
-          icon: ''
-        }));
-        data = [{ title:'Bookmarks bar', collapsed:false, items }];
-        save(); render();
-      };
-      reader.readAsText(file);
-    }
-
-    // Drag-and-drop file import
-    document.addEventListener('dragover', e => {
-      e.preventDefault(); dropHint.classList.add('visible');
-    });
-    document.addEventListener('dragleave', e => dropHint.classList.remove('visible'));
-    document.addEventListener('drop', e => {
-      e.preventDefault(); dropHint.classList.remove('visible');
-      if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
-    });
-
-    // Export
-    function exportBookmarks() {
-      const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href = url; a.download = 'bookmarks.json';
-      a.click(); URL.revokeObjectURL(url);
-    }
-
-    // Init
-    load();
-  </script>
-</body>
-</html>
