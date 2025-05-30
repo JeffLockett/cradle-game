@@ -32,7 +32,7 @@
     #drop-hint { position:fixed; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.3); font-size:2rem; color:#fff; pointer-events:none; opacity:0; transition:opacity .2s; }
     #drop-hint.visible { opacity:1 }
     #tasks-container h2 { margin-bottom:.5rem; font-size:1.4rem; text-align:center; font-weight:bold; color:#39ff14; }
-    #task-input { padding:.6rem; border:none; border-radius:4px; margin-bottom:.6rem; background:#2a2a2a; color:#e0e0e0; flex:0; font-size:1.1rem; }
+    #task-input { padding:.6rem; border:none; border-radius:4px; margin-bottom:1rem; background:#2a2a2a; color:#e0e0e0; flex:0; font-size:1.1rem; }
     #task-add-btn { padding:.7rem; margin-bottom:1rem; background:#39ff14; color:#121212; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:1.1rem; }
     #task-list { list-style:none; padding:0; flex:1; overflow-y:auto; }
     #task-list li { display:flex; justify-content:space-between; align-items:center; padding:.7rem; margin-bottom:.7rem; background:#2a2a2a; border-radius:4px; color:#e0e0e0; font-weight:bold; font-size:1rem; }
@@ -71,26 +71,210 @@
   document.addEventListener('DOMContentLoaded', () => {
     // Clock
     const clockEl = document.getElementById('current-time');
-    function updateClock() { const now=new Date(); clockEl.textContent=now.toLocaleTimeString('en-GB',{hour12:false}); clockEl.style.visibility='visible'; }
-    setInterval(updateClock,1000); updateClock();
+    function updateClock() {
+      const now = new Date();
+      clockEl.textContent = now.toLocaleTimeString('en-GB', { hour12: false });
+      clockEl.style.visibility = 'visible';
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
     // PIN
-    const PIN_KEY='bookmarkPIN';
-    const overlay=document.getElementById('pin-overlay');
-    const pinInput=document.getElementById('pin-input');
-    const pinSubmit=document.getElementById('pin-submit');
-    const titleEl=document.getElementById('main-title');
-    const controls=document.getElementById('controls');
-    const sections=document.getElementById('sections');
-    function showApp(){ overlay.style.display='none'; titleEl.style.visibility='visible'; controls.style.visibility='visible'; sections.style.visibility='visible'; initBookmarks(); initTasks(); }
-    let storedPin=localStorage.getItem(PIN_KEY);
-    if(!storedPin){ let newPin; do{ newPin=prompt('Set new 4-digit PIN:'); if(newPin===null)break;}while(!/^[0-9]{4}$/.test(newPin)); if(newPin)localStorage.setItem(PIN_KEY,newPin),storedPin=newPin; }
-    pinSubmit.addEventListener('click',()=>{ if(pinInput.value===storedPin)showApp(); else{alert('Incorrect PIN');pinInput.value='';pinInput.focus();}});
-    pinInput.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault();pinSubmit.click();}});
+    const PIN_KEY = 'bookmarkPIN';
+    const overlay = document.getElementById('pin-overlay');
+    const pinInput = document.getElementById('pin-input');
+    const pinSubmit = document.getElementById('pin-submit');
+    const titleEl = document.getElementById('main-title');
+    const controls = document.getElementById('controls');
+    const sections = document.getElementById('sections');
+    function showApp() {
+      overlay.style.display = 'none';
+      titleEl.style.visibility = 'visible';
+      controls.style.visibility = 'visible';
+      sections.style.visibility = 'visible';
+      initBookmarks();
+      initTasks();
+    }
+    let storedPin = localStorage.getItem(PIN_KEY);
+    if (!storedPin) {
+      let newPin;
+      do {
+        newPin = prompt('Set new 4-digit PIN:');
+        if (newPin === null) break;
+      } while (!/^[0-9]{4}$/.test(newPin));
+      if (newPin) {
+        localStorage.setItem(PIN_KEY, newPin);
+        storedPin = newPin;
+      }
+    }
+    pinSubmit.addEventListener('click', () => {
+      if (pinInput.value === storedPin) showApp();
+      else {
+        alert('Incorrect PIN');
+        pinInput.value = '';
+        pinInput.focus();
+      }
+    });
+    pinInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        pinSubmit.click();
+      }
+    });
 
     // Bookmarks
-    function initBookmarks(){ /* existing code unchanged */ }
-    function initTasks(){ /* existing code unchanged */ }
+    function initBookmarks() {
+      let data = [];
+      const btnImport = document.getElementById('btnImport');
+      const btnExport = document.getElementById('btnExport');
+      const btnAddSection = document.getElementById('btnAddSection');
+      const btnDelete = document.getElementById('btnDelete');
+      const fileInput = document.getElementById('fileInput');
+      const dropHint = document.getElementById('drop-hint');
+
+      function save() { localStorage.setItem('quickBookmarks', JSON.stringify(data)); }
+      function load() {
+        try { data = JSON.parse(localStorage.getItem('quickBookmarks')) || []; }
+        catch { data = []; }
+        if (!Array.isArray(data) || data.length === 0) data = [{ title: 'Bookmarks bar', collapsed: false, items: [] }];
+        render();
+      }
+
+      function render() {
+        sections.innerHTML = '';
+        data.forEach((sec, si) => {
+          const secDiv = document.createElement('div'); secDiv.className = 'section';
+          const hdr = document.createElement('div'); hdr.className = 'section-header'; hdr.textContent = sec.title;
+          hdr.addEventListener('dblclick', () => {
+            const newName = prompt('Rename section:', sec.title);
+            if (newName) {
+              sec.title = newName;
+              save();
+              render();
+            }
+          });
+          hdr.addEventListener('click', () => { sec.collapsed = !sec.collapsed; save(); render(); });
+          secDiv.appendChild(hdr);
+
+          const grid = document.createElement('div'); grid.className = 'grid'; grid.id = `grid-${si}`;
+          grid.style.display = sec.collapsed ? 'none' : 'grid'; secDiv.appendChild(grid);
+
+          if (!sec.collapsed) {
+            const addBtn = document.createElement('button'); addBtn.textContent = '+'; addBtn.title = 'Add bookmark';
+            addBtn.addEventListener('click', () => {
+              const url = prompt('Bookmark URL:'); if (!url) return;
+              let name = prompt('Name (15 chars max):', url) || url;
+              if (name.length > 15) name = name.slice(0, 12) + '...';
+              sec.items.push({ name, url }); save(); render();
+            });
+            secDiv.appendChild(addBtn);
+          }
+
+          sec.items.forEach((item, ii) => {
+            const a = document.createElement('a'); a.className = 'tile'; a.href = item.url; a.target = '_blank'; a.title = item.name;
+            a.addEventListener('dblclick', () => {
+              const newName = prompt('Rename bookmark:', item.name);
+              if (newName) {
+                item.name = newName;
+                save();
+                render();
+              }
+            });
+            const cb = document.createElement('input'); cb.type = 'checkbox'; cb.className = 'select-box'; cb.dataset.sec = si; cb.dataset.idx = ii; a.appendChild(cb);
+            let d = ''; try { d = new URL(item.url).hostname; } catch {};
+            const img = document.createElement('img'); img.src = `https://www.google.com/s2/favicons?domain=${d}&sz=64`;
+            img.onerror = () => {
+              a.innerHTML = '<i class="fas fa-hat-wizard"></i><span></span>';
+            };
+            a.appendChild(img);
+            const label = document.createElement('span'); label.textContent = item.name; a.appendChild(label);
+            a.addEventListener('contextmenu', e => {
+              e.preventDefault();
+              const url2 = prompt('Edit URL:', item.url); if (!url2) return;
+              let name2 = prompt('Edit name:', item.name) || url2;
+              if (name2.length > 15) name2 = name2.slice(0, 12) + '...';
+              item.url = url2; item.name = name2; save(); render();
+            });
+            grid.appendChild(a);
+          });
+
+          sections.appendChild(secDiv);
+          Sortable.create(grid, {
+            group: 'shared', animation: 150,
+            onEnd: evt => {
+              const from = data[si].items;
+              const [moved] = from.splice(evt.oldIndex, 1);
+              let toIdx = si;
+              if (evt.to.id !== `grid-${si}`) toIdx = parseInt(evt.to.id.split('-')[1], 10);
+              data[toIdx].items.splice(evt.newIndex, 0, moved);
+              save(); render();
+            }
+          });
+        });
+      }
+
+      btnDelete.addEventListener('click', () => {
+        const toRemove = {};
+        document.querySelectorAll('.select-box:checked').forEach(cb => {
+          (toRemove[cb.dataset.sec] = toRemove[cb.dataset.sec] || []).push(parseInt(cb.dataset.idx, 10));
+        });
+        Object.entries(toRemove).forEach(([si, idxs]) => {
+          idxs.sort((a, b) => b - a).forEach(ii => data[si].items.splice(ii, 1));
+        }); save(); render();
+      });
+      btnImport.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', () => { const f = fileInput.files[0]; if (f) processFile(f); fileInput.value = ''; });
+      function processFile(file) {
+        const r = new FileReader(); r.onload = () => {
+          const txt = r.result;
+          try { const arr = JSON.parse(txt); if (Array.isArray(arr)) { data = arr; save(); render(); return; } } catch {}
+          const doc = new DOMParser().parseFromString(txt, 'text/html');
+          const anchors = Array.from(doc.querySelectorAll('a'));
+          data = [{ title: 'Bookmarks bar', collapsed: false, items: anchors.map(a => ({ name: (a.textContent.trim().slice(0,12) + (a.textContent.trim().length>15?'...':'')), url: a.href })) }];
+          save(); render();
+        };
+        r.readAsText(file);
+      }
+      document.addEventListener('dragover', e => { e.preventDefault(); dropHint.classList.add('visible'); });
+      document.addEventListener('dragleave', () => dropHint.classList.remove('visible'));
+      document.addEventListener('drop', e => { e.preventDefault(); dropHint.classList.remove('visible'); if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]); });
+      btnExport.addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(data,null,2)], { type: 'application/json' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'bookmarks.json'; a.click(); URL.revokeObjectURL(a.href);
+      });
+      btnAddSection.addEventListener('click', () => {
+        const name = prompt('New section name:','New Section'); if (!name) return;
+        data.unshift({ title: name, collapsed: false, items: [] }); save(); render();
+      });
+      load();
+    }
+
+    // Tasks
+    function initTasks() {
+      const TASK_KEY = 'quickTasks';
+      const input = document.getElementById('task-input');
+      const addBtn = document.getElementById('task-add-btn');
+      const list = document.getElementById('task-list');
+      let tasks = [];
+      function saveTasks() { localStorage.setItem(TASK_KEY, JSON.stringify(tasks)); }
+      function loadTasks() { try { tasks = JSON.parse(localStorage.getItem(TASK_KEY))||[]; } catch { tasks=[]; } renderTasks(); }
+      function addTask(text) { const time = new Date().toLocaleTimeString('en-GB',{hour12:false}); tasks.push({ text, time }); saveTasks(); renderTasks(); }
+      function removeTask(idx) { tasks.splice(idx,1); saveTasks(); renderTasks(); }
+      function renderTasks() {
+        list.innerHTML='';
+        tasks.forEach((t,i) => {
+          const li = document.createElement('li');
+          const spanT = document.createElement('span'); spanT.textContent = t.text;
+          const spanTime = document.createElement('span'); spanTime.className='task-time'; spanTime.textContent = t.time;
+          li.appendChild(spanT); li.appendChild(spanTime);
+          const btn = document.createElement('button'); btn.textContent='✕'; btn.className='task-remove'; btn.addEventListener('click',()=>removeTask(i));
+          li.appendChild(btn); list.appendChild(li);
+        });
+      }
+      addBtn.addEventListener('click', ()=>{ const text = input.value.trim(); if (text) { addTask(text); input.value=''; input.focus(); }});
+      input.addEventListener('keydown', e => { if (e.key==='Enter' && input.value.trim()) { addTask(input.value.trim()); input.value=''; input.focus(); }});
+      loadTasks();
+    }
   });
   </script>
 </body>
