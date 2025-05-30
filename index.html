@@ -50,11 +50,13 @@
     <div id="left">
       <h1>🔮 ADHD Workflow Hub</h1>
       <div id="controls">
-        <button id="import-secs">Import Sections</button>
+        <button id="import-html">Import Bookmarks HTML</button>
+        <button id="import-secs">Import Sections (JSON)</button>
         <button id="export-secs">Export Sections</button>
         <button id="add-sec-btn">+ Section</button>
         <button id="delete-items">Delete Selected</button>
       </div>
+      <input type="file" id="html-file" accept=".html">
       <input type="file" id="sec-file" accept="application/json">
       <div id="sections"></div>
     </div>
@@ -85,16 +87,32 @@
     pinBtn.onclick=()=>{if(pinIn.value===pin)unlock();else{alert('Wrong PIN');pinIn.value='';pinIn.focus();}};
     pinIn.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pinBtn.click();}});
 
-    // Sections
+    // Sections & HTML Import
     function initSections(){
-      const secCon=document.getElementById('sections'),fileInput=document.getElementById('sec-file');
+      const secCon=document.getElementById('sections');
+      const htmlFile=document.getElementById('html-file');
+      const jsonFile=document.getElementById('sec-file');
+      document.getElementById('import-html').onclick=()=>htmlFile.click();
+      htmlFile.addEventListener('change',e=>{
+        const f=e.target.files[0];
+        const r=new FileReader();
+        r.onload=()=>{
+          const doc=new DOMParser().parseFromString(r.result,'text/html');
+          const anchors=Array.from(doc.querySelectorAll('a')); // all bookmark links
+          data=[{title:'Imported',collapsed:false,items:anchors.map(a=>({name:a.textContent||a.getAttribute('href'),url:a.href}))}];
+          save(); render();
+        };
+        r.readAsText(f);
+      });
+
       let data=JSON.parse(localStorage.getItem('secs'))||[{title:'Default',items:[]}];
       const save=()=>localStorage.setItem('secs',JSON.stringify(data));
       function render(){secCon.innerHTML='';
         data.forEach((s,si)=>{
           const secDiv=document.createElement('div');secDiv.className='section';
           const hdr=document.createElement('div');hdr.className='section-header';hdr.textContent=s.title;
-          hdr.onclick=()=>{s.collapsed=!s.collapsed;save();render();};hdr.ondblclick=()=>{const t=prompt('Rename section',s.title);if(t){s.title=t;save();render();}};
+          hdr.onclick=()=>{s.collapsed=!s.collapsed;save();render();};
+          hdr.ondblclick=()=>{const t=prompt('Rename section',s.title);if(t){s.title=t;save();render();}};
           secDiv.appendChild(hdr);
           const grid=document.createElement('div');grid.className='grid';grid.style.display=s.collapsed?'none':'grid';
           s.items.forEach((it,ii)=>{
@@ -103,20 +121,25 @@
             const img=new Image();img.src=`https://www.google.com/s2/favicons?domain=${new URL(it.url).hostname}&sz=64`;
             img.onerror=()=>{a.innerHTML='<i class="fas fa-hat-wizard"></i>'};a.appendChild(img);
             const sp=document.createElement('span');sp.textContent=it.name;a.appendChild(sp);
+            const cb=document.createElement('input');cb.type='checkbox';cb.className='select-box';cb.dataset.si=si;cb.dataset.ii=ii;a.appendChild(cb);
             grid.appendChild(a);
           });
           secDiv.appendChild(grid);
-          const addB=document.createElement('button');addB.textContent='+';addB.onclick=()=>{const u=prompt('URL');if(u){s.items.push({name:u,url:u});save();render();}};
+          const addB=document.createElement('button');addB.textContent='+';addB.onclick=()=>{const u=prompt('Bookmark URL:');const nm=prompt('Label (15 chars max):',u)||u;if(nm.length>15)nm=nm.slice(0,12)+'...';s.items.push({name:nm,url:u});save();render();};
           secDiv.appendChild(addB);
           secCon.appendChild(secDiv);
           Sortable.create(grid,{group:'shared',animation:150,onEnd:e=>{const [m]=s.items.splice(e.oldIndex,1);s.items.splice(e.newIndex,0,m);save();render();}});
         });
       }
       document.getElementById('add-sec-btn').onclick=()=>{const t=prompt('New section');if(t){data.unshift({title:t,items:[]});save();render();}};
-      document.getElementById('delete-items').onclick=()=>{data.forEach(s=>{s.items=s.items.filter((_,i)=>{const cb=document.querySelector(`#sections .grid:nth-child(${data.indexOf(s)+1}) .select-box[data-idx="${i}"]`);return!cb.checked});});save();render();};
-      document.getElementById('export-secs').onclick=()=>{const b=new Blob([JSON.stringify(data)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='secs.json';a.click();};
-      document.getElementById('import-secs').onclick=()=>fileInput.click();
-      fileInput.addEventListener('change',e=>{const f=e.target.files[0];const r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);save();render();}catch{};};r.readAsText(f);});
+      document.getElementById('delete-items').onclick=()=>{
+        document.querySelectorAll('.select-box:checked').forEach(cb=>{
+          const si=cb.dataset.si,ii=cb.dataset.ii;data[si].items.splice(ii,1);
+        });save();render();
+      };
+      document.getElementById('export-secs').onclick=()=>{const b=new Blob([JSON.stringify(data,0,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='sections.json';a.click();};
+      document.getElementById('import-secs').onclick=()=>jsonFile.click();
+      jsonFile.addEventListener('change',e=>{const f=e.target.files[0];const r=new FileReader();r.onload=()=>{data=JSON.parse(r.result);save();render();};r.readAsText(f);});
       render();
     }
     // Tasks
