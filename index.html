@@ -20,14 +20,14 @@
     .section-header{font-size:1.2rem;margin-bottom:.5rem;cursor:pointer}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.8rem}
     .tile{position:relative;background:#1e1e1e;border-radius:12px;width:80px;height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.5);cursor:grab;text-decoration:none}
-    .tile:active{cursor:grabbing}
     .tile img{width:48px;height:48px;border-radius:8px;margin-bottom:4px}
     .tile i.fa-hat-wizard{font-size:48px;color:#03dac6;margin-bottom:4px}
     .tile span{font-size:.8rem;color:#03dac6;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .select-box{position:absolute;top:4px;left:4px;transform:scale(1.2);cursor:pointer;z-index:2}
     #controls{text-align:center;margin-bottom:1rem}
-    /* Tasks */
-    #clock{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#39ff14;text-shadow:0 0 5px #39ff14,0 0 10px #39ff14;text-align:center;margin-bottom:1rem}
+    /* Right panel */
+    #clock{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#39ff14;text-shadow:0 0 5px #39ff14,0 0 10px #39ff14;text-align:center;margin-bottom:1rem;}
+    #pomodoro-display{font-family:'Orbitron',sans-serif;font-size:2rem;color:#ff5722;text-align:center;margin-bottom:1rem;}
     #task-input{padding:.6rem;border:none;border-radius:4px;margin-bottom:1rem;background:#2a2a2a;color:#e0e0e0;font-size:1.1rem}
     #task-add-btn{padding:.7rem;margin-bottom:1rem;background:#39ff14;color:#121212;border:none;border-radius:4px;cursor:pointer;font-weight:bold;font-size:1.1rem}
     #task-list{list-style:none;padding:0;flex:1;overflow-y:auto}
@@ -37,6 +37,7 @@
     /* Pin Overlay */
     #pin-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:999}
     #pin-overlay input{padding:.5rem;font-size:1.2rem;width:200px;margin-bottom:1rem;border:1px solid #444;border-radius:4px;background:#121212;color:#e0e0e0}
+    input[type=file]{display:none}
   </style>
 </head>
 <body>
@@ -49,31 +50,33 @@
     <div id="left">
       <h1>🔮 ADHD Workflow Hub</h1>
       <div id="controls">
-        <button id="import-btn">Import</button>
-        <button id="export-btn">Export</button>
+        <button id="import-secs">Import Sections</button>
+        <button id="export-secs">Export Sections</button>
         <button id="add-sec-btn">+ Section</button>
-        <button id="del-sec-btn">Delete Selected</button>
+        <button id="delete-items">Delete Selected</button>
       </div>
+      <input type="file" id="sec-file" accept="application/json">
       <div id="sections"></div>
     </div>
     <div id="right">
       <div id="clock"></div>
+      <div id="pomodoro-display"></div>
       <h2>Tasks</h2>
       <input id="task-input" placeholder="New task...">
       <button id="task-add-btn">Add Task</button>
       <ul id="task-list"></ul>
       <div style="margin-top:1rem">
         <button id="pomodoro-start">Start Pomodoro</button>
-        <button id="pomodoro-reset">Reset Timer</button>
+        <button id="pomodoro-reset">Reset Pomodoro</button>
       </div>
     </div>
   </div>
   <script>
   document.addEventListener('DOMContentLoaded',()=>{
     // Clock
-    const clock=document.getElementById('clock');
-    function tick(){clock.textContent=new Date().toLocaleTimeString('en-GB',{hour12:false});}
-    setInterval(tick,1000);tick();
+    const clockEl=document.getElementById('clock');
+    setInterval(()=>clockEl.textContent=new Date().toLocaleTimeString('en-GB',{hour12:false}),1000);
+
     // PIN
     const overlay=document.getElementById('pin-overlay'),app=document.getElementById('app');
     const pinIn=document.getElementById('pin-input'),pinBtn=document.getElementById('pin-submit');
@@ -81,43 +84,65 @@
     function unlock(){overlay.style.display='none';app.style.visibility='visible';initSections();initTasks();initPomodoro();}
     pinBtn.onclick=()=>{if(pinIn.value===pin)unlock();else{alert('Wrong PIN');pinIn.value='';pinIn.focus();}};
     pinIn.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pinBtn.click();}});
+
     // Sections
     function initSections(){
-      const secCon=document.getElementById('sections');let data=[];
+      const secCon=document.getElementById('sections'),fileInput=document.getElementById('sec-file');
+      let data=JSON.parse(localStorage.getItem('secs'))||[{title:'Default',items:[]}];
       const save=()=>localStorage.setItem('secs',JSON.stringify(data));
-      const load=()=>{data=JSON.parse(localStorage.getItem('secs'))||[{title:'Default',items:[]}];render();};
-      function render(){secCon.innerHTML='';data.forEach((s,si)=>{const d=document.createElement('div');d.className='section';
-        const h=document.createElement('div');h.className='section-header';h.textContent=s.title;
-        h.onclick=()=>{s.collapsed=!s.collapsed;save();render();};d.appendChild(h);
-        const g=document.createElement('div');g.className='grid';g.style.display=s.collapsed?'none':'grid';
-        s.items.forEach((it,ii)=>{const a=document.createElement('a');a.className='tile';a.href=it.url;a.target='_blank';
-          const img=new Image();img.src=`https://www.google.com/s2/favicons?domain=${new URL(it.url).hostname}&sz=64`;
-          img.onerror=()=>{a.innerHTML='<i class="fas fa-hat-wizard"></i>'};a.appendChild(img);
-          const sp=document.createElement('span');sp.textContent=it.name; a.appendChild(sp);
-          a.ondblclick=()=>{const n=prompt('Rename',it.name);if(n){it.name=n;save();render();}};
-          g.appendChild(a);
-        });d.appendChild(g);
-        const btn=document.createElement('button');btn.textContent='+';btn.onclick=()=>{const u=prompt('URL');if(u)s.items.push({name:u,url:u}),save(),render();};
-        d.appendChild(btn);secCon.appendChild(d);
-        Sortable.create(g,{group:'x',animation:150, onEnd:e=>{const [m]=s.items.splice(e.oldIndex,1);s.items.splice(e.newIndex,0,m);save();render();}});
-      });}
-      document.getElementById('add-sec-btn').onclick=()=>{const t=prompt('New section');if(t)data.unshift({title:t,items:[],collapsed:false}),save(),render();};
-      document.getElementById('export-btn').onclick=()=>{const b=new Blob([localStorage.getItem('secs')],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='secs.json';a.click();};
-      document.getElementById('import-btn').onclick=()=>{fetch(URL.createObjectURL(new Blob([],{})));};
-      load();
+      function render(){secCon.innerHTML='';
+        data.forEach((s,si)=>{
+          const secDiv=document.createElement('div');secDiv.className='section';
+          const hdr=document.createElement('div');hdr.className='section-header';hdr.textContent=s.title;
+          hdr.onclick=()=>{s.collapsed=!s.collapsed;save();render();};hdr.ondblclick=()=>{const t=prompt('Rename section',s.title);if(t){s.title=t;save();render();}};
+          secDiv.appendChild(hdr);
+          const grid=document.createElement('div');grid.className='grid';grid.style.display=s.collapsed?'none':'grid';
+          s.items.forEach((it,ii)=>{
+            const a=document.createElement('a');a.className='tile';a.href=it.url;a.target='_blank';
+            a.ondblclick=()=>{const n=prompt('Rename bookmark',it.name);if(n){it.name=n;save();render();}};
+            const img=new Image();img.src=`https://www.google.com/s2/favicons?domain=${new URL(it.url).hostname}&sz=64`;
+            img.onerror=()=>{a.innerHTML='<i class="fas fa-hat-wizard"></i>'};a.appendChild(img);
+            const sp=document.createElement('span');sp.textContent=it.name;a.appendChild(sp);
+            grid.appendChild(a);
+          });
+          secDiv.appendChild(grid);
+          const addB=document.createElement('button');addB.textContent='+';addB.onclick=()=>{const u=prompt('URL');if(u){s.items.push({name:u,url:u});save();render();}};
+          secDiv.appendChild(addB);
+          secCon.appendChild(secDiv);
+          Sortable.create(grid,{group:'shared',animation:150,onEnd:e=>{const [m]=s.items.splice(e.oldIndex,1);s.items.splice(e.newIndex,0,m);save();render();}});
+        });
+      }
+      document.getElementById('add-sec-btn').onclick=()=>{const t=prompt('New section');if(t){data.unshift({title:t,items:[]});save();render();}};
+      document.getElementById('delete-items').onclick=()=>{data.forEach(s=>{s.items=s.items.filter((_,i)=>{const cb=document.querySelector(`#sections .grid:nth-child(${data.indexOf(s)+1}) .select-box[data-idx="${i}"]`);return!cb.checked});});save();render();};
+      document.getElementById('export-secs').onclick=()=>{const b=new Blob([JSON.stringify(data)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='secs.json';a.click();};
+      document.getElementById('import-secs').onclick=()=>fileInput.click();
+      fileInput.addEventListener('change',e=>{const f=e.target.files[0];const r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);save();render();}catch{};};r.readAsText(f);});
+      render();
     }
     // Tasks
-    function initTasks(){const key='tasks';const inp=document.getElementById('task-input');const btn=document.getElementById('task-add-btn');const ul=document.getElementById('task-list');let tasks=JSON.parse(localStorage.getItem(key))||[];
+    function initTasks(){
+      const key='tasks',inp=document.getElementById('task-input'),btn=document.getElementById('task-add-btn'),ul=document.getElementById('task-list');
+      let tasks=JSON.parse(localStorage.getItem(key))||[];
       const save=()=>localStorage.setItem(key,JSON.stringify(tasks));
-      function render(){ul.innerHTML='';tasks.forEach((t,i)=>{const li=document.createElement('li');const txt=document.createElement('span');txt.textContent=t.text;const tm=document.createElement('span');tm.className='task-time';tm.textContent=t.time;li.append(txt,tm);const del=document.createElement('button');del.textContent='✕';del.onclick=()=>{tasks.splice(i,1);save();render();};li.append(del);ul.append(li);});}
+      function render(){ul.innerHTML='';tasks.forEach((t,i)=>{const li=document.createElement('li');
+        const txt=document.createElement('span');txt.textContent=t.text;
+        const tm=document.createElement('span');tm.className='task-time';tm.textContent=t.time;
+        const del=document.createElement('button');del.textContent='✕';del.onclick=()=>{tasks.splice(i,1);save();render();};
+        li.append(txt,tm,del);ul.appendChild(li);
+      });}
       btn.onclick=()=>{if(inp.value.trim()){tasks.push({text:inp.value,time:new Date().toLocaleTimeString('en-GB',{hour12:false})});save();render();inp.value='';inp.focus();}};
-      inp.addEventListener('keydown',e=>{if(e.key==='Enter'){btn.click();}});render();
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter'){btn.click();}});
+      render();
     }
     // Pomodoro
-    function initPomodoro(){let timer=null,sec=1500;const start=document.getElementById('pomodoro-start'),reset=document.getElementById('pomodoro-reset');
-      function updateDisplay(){clock.textContent=('0'+Math.floor(sec/60)).slice(-2)+':'+('0'+sec%60).slice(-2);}  
-      start.onclick=()=>{clearInterval(timer);timer=setInterval(()=>{if(sec>0){sec--;updateDisplay()}else clearInterval(timer);},1000);};
-      reset.onclick=()=>{clearInterval(timer);sec=1500;updateDisplay();};updateDisplay();}
+    function initPomodoro(){
+      const disp=document.getElementById('pomodoro-display'),start=document.getElementById('pomodoro-start'),reset=document.getElementById('pomodoro-reset');
+      let timer,sec=1500;
+      function update(){disp.textContent=('0'+Math.floor(sec/60)).slice(-2)+':'+('0'+sec%60).slice(-2);}          
+      start.onclick=()=>{clearInterval(timer);timer=setInterval(()=>{if(sec>0){sec--;update()}else clearInterval(timer);},1000);};
+      reset.onclick=()=>{clearInterval(timer);sec=1500;update();};
+      update();
+    }
   });
   </script>
 </body>
