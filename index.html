@@ -1,172 +1,151 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>ADHD Workflow Hub</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js" defer></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous"/>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:sans-serif;background:#121212;color:#e0e0e0;padding:1rem;height:100vh;overflow:hidden}
-    #app{display:flex;height:100%}
-    #left{flex:1;overflow-y:auto;padding-right:1rem}
-    #right{width:320px;background:#1f1f1f;border:3px solid #39ff14;box-shadow:0 0 10px #39ff14;border-radius:8px;display:flex;flex-direction:column;padding:1rem}
-    h1{text-align:center;font-size:1.5rem;margin-bottom:1rem}
-    button{margin:0 .3rem;padding:.5rem 1rem;font-size:1rem;cursor:pointer;background:#1f1f1f;color:#e0e0e0;border:1px solid #333;border-radius:4px}
-    button:hover{background:#2a2a2a}
-    .section{margin-bottom:2rem}
-    .section-header{font-size:1.2rem;margin-bottom:.5rem;cursor:pointer}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.8rem}
-    .tile{position:relative;background:#1e1e1e;border-radius:12px;width:80px;height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.5);cursor:grab;text-decoration:none}
-    .tile img{width:48px;height:48px;border-radius:8px;margin-bottom:4px}
-    .tile i.fa-hat-wizard{font-size:48px;color:#03dac6;margin-bottom:4px}
-    .tile span{font-size:.8rem;color:#03dac6;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .select-box{position:absolute;top:4px;left:4px;transform:scale(1.2);cursor:pointer;z-index:2}
-    #controls{text-align:center;margin-bottom:1rem}
-    /* Right panel */
-    #clock{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#39ff14;text-shadow:0 0 5px #39ff14,0 0 10px #39ff14;text-align:center;margin-bottom:1rem;}
-    #pomodoro-display{font-family:'Orbitron',sans-serif;font-size:2rem;color:#ff5722;text-align:center;margin-bottom:1rem;}
-    #task-input{padding:.6rem;border:none;border-radius:4px;margin-bottom:1rem;background:#2a2a2a;color:#e0e0e0;font-size:1.1rem}
-    #task-add-btn{padding:.7rem;margin-bottom:1rem;background:#39ff14;color:#121212;border:none;border-radius:4px;cursor:pointer;font-weight:bold;font-size:1.1rem}
-    #task-list{list-style:none;padding:0;flex:1;overflow-y:auto}
-    #task-list li{display:flex;justify-content:space-between;align-items:center;padding:.7rem;margin-bottom:.7rem;background:#2a2a2a;border-radius:4px;font-weight:bold;font-size:1rem}
-    .task-time{font-size:.8rem;color:#aaa;margin-left:8px}
-    .task-remove{background:transparent;border:none;color:#cf6679;font-size:1.2rem;cursor:pointer}
-    /* Pin Overlay */
-    #pin-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:999}
-    #pin-overlay input{padding:.5rem;font-size:1.2rem;width:200px;margin-bottom:1rem;border:1px solid #444;border-radius:4px;background:#121212;color:#e0e0e0}
-    input[type=file]{display:none}
-  </style>
-</head>
-<body>
-  <div id="pin-overlay">
-    <h1>Enter PIN</h1>
-    <input id="pin-input" placeholder="4-digit PIN" maxlength="4" autofocus>
-    <button id="pin-submit">Unlock</button>
-  </div>
-  <div id="app" style="visibility:hidden">
-    <div id="left">
-      <h1>🔮 ADHD Workflow Hub</h1>
-      <div id="controls">
-        <button id="import-html">Import Bookmarks HTML</button>
-        <button id="import-secs">Import Sections (JSON)</button>
-        <button id="export-secs">Export Sections</button>
-        <button id="add-sec-btn">+ Section</button>
-        <button id="delete-items">Delete Selected</button>
-      </div>
-      <input type="file" id="html-file" accept=".html">
-      <input type="file" id="sec-file" accept="application/json">
-      <div id="sections"></div>
-    </div>
-    <div id="right">
-      <div id="clock"></div>
-      <div id="pomodoro-display"></div>
-      <h2>Tasks</h2>
-      <input id="task-input" placeholder="New task...">
-      <button id="task-add-btn">Add Task</button>
-      <ul id="task-list"></ul>
-      <div style="margin-top:1rem">
-        <button id="pomodoro-start">Start Pomodoro</button>
-        <button id="pomodoro-reset">Reset Pomodoro</button>
-      </div>
-    </div>
-  </div>
-  <script>
-  document.addEventListener('DOMContentLoaded',()=>{
-    // Clock
-    const clockEl=document.getElementById('clock');
-    setInterval(()=>clockEl.textContent=new Date().toLocaleTimeString('en-GB',{hour12:false}),1000);
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:sans-serif;background:#121212;color:#e0e0e0;padding:1rem;height:100vh;overflow:hidden}
+  #app{display:flex;height:100%}
+  #left{flex:1;overflow-y:auto;padding-right:1rem}
+  #right{width:320px;background:#1f1f1f;border:3px solid #39ff14;box-shadow:0 0 10px #39ff14;border-radius:8px;display:flex;flex-direction:column;padding:1rem}
+  h1{text-align:center;font-size:1.5rem;margin-bottom:1rem}
+  button{margin:0 .3rem;padding:.5rem 1rem;font-size:1rem;cursor:pointer;background:#1f1f1f;color:#e0e0e0;border:1px solid #333;border-radius:4px}
+  button:hover{background:#2a2a2a}
+  .section{margin-bottom:2rem}
+  .section-header{font-size:1.2rem;margin-bottom:.5rem;cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:.7rem}
+  .tile{position:relative;background:#1e1e1e;border-radius:10px;width:64px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.5);cursor:grab;text-decoration:none}
+  .tile img{width:36px;height:36px;border-radius:8px;margin-bottom:2px}
+  .tile i.fa-hat-wizard{font-size:36px;color:#03dac6;margin-bottom:2px}
+  .tile span{font-size:.75rem;color:#03dac6;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px}
+  .select-box{position:absolute;top:2px;left:2px;transform:scale(1.1);cursor:pointer;z-index:2}
+  #controls{text-align:center;margin-bottom:1rem}
+  /* Right panel */
+  #clock{font-family:'Orbitron',sans-serif;font-size:2.5rem;color:#39ff14;text-shadow:0 0 5px #39ff14,0 0 10px #39ff14;text-align:center;margin-bottom:1rem;}
+  #pomodoro-display{font-family:'Orbitron',sans-serif;font-size:2rem;color:#ff5722;text-align:center;margin-bottom:1rem;}
+  #task-input{padding:.6rem;border:none;border-radius:4px;margin-bottom:1rem;background:#2a2a2a;color:#e0e0e0;font-size:1.1rem}
+  #task-add-btn{padding:.7rem;margin-bottom:1rem;background:#39ff14;color:#121212;border:none;border-radius:4px;cursor:pointer;font-weight:bold;font-size:1.1rem}
+  #task-list{list-style:none;padding:0;flex:1;overflow-y:auto}
+  #task-list li{display:flex;justify-content:space-between;align-items:center;padding:.7rem;margin-bottom:.7rem;background:#2a2a2a;border-radius:4px;font-weight:bold;}
+  #task-list li .pulse {font-size:1.4rem; animation:pulse 1.5s infinite;}
+  @keyframes pulse {
+    0%{opacity:.7;} 50%{opacity:1;} 100%{opacity:.7;}
+  }
+  .task-time{font-size:.85rem;color:#aaa;margin-left:8px}
+  .task-remove{background:transparent;border:none;color:#cf6679;font-size:1.2rem;cursor:pointer}
+  #pin-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:999}
+  #pin-overlay input{padding:.5rem;font-size:1.2rem;width:200px;margin-bottom:1rem;border:1px solid #444;border-radius:4px;background:#121212;color:#e0e0e0}
+  input[type=file]{display:none}
+</style>
 
-    // PIN
-    const overlay=document.getElementById('pin-overlay'),app=document.getElementById('app');
-    const pinIn=document.getElementById('pin-input'),pinBtn=document.getElementById('pin-submit');
-    let pin=localStorage.getItem('pin')||prompt('Set 4-digit PIN');localStorage.setItem('pin',pin);
-    function unlock(){overlay.style.display='none';app.style.visibility='visible';initSections();initTasks();initPomodoro();}
-    pinBtn.onclick=()=>{if(pinIn.value===pin)unlock();else{alert('Wrong PIN');pinIn.value='';pinIn.focus();}};
-    pinIn.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pinBtn.click();}});
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  // Clock
+  const clockEl=document.getElementById('clock');
+  setInterval(()=>clockEl.textContent=new Date().toLocaleTimeString('en-GB',{hour12:false}),1000);
 
-    // Sections & HTML Import
-    function initSections(){
-      const secCon=document.getElementById('sections');
-      const htmlFile=document.getElementById('html-file');
-      const jsonFile=document.getElementById('sec-file');
-      document.getElementById('import-html').onclick=()=>htmlFile.click();
-      htmlFile.addEventListener('change',e=>{
-        const f=e.target.files[0];
-        const r=new FileReader();
-        r.onload=()=>{
-          const doc=new DOMParser().parseFromString(r.result,'text/html');
-          const anchors=Array.from(doc.querySelectorAll('a')); // all bookmark links
-          data=[{title:'Imported',collapsed:false,items:anchors.map(a=>({name:a.textContent||a.getAttribute('href'),url:a.href}))}];
-          save(); render();
-        };
-        r.readAsText(f);
-      });
+  // PIN
+  const overlay=document.getElementById('pin-overlay'),app=document.getElementById('app');
+  const pinIn=document.getElementById('pin-input'),pinBtn=document.getElementById('pin-submit');
+  let pin=localStorage.getItem('pin')||prompt('Set 4-digit PIN');localStorage.setItem('pin',pin);
+  function unlock(){overlay.style.display='none';app.style.visibility='visible';initSections();initTasks();initPomodoro();}
+  pinBtn.onclick=()=>{if(pinIn.value===pin)unlock();else{alert('Wrong PIN');pinIn.value='';pinIn.focus();}};
+  pinIn.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pinBtn.click();}});
 
-      let data=JSON.parse(localStorage.getItem('secs'))||[{title:'Default',items:[]}];
-      const save=()=>localStorage.setItem('secs',JSON.stringify(data));
-      function render(){secCon.innerHTML='';
-        data.forEach((s,si)=>{
-          const secDiv=document.createElement('div');secDiv.className='section';
-          const hdr=document.createElement('div');hdr.className='section-header';hdr.textContent=s.title;
-          hdr.onclick=()=>{s.collapsed=!s.collapsed;save();render();};
-          hdr.ondblclick=()=>{const t=prompt('Rename section',s.title);if(t){s.title=t;save();render();}};
-          secDiv.appendChild(hdr);
-          const grid=document.createElement('div');grid.className='grid';grid.style.display=s.collapsed?'none':'grid';
-          s.items.forEach((it,ii)=>{
-            const a=document.createElement('a');a.className='tile';a.href=it.url;a.target='_blank';
-            a.ondblclick=()=>{const n=prompt('Rename bookmark',it.name);if(n){it.name=n;save();render();}};
-            const img=new Image();img.src=`https://www.google.com/s2/favicons?domain=${new URL(it.url).hostname}&sz=64`;
-            img.onerror=()=>{a.innerHTML='<i class="fas fa-hat-wizard"></i>'};a.appendChild(img);
-            const sp=document.createElement('span');sp.textContent=it.name;a.appendChild(sp);
-            const cb=document.createElement('input');cb.type='checkbox';cb.className='select-box';cb.dataset.si=si;cb.dataset.ii=ii;a.appendChild(cb);
-            grid.appendChild(a);
-          });
-          secDiv.appendChild(grid);
-          const addB=document.createElement('button');addB.textContent='+';addB.onclick=()=>{const u=prompt('Bookmark URL:');const nm=prompt('Label (15 chars max):',u)||u;if(nm.length>15)nm=nm.slice(0,12)+'...';s.items.push({name:nm,url:u});save();render();};
-          secDiv.appendChild(addB);
-          secCon.appendChild(secDiv);
-          Sortable.create(grid,{group:'shared',animation:150,onEnd:e=>{const [m]=s.items.splice(e.oldIndex,1);s.items.splice(e.newIndex,0,m);save();render();}});
-        });
-      }
-      document.getElementById('add-sec-btn').onclick=()=>{const t=prompt('New section');if(t){data.unshift({title:t,items:[]});save();render();}};
-      document.getElementById('delete-items').onclick=()=>{
-        document.querySelectorAll('.select-box:checked').forEach(cb=>{
-          const si=cb.dataset.si,ii=cb.dataset.ii;data[si].items.splice(ii,1);
-        });save();render();
+  // Sections & HTML Import
+  function initSections(){
+    const secCon=document.getElementById('sections');
+    const htmlFile=document.getElementById('html-file');
+    const jsonFile=document.getElementById('sec-file');
+    document.getElementById('import-html').onclick=()=>htmlFile.click();
+    htmlFile.addEventListener('change',e=>{
+      const f=e.target.files[0];
+      const r=new FileReader();
+      r.onload=()=>{
+        const doc=new DOMParser().parseFromString(r.result,'text/html');
+        const anchors=Array.from(doc.querySelectorAll('a'));
+        data=[{title:'Imported',collapsed:false,items:anchors.map(a=>({name:(a.textContent||a.getAttribute('href')).slice(0,10)+(a.textContent&&a.textContent.length>10?'...':''),url:a.href}))}];
+        save(); render();
       };
-      document.getElementById('export-secs').onclick=()=>{const b=new Blob([JSON.stringify(data,0,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='sections.json';a.click();};
-      document.getElementById('import-secs').onclick=()=>jsonFile.click();
-      jsonFile.addEventListener('change',e=>{const f=e.target.files[0];const r=new FileReader();r.onload=()=>{data=JSON.parse(r.result);save();render();};r.readAsText(f);});
-      render();
+      r.readAsText(f);
+    });
+
+    let data=JSON.parse(localStorage.getItem('secs'))||[{title:'Default',items:[]}];
+    const save=()=>localStorage.setItem('secs',JSON.stringify(data));
+    function render(){secCon.innerHTML='';
+      data.forEach((s,si)=>{
+        const secDiv=document.createElement('div');secDiv.className='section';
+        const hdr=document.createElement('div');hdr.className='section-header';hdr.textContent=s.title;
+        hdr.onclick=()=>{s.collapsed=!s.collapsed;save();render();};
+        hdr.ondblclick=()=>{const t=prompt('Rename section',s.title);if(t){s.title=t;save();render();}};
+        secDiv.appendChild(hdr);
+        const grid=document.createElement('div');grid.className='grid';grid.style.display=s.collapsed?'none':'grid';grid.id='grid-'+si;
+        s.items.forEach((it,ii)=>{
+          const a=document.createElement('a');a.className='tile';a.href=it.url;a.target='_blank';
+          a.ondblclick=()=>{const n=prompt('Rename bookmark',it.name);if(n){it.name=n.slice(0,10)+(n.length>10?'...':'');save();render();}};
+          let img=new Image();
+          img.src=`https://www.google.com/s2/favicons?domain=${new URL(it.url).hostname}&sz=64`;
+          img.onerror=()=>{a.innerHTML='<i class=\"fas fa-hat-wizard\"></i><span>'+it.name+'</span>';};
+          img.onload=()=>{if(!a.innerHTML)a.appendChild(img);}
+          a.appendChild(img);
+          const sp=document.createElement('span');
+          let n=it.name||''; sp.textContent=n.length>10?n.slice(0,10)+'...':n;
+          a.appendChild(sp);
+          const cb=document.createElement('input');cb.type='checkbox';cb.className='select-box';cb.dataset.si=si;cb.dataset.ii=ii;a.appendChild(cb);
+          grid.appendChild(a);
+        });
+        secDiv.appendChild(grid);
+        const addB=document.createElement('button');addB.textContent='+';addB.onclick=()=>{const u=prompt('Bookmark URL:');let nm=prompt('Label (10 chars max):',u)||u;if(nm.length>10)nm=nm.slice(0,10)+'...';s.items.push({name:nm,url:u});save();render();};
+        secDiv.appendChild(addB);
+        secCon.appendChild(secDiv);
+        // Make all grids draggable & cross-droppable
+        Sortable.create(grid,{group:'shared',animation:150,
+          onEnd:e=>{
+            if(e.from===e.to){
+              const fromArr=data[si].items;
+              const [m]=fromArr.splice(e.oldIndex,1);
+              fromArr.splice(e.newIndex,0,m);
+            }else{
+              let fromIdx=parseInt(e.from.id.replace('grid-',''));
+              let toIdx=parseInt(e.to.id.replace('grid-',''));
+              const [m]=data[fromIdx].items.splice(e.oldIndex,1);
+              data[toIdx].items.splice(e.newIndex,0,m);
+            }
+            save(); render();
+          }
+        });
+      });
     }
-    // Tasks
-    function initTasks(){
-      const key='tasks',inp=document.getElementById('task-input'),btn=document.getElementById('task-add-btn'),ul=document.getElementById('task-list');
-      let tasks=JSON.parse(localStorage.getItem(key))||[];
-      const save=()=>localStorage.setItem(key,JSON.stringify(tasks));
-      function render(){ul.innerHTML='';tasks.forEach((t,i)=>{const li=document.createElement('li');
-        const txt=document.createElement('span');txt.textContent=t.text;
-        const tm=document.createElement('span');tm.className='task-time';tm.textContent=t.time;
-        const del=document.createElement('button');del.textContent='✕';del.onclick=()=>{tasks.splice(i,1);save();render();};
-        li.append(txt,tm,del);ul.appendChild(li);
-      });}
-      btn.onclick=()=>{if(inp.value.trim()){tasks.push({text:inp.value,time:new Date().toLocaleTimeString('en-GB',{hour12:false})});save();render();inp.value='';inp.focus();}};
-      inp.addEventListener('keydown',e=>{if(e.key==='Enter'){btn.click();}});
-      render();
-    }
-    // Pomodoro
-    function initPomodoro(){
-      const disp=document.getElementById('pomodoro-display'),start=document.getElementById('pomodoro-start'),reset=document.getElementById('pomodoro-reset');
-      let timer,sec=1500;
-      function update(){disp.textContent=('0'+Math.floor(sec/60)).slice(-2)+':'+('0'+sec%60).slice(-2);}          
-      start.onclick=()=>{clearInterval(timer);timer=setInterval(()=>{if(sec>0){sec--;update()}else clearInterval(timer);},1000);};
-      reset.onclick=()=>{clearInterval(timer);sec=1500;update();};
-      update();
-    }
-  });
-  </script>
-</body>
-</html>
+    document.getElementById('add-sec-btn').onclick=()=>{const t=prompt('New section');if(t){data.unshift({title:t,items:[]});save();render();}};
+    document.getElementById('delete-items').onclick=()=>{
+      document.querySelectorAll('.select-box:checked').forEach(cb=>{
+        const si=cb.dataset.si,ii=cb.dataset.ii;data[si].items.splice(ii,1);
+      });save();render();
+    };
+    document.getElementById('export-secs').onclick=()=>{const b=new Blob([JSON.stringify(data,0,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='sections.json';a.click();};
+    document.getElementById('import-secs').onclick=()=>jsonFile.click();
+    jsonFile.addEventListener('change',e=>{const f=e.target.files[0];const r=new FileReader();r.onload=()=>{data=JSON.parse(r.result);save();render();};r.readAsText(f);});
+    render();
+  }
+  // Tasks
+  function initTasks(){
+    const key='tasks',inp=document.getElementById('task-input'),btn=document.getElementById('task-add-btn'),ul=document.getElementById('task-list');
+    let tasks=JSON.parse(localStorage.getItem(key))||[];
+    const save=()=>localStorage.setItem(key,JSON.stringify(tasks));
+    function render(){ul.innerHTML='';tasks.forEach((t,i)=>{const li=document.createElement('li');
+      const txt=document.createElement('span');txt.textContent=t.text;txt.className='pulse';
+      const tm=document.createElement('span');tm.className='task-time';tm.textContent=t.time;
+      const del=document.createElement('button');del.textContent='✕';del.onclick=()=>{tasks.splice(i,1);save();render();};
+      li.append(txt,tm,del);ul.appendChild(li);
+    });}
+    btn.onclick=()=>{if(inp.value.trim()){tasks.push({text:inp.value,time:new Date().toLocaleTimeString('en-GB',{hour12:false})});save();render();inp.value='';inp.focus();}};
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){btn.click();}});
+    render();
+  }
+  // Pomodoro
+  function initPomodoro(){
+    const disp=document.getElementById('pomodoro-display'),start=document.getElementById('pomodoro-start'),reset=document.getElementById('pomodoro-reset');
+    let timer,sec=1500;
+    function update(){disp.textContent=('0'+Math.floor(sec/60)).slice(-2)+':'+('0'+sec%60).slice(-2);}
+    start.onclick=()=>{clearInterval(timer);timer=setInterval(()=>{if(sec>0){sec--;update()}else clearInterval(timer);},1000);};
+    reset.onclick=()=>{clearInterval(timer);sec=1500;update();};
+    update();
+  }
+});
+</script>
