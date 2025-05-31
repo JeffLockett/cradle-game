@@ -931,7 +931,7 @@
                     <textarea id="backup-textarea" 
                              placeholder="Type your idea here and I'll break it into AI research commands..."
                              rows="3"></textarea>
-                    <button class="send-button" onclick="sendToHexMind()">
+                    <button class="send-button" onclick="window.sendToHexMind(); return false;">
                         ➤ Send to HexMind
                     </button>
                 </div>
@@ -1319,8 +1319,17 @@
         }
 
         function sendToHexMind() {
+            console.log('🎵 SendToHexMind function called!');
+            
             const textarea = document.getElementById('backup-textarea');
+            if (!textarea) {
+                console.error('❌ Textarea not found!');
+                alert('Error: Input textarea not found!');
+                return;
+            }
+            
             const message = textarea.value.trim();
+            console.log('📝 Message to send:', message);
             
             if (!message) {
                 alert('Please enter your idea first!');
@@ -1335,6 +1344,19 @@
             
             // Clear the textarea
             textarea.value = '';
+            
+            // Give user feedback
+            const sendButton = document.querySelector('.send-button');
+            if (sendButton) {
+                const originalText = sendButton.innerHTML;
+                sendButton.innerHTML = '⏳ Sending...';
+                sendButton.disabled = true;
+                
+                setTimeout(() => {
+                    sendButton.innerHTML = originalText;
+                    sendButton.disabled = false;
+                }, 2000);
+            }
         }
 
         async function sendDirectToFlowise(message) {
@@ -1537,6 +1559,13 @@ Copy your idea above and paste it into:
             handleMobileInteractions();
             initializeFreshHexMind();
             setupBackupInput(); // Initialize backup input system
+            
+            // CRITICAL: Make functions globally available
+            window.sendToHexMind = sendToHexMind;
+            window.toggleInputMode = toggleInputMode;
+            window.copyCommand = copyCommand;
+            window.toggleFocusMode = toggleFocusMode;
+            window.openTool = openTool;
             
             // Add resize listener
             window.addEventListener('resize', handleResize);
