@@ -1,8 +1,790 @@
-<flowise-fullchatbot></flowise-fullchatbot>
-<script type="module">
-    import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
-    Chatbot.initFull({
-        chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
-        apiHost: "https://cloud.flowiseai.com",
-    })
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HexMind Command Center - Sacred Artist Jeff's AI Orchestration Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Sacred Energy Background Animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 105, 180, 0.05) 0%, transparent 50%);
+            animation: energyPulse 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes energyPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .command-center {
+            display: grid;
+            grid-template-areas: 
+                "header header header"
+                "status orchestrator output"
+                "tools orchestrator history";
+            grid-template-columns: 250px 1fr 300px;
+            grid-template-rows: 80px 1fr 200px;
+            height: 100vh;
+            gap: 15px;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            grid-area: header;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4ecdc4, #ffd700, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+        }
+
+        .logo .sacred-symbol {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #4ecdc4, #ffd700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .power-level {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .advancement-badge {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        }
+
+        .ai-spirits {
+            display: flex;
+            gap: 5px;
+        }
+
+        .spirit-orb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .spirit-orb:nth-child(odd) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .status-panel {
+            grid-area: status;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-title {
+            color: #4ecdc4;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .energy-meter {
+            margin: 15px 0;
+        }
+
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .meter-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .meter-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: scan 2s ease-in-out infinite;
+        }
+
+        .focus-mode-toggle {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .toggle-button {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .orchestrator-panel {
+            grid-area: orchestrator;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 0;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(78, 205, 196, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .orchestrator-header {
+            background: linear-gradient(45deg, rgba(78, 205, 196, 0.2), rgba(68, 160, 141, 0.2));
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .orchestrator-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 5px;
+        }
+
+        .orchestrator-subtitle {
+            font-size: 0.9em;
+            color: #a8b2d1;
+            font-style: italic;
+        }
+
+        #hexmind-chat {
+            height: calc(100% - 80px);
+            border: none;
+            background: transparent;
+        }
+
+        /* Custom Flowise Styling */
+        flowise-fullchatbot {
+            --flowise-chatbot-background: transparent !important;
+            --flowise-chatbot-border: none !important;
+            height: 100% !important;
+        }
+
+        .output-panel {
+            grid-area: output;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            overflow-y: auto;
+        }
+
+        .output-title {
+            color: #ffd700;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .research-command {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .command-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ai-model-tag {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .copy-button {
+            background: rgba(78, 205, 196, 0.8);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background: rgba(78, 205, 196, 1);
+            transform: scale(1.05);
+        }
+
+        .tools-panel {
+            grid-area: tools;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tools-title {
+            color: #a8b2d1;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .tool-button {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .tool-button:hover {
+            background: linear-gradient(45deg, rgba(78, 205, 196, 0.3), rgba(68, 160, 141, 0.3));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.2);
+        }
+
+        .history-panel {
+            grid-area: history;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+        }
+
+        .history-title {
+            color: #a8b2d1;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 8px 0;
+            border-left: 3px solid #4ecdc4;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(78, 205, 196, 0.1);
+            transform: translateX(5px);
+        }
+
+        .history-time {
+            font-size: 0.8em;
+            color: #4ecdc4;
+            margin-bottom: 5px;
+        }
+
+        .history-text {
+            font-size: 0.9em;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ADHD Focus Mode */
+        .focus-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .focus-container {
+            width: 80%;
+            max-width: 800px;
+            height: 80%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            border: 2px solid #4ecdc4;
+            padding: 20px;
+            position: relative;
+        }
+
+        .focus-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #4ecdc4;
+            font-size: 2em;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .command-center {
+                grid-template-areas: 
+                    "header header"
+                    "orchestrator status"
+                    "orchestrator output"
+                    "tools history";
+                grid-template-columns: 1fr 300px;
+                grid-template-rows: 80px 1fr 300px 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .command-center {
+                grid-template-areas: 
+                    "header"
+                    "orchestrator"
+                    "status"
+                    "output"
+                    "tools"
+                    "history";
+                grid-template-columns: 1fr;
+                grid-template-rows: 80px 1fr 200px 300px 150px 200px;
+            }
+        }
+
+        /* Achievement Notifications */
+        .achievement {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            transform: translateX(300px);
+            transition: transform 0.5s ease;
+            z-index: 2000;
+        }
+
+        .achievement.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="command-center">
+        <header class="header">
+            <div class="logo">
+                <div class="sacred-symbol">🌟</div>
+                <h1>HexMind Command Center</h1>
+            </div>
+            <div class="power-level">
+                <div class="advancement-badge">Sage Level</div>
+                <div class="ai-spirits">
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="status-panel">
+            <div class="status-title">Sacred Artist Status</div>
+            
+            <div class="energy-meter">
+                <div class="meter-label">
+                    <span>Caffeine Level</span>
+                    <span id="caffeine-level">85%</span>
+                </div>
+                <div class="meter-bar">
+                    <div class="meter-fill" style="width: 85%"></div>
+                </div>
+            </div>
+
+            <div class="energy-meter">
+                <div class="meter-label">
+                    <span>ADHD Focus</span>
+                    <span id="focus-level">92%</span>
+                </div>
+                <div class="meter-bar">
+                    <div class="meter-fill" style="width: 92%"></div>
+                </div>
+            </div>
+
+            <div class="energy-meter">
+                <div class="meter-label">
+                    <span>AI Harmony</span>
+                    <span id="harmony-level">96%</span>
+                </div>
+                <div class="meter-bar">
+                    <div class="meter-fill" style="width: 96%"></div>
+                </div>
+            </div>
+
+            <div class="focus-mode-toggle">
+                <button class="toggle-button" onclick="toggleFocusMode()">
+                    ⚡ Focus Mode
+                </button>
+            </div>
+        </div>
+
+        <div class="orchestrator-panel">
+            <div class="orchestrator-header">
+                <div class="orchestrator-title">🎵 HexMind Orchestrator</div>
+                <div class="orchestrator-subtitle">Your AI Research Conductor</div>
+            </div>
+            <div id="hexmind-chat">
+                <flowise-fullchatbot></flowise-fullchatbot>
+            </div>
+        </div>
+
+        <div class="output-panel">
+            <div class="output-title">🎯 Research Commands</div>
+            <div id="research-output">
+                <div class="research-command">
+                    <div class="command-header">
+                        <div class="ai-model-tag">Claude Sonnet 4</div>
+                        <button class="copy-button" onclick="copyCommand(this)">📋 Copy</button>
+                    </div>
+                    <div class="command-text">Awaiting your first idea to orchestrate...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tools-panel">
+            <div class="tools-title">🛠️ Sacred Tools</div>
+            <div class="tool-grid">
+                <button class="tool-button" onclick="openTool('seed')">
+                    🌱<br>Seed Learning
+                </button>
+                <button class="tool-button" onclick="openTool('mechanic')">
+                    🔧<br>Magic Mechanic
+                </button>
+                <button class="tool-button" onclick="openTool('analytics')">
+                    📊<br>Analytics
+                </button>
+                <button class="tool-button" onclick="openTool('settings')">
+                    ⚙️<br>Settings
+                </button>
+            </div>
+        </div>
+
+        <div class="history-panel">
+            <div class="history-title">📚 Session History</div>
+            <div id="session-history">
+                <div class="history-item">
+                    <div class="history-time">Session Start</div>
+                    <div class="history-text">HexMind Orchestrator Initialized</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Focus Mode Overlay -->
+    <div class="focus-mode" id="focus-mode">
+        <div class="focus-container">
+            <button class="focus-close" onclick="toggleFocusMode()">×</button>
+            <div id="focus-chat">
+                <flowise-fullchatbot></flowise-fullchatbot>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Notification -->
+    <div class="achievement" id="achievement">
+        🏆 Achievement Unlocked: HexMind Conductor!
+    </div>
+
+    <!-- Flowise Integration Script -->
+    <script type="module">
+        import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+        Chatbot.initFull({
+            chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
+            apiHost: "https://cloud.flowiseai.com",
+        })
+    </script>
+
+    <script>
+        // Sacred Artist Jeff's Command Center Logic
+        let sessionCount = 0;
+        let achievements = [];
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            showAchievement();
+            startEnergyMonitoring();
+        });
+
+        function showAchievement() {
+            const achievement = document.getElementById('achievement');
+            setTimeout(() => {
+                achievement.classList.add('show');
+                setTimeout(() => {
+                    achievement.classList.remove('show');
+                }, 3000);
+            }, 1000);
+        }
+
+        function toggleFocusMode() {
+            const focusMode = document.getElementById('focus-mode');
+            focusMode.style.display = focusMode.style.display === 'flex' ? 'none' : 'flex';
+            
+            if (focusMode.style.display === 'flex') {
+                // Re-initialize Flowise in focus mode
+                setTimeout(() => {
+                    import("https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js").then(({ default: Chatbot }) => {
+                        Chatbot.init({
+                            chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
+                            apiHost: "https://cloud.flowiseai.com",
+                            chatflowConfig: {
+                                backgroundColor: "transparent"
+                            }
+                        })
+                    });
+                }, 100);
+            }
+        }
+
+        function copyCommand(button) {
+            const commandText = button.parentElement.nextElementSibling.textContent;
+            navigator.clipboard.writeText(commandText).then(() => {
+                button.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    button.innerHTML = '📋 Copy';
+                }, 1000);
+            });
+        }
+
+        function openTool(tool) {
+            switch(tool) {
+                case 'seed':
+                    addHistoryItem('Opened Seed Learning System');
+                    break;
+                case 'mechanic':
+                    addHistoryItem('Accessed Magic Mechanic AI');
+                    break;
+                case 'analytics':
+                    addHistoryItem('Reviewed Analytics Dashboard');
+                    break;
+                case 'settings':
+                    addHistoryItem('Opened Settings Panel');
+                    break;
+            }
+        }
+
+        function addHistoryItem(text) {
+            const history = document.getElementById('session-history');
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.innerHTML = `
+                <div class="history-time">${new Date().toLocaleTimeString()}</div>
+                <div class="history-text">${text}</div>
+            `;
+            history.insertBefore(item, history.firstChild);
+            
+            // Keep only last 10 items
+            while (history.children.length > 10) {
+                history.removeChild(history.lastChild);
+            }
+        }
+
+        function startEnergyMonitoring() {
+            setInterval(() => {
+                // Simulate dynamic energy levels
+                const caffeine = document.getElementById('caffeine-level');
+                const focus = document.getElementById('focus-level');
+                const harmony = document.getElementById('harmony-level');
+                
+                // Add some realistic fluctuation
+                const time = Date.now() / 1000;
+                const caffeineLevel = Math.max(60, 85 + Math.sin(time / 300) * 15);
+                const focusLevel = Math.max(70, 92 + Math.sin(time / 200) * 10);
+                const harmonyLevel = Math.max(80, 96 + Math.sin(time / 400) * 5);
+                
+                caffeine.textContent = Math.round(caffeineLevel) + '%';
+                focus.textContent = Math.round(focusLevel) + '%';
+                harmony.textContent = Math.round(harmonyLevel) + '%';
+                
+                // Update meter bars
+                caffeine.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = caffeineLevel + '%';
+                focus.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = focusLevel + '%';
+                harmony.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = harmonyLevel + '%';
+            }, 2000);
+        }
+
+        // Listen for successful orchestrations
+        document.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'hexmind-response') {
+                addHistoryItem('Orchestration Complete');
+                updateResearchOutput(event.data.commands);
+            }
+        });
+
+        function updateResearchOutput(commands) {
+            const output = document.getElementById('research-output');
+            output.innerHTML = '';
+            
+            commands.forEach((command, index) => {
+                const div = document.createElement('div');
+                div.className = 'research-command';
+                div.innerHTML = `
+                    <div class="command-header">
+                        <div class="ai-model-tag">${command.model}</div>
+                        <button class="copy-button" onclick="copyCommand(this)">📋 Copy</button>
+                    </div>
+                    <div class="command-text">${command.text}</div>
+                `;
+                output.appendChild(div);
+            });
+        }
+
+        // Enhanced keyboard shortcuts for ADHD efficiency
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey || event.metaKey) {
+                switch(event.key) {
+                    case 'f':
+                        event.preventDefault();
+                        toggleFocusMode();
+                        break;
+                    case '1':
+                        event.preventDefault();
+                        openTool('seed');
+                        break;
+                    case '2':
+                        event.preventDefault();
+                        openTool('mechanic');
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
