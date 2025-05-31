@@ -448,7 +448,7 @@
             cursor: pointer;
         }
 
-        /* Responsive Design */
+        /* Advanced Mobile Optimization */
         @media (max-width: 1200px) {
             .command-center {
                 grid-template-areas: 
@@ -456,22 +456,213 @@
                     "orchestrator status"
                     "orchestrator output"
                     "tools history";
-                grid-template-columns: 1fr 300px;
-                grid-template-rows: 80px 1fr 300px 200px;
+                grid-template-columns: 1fr 280px;
+                grid-template-rows: 70px 1fr 280px 180px;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 0 20px;
+            }
+            
+            .logo h1 {
+                font-size: 1.5em;
             }
         }
 
         @media (max-width: 768px) {
+            body {
+                overflow-y: auto;
+                height: auto;
+                min-height: 100vh;
+            }
+            
             .command-center {
                 grid-template-areas: 
                     "header"
                     "orchestrator"
-                    "status"
                     "output"
+                    "status"
                     "tools"
                     "history";
                 grid-template-columns: 1fr;
-                grid-template-rows: 80px 1fr 200px 300px 150px 200px;
+                grid-template-rows: 60px minmax(400px, 50vh) auto auto auto auto;
+                gap: 10px;
+                padding: 10px;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .header {
+                padding: 0 15px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2em;
+            }
+            
+            .logo .sacred-symbol {
+                width: 35px;
+                height: 35px;
+                font-size: 1.2em;
+            }
+            
+            .advancement-badge {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+            
+            .orchestrator-panel {
+                min-height: 400px;
+                height: 50vh;
+            }
+            
+            .status-panel,
+            .output-panel,
+            .tools-panel,
+            .history-panel {
+                min-height: auto;
+                height: auto;
+            }
+            
+            .tool-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            
+            .tool-button {
+                padding: 12px 8px;
+                font-size: 0.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .command-center {
+                padding: 8px;
+                gap: 8px;
+            }
+            
+            .header {
+                padding: 0 10px;
+                grid-template-rows: 50px;
+            }
+            
+            .logo h1 {
+                font-size: 1em;
+            }
+            
+            .logo .sacred-symbol {
+                width: 30px;
+                height: 30px;
+                font-size: 1em;
+            }
+            
+            .advancement-badge {
+                padding: 4px 8px;
+                font-size: 0.7em;
+            }
+            
+            .ai-spirits {
+                gap: 3px;
+            }
+            
+            .spirit-orb {
+                width: 8px;
+                height: 8px;
+            }
+            
+            .orchestrator-panel {
+                min-height: 350px;
+                height: 45vh;
+            }
+            
+            .orchestrator-header {
+                padding: 10px;
+            }
+            
+            .orchestrator-title {
+                font-size: 1.1em;
+            }
+            
+            .orchestrator-subtitle {
+                font-size: 0.8em;
+            }
+            
+            .status-panel,
+            .output-panel,
+            .tools-panel,
+            .history-panel {
+                padding: 15px;
+            }
+            
+            .tool-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            
+            .tool-button {
+                padding: 10px 6px;
+                font-size: 0.75em;
+            }
+            
+            .research-command {
+                padding: 12px;
+                margin: 8px 0;
+            }
+            
+            .copy-button {
+                padding: 4px 8px;
+                font-size: 0.7em;
+            }
+            
+            .ai-model-tag {
+                padding: 3px 6px;
+                font-size: 0.7em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .logo h1 {
+                display: none;
+            }
+            
+            .logo .sacred-symbol {
+                margin: 0 auto;
+            }
+            
+            .tool-grid {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+            
+            .tool-button {
+                padding: 8px;
+                font-size: 0.7em;
+            }
+        }
+
+        /* Mobile-specific touch optimizations */
+        @media (max-width: 768px) {
+            .copy-button,
+            .toggle-button,
+            .tool-button,
+            .history-item {
+                min-height: 44px;
+                min-width: 44px;
+                touch-action: manipulation;
+            }
+            
+            .focus-container {
+                width: 95%;
+                height: 90%;
+                margin: 5vh auto;
+            }
+            
+            .focus-close {
+                font-size: 2.5em;
+                min-height: 44px;
+                min-width: 44px;
             }
         }
 
@@ -637,10 +828,203 @@
         let sessionCount = 0;
         let achievements = [];
 
-        // Initialize on load
+        // Mobile-specific enhancements
+        let isMobile = window.innerWidth <= 768;
+        let isTablet = window.innerWidth <= 1200 && window.innerWidth > 768;
+
+        // Enhanced mobile touch handling
+        function handleMobileInteractions() {
+            if (isMobile) {
+                // Add mobile-specific event listeners
+                document.addEventListener('touchstart', function() {}, {passive: true});
+                
+                // Optimize focus mode for mobile
+                const focusMode = document.getElementById('focus-mode');
+                focusMode.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, {passive: false});
+                
+                // Mobile-optimized copy function
+                window.copyCommand = function(button) {
+                    const commandText = button.parentElement.nextElementSibling.textContent;
+                    
+                    if (navigator.clipboard && window.isSecureContext) {
+                        navigator.clipboard.writeText(commandText).then(() => {
+                            showMobileFeedback(button, '✅ Copied!');
+                        }).catch(() => {
+                            fallbackCopy(commandText, button);
+                        });
+                    } else {
+                        fallbackCopy(commandText, button);
+                    }
+                };
+                
+                // Add swipe gestures for history panel
+                addSwipeGestures();
+            }
+        }
+
+        function fallbackCopy(text, button) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showMobileFeedback(button, '✅ Copied!');
+            } catch (err) {
+                showMobileFeedback(button, '❌ Copy failed');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function showMobileFeedback(button, message) {
+            const originalText = button.innerHTML;
+            button.innerHTML = message;
+            button.style.transform = 'scale(1.1)';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.transform = 'scale(1)';
+            }, 1500);
+        }
+
+        function addSwipeGestures() {
+            const historyPanel = document.getElementById('session-history');
+            let startX, startY, distX, distY;
+            
+            historyPanel.addEventListener('touchstart', function(e) {
+                const touch = e.touches[0];
+                startX = touch.clientX;
+                startY = touch.clientY;
+            }, {passive: true});
+            
+            historyPanel.addEventListener('touchmove', function(e) {
+                if (!startX || !startY) return;
+                
+                const touch = e.touches[0];
+                distX = touch.clientX - startX;
+                distY = touch.clientY - startY;
+                
+                if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > 50) {
+                    // Horizontal swipe detected
+                    if (distX > 0) {
+                        // Swipe right - maybe show more options
+                    } else {
+                        // Swipe left - maybe delete item
+                    }
+                }
+            }, {passive: true});
+        }
+
+        // Responsive layout adjustments
+        function handleResize() {
+            const newIsMobile = window.innerWidth <= 768;
+            const newIsTablet = window.innerWidth <= 1200 && window.innerWidth > 768;
+            
+            if (newIsMobile !== isMobile || newIsTablet !== isTablet) {
+                isMobile = newIsMobile;
+                isTablet = newIsTablet;
+                
+                // Re-initialize mobile interactions if needed
+                if (isMobile) {
+                    handleMobileInteractions();
+                }
+                
+                // Adjust focus mode for new screen size
+                const focusMode = document.getElementById('focus-mode');
+                if (focusMode.style.display === 'flex') {
+                    toggleFocusMode();
+                    setTimeout(() => toggleFocusMode(), 100);
+                }
+            }
+        }
+
+        // Mobile-optimized focus mode toggle
+        function toggleFocusMode() {
+            const focusMode = document.getElementById('focus-mode');
+            const isShowing = focusMode.style.display === 'flex';
+            
+            if (isShowing) {
+                focusMode.style.display = 'none';
+                document.body.style.overflow = isMobile ? 'auto' : 'hidden';
+            } else {
+                focusMode.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                
+                // Re-initialize Flowise in focus mode with mobile optimization
+                setTimeout(() => {
+                    import("https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js").then(({ default: Chatbot }) => {
+                        Chatbot.init({
+                            chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
+                            apiHost: "https://cloud.flowiseai.com",
+                            chatflowConfig: {
+                                backgroundColor: "transparent",
+                                fontSize: isMobile ? "14px" : "16px",
+                                height: isMobile ? "calc(100% - 100px)" : "100%"
+                            }
+                        })
+                    });
+                }, 100);
+            }
+        }
+
+        // Mobile-optimized energy monitoring
+        function startEnergyMonitoring() {
+            const updateInterval = isMobile ? 5000 : 2000; // Slower on mobile to save battery
+            
+            setInterval(() => {
+                // Simulate dynamic energy levels
+                const caffeine = document.getElementById('caffeine-level');
+                const focus = document.getElementById('focus-level');
+                const harmony = document.getElementById('harmony-level');
+                
+                // Add some realistic fluctuation
+                const time = Date.now() / 1000;
+                const caffeineLevel = Math.max(60, 85 + Math.sin(time / 300) * 15);
+                const focusLevel = Math.max(70, 92 + Math.sin(time / 200) * 10);
+                const harmonyLevel = Math.max(80, 96 + Math.sin(time / 400) * 5);
+                
+                caffeine.textContent = Math.round(caffeineLevel) + '%';
+                focus.textContent = Math.round(focusLevel) + '%';
+                harmony.textContent = Math.round(harmonyLevel) + '%';
+                
+                // Update meter bars
+                caffeine.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = caffeineLevel + '%';
+                focus.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = focusLevel + '%';
+                harmony.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = harmonyLevel + '%';
+            }, updateInterval);
+        }
+
+        // Enhanced initialization
         window.addEventListener('load', function() {
+            isMobile = window.innerWidth <= 768;
+            isTablet = window.innerWidth <= 1200 && window.innerWidth > 768;
+            
             showAchievement();
             startEnergyMonitoring();
+            handleMobileInteractions();
+            
+            // Add resize listener
+            window.addEventListener('resize', handleResize);
+            
+            // Prevent zoom on double tap for mobile
+            if (isMobile) {
+                let lastTouchEnd = 0;
+                document.addEventListener('touchend', function (event) {
+                    const now = (new Date()).getTime();
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault();
+                    }
+                    lastTouchEnd = now;
+                }, false);
+            }
         });
 
         function showAchievement() {
