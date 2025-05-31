@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HexMind Command Center - Sacred Artist Jeff's AI Orchestration Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>HexMind AI Orchestrator</title>
+    
     <style>
         * {
             margin: 0;
@@ -12,1736 +15,1053 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
-            color: #ffffff;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            font-size: 16px; /* Prevents zoom on focus in Safari */
         }
 
-        /* Sacred Energy Background Animation */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(255, 105, 180, 0.05) 0%, transparent 50%);
-            animation: energyPulse 8s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes energyPulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
-
-        .command-center {
-            display: grid;
-            grid-template-areas: 
-                "header header header"
-                "status orchestrator output"
-                "tools orchestrator history";
-            grid-template-columns: 250px 1fr 300px;
-            grid-template-rows: 80px 1fr 200px;
-            height: 100vh;
-            gap: 15px;
-            padding: 15px;
-            position: relative;
-            z-index: 1;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
         }
 
         .header {
-            grid-area: header;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(78, 205, 196, 0.3);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo h1 {
-            font-size: 2em;
-            font-weight: bold;
-            background: linear-gradient(45deg, #4ecdc4, #ffd700, #4ecdc4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
-        }
-
-        .logo .sacred-symbol {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(45deg, #4ecdc4, #ffd700);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .power-level {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .advancement-badge {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-            to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
-        }
-
-        .ai-spirits {
-            display: flex;
-            gap: 5px;
-        }
-
-        .spirit-orb {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        .spirit-orb:nth-child(odd) {
-            animation-delay: 0.3s;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .status-panel {
-            grid-area: status;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .status-title {
-            color: #4ecdc4;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 15px;
             text-align: center;
+            margin-bottom: 30px;
         }
 
-        .energy-meter {
-            margin: 15px 0;
-        }
-
-        .meter-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 0.9em;
-        }
-
-        .meter-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .meter-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4ecdc4, #44a08d);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-            position: relative;
-        }
-
-        .meter-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: scan 2s ease-in-out infinite;
-        }
-
-        .focus-mode-toggle {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .toggle-button {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
-        }
-
-        .orchestrator-panel {
-            grid-area: orchestrator;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 0;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(78, 205, 196, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .orchestrator-header {
-            background: linear-gradient(45deg, rgba(78, 205, 196, 0.2), rgba(68, 160, 141, 0.2));
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid rgba(78, 205, 196, 0.3);
-        }
-
-        .orchestrator-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #4ecdc4;
-            margin-bottom: 5px;
-        }
-
-        .orchestrator-subtitle {
-            font-size: 0.9em;
-            color: #a8b2d1;
-            font-style: italic;
-        }
-
-        /* Backup Input System Styling */
-        .backup-input-container {
-            background: rgba(78, 205, 196, 0.1);
-            border: 2px solid rgba(78, 205, 196, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px;
-            position: relative;
-            z-index: 1000;
-        }
-
-        .input-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .header h1 {
+            color: #2d3748;
+            font-size: 2rem;
             margin-bottom: 10px;
-            color: #4ecdc4;
-            font-weight: bold;
         }
 
-        .switch-mode-btn {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            border: none;
-            padding: 5px 10px;
-            border-radius: 15px;
-            color: white;
-            font-size: 0.8em;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .status {
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .switch-mode-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 3px 10px rgba(78, 205, 196, 0.3);
+        .status.online {
+            background: #c6f6d5;
+            color: #22543d;
         }
 
-        .backup-input-area {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .status.offline {
+            background: #fed7d7;
+            color: #742a2a;
         }
 
-        #backup-textarea {
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .idea-input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 12px;
-            color: #ffffff;
-            font-family: inherit;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
             font-size: 16px;
             resize: vertical;
-            min-height: 60px;
+            transition: border-color 0.3s ease;
+            -webkit-overflow-scrolling: touch;
         }
 
-        #backup-textarea::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        #backup-textarea:focus {
+        .idea-input:focus {
             outline: none;
-            border-color: #4ecdc4;
-            box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        .send-button {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
-
-        .send-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
-        }
-
-        .send-button:active {
-            transform: translateY(0);
-        }
-
-        /* Mobile optimizations for backup input */
-        @media (max-width: 768px) {
-            .backup-input-container {
-                margin: 10px;
-                padding: 12px;
-            }
-
-            #backup-textarea {
-                font-size: 16px; /* Prevents zoom on iOS */
-                min-height: 80px;
-            }
-
-            .send-button {
-                min-height: 44px;
-                font-size: 16px;
-            }
-
-            .input-header {
-                flex-direction: column;
-                gap: 8px;
-                align-items: stretch;
-            }
-
-            .switch-mode-btn {
-                align-self: center;
-                padding: 8px 15px;
-            }
-        }
-
-        /* Hide/show modes */
-        .flowise-mode .backup-input-container {
-            display: none;
-        }
-
-        .backup-mode #hexmind-chat {
-            display: none;
-        }
-
-        /* Enhanced Flowise Mobile Styling */
-        flowise-fullchatbot {
-            --flowise-chatbot-background: transparent !important;
-            --flowise-chatbot-border: none !important;
-            height: 100% !important;
-            width: 100% !important;
-            display: block !important;
-        }
-
-        /* Force Flowise input visibility on mobile */
-        @media (max-width: 768px) {
-            #hexmind-chat {
-                height: calc(100% - 80px);
-                min-height: 300px;
-                position: relative;
-                overflow: visible;
-            }
-            
-            flowise-fullchatbot {
-                height: 100% !important;
-                width: 100% !important;
-                min-height: 300px !important;
-                display: block !important;
-                position: relative !important;
-                overflow: visible !important;
-            }
-            
-            /* Ensure chat input is visible */
-            flowise-fullchatbot * {
-                max-width: 100% !important;
-            }
-            
-            /* Force input area to be visible */
-            .chatbot-input,
-            .flowise-chatbot-input,
-            [data-testid="chat-input"],
-            input[type="text"],
-            textarea {
-                visibility: visible !important;
-                display: block !important;
-                position: relative !important;
-                width: 100% !important;
-                height: auto !important;
-                min-height: 40px !important;
-                z-index: 1000 !important;
-            }
-        }
-
-        .output-panel {
-            grid-area: output;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            overflow-y: auto;
-        }
-
-        .output-title {
-            color: #ffd700;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .research-command {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-            position: relative;
-        }
-
-        .command-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .ai-model-tag {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000;
-            padding: 4px 8px;
-            border-radius: 10px;
-            font-size: 0.8em;
-            font-weight: bold;
-        }
-
-        .copy-button {
-            background: rgba(78, 205, 196, 0.8);
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-            font-size: 0.8em;
-            transition: all 0.3s ease;
-        }
-
-        .copy-button:hover {
-            background: rgba(78, 205, 196, 1);
-            transform: scale(1.05);
-        }
-
-        .tools-panel {
-            grid-area: tools;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tools-title {
-            color: #a8b2d1;
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .tool-grid {
+        .ai-models {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .tool-button {
-            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 15px 10px;
-            color: white;
+        .model-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-align: center;
-            font-size: 0.9em;
+            min-height: 44px; /* Apple minimum touch target */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            touch-action: manipulation;
         }
 
-        .tool-button:hover {
-            background: linear-gradient(45deg, rgba(78, 205, 196, 0.3), rgba(68, 160, 141, 0.3));
+        .model-card.selected {
+            border-color: #667eea;
+            background: #f7fafc;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.2);
         }
 
-        .history-panel {
-            grid-area: history;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow-y: auto;
+        .model-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .history-title {
-            color: #a8b2d1;
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .history-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 10px;
-            margin: 8px 0;
-            border-left: 3px solid #4ecdc4;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .history-item:hover {
-            background: rgba(78, 205, 196, 0.1);
-            transform: translateX(5px);
-        }
-
-        .history-time {
-            font-size: 0.8em;
-            color: #4ecdc4;
+        .model-name {
+            font-weight: 600;
+            color: #2d3748;
             margin-bottom: 5px;
         }
 
-        .history-text {
-            font-size: 0.9em;
-            color: #ffffff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .model-specialty {
+            font-size: 0.8rem;
+            color: #718096;
         }
 
-        /* ADHD Focus Mode */
-        .focus-mode {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
-        .focus-container {
-            width: 80%;
-            max-width: 800px;
-            height: 80%;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 20px;
-            border: 2px solid #4ecdc4;
-            padding: 20px;
-            position: relative;
-        }
-
-        .focus-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
+        .btn {
+            padding: 15px 20px;
             border: none;
-            color: #4ecdc4;
-            font-size: 2em;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+            transform: translateY(-2px);
+        }
+
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .prompt-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .prompt-header {
+            background: #f7fafc;
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prompt-title {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .copy-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        .copy-btn:hover {
+            background: #38a169;
+        }
+
+        .prompt-content {
+            padding: 15px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #f8f9fa;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .progress-indicator {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .debug-panel {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
+            display: none;
+        }
+
+        .debug-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2d3748;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
             cursor: pointer;
         }
 
-        /* Advanced Mobile Optimization */
-        @media (max-width: 1200px) {
-            .command-center {
-                grid-template-areas: 
-                    "header header"
-                    "orchestrator status"
-                    "orchestrator output"
-                    "tools history";
-                grid-template-columns: 1fr 280px;
-                grid-template-rows: 70px 1fr 280px 180px;
-                gap: 10px;
-                padding: 10px;
-            }
-            
-            .header {
-                padding: 0 20px;
-            }
-            
-            .logo h1 {
-                font-size: 1.5em;
-            }
+        /* ADHD-friendly visual cues */
+        .task-progress {
+            margin: 20px 0;
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
         }
 
         @media (max-width: 768px) {
-            body {
-                overflow-y: auto;
-                height: auto;
-                min-height: 100vh;
-            }
-            
-            .command-center {
-                grid-template-areas: 
-                    "header"
-                    "orchestrator"
-                    "output"
-                    "status"
-                    "tools"
-                    "history";
-                grid-template-columns: 1fr;
-                grid-template-rows: 60px minmax(400px, 50vh) auto auto auto auto;
-                gap: 10px;
-                padding: 10px;
-                height: auto;
-                min-height: 100vh;
-            }
-            
-            .header {
-                padding: 0 15px;
-            }
-            
-            .logo h1 {
-                font-size: 1.2em;
-            }
-            
-            .logo .sacred-symbol {
-                width: 35px;
-                height: 35px;
-                font-size: 1.2em;
-            }
-            
-            .advancement-badge {
-                padding: 6px 12px;
-                font-size: 0.8em;
-            }
-            
-            .orchestrator-panel {
-                min-height: 450px;
-                height: 60vh;
-                max-height: 600px;
-                position: relative;
-            }
-            
-            #hexmind-chat {
-                height: calc(100% - 80px);
-                min-height: 350px;
-                position: relative;
-                z-index: 100;
-            }
-            
-            .status-panel,
-            .output-panel,
-            .tools-panel,
-            .history-panel {
-                min-height: auto;
-                height: auto;
-            }
-            
-            .tool-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            
-            .tool-button {
-                padding: 12px 8px;
-                font-size: 0.8em;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .command-center {
-                padding: 8px;
-                gap: 8px;
-            }
-            
-            .header {
-                padding: 0 10px;
-                grid-template-rows: 50px;
-            }
-            
-            .logo h1 {
-                font-size: 1em;
-            }
-            
-            .logo .sacred-symbol {
-                width: 30px;
-                height: 30px;
-                font-size: 1em;
-            }
-            
-            .advancement-badge {
-                padding: 4px 8px;
-                font-size: 0.7em;
-            }
-            
-            .ai-spirits {
-                gap: 3px;
-            }
-            
-            .spirit-orb {
-                width: 8px;
-                height: 8px;
-            }
-            
-            .orchestrator-panel {
-                min-height: 350px;
-                height: 45vh;
-            }
-            
-            .orchestrator-header {
-                padding: 10px;
-            }
-            
-            .orchestrator-title {
-                font-size: 1.1em;
-            }
-            
-            .orchestrator-subtitle {
-                font-size: 0.8em;
-            }
-            
-            .status-panel,
-            .output-panel,
-            .tools-panel,
-            .history-panel {
+            .container {
+                margin: 10px;
                 padding: 15px;
             }
             
-            .tool-grid {
+            .ai-models {
                 grid-template-columns: 1fr 1fr;
-                gap: 6px;
             }
             
-            .tool-button {
-                padding: 10px 6px;
-                font-size: 0.75em;
-            }
-            
-            .research-command {
-                padding: 12px;
-                margin: 8px 0;
-            }
-            
-            .copy-button {
-                padding: 4px 8px;
-                font-size: 0.7em;
-            }
-            
-            .ai-model-tag {
-                padding: 3px 6px;
-                font-size: 0.7em;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .logo h1 {
-                display: none;
-            }
-            
-            .logo .sacred-symbol {
-                margin: 0 auto;
-            }
-            
-            .tool-grid {
+            .action-buttons {
                 grid-template-columns: 1fr;
-                gap: 5px;
             }
-            
-            .tool-button {
-                padding: 8px;
-                font-size: 0.7em;
-            }
-        }
-
-        /* Mobile-specific touch optimizations */
-        @media (max-width: 768px) {
-            .copy-button,
-            .toggle-button,
-            .tool-button,
-            .history-item {
-                min-height: 44px;
-                min-width: 44px;
-                touch-action: manipulation;
-            }
-            
-            .focus-container {
-                width: 95%;
-                height: 90%;
-                margin: 5vh auto;
-            }
-            
-            .focus-close {
-                font-size: 2.5em;
-                min-height: 44px;
-                min-width: 44px;
-            }
-        }
-
-        /* Achievement Notifications */
-        .achievement {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            transform: translateX(300px);
-            transition: transform 0.5s ease;
-            z-index: 2000;
-        }
-
-        .achievement.show {
-            transform: translateX(0);
         }
     </style>
 </head>
 <body>
-    <div class="command-center">
-        <header class="header">
-            <div class="logo">
-                <div class="sacred-symbol">🌟</div>
-                <h1>HexMind Command Center</h1>
-            </div>
-            <div class="power-level">
-                <div class="advancement-badge">Sage Level</div>
-                <div class="ai-spirits">
-                    <div class="spirit-orb"></div>
-                    <div class="spirit-orb"></div>
-                    <div class="spirit-orb"></div>
-                    <div class="spirit-orb"></div>
-                    <div class="spirit-orb"></div>
-                    <div class="spirit-orb"></div>
-                    <div class="spirit-orb"></div>
-                </div>
-            </div>
-        </header>
-
-        <div class="status-panel">
-            <div class="status-title">Sacred Artist Status</div>
-            
-            <div class="energy-meter">
-                <div class="meter-label">
-                    <span>Caffeine Level</span>
-                    <span id="caffeine-level">85%</span>
-                </div>
-                <div class="meter-bar">
-                    <div class="meter-fill" style="width: 85%"></div>
-                </div>
-            </div>
-
-            <div class="energy-meter">
-                <div class="meter-label">
-                    <span>ADHD Focus</span>
-                    <span id="focus-level">92%</span>
-                </div>
-                <div class="meter-bar">
-                    <div class="meter-fill" style="width: 92%"></div>
-                </div>
-            </div>
-
-            <div class="energy-meter">
-                <div class="meter-label">
-                    <span>AI Harmony</span>
-                    <span id="harmony-level">96%</span>
-                </div>
-                <div class="meter-bar">
-                    <div class="meter-fill" style="width: 96%"></div>
-                </div>
-            </div>
-
-            <div class="focus-mode-toggle">
-                <button class="toggle-button" onclick="toggleFocusMode()">
-                    ⚡ Focus Mode
-                </button>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 HexMind AI Orchestrator</h1>
+            <div id="status" class="status offline">
+                📱 Mobile-Optimized Mode
             </div>
         </div>
 
-        <div class="orchestrator-panel">
-            <div class="orchestrator-header">
-                <div class="orchestrator-title">🎵 HexMind Orchestrator</div>
-                <div class="orchestrator-subtitle">Your AI Research Conductor</div>
-            </div>
-            
-            <!-- Backup Input System - Always Visible -->
-            <div class="backup-input-container" id="backup-input-container">
-                <div class="input-header">
-                    <span>💡 Share Your Idea:</span>
-                    <button class="switch-mode-btn" onclick="toggleInputMode()">🔄 Switch Mode</button>
-                </div>
-                <div class="backup-input-area">
-                    <textarea id="backup-textarea" 
-                             placeholder="Type your idea here and I'll break it into AI research commands..."
-                             rows="3"></textarea>
-                    <button class="send-button" onclick="window.sendToHexMind(); return false;">
-                        ➤ Send to HexMind
-                    </button>
-                </div>
-            </div>
-            
-            <div id="hexmind-chat">
-                <flowise-fullchatbot></flowise-fullchatbot>
+        <div class="input-section">
+            <label class="input-label" for="ideaInput">
+                💡 Describe your idea or project:
+            </label>
+            <textarea 
+                id="ideaInput" 
+                class="idea-input" 
+                placeholder="e.g., I want to research sustainable energy solutions for small businesses and create a presentation..."
+            ></textarea>
+        </div>
+
+        <div class="task-progress" id="taskProgress" style="display: none;">
+            <div>Progress: <span id="progressText">0/0 tasks</span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
 
-        <div class="output-panel">
-            <div class="output-title">🎯 Research Commands</div>
-            <div id="research-output">
-                <div class="research-command">
-                    <div class="command-header">
-                        <div class="ai-model-tag">Claude Sonnet 4</div>
-                        <button class="copy-button" onclick="copyCommand(this)">📋 Copy</button>
-                    </div>
-                    <div class="command-text">Awaiting your first idea to orchestrate...</div>
-                </div>
+        <div class="ai-models">
+            <div class="model-card" data-model="claude">
+                <div class="model-name">Claude Sonnet 4</div>
+                <div class="model-specialty">Deep Analysis</div>
+            </div>
+            <div class="model-card" data-model="gpt4">
+                <div class="model-name">GPT-4</div>
+                <div class="model-specialty">Versatile Tasks</div>
+            </div>
+            <div class="model-card" data-model="gemini">
+                <div class="model-name">Gemini Pro</div>
+                <div class="model-specialty">Creative Solutions</div>
+            </div>
+            <div class="model-card" data-model="copilot">
+                <div class="model-name">GitHub Copilot</div>
+                <div class="model-specialty">Code Generation</div>
             </div>
         </div>
 
-        <div class="tools-panel">
-            <div class="tools-title">🛠️ Sacred Tools</div>
-            <div class="tool-grid">
-                <button class="tool-button" onclick="openTool('seed')">
-                    🌱<br>Seed Learning
-                </button>
-                <button class="tool-button" onclick="openTool('mechanic')">
-                    🔧<br>Magic Mechanic
-                </button>
-                <button class="tool-button" onclick="openTool('analytics')">
-                    📊<br>Analytics
-                </button>
-                <button class="tool-button" onclick="openTool('settings')">
-                    ⚙️<br>Settings
-                </button>
-            </div>
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="orchestrateAI()">
+                🚀 Generate AI Commands
+            </button>
+            <button class="btn btn-secondary" onclick="clearAll()">
+                🔄 Clear All
+            </button>
         </div>
 
-        <div class="history-panel">
-            <div class="history-title">📚 Session History</div>
-            <div id="session-history">
-                <div class="history-item">
-                    <div class="history-time">Session Start</div>
-                    <div class="history-text">HexMind Orchestrator Initialized</div>
-                </div>
-            </div>
+        <div class="progress-indicator" id="progressIndicator">
+            <div class="spinner"></div>
+            <div>Analyzing your idea and generating prompts...</div>
         </div>
+
+        <div class="results-section" id="resultsSection"></div>
     </div>
 
-    <!-- Focus Mode Overlay -->
-    <div class="focus-mode" id="focus-mode">
-        <div class="focus-container">
-            <button class="focus-close" onclick="toggleFocusMode()">×</button>
-            <div id="focus-chat">
-                <flowise-fullchatbot></flowise-fullchatbot>
-            </div>
-        </div>
-    </div>
+    <button class="debug-toggle" onclick="toggleDebug()">🐛</button>
+    <div class="debug-panel" id="debugPanel"></div>
 
-    <!-- Achievement Notification -->
-    <div class="achievement" id="achievement">
-        🏆 Achievement Unlocked: HexMind Conductor!
-    </div>
-
-    <!-- Flowise Integration Script -->
-    <script type="module">
-        import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
-        Chatbot.initFull({
-            chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
-            apiHost: "https://cloud.flowiseai.com",
-        })
-    </script>
+    <div class="toast" id="toast"></div>
 
     <script>
-        // Sacred Artist Jeff's Command Center Logic
-        let sessionCount = 0;
-        let achievements = [];
-
-        // Mobile-specific enhancements
-        let isMobile = window.innerWidth <= 768;
-        let isTablet = window.innerWidth <= 1200 && window.innerWidth > 768;
-
-        // Enhanced mobile touch handling
-        function handleMobileInteractions() {
-            if (isMobile) {
-                // Add mobile-specific event listeners
-                document.addEventListener('touchstart', function() {}, {passive: true});
+        // HexMind AI Orchestrator - Main Application
+        class HexMindOrchestrator {
+            constructor() {
+                this.selectedModels = new Set();
+                this.templates = this.initializeTemplates();
+                this.storage = new PromptStorage();
+                this.parser = new IntentParser();
+                this.debugMode = false;
+                this.memoryStorage = {}; // Fallback for when localStorage isn't available
                 
-                // Optimize focus mode for mobile
-                const focusMode = document.getElementById('focus-mode');
-                focusMode.addEventListener('touchmove', function(e) {
-                    e.preventDefault();
-                }, {passive: false});
-                
-                // Mobile-optimized copy function
-                window.copyCommand = function(button) {
-                    const commandText = button.parentElement.nextElementSibling.textContent;
-                    
-                    if (navigator.clipboard && window.isSecureContext) {
-                        navigator.clipboard.writeText(commandText).then(() => {
-                            showMobileFeedback(button, '✅ Copied!');
-                        }).catch(() => {
-                            fallbackCopy(commandText, button);
-                        });
-                    } else {
-                        fallbackCopy(commandText, button);
-                    }
-                };
-                
-                // Add swipe gestures for history panel
-                addSwipeGestures();
+                this.init();
             }
-        }
 
-        function fallbackCopy(text, button) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                showMobileFeedback(button, '✅ Copied!');
-            } catch (err) {
-                showMobileFeedback(button, '❌ Copy failed');
+            async init() {
+                this.attachEventListeners();
+                await this.storage.init();
+                this.detectCapabilities();
+                this.log('HexMind initialized successfully');
             }
-            
-            document.body.removeChild(textArea);
-        }
 
-        function showMobileFeedback(button, message) {
-            const originalText = button.innerHTML;
-            button.innerHTML = message;
-            button.style.transform = 'scale(1.1)';
-            
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.transform = 'scale(1)';
-            }, 1500);
-        }
-
-        function addSwipeGestures() {
-            const historyPanel = document.getElementById('session-history');
-            let startX, startY, distX, distY;
-            
-            historyPanel.addEventListener('touchstart', function(e) {
-                const touch = e.touches[0];
-                startX = touch.clientX;
-                startY = touch.clientY;
-            }, {passive: true});
-            
-            historyPanel.addEventListener('touchmove', function(e) {
-                if (!startX || !startY) return;
-                
-                const touch = e.touches[0];
-                distX = touch.clientX - startX;
-                distY = touch.clientY - startY;
-                
-                if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > 50) {
-                    // Horizontal swipe detected
-                    if (distX > 0) {
-                        // Swipe right - maybe show more options
-                    } else {
-                        // Swipe left - maybe delete item
-                    }
-                }
-            }, {passive: true});
-        }
-
-        // Responsive layout adjustments
-        function handleResize() {
-            const newIsMobile = window.innerWidth <= 768;
-            const newIsTablet = window.innerWidth <= 1200 && window.innerWidth > 768;
-            
-            if (newIsMobile !== isMobile || newIsTablet !== isTablet) {
-                isMobile = newIsMobile;
-                isTablet = newIsTablet;
-                
-                // Re-initialize mobile interactions if needed
-                if (isMobile) {
-                    handleMobileInteractions();
-                }
-                
-                // Adjust focus mode for new screen size
-                const focusMode = document.getElementById('focus-mode');
-                if (focusMode.style.display === 'flex') {
-                    toggleFocusMode();
-                    setTimeout(() => toggleFocusMode(), 100);
-                }
-            }
-        }
-
-        // Mobile-optimized focus mode toggle
-        function toggleFocusMode() {
-            const focusMode = document.getElementById('focus-mode');
-            const isShowing = focusMode.style.display === 'flex';
-            
-            if (isShowing) {
-                focusMode.style.display = 'none';
-                document.body.style.overflow = isMobile ? 'auto' : 'hidden';
-            } else {
-                focusMode.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                
-                // Re-initialize Flowise in focus mode with mobile optimization
-                setTimeout(() => {
-                    import("https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js").then(({ default: Chatbot }) => {
-                        Chatbot.init({
-                            chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
-                            apiHost: "https://cloud.flowiseai.com",
-                            chatflowConfig: {
-                                backgroundColor: "transparent",
-                                fontSize: isMobile ? "14px" : "16px",
-                                height: isMobile ? "calc(100% - 100px)" : "100%"
-                            }
-                        })
-                    });
-                }, 100);
-            }
-        }
-
-        // Mobile-optimized energy monitoring
-        function startEnergyMonitoring() {
-            const updateInterval = isMobile ? 5000 : 2000; // Slower on mobile to save battery
-            
-            setInterval(() => {
-                // Simulate dynamic energy levels
-                const caffeine = document.getElementById('caffeine-level');
-                const focus = document.getElementById('focus-level');
-                const harmony = document.getElementById('harmony-level');
-                
-                // Add some realistic fluctuation
-                const time = Date.now() / 1000;
-                const caffeineLevel = Math.max(60, 85 + Math.sin(time / 300) * 15);
-                const focusLevel = Math.max(70, 92 + Math.sin(time / 200) * 10);
-                const harmonyLevel = Math.max(80, 96 + Math.sin(time / 400) * 5);
-                
-                caffeine.textContent = Math.round(caffeineLevel) + '%';
-                focus.textContent = Math.round(focusLevel) + '%';
-                harmony.textContent = Math.round(harmonyLevel) + '%';
-                
-                // Update meter bars
-                caffeine.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = caffeineLevel + '%';
-                focus.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = focusLevel + '%';
-                harmony.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = harmonyLevel + '%';
-            }, updateInterval);
-        }
-
-        // Auto-fresh HexMind system
-        function initializeFreshHexMind() {
-            // Generate unique session ID for every page load
-            const sessionId = 'hexmind_session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
-            // Clear any existing Flowise data
-            try {
-                localStorage.removeItem('flowise-chatbot');
-                localStorage.removeItem('flowise-session');
-                sessionStorage.clear();
-            } catch (e) {
-                console.log('Storage clear attempted');
-            }
-            
-            const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
-            if (isMobileDevice || window.innerWidth <= 768) {
-                // Mobile initialization with fresh session
-                setTimeout(() => {
-                    import("https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js").then(({ default: Chatbot }) => {
-                        Chatbot.initFull({
-                            chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
-                            apiHost: "https://cloud.flowiseai.com",
-                            chatflowConfig: {
-                                sessionId: sessionId,
-                                overrideConfig: {
-                                    sessionId: sessionId,
-                                    returnSourceDocuments: false
-                                }
-                            },
-                            theme: {
-                                button: {
-                                    backgroundColor: "#4ecdc4",
-                                    right: 20,
-                                    bottom: 20,
-                                    size: "medium",
-                                    iconColor: "white",
-                                },
-                                chatWindow: {
-                                    backgroundColor: "transparent",
-                                    height: "100%",
-                                    width: "100%",
-                                    fontSize: "16px",
-                                    poweredByTextColor: "#4ecdc4",
-                                    welcomeMessage: "🎵 HexMind Orchestrator Ready! Share your idea and I'll break it into research commands.",
-                                    botMessage: {
-                                        backgroundColor: "rgba(78, 205, 196, 0.1)",
-                                        textColor: "#ffffff",
-                                    },
-                                    userMessage: {
-                                        backgroundColor: "rgba(255, 215, 0, 0.2)",
-                                        textColor: "#ffffff",
-                                    },
-                                    textInput: {
-                                        backgroundColor: "rgba(255, 255, 255, 0.1)",
-                                        textColor: "#ffffff",
-                                        placeholder: "Type your idea here...",
-                                        sendButtonColor: "#4ecdc4",
-                                    }
-                                }
-                            }
-                        });
-                        
-                        // Force input visibility after initialization
-                        setTimeout(() => {
-                            const chatInputs = document.querySelectorAll('input[type="text"], textarea, [role="textbox"]');
-                            chatInputs.forEach(input => {
-                                input.style.visibility = 'visible';
-                                input.style.display = 'block';
-                                input.style.position = 'relative';
-                                input.style.zIndex = '1000';
-                                input.style.minHeight = '40px';
-                                input.style.width = '100%';
-                            });
-                            
-                            addHistoryItem(`Fresh HexMind Session: ${sessionId.split('_')[2]}`);
-                        }, 1000);
-                    });
-                }, 500);
-            } else {
-                // Desktop initialization with fresh session
-                setTimeout(() => {
-                    import("https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js").then(({ default: Chatbot }) => {
-                        Chatbot.initFull({
-                            chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
-                            apiHost: "https://cloud.flowiseai.com",
-                            chatflowConfig: {
-                                sessionId: sessionId,
-                                overrideConfig: {
-                                    sessionId: sessionId,
-                                    returnSourceDocuments: false
-                                }
-                            }
-                        });
-                        
-                        addHistoryItem(`Fresh HexMind Session: ${sessionId.split('_')[2]}`);
-                    });
-                }, 300);
-            }
-            
-            // Store session info for debugging
-            window.hexmindSessionId = sessionId;
-            console.log('🎵 Fresh HexMind Session:', sessionId);
-        }
-
-        #hexmind-chat {
-            height: calc(100% - 160px);
-            border: none;
-            background: transparent;
-            position: relative;
-            overflow: visible;
-        }
-
-        // Backup input system functions
-        let inputMode = 'backup'; // Start with backup input visible
-        
-        function toggleInputMode() {
-            const container = document.querySelector('.orchestrator-panel');
-            inputMode = inputMode === 'backup' ? 'flowise' : 'backup';
-            
-            if (inputMode === 'backup') {
-                container.classList.remove('flowise-mode');
-                container.classList.add('backup-mode');
-            } else {
-                container.classList.remove('backup-mode');
-                container.classList.add('flowise-mode');
-            }
-            
-            addHistoryItem(`Switched to ${inputMode} input mode`);
-        }
-
-        function sendToHexMind() {
-            console.log('🎵 SendToHexMind function called!');
-            
-            const textarea = document.getElementById('backup-textarea');
-            if (!textarea) {
-                console.error('❌ Textarea not found!');
-                alert('Error: Input textarea not found!');
-                return;
-            }
-            
-            const message = textarea.value.trim();
-            console.log('📝 Message to send:', message);
-            
-            if (!message) {
-                alert('Please enter your idea first!');
-                return;
-            }
-            
-            // Add to history
-            addHistoryItem(`Sent: ${message.substring(0, 30)}...`);
-            
-            // Try to send via Flowise API directly
-            sendDirectToFlowise(message);
-            
-            // Clear the textarea
-            textarea.value = '';
-            
-            // Give user feedback
-            const sendButton = document.querySelector('.send-button');
-            if (sendButton) {
-                const originalText = sendButton.innerHTML;
-                sendButton.innerHTML = '⏳ Sending...';
-                sendButton.disabled = true;
-                
-                setTimeout(() => {
-                    sendButton.innerHTML = originalText;
-                    sendButton.disabled = false;
-                }, 2000);
-            }
-        }
-
-        async function sendDirectToFlowise(message) {
-            // Show loading state
-            const outputPanel = document.getElementById('research-output');
-            outputPanel.innerHTML = `
-                <div class="research-command">
-                    <div class="command-header">
-                        <div class="ai-model-tag">Processing...</div>
-                        <button class="copy-button" disabled>⏳ Working</button>
-                    </div>
-                    <div class="command-text">🎵 HexMind is orchestrating your idea: "${message}"</div>
-                </div>
-            `;
-
-            try {
-                console.log('Sending to HexMind API:', message);
-                
-                const response = await fetch('https://cloud.flowiseai.com/api/v1/prediction/065c9bf0-1184-496d-9d73-d177eb1948b5', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        question: message,
-                        overrideConfig: {
-                            sessionId: window.hexmindSessionId || 'backup_session_' + Date.now()
-                        }
-                    })
+            attachEventListeners() {
+                // Model selection
+                document.querySelectorAll('.model-card').forEach(card => {
+                    card.addEventListener('click', () => this.toggleModel(card));
                 });
 
-                console.log('Response status:', response.status);
+                // Auto-save input
+                document.getElementById('ideaInput').addEventListener('input', 
+                    this.debounce(() => this.saveToStorage(), 1000));
+            }
+
+            toggleModel(card) {
+                const model = card.dataset.model;
                 
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log('API Response:', result);
-                    
-                    // Extract the actual response text
-                    let botResponse = result.text || result.answer || result.response || JSON.stringify(result, null, 2);
-                    
-                    // If it's still an object, try to get the message
-                    if (typeof botResponse === 'object') {
-                        botResponse = botResponse.message || botResponse.content || 'Response received but format unclear';
-                    }
-                    
-                    displayHexMindResponse(message, botResponse);
+                if (this.selectedModels.has(model)) {
+                    this.selectedModels.delete(model);
+                    card.classList.remove('selected');
                 } else {
-                    const errorText = await response.text();
-                    console.error('API Error:', response.status, errorText);
-                    throw new Error(`API returned ${response.status}: ${errorText}`);
+                    this.selectedModels.add(model);
+                    card.classList.add('selected');
                 }
-            } catch (error) {
-                console.error('HexMind API Error:', error);
                 
-                // Show detailed error in output
-                displayHexMindResponse(message, `
-🚨 HexMind API Error: ${error.message}
-
-📋 Your Original Idea: "${message}"
-
-🔧 Troubleshooting Steps:
-1. Check your Flowise flow is running
-2. Verify the Max Iterations is set to 5-10 (not 0)
-3. Try refreshing the page for a fresh session
-4. Switch to Flowise mode using the 🔄 Switch Mode button
-
-💡 Manual Research Approach:
-Copy your idea above and paste it into:
-• Claude Sonnet 4 for architectural analysis
-• GPT-4 for comprehensive research
-• Gemini for creative brainstorming
-• GitHub Copilot for technical implementation
-                `);
+                this.log(`Model ${model} ${this.selectedModels.has(model) ? 'selected' : 'deselected'}`);
             }
-        }
 
-        function displayHexMindResponse(userMessage, botResponse) {
-            // Update the output panel with formatted response
-            const outputPanel = document.getElementById('research-output');
-            
-            // Parse if the response looks like research commands
-            let formattedResponse = botResponse;
-            
-            // Check if response contains research structure
-            if (typeof botResponse === 'string' && botResponse.includes('research') || botResponse.includes('command')) {
-                // Try to parse structured response
-                const lines = botResponse.split('\n').filter(line => line.trim());
-                let commands = [];
+            async orchestrateAI() {
+                const idea = document.getElementById('ideaInput').value.trim();
                 
-                lines.forEach(line => {
-                    if (line.includes('Claude') || line.includes('GPT') || line.includes('Gemini') || line.includes('research')) {
-                        commands.push({
-                            model: extractModelName(line),
-                            text: line.trim()
-                        });
-                    }
-                });
-                
-                if (commands.length > 0) {
-                    // Display as separate research commands
-                    outputPanel.innerHTML = `
-                        <div class="research-command">
-                            <div class="command-header">
-                                <div class="ai-model-tag">Your Idea</div>
-                                <button class="copy-button" onclick="copyCommand(this)">📋 Copy</button>
-                            </div>
-                            <div class="command-text">${userMessage}</div>
-                        </div>
-                    `;
-                    
-                    commands.forEach(cmd => {
-                        const cmdDiv = document.createElement('div');
-                        cmdDiv.className = 'research-command';
-                        cmdDiv.innerHTML = `
-                            <div class="command-header">
-                                <div class="ai-model-tag">${cmd.model}</div>
-                                <button class="copy-button" onclick="copyCommand(this)">📋 Copy</button>
-                            </div>
-                            <div class="command-text">${cmd.text}</div>
-                        `;
-                        outputPanel.appendChild(cmdDiv);
-                    });
-                    
-                    showSuccessAchievement();
+                if (!idea) {
+                    this.showToast('Please enter an idea first!', 'error');
                     return;
                 }
-            }
-            
-            // Default display for any response
-            outputPanel.innerHTML = `
-                <div class="research-command">
-                    <div class="command-header">
-                        <div class="ai-model-tag">Your Idea</div>
-                        <button class="copy-button" onclick="copyCommand(this)">📋 Copy</button>
-                    </div>
-                    <div class="command-text">${userMessage}</div>
-                </div>
-                <div class="research-command">
-                    <div class="command-header">
-                        <div class="ai-model-tag">HexMind Response</div>
-                        <button class="copy-button" onclick="copyCommand(this)">📋 Copy</button>
-                    </div>
-                    <div class="command-text" style="white-space: pre-wrap;">${formattedResponse}</div>
-                </div>
-            `;
-            
-            showSuccessAchievement();
-        }
 
-        function extractModelName(text) {
-            if (text.toLowerCase().includes('claude')) return 'Claude Sonnet 4';
-            if (text.toLowerCase().includes('gpt')) return 'GPT-4';
-            if (text.toLowerCase().includes('gemini')) return 'Gemini Pro';
-            if (text.toLowerCase().includes('copilot')) return 'GitHub Copilot';
-            if (text.toLowerCase().includes('research')) return 'Research Command';
-            return 'AI Research';
-        }
-
-        function showSuccessAchievement() {
-            setTimeout(() => {
-                const achievement = document.getElementById('achievement');
-                achievement.textContent = '🎯 HexMind Orchestration Complete!';
-                achievement.classList.add('show');
-                setTimeout(() => achievement.classList.remove('show'), 3000);
-            }, 500);
-        }
-
-        // Enhanced textarea handling
-        function setupBackupInput() {
-            const textarea = document.getElementById('backup-textarea');
-            
-            // Enter key handling
-            textarea.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                    e.preventDefault();
-                    sendToHexMind();
-                } else if (e.key === 'Enter' && !e.shiftKey && window.innerWidth <= 768) {
-                    // On mobile, single Enter sends (unless Shift+Enter for new line)
-                    e.preventDefault();
-                    sendToHexMind();
+                if (this.selectedModels.size === 0) {
+                    // Auto-select appropriate models based on content
+                    this.autoSelectModels(idea);
                 }
-            });
 
-            // Auto-resize
-            textarea.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 150) + 'px';
-            });
-        }
-            isMobile = window.innerWidth <= 768;
-            isTablet = window.innerWidth <= 1200 && window.innerWidth > 768;
-            
-        // Enhanced initialization with auto-fresh
-        window.addEventListener('load', function() {
-            isMobile = window.innerWidth <= 768;
-            isTablet = window.innerWidth <= 1200 && window.innerWidth > 768;
-            
-            showAchievement();
-            startEnergyMonitoring();
-            handleMobileInteractions();
-            initializeFreshHexMind();
-            setupBackupInput(); // Initialize backup input system
-            
-            // CRITICAL: Make functions globally available
-            window.sendToHexMind = sendToHexMind;
-            window.toggleInputMode = toggleInputMode;
-            window.copyCommand = copyCommand;
-            window.toggleFocusMode = toggleFocusMode;
-            window.openTool = openTool;
-            
-            // Add resize listener
-            window.addEventListener('resize', handleResize);
-            
-            // Prevent zoom on double tap for mobile
-            if (isMobile) {
-                let lastTouchEnd = 0;
-                document.addEventListener('touchend', function (event) {
-                    const now = (new Date()).getTime();
-                    if (now - lastTouchEnd <= 300) {
-                        event.preventDefault();
-                    }
-                    lastTouchEnd = now;
-                }, false);
-            }
-            
-            // Add manual refresh button functionality
-            const refreshButton = document.createElement('button');
-            refreshButton.innerHTML = '🔄 Fresh Start';
-            refreshButton.className = 'toggle-button';
-            refreshButton.style.margin = '10px 0';
-            refreshButton.onclick = function() {
-                location.reload();
-            };
-            
-            // Add refresh button to status panel
-            setTimeout(() => {
-                const statusPanel = document.querySelector('.status-panel');
-                if (statusPanel) {
-                    statusPanel.appendChild(refreshButton);
+                this.showProgress();
+                
+                try {
+                    const intent = await this.parser.analyze(idea);
+                    const prompts = await this.generatePrompts(intent, idea);
+                    this.displayResults(prompts);
+                    this.showToast('AI commands generated successfully!');
+                } catch (error) {
+                    this.log(`Error: ${error.message}`);
+                    this.showToast('Error generating commands. Check debug panel.', 'error');
+                } finally {
+                    this.hideProgress();
                 }
-            }, 1000);
-        });
+            }
 
-        function showAchievement() {
-            const achievement = document.getElementById('achievement');
-            setTimeout(() => {
-                achievement.classList.add('show');
-                setTimeout(() => {
-                    achievement.classList.remove('show');
-                }, 3000);
-            }, 1000);
-        }
+            autoSelectModels(idea) {
+                const keywords = idea.toLowerCase();
+                
+                // Auto-select based on content analysis
+                if (keywords.includes('code') || keywords.includes('programming') || keywords.includes('app')) {
+                    this.selectModel('copilot');
+                }
+                if (keywords.includes('research') || keywords.includes('analysis') || keywords.includes('study')) {
+                    this.selectModel('claude');
+                }
+                if (keywords.includes('creative') || keywords.includes('design') || keywords.includes('story')) {
+                    this.selectModel('gemini');
+                }
+                
+                // Default fallback
+                if (this.selectedModels.size === 0) {
+                    this.selectModel('gpt4');
+                }
+            }
 
-        function toggleFocusMode() {
-            const focusMode = document.getElementById('focus-mode');
-            focusMode.style.display = focusMode.style.display === 'flex' ? 'none' : 'flex';
-            
-            if (focusMode.style.display === 'flex') {
-                // Re-initialize Flowise in focus mode
-                setTimeout(() => {
-                    import("https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js").then(({ default: Chatbot }) => {
-                        Chatbot.init({
-                            chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
-                            apiHost: "https://cloud.flowiseai.com",
-                            chatflowConfig: {
-                                backgroundColor: "transparent"
-                            }
-                        })
+            selectModel(modelName) {
+                const card = document.querySelector(`[data-model="${modelName}"]`);
+                if (card && !this.selectedModels.has(modelName)) {
+                    this.selectedModels.add(modelName);
+                    card.classList.add('selected');
+                }
+            }
+
+            async generatePrompts(intent, idea) {
+                const prompts = [];
+                
+                for (const model of this.selectedModels) {
+                    const template = this.templates[model];
+                    const prompt = template.generatePrompt(intent, idea);
+                    
+                    prompts.push({
+                        model: model,
+                        title: template.title,
+                        content: prompt,
+                        instructions: template.instructions
                     });
-                }, 100);
-            }
-        }
-
-        function copyCommand(button) {
-            const commandText = button.parentElement.nextElementSibling.textContent;
-            navigator.clipboard.writeText(commandText).then(() => {
-                button.textContent = '✅ Copied!';
-                setTimeout(() => {
-                    button.innerHTML = '📋 Copy';
-                }, 1000);
-            });
-        }
-
-        function openTool(tool) {
-            switch(tool) {
-                case 'seed':
-                    addHistoryItem('Opened Seed Learning System');
-                    break;
-                case 'mechanic':
-                    addHistoryItem('Accessed Magic Mechanic AI');
-                    break;
-                case 'analytics':
-                    addHistoryItem('Reviewed Analytics Dashboard');
-                    break;
-                case 'settings':
-                    addHistoryItem('Opened Settings Panel');
-                    break;
-            }
-        }
-
-        function addHistoryItem(text) {
-            const history = document.getElementById('session-history');
-            const item = document.createElement('div');
-            item.className = 'history-item';
-            item.innerHTML = `
-                <div class="history-time">${new Date().toLocaleTimeString()}</div>
-                <div class="history-text">${text}</div>
-            `;
-            history.insertBefore(item, history.firstChild);
-            
-            // Keep only last 10 items
-            while (history.children.length > 10) {
-                history.removeChild(history.lastChild);
-            }
-        }
-
-        function startEnergyMonitoring() {
-            setInterval(() => {
-                // Simulate dynamic energy levels
-                const caffeine = document.getElementById('caffeine-level');
-                const focus = document.getElementById('focus-level');
-                const harmony = document.getElementById('harmony-level');
+                }
                 
-                // Add some realistic fluctuation
-                const time = Date.now() / 1000;
-                const caffeineLevel = Math.max(60, 85 + Math.sin(time / 300) * 15);
-                const focusLevel = Math.max(70, 92 + Math.sin(time / 200) * 10);
-                const harmonyLevel = Math.max(80, 96 + Math.sin(time / 400) * 5);
-                
-                caffeine.textContent = Math.round(caffeineLevel) + '%';
-                focus.textContent = Math.round(focusLevel) + '%';
-                harmony.textContent = Math.round(harmonyLevel) + '%';
-                
-                // Update meter bars
-                caffeine.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = caffeineLevel + '%';
-                focus.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = focusLevel + '%';
-                harmony.parentElement.nextElementSibling.querySelector('.meter-fill').style.width = harmonyLevel + '%';
-            }, 2000);
-        }
-
-        // Listen for successful orchestrations
-        document.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'hexmind-response') {
-                addHistoryItem('Orchestration Complete');
-                updateResearchOutput(event.data.commands);
+                return prompts;
             }
-        });
 
-        function updateResearchOutput(commands) {
-            const output = document.getElementById('research-output');
-            output.innerHTML = '';
-            
-            commands.forEach((command, index) => {
-                const div = document.createElement('div');
-                div.className = 'research-command';
-                div.innerHTML = `
-                    <div class="command-header">
-                        <div class="ai-model-tag">${command.model}</div>
-                        <button class="copy-button" onclick="copyCommand(this)">📋 Copy</button>
+            displayResults(prompts) {
+                const resultsSection = document.getElementById('resultsSection');
+                resultsSection.innerHTML = '';
+                
+                prompts.forEach((prompt, index) => {
+                    const card = this.createPromptCard(prompt, index);
+                    resultsSection.appendChild(card);
+                });
+                
+                // Update progress
+                this.updateProgress(prompts.length, prompts.length);
+            }
+
+            createPromptCard(prompt, index) {
+                const card = document.createElement('div');
+                card.className = 'prompt-card';
+                card.innerHTML = `
+                    <div class="prompt-header">
+                        <div class="prompt-title">
+                            ${this.getModelIcon(prompt.model)} ${prompt.title}
+                        </div>
+                        <button class="copy-btn" onclick="window.copyPromptHandler(${index})">
+                            📋 Copy
+                        </button>
                     </div>
-                    <div class="command-text">${command.text}</div>
+                    <div class="prompt-content">${prompt.content}</div>
                 `;
-                output.appendChild(div);
-            });
-        }
+                return card;
+            }
 
-        // Enhanced keyboard shortcuts for ADHD efficiency
-        document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey || event.metaKey) {
-                switch(event.key) {
-                    case 'f':
-                        event.preventDefault();
-                        toggleFocusMode();
-                        break;
-                    case '1':
-                        event.preventDefault();
-                        openTool('seed');
-                        break;
-                    case '2':
-                        event.preventDefault();
-                        openTool('mechanic');
-                        break;
+            getModelIcon(model) {
+                const icons = {
+                    claude: '🤖',
+                    gpt4: '🧠',
+                    gemini: '✨',
+                    copilot: '💻'
+                };
+                return icons[model] || '🤖';
+            }
+
+            async copyPrompt(index) {
+                const prompts = document.querySelectorAll('.prompt-content');
+                if (!prompts[index]) {
+                    this.log(`No prompt found at index ${index}`);
+                    return;
+                }
+                
+                const content = prompts[index].textContent;
+                
+                try {
+                    await this.copyToClipboard(content);
+                    this.showToast('Prompt copied to clipboard!');
+                    this.log('Prompt copied successfully');
+                } catch (error) {
+                    this.log(`Copy failed: ${error.message}`);
+                    this.showToast('Copy failed. Check debug panel.', 'error');
                 }
             }
+
+            async copyToClipboard(text) {
+                // Safari-compatible clipboard implementation
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                    return;
+                }
+                
+                // Fallback for older Safari
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'absolute';
+                textArea.style.left = '-9999px';
+                
+                document.body.appendChild(textArea);
+                
+                // iOS-specific selection
+                const range = document.createRange();
+                range.selectNodeContents(textArea);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                textArea.setSelectionRange(0, text.length);
+                
+                const success = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                if (!success) {
+                    throw new Error('Clipboard copy failed');
+                }
+            }
+
+            showProgress() {
+                document.getElementById('progressIndicator').style.display = 'block';
+                document.getElementById('taskProgress').style.display = 'block';
+                this.updateProgress(0, this.selectedModels.size);
+            }
+
+            hideProgress() {
+                document.getElementById('progressIndicator').style.display = 'none';
+            }
+
+            updateProgress(current, total) {
+                const percentage = total > 0 ? (current / total) * 100 : 0;
+                document.getElementById('progressFill').style.width = `${percentage}%`;
+                document.getElementById('progressText').textContent = `${current}/${total} tasks`;
+            }
+
+            showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.className = `toast ${type}`;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            clearAll() {
+                document.getElementById('ideaInput').value = '';
+                document.getElementById('resultsSection').innerHTML = '';
+                document.getElementById('taskProgress').style.display = 'none';
+                
+                // Clear model selections
+                this.selectedModels.clear();
+                document.querySelectorAll('.model-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                this.showToast('All cleared!');
+            }
+
+            detectCapabilities() {
+                const capabilities = {
+                    clipboard: !!navigator.clipboard,
+                    serviceWorker: 'serviceWorker' in navigator,
+                    indexedDB: 'indexedDB' in window,
+                    localStorage: this.isStorageAvailable(),
+                    touchDevice: 'ontouchstart' in window,
+                    iOS: /iPad|iPhone|iPod/.test(navigator.userAgent),
+                    standalone: window.navigator.standalone === true
+                };
+                
+                this.log('Device capabilities:', capabilities);
+                
+                // Update status based on capabilities
+                const status = document.getElementById('status');
+                if (capabilities.iOS) {
+                    if (capabilities.localStorage) {
+                        status.textContent = '📱 iOS Safari Ready';
+                        status.className = 'status online';
+                    } else {
+                        status.textContent = '📱 iOS Private Mode (Memory Only)';
+                        status.className = 'status offline';
+                    }
+                } else {
+                    status.textContent = '🌐 Mobile Optimized';
+                    status.className = 'status online';
+                }
+            }
+
+            saveToStorage() {
+                try {
+                    // Check if localStorage is available and accessible
+                    if (this.isStorageAvailable()) {
+                        const input = document.getElementById('ideaInput');
+                        if (input) {
+                            const idea = input.value;
+                            localStorage.setItem('hexmind_idea', idea);
+                            this.log('Saved to storage successfully');
+                        }
+                    } else {
+                        this.log('Storage not available, using memory only');
+                        this.memoryStorage = this.memoryStorage || {};
+                        const input = document.getElementById('ideaInput');
+                        if (input) {
+                            this.memoryStorage.idea = input.value;
+                        }
+                    }
+                } catch (error) {
+                    this.log(`Failed to save to storage: ${error.message}`);
+                    // Fallback to memory storage
+                    this.memoryStorage = this.memoryStorage || {};
+                    const input = document.getElementById('ideaInput');
+                    if (input) {
+                        this.memoryStorage.idea = input.value;
+                    }
+                }
+            }
+
+            loadFromStorage() {
+                try {
+                    let saved = null;
+                    
+                    if (this.isStorageAvailable()) {
+                        saved = localStorage.getItem('hexmind_idea');
+                        this.log('Loaded from localStorage');
+                    } else if (this.memoryStorage && this.memoryStorage.idea) {
+                        saved = this.memoryStorage.idea;
+                        this.log('Loaded from memory storage');
+                    }
+                    
+                    if (saved) {
+                        const input = document.getElementById('ideaInput');
+                        if (input) {
+                            input.value = saved;
+                            this.log('Restored saved idea');
+                        }
+                    }
+                } catch (error) {
+                    this.log(`Failed to load from storage: ${error.message}`);
+                }
+            }
+
+            isStorageAvailable() {
+                try {
+                    const test = '__storage_test__';
+                    localStorage.setItem(test, test);
+                    localStorage.removeItem(test);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            initializeTemplates() {
+                return {
+                    claude: new ClaudeTemplate(),
+                    gpt4: new GPT4Template(),
+                    gemini: new GeminiTemplate(),
+                    copilot: new CopilotTemplate()
+                };
+            }
+
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            log(message, data = null) {
+                if (this.debugMode) {
+                    const debugPanel = document.getElementById('debugPanel');
+                    const timestamp = new Date().toLocaleTimeString();
+                    const logEntry = `[${timestamp}] ${message}${data ? '\n' + JSON.stringify(data, null, 2) : ''}`;
+                    debugPanel.textContent += logEntry + '\n';
+                    debugPanel.scrollTop = debugPanel.scrollHeight;
+                }
+                console.log(message, data);
+            }
+        }
+
+        // AI Model Templates
+        class ClaudeTemplate {
+            constructor() {
+                this.title = 'Claude Sonnet 4 - Deep Analysis';
+                this.instructions = 'Use for comprehensive analysis and structured reasoning';
+            }
+
+            generatePrompt(intent, idea) {
+                return `<role>Expert Analyst and Researcher</role>
+<context>Deep analysis request for: ${idea}</context>
+
+<task>
+Conduct a comprehensive analysis of this topic with the following approach:
+
+1. **Initial Assessment**
+   - Break down the core components
+   - Identify key stakeholders and considerations
+   - Outline potential challenges and opportunities
+
+2. **Deep Dive Analysis**
+   - Research current best practices
+   - Analyze market trends and data
+   - Consider multiple perspectives and viewpoints
+
+3. **Structured Recommendations**
+   - Provide actionable next steps
+   - Include implementation timeline
+   - Suggest success metrics
+
+4. **Risk Assessment**
+   - Identify potential obstacles
+   - Suggest mitigation strategies
+   - Plan for contingencies
+</task>
+
+<output_format>
+Structure your response with clear headers, bullet points for key insights, and a executive summary at the end.
+</output_format>
+
+Please provide your comprehensive analysis of: ${idea}`;
+            }
+        }
+
+        class GPT4Template {
+            constructor() {
+                this.title = 'GPT-4 - Versatile Problem Solving';
+                this.instructions = 'Use for general problem-solving and creative thinking';
+            }
+
+            generatePrompt(intent, idea) {
+                return `You are an expert problem-solver and strategic thinker. I need your help with: ${idea}
+
+Please approach this systematically:
+
+**Understanding the Challenge:**
+- What are the core objectives?
+- What constraints or limitations exist?
+- Who are the key stakeholders?
+
+**Solution Development:**
+- Generate 3-5 potential approaches
+- Evaluate pros and cons of each
+- Recommend the best path forward
+
+**Implementation Plan:**
+- Break down into actionable steps
+- Identify required resources
+- Suggest timeline and milestones
+
+**Success Measurement:**
+- Define what success looks like
+- Suggest key performance indicators
+- Plan for iteration and improvement
+
+Please provide detailed, actionable advice for: ${idea}`;
+            }
+        }
+
+        class GeminiTemplate {
+            constructor() {
+                this.title = 'Gemini Pro - Creative Solutions';
+                this.instructions = 'Use for creative thinking and innovative approaches';
+            }
+
+            generatePrompt(intent, idea) {
+                return `🎨 CREATIVE INNOVATION SESSION 🎨
+
+Challenge: ${idea}
+
+I need you to think outside the box and provide innovative, creative solutions. Please approach this with:
+
+🌟 **Creative Exploration:**
+- What unconventional approaches could work?
+- How might we reframe this challenge differently?
+- What innovative solutions exist in other industries?
+
+💡 **Ideation Phase:**
+- Generate multiple creative concepts
+- Combine different ideas for hybrid solutions
+- Think about future-forward approaches
+
+🎯 **Practical Creativity:**
+- How can creative ideas be made actionable?
+- What resources would be needed?
+- How to test and iterate quickly?
+
+🚀 **Innovation Framework:**
+- Design thinking principles
+- Rapid prototyping strategies
+- User-centered design considerations
+
+Please provide creative, actionable solutions with implementation guidance for: ${idea}
+
+Focus on innovation, creativity, and practical application.`;
+            }
+        }
+
+        class CopilotTemplate {
+            constructor() {
+                this.title = 'GitHub Copilot - Code Generation';
+                this.instructions = 'Use for programming tasks and technical implementation';
+            }
+
+            generatePrompt(intent, idea) {
+                return `// Technical Implementation Request
+// Project: ${idea}
+
+/*
+CODING TASK BREAKDOWN:
+
+1. ARCHITECTURE PLANNING
+   - Define system architecture
+   - Choose appropriate technologies
+   - Plan data structures and APIs
+
+2. DEVELOPMENT PHASES
+   - Core functionality implementation
+   - User interface design
+   - Testing and validation
+
+3. BEST PRACTICES
+   - Clean, maintainable code
+   - Proper error handling
+   - Security considerations
+   - Performance optimization
+
+4. DEPLOYMENT STRATEGY
+   - Development environment setup
+   - Production deployment plan
+   - Monitoring and maintenance
+*/
+
+Please provide:
+- Technical architecture recommendations
+- Code examples and implementations
+- Best practices and patterns
+- Testing strategies
+- Deployment guidelines
+
+For the following project: ${idea}
+
+Include specific code examples, file structures, and implementation steps.`;
+            }
+        }
+
+        // Storage and parsing utilities
+        class PromptStorage {
+            async init() {
+                if ('indexedDB' in window) {
+                    return new Promise((resolve, reject) => {
+                        const request = indexedDB.open('HexMind', 1);
+                        
+                        request.onupgradeneeded = (event) => {
+                            const db = event.target.result;
+                            
+                            if (!db.objectStoreNames.contains('templates')) {
+                                const templateStore = db.createObjectStore('templates', { keyPath: 'id' });
+                                templateStore.createIndex('category', 'category', { unique: false });
+                            }
+                            
+                            if (!db.objectStoreNames.contains('history')) {
+                                db.createObjectStore('history', { keyPath: 'id', autoIncrement: true });
+                            }
+                        };
+                        
+                        request.onsuccess = () => {
+                            this.db = request.result;
+                            resolve();
+                        };
+                        
+                        request.onerror = () => reject(request.error);
+                    });
+                }
+                return Promise.resolve();
+            }
+        }
+
+        class IntentParser {
+            async analyze(text) {
+                const keywords = {
+                    research: ['research', 'study', 'analyze', 'investigation', 'data'],
+                    creative: ['creative', 'design', 'story', 'content', 'art', 'marketing'],
+                    technical: ['code', 'programming', 'app', 'software', 'system', 'technical'],
+                    business: ['business', 'strategy', 'plan', 'market', 'revenue', 'growth']
+                };
+                
+                const lowercaseText = text.toLowerCase();
+                const intent = {
+                    category: 'general',
+                    confidence: 0,
+                    keywords: []
+                };
+                
+                for (const [category, words] of Object.entries(keywords)) {
+                    const matches = words.filter(word => lowercaseText.includes(word));
+                    if (matches.length > intent.confidence) {
+                        intent.category = category;
+                        intent.confidence = matches.length;
+                        intent.keywords = matches;
+                    }
+                }
+                
+                return intent;
+            }
+        }
+
+        // Initialize app when page loads
+        let app;
+        
+        // Global functions for HTML onclick handlers
+        window.toggleDebug = function() {
+            if (!app) return;
+            const debugPanel = document.getElementById('debugPanel');
+            app.debugMode = !app.debugMode;
+            debugPanel.style.display = app.debugMode ? 'block' : 'none';
+            
+            if (app.debugMode) {
+                app.log('Debug mode enabled');
+            }
+        }
+
+        window.orchestrateAI = function() {
+            if (!app) return;
+            app.orchestrateAI();
+        }
+
+        window.clearAll = function() {
+            if (!app) return;
+            app.clearAll();
+        }
+
+        window.copyPromptHandler = function(index) {
+            if (!app) return;
+            app.copyPrompt(index);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                app = new HexMindOrchestrator();
+                app.loadFromStorage();
+            } catch (error) {
+                console.error('Failed to initialize HexMind:', error);
+            }
         });
+
+        // PWA capabilities - only register if not in private mode
+        if ('serviceWorker' in navigator && window.isSecureContext) {
+            window.addEventListener('load', () => {
+                // Check if we can use storage before registering SW
+                try {
+                    const test = '__sw_test__';
+                    localStorage.setItem(test, test);
+                    localStorage.removeItem(test);
+                    
+                    navigator.serviceWorker.register('/sw.js')
+                        .then((registration) => {
+                            console.log('SW registered: ', registration);
+                        })
+                        .catch((registrationError) => {
+                            console.log('SW registration failed: ', registrationError);
+                        });
+                } catch (e) {
+                    console.log('Private browsing mode detected, skipping SW registration');
+                }
+            });
+        }
     </script>
 </body>
 </html>
