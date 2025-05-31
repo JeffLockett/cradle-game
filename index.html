@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>HexMind AI Orchestrator</title>
-    
+    <title>HexMind Command Center - Sacred Artist Jeff's AI Orchestration Hub</title>
     <style>
         * {
             margin: 0;
@@ -15,98 +14,283 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e, #0f3460);
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-            font-size: 16px; /* Prevents zoom on focus in Safari */
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            margin-top: 20px;
+        /* Sacred Energy Background Animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 105, 180, 0.05) 0%, transparent 50%);
+            animation: energyPulse 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes energyPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .command-center {
+            display: grid;
+            grid-template-areas: 
+                "header header header"
+                "status orchestrator output"
+                "tools orchestrator history";
+            grid-template-columns: 250px 1fr 300px;
+            grid-template-rows: 80px 1fr 200px;
+            height: 100vh;
+            gap: 15px;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
         }
 
         .header {
+            grid-area: header;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4ecdc4, #ffd700, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+        }
+
+        .logo .sacred-symbol {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #4ecdc4, #ffd700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .power-level {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .advancement-badge {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        }
+
+        .ai-spirits {
+            display: flex;
+            gap: 5px;
+        }
+
+        .spirit-orb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .spirit-orb:nth-child(odd) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .status-panel {
+            grid-area: status;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-title {
+            color: #4ecdc4;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
             text-align: center;
-            margin-bottom: 30px;
         }
 
-        .header h1 {
-            color: #2d3748;
-            font-size: 2rem;
-            margin-bottom: 10px;
+        .energy-meter {
+            margin: 15px 0;
         }
 
-        .status {
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-weight: 500;
-            margin-bottom: 20px;
-            text-align: center;
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
         }
 
-        .status.online {
-            background: #c6f6d5;
-            color: #22543d;
+        .meter-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
         }
 
-        .status.offline {
-            background: #fed7d7;
-            color: #742a2a;
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            position: relative;
         }
 
-        .input-section {
-            margin-bottom: 30px;
-        }
-
-        .input-label {
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .idea-input {
+        .meter-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            min-height: 120px;
-            padding: 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 16px;
-            resize: vertical;
-            transition: border-color 0.3s ease;
-            -webkit-overflow-scrolling: touch;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: scan 2s ease-in-out infinite;
         }
 
-        .idea-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .focus-mode-toggle {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .toggle-button {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .toggle-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+        }
+
+        .orchestrator-panel {
+            grid-area: orchestrator;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 0;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(78, 205, 196, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .orchestrator-header {
+            background: linear-gradient(45deg, rgba(78, 205, 196, 0.2), rgba(68, 160, 141, 0.2));
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .orchestrator-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin-bottom: 5px;
+        }
+
+        .orchestrator-subtitle {
+            font-size: 0.9em;
+            color: #a8b2d1;
+            font-style: italic;
+        }
+
+        .ai-model-selection {
+            padding: 15px;
+            background: rgba(78, 205, 196, 0.05);
+            border-bottom: 1px solid rgba(78, 205, 196, 0.2);
+        }
+
+        .models-title {
+            color: #4ecdc4;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
         .ai-models {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
         }
 
         .model-card {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-height: 44px; /* Apple minimum touch target */
+            min-height: 44px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -114,129 +298,128 @@
         }
 
         .model-card.selected {
-            border-color: #667eea;
-            background: #f7fafc;
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.2);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
         }
 
         .model-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .model-name {
             font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 5px;
+            color: #ffffff;
+            margin-bottom: 2px;
+            font-size: 0.8em;
         }
 
         .model-specialty {
-            font-size: 0.8rem;
-            color: #718096;
+            font-size: 0.7em;
+            color: #a8b2d1;
+        }
+
+        .input-container {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #4ecdc4;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .mode-indicator {
+            background: rgba(78, 205, 196, 0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .idea-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 80px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .idea-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .idea-input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
         }
 
         .action-buttons {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
         }
 
         .btn {
-            padding: 15px 20px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             min-height: 44px;
             touch-action: manipulation;
+            padding: 12px 20px;
         }
 
         .btn-primary {
-            background: #667eea;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #5a67d8;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
         }
 
         .btn-secondary {
-            background: #e2e8f0;
-            color: #2d3748;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn-secondary:hover {
-            background: #cbd5e0;
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
-        }
-
-        .results-section {
-            margin-top: 30px;
-        }
-
-        .prompt-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .prompt-header {
-            background: #f7fafc;
-            padding: 15px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .prompt-title {
-            font-weight: 600;
-            color: #2d3748;
-        }
-
-        .copy-btn {
-            background: #48bb78;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            min-height: 44px;
-            min-width: 44px;
-            touch-action: manipulation;
-        }
-
-        .copy-btn:hover {
-            background: #38a169;
-        }
-
-        .prompt-content {
-            padding: 15px;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            background: #f8f9fa;
-            white-space: pre-wrap;
-            word-wrap: break-word;
         }
 
         .progress-indicator {
             display: none;
-            text-align: center;
             padding: 20px;
+            text-align: center;
+            color: #4ecdc4;
         }
 
         .spinner {
-            border: 3px solid #e2e8f0;
-            border-top: 3px solid #667eea;
+            border: 3px solid rgba(78, 205, 196, 0.3);
+            border-top: 3px solid #4ecdc4;
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -249,22 +432,299 @@
             100% { transform: rotate(360deg); }
         }
 
+        .output-panel {
+            grid-area: output;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            overflow-y: auto;
+        }
+
+        .output-title {
+            color: #ffd700;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .research-command {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .command-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ai-model-tag {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .copy-button {
+            background: rgba(78, 205, 196, 0.8);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        .copy-button:hover {
+            background: rgba(78, 205, 196, 1);
+            transform: scale(1.05);
+        }
+
+        .command-text {
+            color: #ffffff;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .tools-panel {
+            grid-area: tools;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tools-title {
+            color: #a8b2d1;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .tool-button {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9em;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .tool-button:hover {
+            background: linear-gradient(45deg, rgba(78, 205, 196, 0.3), rgba(68, 160, 141, 0.3));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.2);
+        }
+
+        .history-panel {
+            grid-area: history;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+        }
+
+        .history-title {
+            color: #a8b2d1;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 8px 0;
+            border-left: 3px solid #4ecdc4;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .history-item:hover {
+            background: rgba(78, 205, 196, 0.1);
+            transform: translateX(5px);
+        }
+
+        .history-time {
+            font-size: 0.8em;
+            color: #4ecdc4;
+            margin-bottom: 5px;
+        }
+
+        .history-text {
+            font-size: 0.9em;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ADHD Focus Mode */
+        .focus-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .focus-container {
+            width: 80%;
+            max-width: 800px;
+            height: 80%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            border: 2px solid #4ecdc4;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .focus-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #4ecdc4;
+            font-size: 2em;
+            cursor: pointer;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        .focus-input-area {
+            padding: 20px 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .focus-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(78, 205, 196, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 18px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .focus-input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            top: calc(env(safe-area-inset-top) + 20px);
+            right: 20px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        }
+
+        /* Achievement Notifications */
+        .achievement {
+            position: fixed;
+            top: calc(env(safe-area-inset-top) + 70px);
+            right: 20px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            transform: translateX(300px);
+            transition: transform 0.5s ease;
+            z-index: 2000;
+        }
+
+        .achievement.show {
+            transform: translateX(0);
+        }
+
+        /* Debug Panel */
         .debug-panel {
-            background: #1a202c;
-            color: #e2e8f0;
+            background: rgba(0, 0, 0, 0.9);
+            color: #4ecdc4;
             padding: 15px;
             border-radius: 12px;
             margin-top: 20px;
             font-family: 'Monaco', 'Consolas', monospace;
             font-size: 12px;
             display: none;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid rgba(78, 205, 196, 0.3);
         }
 
         .debug-toggle {
             position: fixed;
-            bottom: 20px;
+            bottom: calc(env(safe-area-inset-bottom) + 20px);
             right: 20px;
-            background: #2d3748;
+            background: rgba(78, 205, 196, 0.8);
             color: white;
             border: none;
             border-radius: 50%;
@@ -272,135 +732,459 @@
             height: 50px;
             font-size: 20px;
             cursor: pointer;
+            z-index: 1500;
+            touch-action: manipulation;
         }
 
-        /* ADHD-friendly visual cues */
-        .task-progress {
-            margin: 20px 0;
-            background: #f7fafc;
-            border-radius: 12px;
-            padding: 15px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #48bb78, #38a169);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        /* Toast notifications */
-        .toast {
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            background: #48bb78;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-        }
-
-        .toast.show {
-            transform: translateX(0);
+        /* Mobile Responsive Design */
+        @media (max-width: 1200px) {
+            .command-center {
+                grid-template-areas: 
+                    "header header"
+                    "orchestrator status"
+                    "orchestrator output"
+                    "tools history";
+                grid-template-columns: 1fr 280px;
+                grid-template-rows: 70px 1fr 280px 180px;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 0 20px;
+            }
+            
+            .logo h1 {
+                font-size: 1.5em;
+            }
         }
 
         @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                padding: 15px;
+            body {
+                overflow-y: auto;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .command-center {
+                grid-template-areas: 
+                    "header"
+                    "orchestrator"
+                    "output"
+                    "status"
+                    "tools"
+                    "history";
+                grid-template-columns: 1fr;
+                grid-template-rows: 60px auto auto auto auto auto;
+                gap: 10px;
+                padding: 10px;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .header {
+                padding: 0 15px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2em;
+            }
+            
+            .logo .sacred-symbol {
+                width: 35px;
+                height: 35px;
+                font-size: 1.2em;
+            }
+            
+            .advancement-badge {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+            
+            .orchestrator-panel {
+                min-height: auto;
             }
             
             .ai-models {
                 grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            
+            .model-card {
+                padding: 10px 8px;
+            }
+            
+            .model-name {
+                font-size: 0.75em;
+            }
+            
+            .model-specialty {
+                font-size: 0.65em;
+            }
+            
+            .input-container {
+                min-height: 200px;
+            }
+            
+            .idea-input {
+                min-height: 100px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .status-panel,
+            .output-panel,
+            .tools-panel,
+            .history-panel {
+                min-height: auto;
+                height: auto;
+            }
+            
+            .tool-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            
+            .tool-button {
+                padding: 12px 8px;
+                font-size: 0.8em;
+            }
+            
+            .focus-container {
+                width: 95%;
+                height: 90%;
+                margin: 5vh auto;
+            }
+            
+            .focus-close {
+                font-size: 2.5em;
             }
             
             .action-buttons {
                 grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .command-center {
+                padding: 8px;
+                gap: 8px;
+            }
+            
+            .header {
+                padding: 0 10px;
+            }
+            
+            .logo h1 {
+                font-size: 1em;
+            }
+            
+            .logo .sacred-symbol {
+                width: 30px;
+                height: 30px;
+                font-size: 1em;
+            }
+            
+            .advancement-badge {
+                padding: 4px 8px;
+                font-size: 0.7em;
+            }
+            
+            .ai-spirits {
+                gap: 3px;
+            }
+            
+            .spirit-orb {
+                width: 8px;
+                height: 8px;
+            }
+            
+            .orchestrator-header {
+                padding: 10px;
+            }
+            
+            .orchestrator-title {
+                font-size: 1.1em;
+            }
+            
+            .orchestrator-subtitle {
+                font-size: 0.8em;
+            }
+            
+            .ai-models {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            
+            .model-card {
+                padding: 8px 6px;
+            }
+            
+            .model-name {
+                font-size: 0.7em;
+            }
+            
+            .model-specialty {
+                font-size: 0.6em;
+            }
+            
+            .status-panel,
+            .output-panel,
+            .tools-panel,
+            .history-panel {
+                padding: 15px;
+            }
+            
+            .tool-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            
+            .tool-button {
+                padding: 10px 6px;
+                font-size: 0.75em;
+            }
+            
+            .research-command {
+                padding: 12px;
+                margin: 8px 0;
+            }
+            
+            .copy-button {
+                padding: 4px 8px;
+                font-size: 0.7em;
+            }
+            
+            .ai-model-tag {
+                padding: 3px 6px;
+                font-size: 0.7em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .logo h1 {
+                display: none;
+            }
+            
+            .logo .sacred-symbol {
+                margin: 0 auto;
+            }
+            
+            .ai-models {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+            }
+            
+            .model-card {
+                padding: 6px 4px;
+            }
+            
+            .tool-grid {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+            
+            .tool-button {
+                padding: 8px;
+                font-size: 0.7em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🧠 HexMind AI Orchestrator</h1>
-            <div id="status" class="status offline">
-                📱 Mobile-Optimized Mode
+    <div class="command-center">
+        <header class="header">
+            <div class="logo">
+                <div class="sacred-symbol">🌟</div>
+                <h1>HexMind Command Center</h1>
+            </div>
+            <div class="power-level">
+                <div class="advancement-badge">Sage Level</div>
+                <div class="ai-spirits">
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                    <div class="spirit-orb"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="status-panel">
+            <div class="status-title">Sacred Artist Status</div>
+            
+            <div class="energy-meter">
+                <div class="meter-label">
+                    <span>Caffeine Level</span>
+                    <span id="caffeine-level">85%</span>
+                </div>
+                <div class="meter-bar">
+                    <div class="meter-fill" id="caffeine-bar" style="width: 85%"></div>
+                </div>
+            </div>
+
+            <div class="energy-meter">
+                <div class="meter-label">
+                    <span>ADHD Focus</span>
+                    <span id="focus-level">92%</span>
+                </div>
+                <div class="meter-bar">
+                    <div class="meter-fill" id="focus-bar" style="width: 92%"></div>
+                </div>
+            </div>
+
+            <div class="energy-meter">
+                <div class="meter-label">
+                    <span>AI Harmony</span>
+                    <span id="harmony-level">96%</span>
+                </div>
+                <div class="meter-bar">
+                    <div class="meter-fill" id="harmony-bar" style="width: 96%"></div>
+                </div>
+            </div>
+
+            <div class="focus-mode-toggle">
+                <button class="toggle-button" onclick="window.toggleFocusMode()">
+                    ⚡ Focus Mode
+                </button>
+            </div>
+
+            <div id="debug-panel" class="debug-panel">
+                <div>🎵 HexMind Debug Console</div>
             </div>
         </div>
 
-        <div class="input-section">
-            <label class="input-label" for="ideaInput">
-                💡 Describe your idea or project:
-            </label>
-            <textarea 
-                id="ideaInput" 
-                class="idea-input" 
-                placeholder="e.g., I want to research sustainable energy solutions for small businesses and create a presentation..."
-            ></textarea>
-        </div>
-
-        <div class="task-progress" id="taskProgress" style="display: none;">
-            <div>Progress: <span id="progressText">0/0 tasks</span></div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
+        <div class="orchestrator-panel">
+            <div class="orchestrator-header">
+                <div class="orchestrator-title">🎵 HexMind Orchestrator</div>
+                <div class="orchestrator-subtitle">Your AI Research Conductor</div>
+            </div>
+            
+            <div class="ai-model-selection">
+                <div class="models-title">Select AI Models:</div>
+                <div class="ai-models">
+                    <div class="model-card" data-model="claude">
+                        <div class="model-name">Claude Sonnet 4</div>
+                        <div class="model-specialty">Deep Analysis</div>
+                    </div>
+                    <div class="model-card" data-model="gpt4">
+                        <div class="model-name">GPT-4</div>
+                        <div class="model-specialty">Versatile Tasks</div>
+                    </div>
+                    <div class="model-card" data-model="gemini">
+                        <div class="model-name">Gemini Pro</div>
+                        <div class="model-specialty">Creative Solutions</div>
+                    </div>
+                    <div class="model-card" data-model="copilot">
+                        <div class="model-name">GitHub Copilot</div>
+                        <div class="model-specialty">Code Generation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <div class="input-header">
+                    <span>💡 Share Your Idea:</span>
+                    <div class="mode-indicator" id="status-indicator">Mobile Optimized</div>
+                </div>
+                
+                <textarea 
+                    id="ideaInput" 
+                    class="idea-input" 
+                    placeholder="e.g., I want to research sustainable energy solutions for small businesses and create a presentation..."
+                ></textarea>
+                
+                <div class="progress-indicator" id="progressIndicator">
+                    <div class="spinner"></div>
+                    <div>Orchestrating your AI research commands...</div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="window.orchestrateAI()">
+                        🚀 Generate AI Commands
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.clearAll()">
+                        🔄 Clear
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="ai-models">
-            <div class="model-card" data-model="claude">
-                <div class="model-name">Claude Sonnet 4</div>
-                <div class="model-specialty">Deep Analysis</div>
-            </div>
-            <div class="model-card" data-model="gpt4">
-                <div class="model-name">GPT-4</div>
-                <div class="model-specialty">Versatile Tasks</div>
-            </div>
-            <div class="model-card" data-model="gemini">
-                <div class="model-name">Gemini Pro</div>
-                <div class="model-specialty">Creative Solutions</div>
-            </div>
-            <div class="model-card" data-model="copilot">
-                <div class="model-name">GitHub Copilot</div>
-                <div class="model-specialty">Code Generation</div>
+        <div class="output-panel">
+            <div class="output-title">🎯 Research Commands</div>
+            <div id="research-output">
+                <div class="research-command">
+                    <div class="command-header">
+                        <div class="ai-model-tag">HexMind Ready</div>
+                        <button class="copy-button" onclick="window.copyCommand(this)">📋 Copy</button>
+                    </div>
+                    <div class="command-text">Awaiting your first idea to orchestrate into AI research commands...</div>
+                </div>
             </div>
         </div>
 
-        <div class="action-buttons">
-            <button class="btn btn-primary" onclick="orchestrateAI()">
-                🚀 Generate AI Commands
-            </button>
-            <button class="btn btn-secondary" onclick="clearAll()">
-                🔄 Clear All
-            </button>
+        <div class="tools-panel">
+            <div class="tools-title">🛠️ Sacred Tools</div>
+            <div class="tool-grid">
+                <button class="tool-button" onclick="window.openTool('seed')">
+                    🌱<br>Seed Learning
+                </button>
+                <button class="tool-button" onclick="window.openTool('mechanic')">
+                    🔧<br>Magic Mechanic
+                </button>
+                <button class="tool-button" onclick="window.openTool('analytics')">
+                    📊<br>Analytics
+                </button>
+                <button class="tool-button" onclick="window.openTool('settings')">
+                    ⚙️<br>Settings
+                </button>
+            </div>
         </div>
 
-        <div class="progress-indicator" id="progressIndicator">
-            <div class="spinner"></div>
-            <div>Analyzing your idea and generating prompts...</div>
+        <div class="history-panel">
+            <div class="history-title">📚 Session History</div>
+            <div id="session-history">
+                <div class="history-item">
+                    <div class="history-time">Session Start</div>
+                    <div class="history-text">HexMind Orchestrator Initialized</div>
+                </div>
+            </div>
         </div>
-
-        <div class="results-section" id="resultsSection"></div>
     </div>
 
-    <button class="debug-toggle" onclick="toggleDebug()">🐛</button>
-    <div class="debug-panel" id="debugPanel"></div>
+    <!-- Focus Mode Overlay -->
+    <div class="focus-mode" id="focus-mode">
+        <div class="focus-container">
+            <button class="focus-close" onclick="window.toggleFocusMode()">×</button>
+            <div class="focus-input-area">
+                <h2 style="color: #4ecdc4; text-align: center; margin-bottom: 20px;">🎯 ADHD Focus Mode</h2>
+                <textarea 
+                    id="focus-input" 
+                    class="focus-input" 
+                    placeholder="In focus mode, type your idea with zero distractions..."
+                ></textarea>
+                <button class="btn btn-primary" onclick="window.processFocusInput()" style="align-self: center; max-width: 300px;">
+                    ⚡ Process Idea
+                </button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
 
+    <!-- Achievement Notification -->
+    <div class="achievement" id="achievement">
+        🏆 Achievement Unlocked: HexMind Conductor!
+    </div>
+
+    <!-- Debug Toggle Button -->
+    <button class="debug-toggle" onclick="window.toggleDebug()">🐛</button>
+
     <script>
-        // HexMind AI Orchestrator - Main Application
+        // Sacred Artist Jeff's HexMind Command Center - Enhanced Implementation
         class HexMindOrchestrator {
             constructor() {
                 this.selectedModels = new Set();
@@ -408,16 +1192,24 @@
                 this.storage = new PromptStorage();
                 this.parser = new IntentParser();
                 this.debugMode = false;
-                this.memoryStorage = {}; // Fallback for when localStorage isn't available
+                this.memoryStorage = {};
+                this.sessionId = this.generateSessionId();
                 
                 this.init();
+            }
+
+            generateSessionId() {
+                return 'hexmind_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             }
 
             async init() {
                 this.attachEventListeners();
                 await this.storage.init();
                 this.detectCapabilities();
-                this.log('HexMind initialized successfully');
+                this.startEnergyMonitoring();
+                this.loadFromStorage();
+                this.log('🎵 HexMind Orchestrator Initialized - Session: ' + this.sessionId);
+                this.showAchievement('🎵 HexMind Command Center Activated!');
             }
 
             attachEventListeners() {
@@ -427,8 +1219,60 @@
                 });
 
                 // Auto-save input
-                document.getElementById('ideaInput').addEventListener('input', 
-                    this.debounce(() => this.saveToStorage(), 1000));
+                const ideaInput = document.getElementById('ideaInput');
+                if (ideaInput) {
+                    ideaInput.addEventListener('input', 
+                        this.debounce(() => this.saveToStorage(), 1000));
+                    
+                    // Enhanced keyboard shortcuts
+                    ideaInput.addEventListener('keydown', (e) => {
+                        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                            e.preventDefault();
+                            this.orchestrateAI();
+                        }
+                    });
+                }
+
+                // Focus mode input
+                const focusInput = document.getElementById('focus-input');
+                if (focusInput) {
+                    focusInput.addEventListener('keydown', (e) => {
+                        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                            e.preventDefault();
+                            this.processFocusInput();
+                        }
+                    });
+                }
+
+                // Enhanced mobile touch handling
+                this.setupMobileOptimizations();
+            }
+
+            setupMobileOptimizations() {
+                if (this.isMobile()) {
+                    // Prevent zoom on double tap
+                    let lastTouchEnd = 0;
+                    document.addEventListener('touchend', (event) => {
+                        const now = (new Date()).getTime();
+                        if (now - lastTouchEnd <= 300) {
+                            event.preventDefault();
+                        }
+                        lastTouchEnd = now;
+                    }, false);
+
+                    // Add haptic feedback for interactions
+                    document.querySelectorAll('.model-card, .btn, .tool-button').forEach(element => {
+                        element.addEventListener('touchstart', () => {
+                            if (navigator.vibrate) {
+                                navigator.vibrate(10);
+                            }
+                        });
+                    });
+                }
+            }
+
+            isMobile() {
+                return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             }
 
             toggleModel(card) {
@@ -443,6 +1287,7 @@
                 }
                 
                 this.log(`Model ${model} ${this.selectedModels.has(model) ? 'selected' : 'deselected'}`);
+                this.addHistoryItem(`${this.selectedModels.has(model) ? 'Selected' : 'Deselected'} ${model}`);
             }
 
             async orchestrateAI() {
@@ -454,17 +1299,18 @@
                 }
 
                 if (this.selectedModels.size === 0) {
-                    // Auto-select appropriate models based on content
                     this.autoSelectModels(idea);
                 }
 
                 this.showProgress();
+                this.addHistoryItem(`Processing: ${idea.substring(0, 30)}...`);
                 
                 try {
                     const intent = await this.parser.analyze(idea);
                     const prompts = await this.generatePrompts(intent, idea);
                     this.displayResults(prompts);
                     this.showToast('AI commands generated successfully!');
+                    this.showAchievement('🎯 Orchestration Complete!');
                 } catch (error) {
                     this.log(`Error: ${error.message}`);
                     this.showToast('Error generating commands. Check debug panel.', 'error');
@@ -475,6 +1321,12 @@
 
             autoSelectModels(idea) {
                 const keywords = idea.toLowerCase();
+                
+                // Clear existing selections for auto-selection
+                this.selectedModels.clear();
+                document.querySelectorAll('.model-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
                 
                 // Auto-select based on content analysis
                 if (keywords.includes('code') || keywords.includes('programming') || keywords.includes('app')) {
@@ -487,10 +1339,11 @@
                     this.selectModel('gemini');
                 }
                 
-                // Default fallback
-                if (this.selectedModels.size === 0) {
-                    this.selectModel('gpt4');
-                }
+                // Always include GPT-4 for versatility
+                this.selectModel('gpt4');
+                
+                this.log('Auto-selected models based on content analysis');
+                this.addHistoryItem('Auto-selected AI models');
             }
 
             selectModel(modelName) {
@@ -520,31 +1373,39 @@
             }
 
             displayResults(prompts) {
-                const resultsSection = document.getElementById('resultsSection');
-                resultsSection.innerHTML = '';
+                const outputPanel = document.getElementById('research-output');
+                outputPanel.innerHTML = '';
                 
+                // Add user's original idea first
+                const ideaCard = this.createPromptCard({
+                    model: 'user',
+                    title: 'Your Original Idea',
+                    content: document.getElementById('ideaInput').value.trim()
+                }, -1);
+                outputPanel.appendChild(ideaCard);
+                
+                // Add AI model prompts
                 prompts.forEach((prompt, index) => {
                     const card = this.createPromptCard(prompt, index);
-                    resultsSection.appendChild(card);
+                    outputPanel.appendChild(card);
                 });
                 
-                // Update progress
-                this.updateProgress(prompts.length, prompts.length);
+                this.addHistoryItem(`Generated ${prompts.length} AI commands`);
             }
 
             createPromptCard(prompt, index) {
                 const card = document.createElement('div');
-                card.className = 'prompt-card';
+                card.className = 'research-command';
                 card.innerHTML = `
-                    <div class="prompt-header">
-                        <div class="prompt-title">
+                    <div class="command-header">
+                        <div class="ai-model-tag">
                             ${this.getModelIcon(prompt.model)} ${prompt.title}
                         </div>
-                        <button class="copy-btn" onclick="window.copyPromptHandler(${index})">
+                        <button class="copy-button" onclick="window.copyPromptHandler(${index})">
                             📋 Copy
                         </button>
                     </div>
-                    <div class="prompt-content">${prompt.content}</div>
+                    <div class="command-text">${prompt.content}</div>
                 `;
                 return card;
             }
@@ -554,13 +1415,14 @@
                     claude: '🤖',
                     gpt4: '🧠',
                     gemini: '✨',
-                    copilot: '💻'
+                    copilot: '💻',
+                    user: '💡'
                 };
-                return icons[model] || '🤖';
+                return icons[model] || '🎵';
             }
 
             async copyPrompt(index) {
-                const prompts = document.querySelectorAll('.prompt-content');
+                const prompts = document.querySelectorAll('.command-text');
                 if (!prompts[index]) {
                     this.log(`No prompt found at index ${index}`);
                     return;
@@ -572,6 +1434,7 @@
                     await this.copyToClipboard(content);
                     this.showToast('Prompt copied to clipboard!');
                     this.log('Prompt copied successfully');
+                    this.addHistoryItem('Copied prompt to clipboard');
                 } catch (error) {
                     this.log(`Copy failed: ${error.message}`);
                     this.showToast('Copy failed. Check debug panel.', 'error');
@@ -590,15 +1453,13 @@
                 textArea.value = text;
                 textArea.style.position = 'absolute';
                 textArea.style.left = '-9999px';
+                textArea.style.opacity = '0';
                 
                 document.body.appendChild(textArea);
                 
                 // iOS-specific selection
-                const range = document.createRange();
-                range.selectNodeContents(textArea);
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
+                textArea.focus();
+                textArea.select();
                 textArea.setSelectionRange(0, text.length);
                 
                 const success = document.execCommand('copy');
@@ -610,36 +1471,60 @@
             }
 
             showProgress() {
-                document.getElementById('progressIndicator').style.display = 'block';
-                document.getElementById('taskProgress').style.display = 'block';
-                this.updateProgress(0, this.selectedModels.size);
+                const indicator = document.getElementById('progressIndicator');
+                if (indicator) {
+                    indicator.style.display = 'block';
+                }
             }
 
             hideProgress() {
-                document.getElementById('progressIndicator').style.display = 'none';
-            }
-
-            updateProgress(current, total) {
-                const percentage = total > 0 ? (current / total) * 100 : 0;
-                document.getElementById('progressFill').style.width = `${percentage}%`;
-                document.getElementById('progressText').textContent = `${current}/${total} tasks`;
+                const indicator = document.getElementById('progressIndicator');
+                if (indicator) {
+                    indicator.style.display = 'none';
+                }
             }
 
             showToast(message, type = 'success') {
                 const toast = document.getElementById('toast');
-                toast.textContent = message;
-                toast.className = `toast ${type}`;
-                toast.classList.add('show');
-                
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
+                if (toast) {
+                    toast.textContent = message;
+                    toast.className = `toast ${type}`;
+                    toast.classList.add('show');
+                    
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 3000);
+                }
+            }
+
+            showAchievement(message) {
+                const achievement = document.getElementById('achievement');
+                if (achievement) {
+                    achievement.textContent = message;
+                    achievement.classList.add('show');
+                    
+                    setTimeout(() => {
+                        achievement.classList.remove('show');
+                    }, 3000);
+                }
             }
 
             clearAll() {
-                document.getElementById('ideaInput').value = '';
-                document.getElementById('resultsSection').innerHTML = '';
-                document.getElementById('taskProgress').style.display = 'none';
+                const ideaInput = document.getElementById('ideaInput');
+                const outputPanel = document.getElementById('research-output');
+                
+                if (ideaInput) ideaInput.value = '';
+                if (outputPanel) {
+                    outputPanel.innerHTML = `
+                        <div class="research-command">
+                            <div class="command-header">
+                                <div class="ai-model-tag">HexMind Ready</div>
+                                <button class="copy-button" onclick="window.copyCommand(this)">📋 Copy</button>
+                            </div>
+                            <div class="command-text">Ready for your next idea to orchestrate...</div>
+                        </div>
+                    `;
+                }
                 
                 // Clear model selections
                 this.selectedModels.clear();
@@ -648,6 +1533,43 @@
                 });
                 
                 this.showToast('All cleared!');
+                this.addHistoryItem('Cleared all inputs and selections');
+            }
+
+            toggleFocusMode() {
+                const focusMode = document.getElementById('focus-mode');
+                const isShowing = focusMode.style.display === 'flex';
+                
+                if (isShowing) {
+                    focusMode.style.display = 'none';
+                    document.body.style.overflow = this.isMobile() ? 'auto' : 'hidden';
+                } else {
+                    focusMode.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Focus on the input
+                    setTimeout(() => {
+                        const focusInput = document.getElementById('focus-input');
+                        if (focusInput) {
+                            focusInput.focus();
+                        }
+                    }, 100);
+                }
+                
+                this.addHistoryItem(`${isShowing ? 'Exited' : 'Entered'} Focus Mode`);
+            }
+
+            processFocusInput() {
+                const focusInput = document.getElementById('focus-input');
+                const mainInput = document.getElementById('ideaInput');
+                
+                if (focusInput && mainInput && focusInput.value.trim()) {
+                    mainInput.value = focusInput.value.trim();
+                    this.toggleFocusMode();
+                    this.orchestrateAI();
+                } else {
+                    this.showToast('Please enter an idea in focus mode first!', 'error');
+                }
             }
 
             detectCapabilities() {
@@ -663,48 +1585,38 @@
                 
                 this.log('Device capabilities:', capabilities);
                 
-                // Update status based on capabilities
-                const status = document.getElementById('status');
-                if (capabilities.iOS) {
-                    if (capabilities.localStorage) {
-                        status.textContent = '📱 iOS Safari Ready';
-                        status.className = 'status online';
+                // Update status indicator
+                const statusIndicator = document.getElementById('status-indicator');
+                if (statusIndicator) {
+                    if (capabilities.iOS) {
+                        if (capabilities.localStorage) {
+                            statusIndicator.textContent = 'iOS Safari Ready';
+                        } else {
+                            statusIndicator.textContent = 'iOS Private Mode';
+                        }
+                    } else if (capabilities.touchDevice) {
+                        statusIndicator.textContent = 'Mobile Optimized';
                     } else {
-                        status.textContent = '📱 iOS Private Mode (Memory Only)';
-                        status.className = 'status offline';
+                        statusIndicator.textContent = 'Desktop Mode';
                     }
-                } else {
-                    status.textContent = '🌐 Mobile Optimized';
-                    status.className = 'status online';
                 }
             }
 
             saveToStorage() {
                 try {
-                    // Check if localStorage is available and accessible
                     if (this.isStorageAvailable()) {
-                        const input = document.getElementById('ideaInput');
-                        if (input) {
-                            const idea = input.value;
-                            localStorage.setItem('hexmind_idea', idea);
-                            this.log('Saved to storage successfully');
+                        const ideaInput = document.getElementById('ideaInput');
+                        if (ideaInput) {
+                            localStorage.setItem('hexmind_idea', ideaInput.value);
+                            this.log('Saved to localStorage successfully');
                         }
                     } else {
-                        this.log('Storage not available, using memory only');
-                        this.memoryStorage = this.memoryStorage || {};
-                        const input = document.getElementById('ideaInput');
-                        if (input) {
-                            this.memoryStorage.idea = input.value;
-                        }
+                        this.memoryStorage.idea = document.getElementById('ideaInput')?.value || '';
+                        this.log('Saved to memory storage');
                     }
                 } catch (error) {
                     this.log(`Failed to save to storage: ${error.message}`);
-                    // Fallback to memory storage
-                    this.memoryStorage = this.memoryStorage || {};
-                    const input = document.getElementById('ideaInput');
-                    if (input) {
-                        this.memoryStorage.idea = input.value;
-                    }
+                    this.memoryStorage.idea = document.getElementById('ideaInput')?.value || '';
                 }
             }
 
@@ -714,16 +1626,14 @@
                     
                     if (this.isStorageAvailable()) {
                         saved = localStorage.getItem('hexmind_idea');
-                        this.log('Loaded from localStorage');
-                    } else if (this.memoryStorage && this.memoryStorage.idea) {
+                    } else if (this.memoryStorage.idea) {
                         saved = this.memoryStorage.idea;
-                        this.log('Loaded from memory storage');
                     }
                     
                     if (saved) {
-                        const input = document.getElementById('ideaInput');
-                        if (input) {
-                            input.value = saved;
+                        const ideaInput = document.getElementById('ideaInput');
+                        if (ideaInput) {
+                            ideaInput.value = saved;
                             this.log('Restored saved idea');
                         }
                     }
@@ -740,6 +1650,76 @@
                     return true;
                 } catch (e) {
                     return false;
+                }
+            }
+
+            startEnergyMonitoring() {
+                const updateInterval = this.isMobile() ? 5000 : 2000;
+                
+                setInterval(() => {
+                    const time = Date.now() / 1000;
+                    const caffeineLevel = Math.max(60, 85 + Math.sin(time / 300) * 15);
+                    const focusLevel = Math.max(70, 92 + Math.sin(time / 200) * 10);
+                    const harmonyLevel = Math.max(80, 96 + Math.sin(time / 400) * 5);
+                    
+                    this.updateEnergyMeter('caffeine', caffeineLevel);
+                    this.updateEnergyMeter('focus', focusLevel);
+                    this.updateEnergyMeter('harmony', harmonyLevel);
+                }, updateInterval);
+            }
+
+            updateEnergyMeter(type, level) {
+                const labelElement = document.getElementById(`${type}-level`);
+                const barElement = document.getElementById(`${type}-bar`);
+                
+                if (labelElement) {
+                    labelElement.textContent = Math.round(level) + '%';
+                }
+                if (barElement) {
+                    barElement.style.width = level + '%';
+                }
+            }
+
+            openTool(tool) {
+                const toolNames = {
+                    seed: 'Seed Learning System',
+                    mechanic: 'Magic Mechanic AI',
+                    analytics: 'Analytics Dashboard',
+                    settings: 'Settings Panel'
+                };
+                
+                this.addHistoryItem(`Opened ${toolNames[tool] || tool}`);
+                this.showToast(`${toolNames[tool] || tool} activated!`);
+            }
+
+            addHistoryItem(text) {
+                const history = document.getElementById('session-history');
+                if (!history) return;
+                
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `
+                    <div class="history-time">${new Date().toLocaleTimeString()}</div>
+                    <div class="history-text">${text}</div>
+                `;
+                
+                // Add click handler to restore from history
+                item.addEventListener('click', () => {
+                    if (text.includes('Processing:')) {
+                        const ideaText = text.replace('Processing: ', '').replace('...', '');
+                        const ideaInput = document.getElementById('ideaInput');
+                        if (ideaInput) {
+                            ideaInput.value = ideaText;
+                            this.showToast('Restored idea from history');
+                        }
+                    }
+                });
+                
+                history.insertBefore(item, history.firstChild);
+                
+                // Keep only last 15 items
+                while (history.children.length > 15) {
+                    history.removeChild(history.lastChild);
                 }
             }
 
@@ -766,17 +1746,30 @@
 
             log(message, data = null) {
                 if (this.debugMode) {
-                    const debugPanel = document.getElementById('debugPanel');
-                    const timestamp = new Date().toLocaleTimeString();
-                    const logEntry = `[${timestamp}] ${message}${data ? '\n' + JSON.stringify(data, null, 2) : ''}`;
-                    debugPanel.textContent += logEntry + '\n';
-                    debugPanel.scrollTop = debugPanel.scrollHeight;
+                    const debugPanel = document.getElementById('debug-panel');
+                    if (debugPanel) {
+                        const timestamp = new Date().toLocaleTimeString();
+                        const logEntry = `[${timestamp}] ${message}${data ? '\n' + JSON.stringify(data, null, 2) : ''}`;
+                        debugPanel.textContent += logEntry + '\n';
+                        debugPanel.scrollTop = debugPanel.scrollHeight;
+                    }
                 }
                 console.log(message, data);
             }
+
+            toggleDebug() {
+                this.debugMode = !this.debugMode;
+                const debugPanel = document.getElementById('debug-panel');
+                if (debugPanel) {
+                    debugPanel.style.display = this.debugMode ? 'block' : 'none';
+                    if (this.debugMode) {
+                        this.log('🐛 Debug mode enabled');
+                    }
+                }
+            }
         }
 
-        // AI Model Templates
+        // AI Model Templates (Enhanced)
         class ClaudeTemplate {
             constructor() {
                 this.title = 'Claude Sonnet 4 - Deep Analysis';
@@ -784,284 +1777,73 @@
             }
 
             generatePrompt(intent, idea) {
-                return `<role>Expert Analyst and Researcher</role>
-<context>Deep analysis request for: ${idea}</context>
+                return `<role>Expert Research Analyst and Strategic Thinker</role>
+<context>Deep analysis request from Sacred Artist Jeff's HexMind system</context>
 
 <task>
-Conduct a comprehensive analysis of this topic with the following approach:
+Conduct a comprehensive, multi-layered analysis of: "${idea}"
 
-1. **Initial Assessment**
-   - Break down the core components
-   - Identify key stakeholders and considerations
-   - Outline potential challenges and opportunities
+**Phase 1: Foundation Analysis**
+- Break down core components and stakeholders
+- Identify primary objectives and constraints
+- Map current landscape and existing solutions
 
-2. **Deep Dive Analysis**
-   - Research current best practices
-   - Analyze market trends and data
-   - Consider multiple perspectives and viewpoints
+**Phase 2: Deep Research Investigation**
+- Analyze market trends and emerging patterns
+- Review academic research and best practices
+- Examine case studies and real-world implementations
 
-3. **Structured Recommendations**
-   - Provide actionable next steps
-   - Include implementation timeline
-   - Suggest success metrics
+**Phase 3: Strategic Synthesis**
+- Develop actionable insights and recommendations
+- Create implementation roadmap with milestones
+- Identify potential obstacles and mitigation strategies
 
-4. **Risk Assessment**
-   - Identify potential obstacles
-   - Suggest mitigation strategies
-   - Plan for contingencies
+**Phase 4: Innovation Opportunities**
+- Explore cutting-edge approaches and technologies
+- Consider interdisciplinary connections
+- Suggest novel applications and future directions
 </task>
 
 <output_format>
-Structure your response with clear headers, bullet points for key insights, and a executive summary at the end.
+Structure as a comprehensive research report with:
+- Executive Summary (key findings)
+- Detailed Analysis (evidence-based insights)
+- Strategic Recommendations (actionable steps)
+- Implementation Timeline
+- Risk Assessment
+- Innovation Opportunities
 </output_format>
 
-Please provide your comprehensive analysis of: ${idea}`;
+Please provide your expert analysis of: ${idea}`;
             }
         }
 
         class GPT4Template {
             constructor() {
                 this.title = 'GPT-4 - Versatile Problem Solving';
-                this.instructions = 'Use for general problem-solving and creative thinking';
+                this.instructions = 'Use for general problem-solving and strategic thinking';
             }
 
             generatePrompt(intent, idea) {
-                return `You are an expert problem-solver and strategic thinker. I need your help with: ${idea}
+                return `You are a master strategist and problem-solver working with Sacred Artist Jeff's HexMind Command Center. I need comprehensive assistance with: "${idea}"
 
-Please approach this systematically:
+**Strategic Analysis Framework:**
 
-**Understanding the Challenge:**
-- What are the core objectives?
-- What constraints or limitations exist?
-- Who are the key stakeholders?
+🎯 **Objective Clarification**
+- What are the core goals and desired outcomes?
+- Who are the key stakeholders and beneficiaries?
+- What constraints and limitations must be considered?
 
-**Solution Development:**
-- Generate 3-5 potential approaches
-- Evaluate pros and cons of each
-- Recommend the best path forward
+🔍 **Multi-Perspective Evaluation**
+- Technical feasibility and resource requirements
+- Market dynamics and competitive landscape
+- Social impact and ethical considerations
+- Financial implications and ROI potential
 
-**Implementation Plan:**
-- Break down into actionable steps
-- Identify required resources
-- Suggest timeline and milestones
+💡 **Solution Architecture**
+- Generate 5-7 strategic approaches with pros/cons
+- Recommend optimal path with clear justification
+- Design implementation phases with success metrics
+- Plan for iteration and continuous improvement
 
-**Success Measurement:**
-- Define what success looks like
-- Suggest key performance indicators
-- Plan for iteration and improvement
-
-Please provide detailed, actionable advice for: ${idea}`;
-            }
-        }
-
-        class GeminiTemplate {
-            constructor() {
-                this.title = 'Gemini Pro - Creative Solutions';
-                this.instructions = 'Use for creative thinking and innovative approaches';
-            }
-
-            generatePrompt(intent, idea) {
-                return `🎨 CREATIVE INNOVATION SESSION 🎨
-
-Challenge: ${idea}
-
-I need you to think outside the box and provide innovative, creative solutions. Please approach this with:
-
-🌟 **Creative Exploration:**
-- What unconventional approaches could work?
-- How might we reframe this challenge differently?
-- What innovative solutions exist in other industries?
-
-💡 **Ideation Phase:**
-- Generate multiple creative concepts
-- Combine different ideas for hybrid solutions
-- Think about future-forward approaches
-
-🎯 **Practical Creativity:**
-- How can creative ideas be made actionable?
-- What resources would be needed?
-- How to test and iterate quickly?
-
-🚀 **Innovation Framework:**
-- Design thinking principles
-- Rapid prototyping strategies
-- User-centered design considerations
-
-Please provide creative, actionable solutions with implementation guidance for: ${idea}
-
-Focus on innovation, creativity, and practical application.`;
-            }
-        }
-
-        class CopilotTemplate {
-            constructor() {
-                this.title = 'GitHub Copilot - Code Generation';
-                this.instructions = 'Use for programming tasks and technical implementation';
-            }
-
-            generatePrompt(intent, idea) {
-                return `// Technical Implementation Request
-// Project: ${idea}
-
-/*
-CODING TASK BREAKDOWN:
-
-1. ARCHITECTURE PLANNING
-   - Define system architecture
-   - Choose appropriate technologies
-   - Plan data structures and APIs
-
-2. DEVELOPMENT PHASES
-   - Core functionality implementation
-   - User interface design
-   - Testing and validation
-
-3. BEST PRACTICES
-   - Clean, maintainable code
-   - Proper error handling
-   - Security considerations
-   - Performance optimization
-
-4. DEPLOYMENT STRATEGY
-   - Development environment setup
-   - Production deployment plan
-   - Monitoring and maintenance
-*/
-
-Please provide:
-- Technical architecture recommendations
-- Code examples and implementations
-- Best practices and patterns
-- Testing strategies
-- Deployment guidelines
-
-For the following project: ${idea}
-
-Include specific code examples, file structures, and implementation steps.`;
-            }
-        }
-
-        // Storage and parsing utilities
-        class PromptStorage {
-            async init() {
-                if ('indexedDB' in window) {
-                    return new Promise((resolve, reject) => {
-                        const request = indexedDB.open('HexMind', 1);
-                        
-                        request.onupgradeneeded = (event) => {
-                            const db = event.target.result;
-                            
-                            if (!db.objectStoreNames.contains('templates')) {
-                                const templateStore = db.createObjectStore('templates', { keyPath: 'id' });
-                                templateStore.createIndex('category', 'category', { unique: false });
-                            }
-                            
-                            if (!db.objectStoreNames.contains('history')) {
-                                db.createObjectStore('history', { keyPath: 'id', autoIncrement: true });
-                            }
-                        };
-                        
-                        request.onsuccess = () => {
-                            this.db = request.result;
-                            resolve();
-                        };
-                        
-                        request.onerror = () => reject(request.error);
-                    });
-                }
-                return Promise.resolve();
-            }
-        }
-
-        class IntentParser {
-            async analyze(text) {
-                const keywords = {
-                    research: ['research', 'study', 'analyze', 'investigation', 'data'],
-                    creative: ['creative', 'design', 'story', 'content', 'art', 'marketing'],
-                    technical: ['code', 'programming', 'app', 'software', 'system', 'technical'],
-                    business: ['business', 'strategy', 'plan', 'market', 'revenue', 'growth']
-                };
-                
-                const lowercaseText = text.toLowerCase();
-                const intent = {
-                    category: 'general',
-                    confidence: 0,
-                    keywords: []
-                };
-                
-                for (const [category, words] of Object.entries(keywords)) {
-                    const matches = words.filter(word => lowercaseText.includes(word));
-                    if (matches.length > intent.confidence) {
-                        intent.category = category;
-                        intent.confidence = matches.length;
-                        intent.keywords = matches;
-                    }
-                }
-                
-                return intent;
-            }
-        }
-
-        // Initialize app when page loads
-        let app;
-        
-        // Global functions for HTML onclick handlers
-        window.toggleDebug = function() {
-            if (!app) return;
-            const debugPanel = document.getElementById('debugPanel');
-            app.debugMode = !app.debugMode;
-            debugPanel.style.display = app.debugMode ? 'block' : 'none';
-            
-            if (app.debugMode) {
-                app.log('Debug mode enabled');
-            }
-        }
-
-        window.orchestrateAI = function() {
-            if (!app) return;
-            app.orchestrateAI();
-        }
-
-        window.clearAll = function() {
-            if (!app) return;
-            app.clearAll();
-        }
-
-        window.copyPromptHandler = function(index) {
-            if (!app) return;
-            app.copyPrompt(index);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                app = new HexMindOrchestrator();
-                app.loadFromStorage();
-            } catch (error) {
-                console.error('Failed to initialize HexMind:', error);
-            }
-        });
-
-        // PWA capabilities - only register if not in private mode
-        if ('serviceWorker' in navigator && window.isSecureContext) {
-            window.addEventListener('load', () => {
-                // Check if we can use storage before registering SW
-                try {
-                    const test = '__sw_test__';
-                    localStorage.setItem(test, test);
-                    localStorage.removeItem(test);
-                    
-                    navigator.serviceWorker.register('/sw.js')
-                        .then((registration) => {
-                            console.log('SW registered: ', registration);
-                        })
-                        .catch((registrationError) => {
-                            console.log('SW registration failed: ', registrationError);
-                        });
-                } catch (e) {
-                    console.log('Private browsing mode detected, skipping SW registration');
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+⚡ **Execution
