@@ -759,6 +759,463 @@
             }
         }
 
+        class GeminiTemplate {
+            constructor() {
+                this.title = 'Gemini Pro - Creative Solutions';
+                this.instructions = 'Use for creative thinking and innovative approaches';
+            }
+
+            generatePrompt(intent, idea) {
+                return `🎨 **CREATIVE INNOVATION LAB** 🎨
+*Sacred Artist Jeff's HexMind Creative Engine*
+
+**Mission:** Transform "${idea}" into breakthrough innovation
+
+🌟 **Creative Exploration Matrix:**
+
+**Inspiration Phase:**
+- What unconventional approaches could revolutionize this space?
+- How might we reframe this challenge through different lenses?
+- What innovative solutions exist in completely different industries?
+- How would a child, artist, engineer, and philosopher each approach this?
+
+💡 **Ideation Acceleration:**
+- Generate 10+ wildly creative concepts (no limits!)
+- Combine opposing ideas for hybrid breakthrough solutions
+- Apply design thinking principles and human-centered design
+- Consider future-forward approaches (5-10 years ahead)
+
+🎯 **Creative-Practical Fusion:**
+- How can visionary ideas become actionable reality?
+- What rapid prototyping strategies could test concepts quickly?
+- How to maintain innovation while ensuring practical implementation?
+- What creative constraints could actually enhance the solution?
+
+🚀 **Innovation Implementation:**
+- Design thinking methodology application
+- Rapid experimentation and iteration cycles
+- User experience optimization strategies
+- Creative project management approaches
+
+🌈 **Multimodal Enhancement:**
+- Visual design and aesthetic considerations
+- Interactive and experiential elements
+- Storytelling and narrative frameworks
+- Community engagement and co-creation opportunities
+
+Please unleash creative, boundary-pushing solutions for: ${idea}
+
+Think beyond conventional limits while providing concrete implementation pathways.`;
+            }
+        }
+
+        class CopilotTemplate {
+            constructor() {
+                this.title = 'GitHub Copilot - Code Generation';
+                this.instructions = 'Use for programming tasks and technical implementation';
+            }
+
+            generatePrompt(intent, idea) {
+                return `// 🛠️ TECHNICAL IMPLEMENTATION BLUEPRINT
+// Project: ${idea}
+// Sacred Artist Jeff's HexMind Development Command
+
+/*
+=====================================================
+COMPREHENSIVE DEVELOPMENT STRATEGY
+=====================================================
+
+1. SYSTEM ARCHITECTURE DESIGN
+   ├── Technology Stack Selection
+   ├── Database Design & Data Flow
+   ├── API Architecture & Integration Points
+   ├── Security & Authentication Framework
+   └── Scalability & Performance Optimization
+
+2. DEVELOPMENT PHASES
+   ├── Phase 1: Core MVP Development
+   ├── Phase 2: Feature Enhancement
+   ├── Phase 3: Advanced Functionality
+   ├── Phase 4: Optimization & Polish
+   └── Phase 5: Deployment & Monitoring
+
+3. CODE QUALITY STANDARDS
+   ├── Clean Architecture Principles
+   ├── SOLID Design Patterns
+   ├── Comprehensive Error Handling
+   ├── Unit Testing & Integration Testing
+   └── Code Documentation & Comments
+
+4. DEPLOYMENT STRATEGY
+   ├── CI/CD Pipeline Setup
+   ├── Environment Configuration
+   ├── Monitoring & Logging Systems
+   ├── Backup & Recovery Procedures
+   └── Performance Monitoring Tools
+*/
+
+// REQUEST SCOPE: ${idea}
+
+// Please provide:
+// 1. **Technical Architecture** - System design and component breakdown
+// 2. **Code Examples** - Key implementations with best practices
+// 3. **File Structure** - Complete project organization
+// 4. **Setup Instructions** - Development environment configuration
+// 5. **Testing Strategy** - Unit tests, integration tests, and QA approach
+// 6. **Deployment Guide** - Production deployment steps and monitoring
+// 7. **Security Measures** - Authentication, authorization, and data protection
+// 8. **Performance Optimization** - Caching, database optimization, and scaling
+// 9. **Documentation** - API docs, code comments, and user guides
+// 10. **Maintenance Plan** - Updates, monitoring, and issue resolution
+
+// Focus on production-ready, scalable, and maintainable solutions.
+// Include mobile-responsive design and cross-platform compatibility.
+// Emphasize security, performance, and user experience best practices.
+
+/* 
+EXPECTED DELIVERABLES:
+- Complete technical specification
+- Working code examples
+- Implementation timeline
+- Resource requirements
+- Risk assessment and mitigation
+*/`;
+            }
+        }
+
+        // Storage and parsing utilities (Enhanced)
+        class PromptStorage {
+            async init() {
+                if ('indexedDB' in window) {
+                    return new Promise((resolve, reject) => {
+                        const request = indexedDB.open('HexMindStorage', 2);
+                        
+                        request.onupgradeneeded = (event) => {
+                            const db = event.target.result;
+                            
+                            // Templates store
+                            if (!db.objectStoreNames.contains('templates')) {
+                                const templateStore = db.createObjectStore('templates', { keyPath: 'id' });
+                                templateStore.createIndex('category', 'category', { unique: false });
+                                templateStore.createIndex('model', 'model', { unique: false });
+                            }
+                            
+                            // History store
+                            if (!db.objectStoreNames.contains('history')) {
+                                const historyStore = db.createObjectStore('history', { keyPath: 'id', autoIncrement: true });
+                                historyStore.createIndex('timestamp', 'timestamp', { unique: false });
+                                historyStore.createIndex('session', 'sessionId', { unique: false });
+                            }
+                            
+                            // Sessions store
+                            if (!db.objectStoreNames.contains('sessions')) {
+                                const sessionStore = db.createObjectStore('sessions', { keyPath: 'id' });
+                                sessionStore.createIndex('created', 'created', { unique: false });
+                            }
+                        };
+                        
+                        request.onsuccess = () => {
+                            this.db = request.result;
+                            resolve();
+                        };
+                        
+                        request.onerror = () => reject(request.error);
+                    });
+                }
+                return Promise.resolve();
+            }
+
+            async saveSession(sessionData) {
+                if (this.db) {
+                    const transaction = this.db.transaction(['sessions'], 'readwrite');
+                    const store = transaction.objectStore('sessions');
+                    await store.put(sessionData);
+                }
+            }
+
+            async getRecentSessions(limit = 10) {
+                if (this.db) {
+                    const transaction = this.db.transaction(['sessions'], 'readonly');
+                    const store = transaction.objectStore('sessions');
+                    const index = store.index('created');
+                    const request = index.openCursor(null, 'prev');
+                    
+                    return new Promise((resolve) => {
+                        const sessions = [];
+                        request.onsuccess = (event) => {
+                            const cursor = event.target.result;
+                            if (cursor && sessions.length < limit) {
+                                sessions.push(cursor.value);
+                                cursor.continue();
+                            } else {
+                                resolve(sessions);
+                            }
+                        };
+                    });
+                }
+                return [];
+            }
+        }
+
+        class IntentParser {
+            async analyze(text) {
+                const keywords = {
+                    research: ['research', 'study', 'analyze', 'investigation', 'data', 'examine', 'explore'],
+                    creative: ['creative', 'design', 'story', 'content', 'art', 'marketing', 'brand', 'aesthetic'],
+                    technical: ['code', 'programming', 'app', 'software', 'system', 'technical', 'development', 'build'],
+                    business: ['business', 'strategy', 'plan', 'market', 'revenue', 'growth', 'startup', 'company'],
+                    educational: ['learn', 'teach', 'education', 'training', 'course', 'tutorial', 'guide'],
+                    productivity: ['organize', 'manage', 'efficiency', 'workflow', 'automation', 'optimize']
+                };
+                
+                const lowercaseText = text.toLowerCase();
+                const intent = {
+                    category: 'general',
+                    confidence: 0,
+                    keywords: [],
+                    complexity: this.assessComplexity(text),
+                    urgency: this.assessUrgency(text)
+                };
+                
+                // Find primary category
+                for (const [category, words] of Object.entries(keywords)) {
+                    const matches = words.filter(word => lowercaseText.includes(word));
+                    if (matches.length > intent.confidence) {
+                        intent.category = category;
+                        intent.confidence = matches.length;
+                        intent.keywords = matches;
+                    }
+                }
+                
+                // Determine secondary categories
+                intent.secondaryCategories = [];
+                for (const [category, words] of Object.entries(keywords)) {
+                    if (category !== intent.category) {
+                        const matches = words.filter(word => lowercaseText.includes(word));
+                        if (matches.length > 0) {
+                            intent.secondaryCategories.push({
+                                category,
+                                strength: matches.length,
+                                keywords: matches
+                            });
+                        }
+                    }
+                }
+                
+                return intent;
+            }
+
+            assessComplexity(text) {
+                const complexityIndicators = [
+                    'comprehensive', 'detailed', 'complex', 'advanced', 'sophisticated',
+                    'multi-step', 'enterprise', 'scalable', 'architecture', 'framework'
+                ];
+                
+                const lowercaseText = text.toLowerCase();
+                const matches = complexityIndicators.filter(indicator => lowercaseText.includes(indicator));
+                
+                if (matches.length > 2 || text.length > 200) return 'high';
+                if (matches.length > 0 || text.length > 100) return 'medium';
+                return 'low';
+            }
+
+            assessUrgency(text) {
+                const urgencyIndicators = [
+                    'urgent', 'asap', 'immediately', 'quickly', 'fast', 'rush',
+                    'deadline', 'today', 'tomorrow', 'this week'
+                ];
+                
+                const lowercaseText = text.toLowerCase();
+                const matches = urgencyIndicators.filter(indicator => lowercaseText.includes(indicator));
+                
+                if (matches.length > 1) return 'high';
+                if (matches.length > 0) return 'medium';
+                return 'low';
+            }
+        }
+
+        // Global app instance and functions
+        let app;
+        
+        // Global functions for HTML onclick handlers
+        window.toggleDebug = function() {
+            if (!app) return;
+            app.toggleDebug();
+        }
+
+        window.orchestrateAI = function() {
+            if (!app) return;
+            app.orchestrateAI();
+        }
+
+        window.clearAll = function() {
+            if (!app) return;
+            app.clearAll();
+        }
+
+        window.copyPromptHandler = function(index) {
+            if (!app) return;
+            app.copyPrompt(index);
+        }
+
+        window.copyCommand = function(button) {
+            if (!app) return;
+            const commandText = button.parentElement.nextElementSibling.textContent;
+            app.copyToClipboard(commandText).then(() => {
+                app.showToast('Command copied!');
+            }).catch(() => {
+                app.showToast('Copy failed', 'error');
+            });
+        }
+
+        window.toggleFocusMode = function() {
+            if (!app) return;
+            app.toggleFocusMode();
+        }
+
+        window.processFocusInput = function() {
+            if (!app) return;
+            app.processFocusInput();
+        }
+
+        window.openTool = function(tool) {
+            if (!app) return;
+            app.openTool(tool);
+        }
+
+        // Enhanced keyboard shortcuts for ADHD efficiency
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey || event.metaKey) {
+                switch(event.key) {
+                    case 'f':
+                        event.preventDefault();
+                        if (window.toggleFocusMode) window.toggleFocusMode();
+                        break;
+                    case 'Enter':
+                        if (document.activeElement && document.activeElement.id === 'ideaInput') {
+                            event.preventDefault();
+                            if (window.orchestrateAI) window.orchestrateAI();
+                        }
+                        break;
+                    case '1':
+                        event.preventDefault();
+                        if (window.openTool) window.openTool('seed');
+                        break;
+                    case '2':
+                        event.preventDefault();
+                        if (window.openTool) window.openTool('mechanic');
+                        break;
+                    case '3':
+                        event.preventDefault();
+                        if (window.openTool) window.openTool('analytics');
+                        break;
+                    case '4':
+                        event.preventDefault();
+                        if (window.openTool) window.openTool('settings');
+                        break;
+                    case 'd':
+                        if (event.shiftKey) {
+                            event.preventDefault();
+                            if (window.toggleDebug) window.toggleDebug();
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                app = new HexMindOrchestrator();
+                
+                // Add resize listener for responsive behavior
+                window.addEventListener('resize', () => {
+                    if (app) {
+                        app.detectCapabilities();
+                    }
+                });
+                
+                // Add visibility change listener for energy saving
+                document.addEventListener('visibilitychange', () => {
+                    if (app && document.hidden) {
+                        app.log('App backgrounded - energy saving mode');
+                    } else if (app) {
+                        app.log('App foregrounded - full energy mode');
+                    }
+                });
+                
+                // Show initial achievement
+                setTimeout(() => {
+                    if (app) {
+                        app.showAchievement('🎵 HexMind Command Center Activated!');
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Failed to initialize HexMind:', error);
+                
+                // Fallback initialization
+                const statusIndicator = document.getElementById('status-indicator');
+                if (statusIndicator) {
+                    statusIndicator.textContent = 'Initialization Error';
+                    statusIndicator.style.background = 'rgba(255, 107, 107, 0.2)';
+                }
+            }
+        });
+
+        // PWA capabilities - enhanced
+        if ('serviceWorker' in navigator && window.isSecureContext) {
+            window.addEventListener('load', () => {
+                try {
+                    const test = '__sw_test__';
+                    localStorage.setItem(test, test);
+                    localStorage.removeItem(test);
+                    
+                    navigator.serviceWorker.register('/sw.js')
+                        .then((registration) => {
+                            console.log('🎵 SW registered successfully:', registration);
+                            if (app) {
+                                app.log('Service Worker registered for offline capability');
+                            }
+                        })
+                        .catch((registrationError) => {
+                            console.log('SW registration failed:', registrationError);
+                            if (app) {
+                                app.log('Service Worker registration failed', registrationError);
+                            }
+                        });
+                } catch (e) {
+                    console.log('Private browsing detected, skipping SW registration');
+                    if (app) {
+                        app.log('Private browsing mode - SW registration skipped');
+                    }
+                }
+            });
+        }
+
+        // Enhanced error handling
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            if (app) {
+                app.log('Global error caught', {
+                    message: event.error?.message,
+                    stack: event.error?.stack,
+                    filename: event.filename,
+                    lineno: event.lineno
+                });
+            }
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
+            if (app) {
+                app.log('Unhandled promise rejection', event.reason);
+            }
+        });
+    </script>
+</body>
+</html>
+
         @media (max-width: 768px) {
             body {
                 overflow-y: auto;
@@ -1846,4 +2303,18 @@ Please provide your expert analysis of: ${idea}`;
 - Design implementation phases with success metrics
 - Plan for iteration and continuous improvement
 
-⚡ **Execution
+⚡ **Execution Blueprint**
+- Break down into actionable tasks and milestones
+- Identify required resources and team structure
+- Create timeline with realistic deadlines
+- Establish monitoring and feedback systems
+
+🚀 **Innovation Enhancement**
+- Consider emerging technologies and trends
+- Explore cross-industry best practices
+- Suggest creative alternatives and improvements
+- Plan for scalability and future expansion
+
+Please provide detailed, actionable guidance for: ${idea}
+
+Focus on practical implementation while maintaining strategic vision.
