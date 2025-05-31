@@ -1054,17 +1054,36 @@
             }, updateInterval);
         }
 
-        // Enhanced mobile Flowise initialization
-        function initializeMobileFlowise() {
+        // Auto-fresh HexMind system
+        function initializeFreshHexMind() {
+            // Generate unique session ID for every page load
+            const sessionId = 'hexmind_session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            // Clear any existing Flowise data
+            try {
+                localStorage.removeItem('flowise-chatbot');
+                localStorage.removeItem('flowise-session');
+                sessionStorage.clear();
+            } catch (e) {
+                console.log('Storage clear attempted');
+            }
+            
             const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             
             if (isMobileDevice || window.innerWidth <= 768) {
-                // Wait for DOM to be ready, then initialize with mobile config
+                // Mobile initialization with fresh session
                 setTimeout(() => {
                     import("https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js").then(({ default: Chatbot }) => {
                         Chatbot.initFull({
                             chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
                             apiHost: "https://cloud.flowiseai.com",
+                            chatflowConfig: {
+                                sessionId: sessionId,
+                                overrideConfig: {
+                                    sessionId: sessionId,
+                                    returnSourceDocuments: false
+                                }
+                            },
                             theme: {
                                 button: {
                                     backgroundColor: "#4ecdc4",
@@ -1079,6 +1098,7 @@
                                     width: "100%",
                                     fontSize: "16px",
                                     poweredByTextColor: "#4ecdc4",
+                                    welcomeMessage: "🎵 HexMind Orchestrator Ready! Share your idea and I'll break it into research commands.",
                                     botMessage: {
                                         backgroundColor: "rgba(78, 205, 196, 0.1)",
                                         textColor: "#ffffff",
@@ -1108,13 +1128,38 @@
                                 input.style.minHeight = '40px';
                                 input.style.width = '100%';
                             });
+                            
+                            addHistoryItem(`Fresh HexMind Session: ${sessionId.split('_')[2]}`);
                         }, 1000);
                     });
                 }, 500);
+            } else {
+                // Desktop initialization with fresh session
+                setTimeout(() => {
+                    import("https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js").then(({ default: Chatbot }) => {
+                        Chatbot.initFull({
+                            chatflowid: "065c9bf0-1184-496d-9d73-d177eb1948b5",
+                            apiHost: "https://cloud.flowiseai.com",
+                            chatflowConfig: {
+                                sessionId: sessionId,
+                                overrideConfig: {
+                                    sessionId: sessionId,
+                                    returnSourceDocuments: false
+                                }
+                            }
+                        });
+                        
+                        addHistoryItem(`Fresh HexMind Session: ${sessionId.split('_')[2]}`);
+                    });
+                }, 300);
             }
+            
+            // Store session info for debugging
+            window.hexmindSessionId = sessionId;
+            console.log('🎵 Fresh HexMind Session:', sessionId);
         }
 
-        // Enhanced initialization
+        // Enhanced initialization with auto-fresh
         window.addEventListener('load', function() {
             isMobile = window.innerWidth <= 768;
             isTablet = window.innerWidth <= 1200 && window.innerWidth > 768;
@@ -1122,7 +1167,7 @@
             showAchievement();
             startEnergyMonitoring();
             handleMobileInteractions();
-            initializeMobileFlowise(); // Add mobile-specific Flowise init
+            initializeFreshHexMind(); // Fresh session every load!
             
             // Add resize listener
             window.addEventListener('resize', handleResize);
@@ -1138,6 +1183,23 @@
                     lastTouchEnd = now;
                 }, false);
             }
+            
+            // Add manual refresh button functionality
+            const refreshButton = document.createElement('button');
+            refreshButton.innerHTML = '🔄 Fresh Start';
+            refreshButton.className = 'toggle-button';
+            refreshButton.style.margin = '10px 0';
+            refreshButton.onclick = function() {
+                location.reload();
+            };
+            
+            // Add refresh button to status panel
+            setTimeout(() => {
+                const statusPanel = document.querySelector('.status-panel');
+                if (statusPanel) {
+                    statusPanel.appendChild(refreshButton);
+                }
+            }, 1000);
         });
 
         function showAchievement() {
