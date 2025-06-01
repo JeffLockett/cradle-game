@@ -724,6 +724,15 @@
                 grid-template-columns: 1fr;
             }
             
+            function setupMainApp() {
+                setupEventListeners();
+                loadSavedData();
+                updateStatus('HexMind Ready - Select AI Models & Enter Your Idea');
+                setTimeout(function() {
+                    showToast('🎵 HexMind Command Center Activated!', 'success');
+                }, 500);
+            }
+            
             h1 {
                 font-size: 1.8em;
             }
@@ -761,6 +770,20 @@
     </style>
 </head>
 <body>
+    <!-- Password Protection Overlay -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-container">
+            <div class="password-title">🔐 HexMind Access</div>
+            <div class="password-subtitle">Sacred Artist Jeff's Protected AI Hub</div>
+            <input type="password" class="password-input" id="passwordInput" placeholder="Enter access code..." maxlength="20">
+            <div>
+                <button class="password-btn" onclick="checkPassword()">🚀 Access HexMind</button>
+            </div>
+            <div id="passwordError" class="password-error"></div>
+            <div class="password-hint">Hint: Sacred geometric number + AI mind fusion</div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Header -->
         <header class="header">
@@ -929,6 +952,73 @@
         (function() {
             'use strict';
             
+            // Hidden Password System
+            var HIDDEN_ACCESS_KEY = 'hex6mind2025'; // Sacred Artist Jeff's protected access
+            var isAuthenticated = false;
+            
+            // Check for saved authentication
+            function checkSavedAuth() {
+                var saved = window.hexmindAuth;
+                if (saved && saved === HIDDEN_ACCESS_KEY) {
+                    isAuthenticated = true;
+                    document.getElementById('passwordOverlay').classList.add('hidden');
+                    return true;
+                }
+                return false;
+            }
+            
+            // Password verification
+            window.checkPassword = function() {
+                var input = document.getElementById('passwordInput').value.toLowerCase().trim();
+                var errorDiv = document.getElementById('passwordError');
+                
+                if (input === HIDDEN_ACCESS_KEY) {
+                    isAuthenticated = true;
+                    window.hexmindAuth = HIDDEN_ACCESS_KEY; // Save auth in memory
+                    document.getElementById('passwordOverlay').classList.add('hidden');
+                    showToast('🎉 Welcome to HexMind, Sacred Artist Jeff!', 'success');
+                    
+                    // Cool unlock animation
+                    setTimeout(function() {
+                        document.querySelector('.header').style.animation = 'glow 2s ease-in-out';
+                    }, 500);
+                    
+                } else {
+                    errorDiv.textContent = '❌ Invalid access code. Try again.';
+                    document.getElementById('passwordInput').value = '';
+                    
+                    // Shake animation for wrong password
+                    var container = document.querySelector('.password-container');
+                    container.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(function() {
+                        container.style.animation = '';
+                    }, 500);
+                }
+            };
+            
+            // Allow Enter key for password
+            function setupPasswordListeners() {
+                document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
+            }
+            
+            // Initialize with password check
+            function init() {
+                setupPasswordListeners();
+                
+                // Check if already authenticated
+                if (checkSavedAuth()) {
+                    // Already authenticated, proceed normally
+                    setupMainApp();
+                } else {
+                    // Show password overlay
+                    document.getElementById('passwordOverlay').classList.remove('hidden');
+                }
+            }
+            
             // State
             var selectedModels = [];
             var historyItems = [];
@@ -936,16 +1026,6 @@
             var lastSaveTime = 0;
             var selectedAI = '';
             var processedData = null;
-            
-            // Initialize
-            function init() {
-                setupEventListeners();
-                loadSavedData();
-                updateStatus('HexMind Ready - Select AI Models & Enter Your Idea');
-                setTimeout(function() {
-                    showToast('🎵 HexMind Command Center Activated!', 'success');
-                }, 500);
-            }
             
             // Event Listeners
             function setupEventListeners() {
