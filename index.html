@@ -1,228 +1,128 @@
-// 🤖 PHASE 3: REAL AI INTEGRATION ENGINE
-        // Extends HexMindAIBridge with live AI processing
-
-        // Add to HexMindAIBridge class - replace simulateAIResponse method
-        HexMindAIBridge.prototype.simulateAIResponse = async function(mission, prompt) {
-            // Show processing state
-            this.showProcessingState(mission);
+// Initialize AI Bridge when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            window.hexMindBridge = new HexMindAIBridge();
             
-            try {
-                // Attempt real AI integration first, fallback to simulation
-                const realAIResponse = await this.processWithRealAI(mission, prompt);
-                
-                if (realAIResponse) {
-                    const learningSeed = this.parseAIResponse(realAIResponse, mission);
-                    this.displayLearningSeed(learningSeed);
-                } else {
-                    // Fallback to enhanced simulation
+            // 🤖 PHASE 3: REAL AI INTEGRATION ENGINE - INSERT HERE
+            
+            // Replace simulateAIResponse method
+            HexMindAIBridge.prototype.simulateAIResponse = async function(mission, prompt) {
+                this.showProcessingState(mission);
+                try {
+                    const realAIResponse = await this.processWithRealAI(mission, prompt);
+                    if (realAIResponse) {
+                        const learningSeed = this.parseAIResponse(realAIResponse, mission);
+                        this.displayLearningSeed(learningSeed);
+                    } else {
+                        const learningSeed = this.generateEnhancedLearningSeed(mission);
+                        this.displayLearningSeed(learningSeed);
+                    }
+                } catch (error) {
+                    console.log('🔄 Using enhanced simulation mode:', error.message);
                     const learningSeed = this.generateEnhancedLearningSeed(mission);
                     this.displayLearningSeed(learningSeed);
                 }
-            } catch (error) {
-                console.log('🔄 Using enhanced simulation mode:', error.message);
-                // Enhanced fallback with better content
-                const learningSeed = this.generateEnhancedLearningSeed(mission);
-                this.displayLearningSeed(learningSeed);
-            }
-        };
+            };
 
-        // Real AI processing method
-        HexMindAIBridge.prototype.processWithRealAI = async function(mission, prompt) {
-            // For now, we'll use a proxy approach since direct API calls require CORS handling
-            // This prepares the structure for Phase 4 server integration
-            
-            const aiPrompt = this.buildAdvancedPrompt(mission);
-            
-            console.log('🤖 Prepared for real AI:', {
-                mission: mission.id,
-                sector: mission.sector,
-                difficulty: mission.difficulty,
-                challenge: mission.challenge,
-                promptLength: aiPrompt.length
-            });
-            
-            // Return null to trigger enhanced simulation for now
-            // In Phase 4, this will make actual API calls
-            return null;
-        };
-
-        // Build advanced AI prompt
-        HexMindAIBridge.prototype.buildAdvancedPrompt = function(mission) {
-            return `You are an expert STEM tutor creating a learning seed for HexMind Stellar Command. 
-
-MISSION CONTEXT:
-- Sector: ${mission.sector}
-- Difficulty: ${mission.difficulty} 
-- Challenge: "${mission.challenge}"
-- Learner Rank: ${this.userProgress.rank}
-- Total XP: ${this.userProgress.totalXP}
-
-RESPONSE FORMAT - Return a structured learning seed with these exact sections:
-
-CONCEPT_INTRODUCTION:
-Engaging opening that connects to the learner's challenge with real-world relevance.
-
-CORE_KNOWLEDGE:
-Break down the fundamental concepts into 3-4 digestible points. Use analogies and examples.
-
-PRACTICAL_APPLICATION:
-Specific, actionable steps the learner can take to apply this knowledge. Include experiments, projects, or exercises.
-
-UNDERSTANDING_CHECKS:
-3 progressive questions that test comprehension from basic recall to application.
-
-NEXT_STEPS:
-4 specific recommendations for continued learning, ranked by priority.
-
-NEURAL_PATTERN:
-Learning hooks and integration points that will help with retention and future recall.
-
-Keep the response engaging, scientifically accurate, and appropriate for ${mission.difficulty} level. Focus on building genuine understanding that feels "native" to the mind.`;
-        };
-
-        // Enhanced simulation with better content generation
-        HexMindAIBridge.prototype.generateEnhancedLearningSeed = function(mission) {
-            const seed = {
-                mission_id: mission.id,
-                title: `${mission.sector} Learning Seed: ${this.extractTopicFromChallenge(mission.challenge)}`,
-                difficulty: mission.difficulty,
-                xp_value: mission.xpPotential,
-                modules: [
-                    {
-                        type: "concept_introduction",
-                        content: this.generateEnhancedIntroduction(mission),
-                        understanding_check: this.generateContextualQuestion(mission, 'introduction')
-                    },
-                    {
-                        type: "core_knowledge",
-                        content: this.generateEnhancedCoreContent(mission),
-                        understanding_check: this.generateContextualQuestion(mission, 'core')
-                    },
-                    {
-                        type: "practical_application", 
-                        content: this.generateEnhancedPracticalContent(mission),
-                        understanding_check: this.generateContextualQuestion(mission, 'application')
+            // Enhanced content generation
+            HexMindAIBridge.prototype.generateEnhancedLearningSeed = function(mission) {
+                const seed = {
+                    mission_id: mission.id,
+                    title: `${mission.sector} Learning Seed: ${this.extractTopicFromChallenge(mission.challenge)}`,
+                    difficulty: mission.difficulty,
+                    xp_value: mission.xpPotential,
+                    modules: [
+                        {
+                            type: "concept_introduction",
+                            content: this.generateEnhancedIntroduction(mission),
+                            understanding_check: this.generateContextualQuestion(mission, 'introduction')
+                        },
+                        {
+                            type: "core_knowledge",
+                            content: this.generateEnhancedCoreContent(mission),
+                            understanding_check: this.generateContextualQuestion(mission, 'core')
+                        },
+                        {
+                            type: "practical_application", 
+                            content: this.generateEnhancedPracticalContent(mission),
+                            understanding_check: this.generateContextualQuestion(mission, 'application')
+                        }
+                    ],
+                    next_steps: this.generatePersonalizedNextSteps(mission),
+                    neural_pattern: {
+                        retention_hooks: this.identifyRetentionHooks(mission),
+                        integration_points: [mission.sector.toLowerCase(), 'real_world_application'],
+                        difficulty_progression: mission.difficulty,
+                        brain_ready: true,
+                        challenge_context: mission.challenge
                     }
-                ],
-                next_steps: this.generatePersonalizedNextSteps(mission),
-                neural_pattern: {
-                    retention_hooks: this.identifyRetentionHooks(mission),
-                    integration_points: [mission.sector.toLowerCase(), 'real_world_application'],
-                    difficulty_progression: mission.difficulty,
-                    brain_ready: true,
-                    challenge_context: mission.challenge
-                }
+                };
+                this.learningSeeds.push(seed);
+                return seed;
             };
+
+            // Topic extraction
+            HexMindAIBridge.prototype.extractTopicFromChallenge = function(challenge) {
+                const words = challenge.toLowerCase().split(' ');
+                const stopWords = ['i', 'want', 'to', 'understand', 'how', 'what', 'why', 'when', 'where', 'learn', 'about'];
+                const meaningfulWords = words.filter(word => !stopWords.includes(word) && word.length > 2);
+                return meaningfulWords.slice(0, 3).join(' ') || 'STEM Concept';
+            };
+
+            // Enhanced introduction
+            HexMindAIBridge.prototype.generateEnhancedIntroduction = function(mission) {
+                const topic = this.extractTopicFromChallenge(mission.challenge);
+                const intros = {
+                    'Science': `Let's explore ${topic} through scientific discovery! This ${mission.difficulty.toLowerCase()}-level challenge connects to fundamental principles that govern our universe.`,
+                    'Technology': `Welcome to ${topic}! This ${mission.difficulty.toLowerCase()}-level technology challenge will help you understand how digital systems work.`,
+                    'Engineering': `Time to engineer solutions for ${topic}! This ${mission.difficulty.toLowerCase()}-level challenge teaches engineering thinking.`,
+                    'Mathematics': `Let's unlock the mathematical patterns behind ${topic}! This ${mission.difficulty.toLowerCase()}-level exploration reveals mathematical structures.`
+                };
+                return intros[mission.sector] || intros['Science'];
+            };
+
+            // Enhanced core content
+            HexMindAIBridge.prototype.generateEnhancedCoreContent = function(mission) {
+                const topic = this.extractTopicFromChallenge(mission.challenge);
+                return `The science behind ${topic} involves interconnected systems. Key principles include: (1) Observable phenomena following natural laws, (2) Measurable cause-and-effect relationships, (3) Energy transformations driving processes, and (4) Repeating patterns across scales. Think of it as a well-orchestrated system where each component contributes to the whole.`;
+            };
+
+            // Enhanced practical content
+            HexMindAIBridge.prototype.generateEnhancedPracticalContent = function(mission) {
+                const topic = this.extractTopicFromChallenge(mission.challenge);
+                return `Apply your understanding of ${topic} through hands-on investigation: Make detailed observations, form testable hypotheses, design simple experiments, record data systematically, and compare results with established knowledge. This mirrors how real scientists build understanding.`;
+            };
+
+            // Contextual questions
+            HexMindAIBridge.prototype.generateContextualQuestion = function(mission, stage) {
+                const topic = this.extractTopicFromChallenge(mission.challenge);
+                const questions = {
+                    'introduction': `How does understanding ${topic} change how you observe the world?`,
+                    'core': `Can you explain the key principles behind ${topic} using your own examples?`,
+                    'application': `Design an experiment to test your understanding of ${topic}. What would you measure?`
+                };
+                return questions[stage] || questions['introduction'];
+            };
+
+            // Personalized next steps
+            HexMindAIBridge.prototype.generatePersonalizedNextSteps = function(mission) {
+                return [
+                    `Explore advanced ${mission.sector.toLowerCase()} concepts related to your challenge`,
+                    `Find real-world applications in current research or industry`,
+                    `Connect with others learning similar topics`,
+                    `Create a project demonstrating your understanding`,
+                    `Join relevant competitions or contribute to open science`
+                ];
+            };
+
+            // Retention hooks
+            HexMindAIBridge.prototype.identifyRetentionHooks = function(mission) {
+                const hooks = ['conceptual', 'practical'];
+                if (mission.challenge.includes('visual') || mission.challenge.includes('see')) hooks.push('visual');
+                if (mission.challenge.includes('build') || mission.challenge.includes('create')) hooks.push('kinesthetic');
+                return hooks;
+            };
+
+            console.log('🤖 Phase 3: Enhanced AI Integration - LOADED');
             
-            this.learningSeeds.push(seed);
-            return seed;
-        };
-
-        // Extract main topic from challenge
-        HexMindAIBridge.prototype.extractTopicFromChallenge = function(challenge) {
-            const words = challenge.toLowerCase().split(' ');
-            const stopWords = ['i', 'want', 'to', 'understand', 'how', 'what', 'why', 'when', 'where', 'learn', 'about'];
-            const meaningfulWords = words.filter(word => !stopWords.includes(word) && word.length > 2);
-            return meaningfulWords.slice(0, 3).join(' ') || 'STEM Concept';
-        };
-
-        // Enhanced content generators
-        HexMindAIBridge.prototype.generateEnhancedIntroduction = function(mission) {
-            const topic = this.extractTopicFromChallenge(mission.challenge);
-            const intros = {
-                'Science': `Let's explore ${topic} through the lens of scientific discovery! This ${mission.difficulty.toLowerCase()}-level challenge connects to fundamental principles that govern how our universe works. Understanding this will give you new ways to see and interact with the world around you.`,
-                'Technology': `Welcome to the fascinating world of ${topic}! As a ${mission.difficulty.toLowerCase()}-level technology challenge, this will help you understand how digital systems shape our reality. You'll gain insights into the logic and creativity behind technological solutions.`,
-                'Engineering': `Time to engineer solutions for ${topic}! This ${mission.difficulty.toLowerCase()}-level challenge will teach you to think like an engineer - breaking down complex problems, considering constraints, and designing elegant solutions that actually work.`,
-                'Mathematics': `Let's unlock the mathematical patterns behind ${topic}! This ${mission.difficulty.toLowerCase()}-level exploration will reveal the hidden mathematical structures that describe relationships, predict outcomes, and solve real-world problems.`
-            };
-            return intros[mission.sector] || intros['Science'];
-        };
-
-        HexMindAIBridge.prototype.generateEnhancedCoreContent = function(mission) {
-            const topic = this.extractTopicFromChallenge(mission.challenge);
-            const coreContent = {
-                'Science': `The science behind ${topic} involves interconnected systems and processes. Key principles include: (1) Observable phenomena that follow natural laws, (2) Cause-and-effect relationships you can measure and test, (3) Energy transformations that drive the processes, and (4) Patterns that repeat across different scales. Think of it like a well-orchestrated symphony where each component plays its part in creating the whole.`,
-                'Technology': `${topic} in technology operates through systematic information processing. Core concepts include: (1) Input-processing-output cycles that transform data, (2) Algorithms that define step-by-step problem-solving, (3) System architecture that organizes components efficiently, and (4) User interfaces that bridge human needs with digital capabilities. It's like building with digital LEGO blocks - each piece has a specific function and connects in precise ways.`,
-                'Engineering': `Engineering ${topic} requires understanding constraints and trade-offs. Essential elements include: (1) Problem definition that clarifies what you're solving, (2) Design requirements that set boundaries and goals, (3) Material properties and their limitations, and (4) Testing and iteration to refine solutions. Think of it as solving a puzzle where you must balance competing needs to find the optimal solution.`,
-                'Mathematics': `The mathematics of ${topic} reveals underlying patterns and relationships. Core components include: (1) Variables and their relationships that describe the system, (2) Functions that model how changes affect outcomes, (3) Patterns that predict behavior, and (4) Optimization principles that find best solutions. It's like having a universal language that describes how quantities relate and change.`
-            };
-            return coreContent[mission.sector] || coreContent['Science'];
-        };
-
-        HexMindAIBridge.prototype.generateEnhancedPracticalContent = function(mission) {
-            const topic = this.extractTopicFromChallenge(mission.challenge);
-            const practical = {
-                'Science': `Apply your understanding of ${topic} through hands-on investigation: Start by making detailed observations of the phenomenon in your environment. Form a testable hypothesis about how it works. Design a simple experiment using materials you can access. Record your data systematically and look for patterns. Compare your results with established scientific knowledge. This process mirrors how real scientists build understanding.`,
-                'Technology': `Put ${topic} into practice through digital creation: Identify a specific problem you can solve with technology. Research existing solutions and tools available to you. Start building a simple prototype - even if it's just a mockup or basic version. Test your solution with real users or use cases. Iterate based on feedback and performance. Document what you learn for future projects.`,
-                'Engineering': `Engineer solutions for ${topic} through systematic design: Define the specific problem you're addressing and its constraints. Brainstorm multiple approaches without judging them initially. Select the most promising solution and create detailed plans. Build and test a prototype using available materials. Measure performance against your requirements and refine the design. Share your solution and get feedback.`,
-                'Mathematics': `Apply ${topic} mathematically through problem-solving practice: Find real-world situations where this mathematical concept appears. Set up equations or models that represent the situation. Solve the mathematical problem step-by-step. Interpret your mathematical results in terms of the real situation. Verify your solution makes practical sense. Look for similar problems to practice the same approach.`
-            };
-            return practical[mission.sector] || practical['Science'];
-        };
-
-        // Generate contextual questions
-        HexMindAIBridge.prototype.generateContextualQuestion = function(mission, stage) {
-            const topic = this.extractTopicFromChallenge(mission.challenge);
-            const questions = {
-                'introduction': {
-                    'Science': `How does understanding ${topic} change the way you observe natural phenomena around you?`,
-                    'Technology': `What real-world problems could you solve by understanding ${topic} better?`,
-                    'Engineering': `What constraints or requirements would you need to consider when working with ${topic}?`,
-                    'Mathematics': `Where do you see mathematical patterns related to ${topic} in everyday life?`
-                },
-                'core': {
-                    'Science': `Can you explain the key scientific principles behind ${topic} using your own examples?`,
-                    'Technology': `How would you describe the system architecture of ${topic} to someone non-technical?`,
-                    'Engineering': `What trade-offs would you consider when designing solutions involving ${topic}?`,
-                    'Mathematics': `How would you use mathematical modeling to predict outcomes related to ${topic}?`
-                },
-                'application': {
-                    'Science': `Design an experiment that would test your understanding of ${topic}. What would you measure?`,
-                    'Technology': `What would you build to demonstrate your grasp of ${topic}? Describe your approach.`,
-                    'Engineering': `How would you solve a real engineering challenge involving ${topic}?`,
-                    'Mathematics': `Apply your mathematical understanding of ${topic} to solve a practical problem.`
-                }
-            };
-            return questions[stage][mission.sector] || questions[stage]['Science'];
-        };
-
-        // Generate personalized next steps
-        HexMindAIBridge.prototype.generatePersonalizedNextSteps = function(mission) {
-            const baseSteps = [
-                `Explore advanced ${mission.sector.toLowerCase()} concepts related to your challenge`,
-                `Find real-world applications of what you've learned in current research or industry`,
-                `Connect with others learning similar topics through online communities or local groups`,
-                `Create a project that demonstrates your understanding to build your portfolio`
-            ];
-            
-            // Add sector-specific steps
-            const sectorSteps = {
-                'Science': 'Conduct a citizen science project or contribute to scientific data collection',
-                'Technology': 'Build an open-source project or contribute to existing technology communities',
-                'Engineering': 'Join engineering challenges or competitions to apply your skills',
-                'Mathematics': 'Solve competition problems or contribute to mathematical modeling projects'
-            };
-            
-            baseSteps.push(sectorSteps[mission.sector] || sectorSteps['Science']);
-            return baseSteps;
-        };
-
-        // Identify retention hooks
-        HexMindAIBridge.prototype.identifyRetentionHooks = function(mission) {
-            const hooks = ['conceptual', 'practical'];
-            
-            if (mission.challenge.includes('visual') || mission.challenge.includes('see') || mission.challenge.includes('image')) {
-                hooks.push('visual');
-            }
-            if (mission.challenge.includes('build') || mission.challenge.includes('create') || mission.challenge.includes('make')) {
-                hooks.push('kinesthetic');
-            }
-            if (mission.challenge.includes('story') || mission.challenge.includes('explain') || mission.challenge.includes('narrative')) {
-                hooks.push('narrative');
-            }
-            
-            return hooks;
-        };
-
-        console.log('🤖 Phase 3: Real AI Integration Engine - LOADED');
-        console.log('📡 Ready for enhanced learning seed generation with AI-grade content');
+            console.log('🚀 HexMind AI Bridge Engine - ONLINE');
+        });
