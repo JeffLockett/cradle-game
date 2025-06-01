@@ -149,5 +149,378 @@
             }
         });
     </script>
+// 🧠 HEXMIND AI BRIDGE ENGINE - PHASE 2
+// Neural-ready learning seed architecture
+
+class HexMindAIBridge {
+    constructor() {
+        this.currentMission = null;
+        this.learningSeeds = [];
+        this.userProgress = {
+            rank: 'Cadet',
+            totalXP: 0,
+            sectorsExplored: [],
+            conceptsMastered: []
+        };
+        this.aiFleet = [
+            { name: 'Claude', specialization: 'STEM exploration, system architecture', active: true },
+            { name: 'Perplexity', specialization: 'Complex problem-solving, data analysis', active: false },
+            { name: 'Gemini', specialization: 'Multi-modal learning, creative solutions', active: false },
+            { name: 'ChatGPT', specialization: 'Broad knowledge base, general assistance', active: false }
+        ];
+        this.init();
+    }
+
+    init() {
+        console.log('🚀 AI Bridge Engine - Initializing Learning Seed Architecture');
+        this.bindMissionForm();
+        this.loadUserProgress();
+        this.displayAIFleet();
+    }
+
+    bindMissionForm() {
+        const form = document.getElementById('mission-form');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleMissionSubmit();
+            });
+            console.log('✅ Mission form bound to AI Bridge');
+        } else {
+            console.error('❌ Mission form not found for AI binding');
+        }
+    }
+
+    handleMissionSubmit() {
+        const challengeInput = document.getElementById('challenge-input');
+        const challenge = challengeInput.value.trim();
+        
+        if (!challenge) {
+            this.showToast('Please enter a learning challenge', 'warning');
+            return;
+        }
+
+        // Create structured mission
+        const mission = this.createMission(challenge);
+        this.currentMission = mission;
+        
+        // Generate AI prompt with learning context
+        const aiPrompt = this.buildLearningPrompt(mission);
+        
+        // Process with AI (simulated for now, real AI integration next)
+        this.simulateAIResponse(mission, aiPrompt);
+        
+        // Clear input for next mission
+        challengeInput.value = '';
+        
+        console.log('🎯 Mission launched:', mission);
+    }
+
+    createMission(challenge) {
+        const missionId = 'MISSION_' + Date.now();
+        const sector = this.detectSector(challenge);
+        const difficulty = this.assessDifficulty(challenge);
+        
+        return {
+            id: missionId,
+            challenge: challenge,
+            sector: sector,
+            difficulty: difficulty,
+            timestamp: new Date().toISOString(),
+            status: 'active',
+            xpPotential: this.calculateXP(difficulty)
+        };
+    }
+
+    detectSector(challenge) {
+        const keywords = {
+            'Science': ['biology', 'chemistry', 'physics', 'experiment', 'hypothesis', 'photosynthesis', 'molecule', 'atom'],
+            'Technology': ['computer', 'software', 'programming', 'algorithm', 'data', 'AI', 'digital'],
+            'Engineering': ['design', 'build', 'construct', 'bridge', 'mechanical', 'electrical', 'structure'],
+            'Mathematics': ['equation', 'formula', 'calculate', 'graph', 'statistics', 'geometry', 'algebra']
+        };
+        
+        const lowerChallenge = challenge.toLowerCase();
+        for (const [sector, words] of Object.entries(keywords)) {
+            if (words.some(word => lowerChallenge.includes(word))) {
+                return sector;
+            }
+        }
+        return 'Science'; // Default
+    }
+
+    assessDifficulty(challenge) {
+        const length = challenge.length;
+        const complexWords = ['analyze', 'synthesize', 'evaluate', 'complex', 'advanced', 'theoretical'];
+        const hasComplexWords = complexWords.some(word => challenge.toLowerCase().includes(word));
+        
+        if (length > 200 || hasComplexWords) return 'Admiral';
+        if (length > 100) return 'Commander';
+        if (length > 50) return 'Officer';
+        return 'Cadet';
+    }
+
+    calculateXP(difficulty) {
+        const xpMap = {
+            'Cadet': 15,
+            'Officer': 25,
+            'Commander': 40,
+            'Admiral': 65
+        };
+        return xpMap[difficulty] || 15;
+    }
+
+    buildLearningPrompt(mission) {
+        return {
+            systemContext: "You are an AI tutor creating structured learning seeds for HexMind Stellar Command. Respond with educational content that builds understanding step-by-step.",
+            missionData: mission,
+            learnerProfile: this.userProgress,
+            responseFormat: "learning_seed",
+            instructions: [
+                "Break complex topics into digestible modules",
+                "Include practical applications and examples", 
+                "Provide understanding checks and next steps",
+                "Focus on building genuine comprehension"
+            ]
+        };
+    }
+
+    simulateAIResponse(mission, prompt) {
+        // Show processing state
+        this.showProcessingState(mission);
+        
+        // Simulate AI processing time
+        setTimeout(() => {
+            const learningSeed = this.generateLearningSeed(mission);
+            this.displayLearningSeed(learningSeed);
+            this.updateProgress(learningSeed);
+        }, 2000);
+    }
+
+    generateLearningSeed(mission) {
+        // This simulates structured AI response - will be replaced with real AI
+        const seed = {
+            mission_id: mission.id,
+            title: `Learning Seed: ${mission.sector} Challenge`,
+            difficulty: mission.difficulty,
+            xp_value: mission.xpPotential,
+            modules: [
+                {
+                    type: "concept_introduction",
+                    content: `Let's explore your ${mission.sector.toLowerCase()} challenge: "${mission.challenge}"`,
+                    understanding_check: "What specific aspect interests you most?"
+                },
+                {
+                    type: "core_knowledge",
+                    content: this.generateCoreContent(mission),
+                    understanding_check: "Can you explain this concept in your own words?"
+                },
+                {
+                    type: "practical_application", 
+                    content: this.generatePracticalContent(mission),
+                    understanding_check: "How would you apply this knowledge?"
+                }
+            ],
+            next_steps: [
+                "Practice with similar examples",
+                "Explore related concepts",
+                "Design your own experiment"
+            ],
+            neural_pattern: {
+                retention_hooks: ["visual", "practical", "conceptual"],
+                integration_points: [mission.sector.toLowerCase()],
+                difficulty_progression: mission.difficulty
+            }
+        };
+        
+        this.learningSeeds.push(seed);
+        return seed;
+    }
+
+    generateCoreContent(mission) {
+        const templates = {
+            'Science': `This involves understanding fundamental principles and how they interact in natural systems. The key is to observe, hypothesize, and test.`,
+            'Technology': `This requires breaking down complex systems into manageable components and understanding how data flows and transforms.`,
+            'Engineering': `This involves systematic problem-solving through design thinking, considering constraints, and iterative improvement.`,
+            'Mathematics': `This requires pattern recognition, logical reasoning, and understanding relationships between abstract concepts.`
+        };
+        return templates[mission.sector] || templates['Science'];
+    }
+
+    generatePracticalContent(mission) {
+        const applications = {
+            'Science': `Design a simple experiment to test your hypothesis. Start with observable variables you can measure.`,
+            'Technology': `Build a prototype or model to demonstrate the concept. Use available tools to create something tangible.`,
+            'Engineering': `Create a design solution that addresses the core problem. Consider materials, constraints, and user needs.`,
+            'Mathematics': `Apply the concept to solve a real-world problem. Use calculations to make predictions or decisions.`
+        };
+        return applications[mission.sector] || applications['Science'];
+    }
+
+    displayLearningSeed(seed) {
+        const display = document.getElementById('seed-content');
+        if (!display) return;
+
+        display.innerHTML = `
+            <div class="learning-seed-header">
+                <h4>🧠 ${seed.title}</h4>
+                <div class="seed-meta">
+                    <span class="difficulty">Difficulty: ${seed.difficulty}</span>
+                    <span class="xp-potential">XP Potential: ${seed.xp_value}</span>
+                </div>
+            </div>
+            
+            ${seed.modules.map((module, index) => `
+                <div class="seed-module" data-module="${index}">
+                    <h5>${module.type.replace('_', ' ').toUpperCase()}</h5>
+                    <p>${module.content}</p>
+                    <div class="understanding-check">
+                        <strong>Check Understanding:</strong> ${module.understanding_check}
+                    </div>
+                </div>
+            `).join('')}
+            
+            <div class="next-steps">
+                <h5>🎯 Next Steps:</h5>
+                <ul>
+                    ${seed.next_steps.map(step => `<li>${step}</li>`).join('')}
+                </ul>
+            </div>
+            
+            <div class="mission-complete">
+                <button onclick="hexMindBridge.completeMission('${seed.mission_id}')" 
+                        style="background: #00ff88; color: #000; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
+                    ✅ Mark Mission Complete (+${seed.xp_value} XP)
+                </button>
+            </div>
+        `;
+
+        // Add some visual polish
+        display.style.background = 'linear-gradient(135deg, #1a1a2e, #16213e)';
+        display.style.border = '2px solid #4a90e2';
+        display.style.borderRadius = '12px';
+        display.style.padding = '25px';
+        display.style.margin = '20px 0';
+    }
+
+    showProcessingState(mission) {
+        const display = document.getElementById('seed-content');
+        if (!display) return;
+
+        display.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+                <div style="font-size: 24px; margin-bottom: 20px;">🧠 Processing Learning Seed...</div>
+                <div style="color: #4a90e2; margin-bottom: 10px;">Mission: ${mission.sector} Challenge</div>
+                <div style="color: #888;">Difficulty: ${mission.difficulty} | XP Potential: ${mission.xpPotential}</div>
+                <div style="margin-top: 20px; color: #00ff88;">AI Fleet analyzing your challenge...</div>
+            </div>
+        `;
+    }
+
+    completeMission(missionId) {
+        const seed = this.learningSeeds.find(s => s.mission_id === missionId);
+        if (!seed) return;
+
+        // Award XP
+        this.userProgress.totalXP += seed.xp_value;
+        this.userProgress.conceptsMastered.push(seed.title);
+        
+        // Check for rank progression
+        this.checkRankProgression();
+        
+        // Show completion
+        this.showToast(`Mission Complete! +${seed.xp_value} XP earned`, 'success');
+        
+        // Update progress display
+        this.saveUserProgress();
+        
+        console.log(`🏆 Mission ${missionId} completed! Total XP: ${this.userProgress.totalXP}`);
+    }
+
+    checkRankProgression() {
+        const ranks = ['Cadet', 'Ensign', 'Lieutenant', 'Commander', 'Captain', 'Fleet Admiral'];
+        const xpThresholds = [0, 50, 150, 300, 500, 1000];
+        
+        const currentRankIndex = ranks.indexOf(this.userProgress.rank);
+        const nextRankIndex = currentRankIndex + 1;
+        
+        if (nextRankIndex < ranks.length && this.userProgress.totalXP >= xpThresholds[nextRankIndex]) {
+            this.userProgress.rank = ranks[nextRankIndex];
+            this.showToast(`🎖️ PROMOTION! You are now ${this.userProgress.rank}!`, 'promotion');
+        }
+    }
+
+    displayAIFleet() {
+        // Simple display for now
+        console.log('🤖 AI Fleet Status:', this.aiFleet);
+    }
+
+    showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed; top: 20px; right: 20px; z-index: 10000;
+            background: ${type === 'success' ? '#00ff88' : type === 'warning' ? '#ffaa00' : type === 'promotion' ? '#ff00aa' : '#4a90e2'};
+            color: ${type === 'success' || type === 'warning' ? '#000' : '#fff'};
+            padding: 15px 20px; border-radius: 8px; font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        `;
+        toast.textContent = message;
+        
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
+
+    loadUserProgress() {
+        // For now, start fresh each session
+        // In future: localStorage or server persistence
+        console.log('📊 User Progress Loaded:', this.userProgress);
+    }
+
+    saveUserProgress() {
+        // For now, just log progress
+        // In future: localStorage or server sync
+        console.log('💾 Progress Saved - Rank:', this.userProgress.rank, 'XP:', this.userProgress.totalXP);
+    }
+}
+
+// Initialize AI Bridge when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    window.hexMindBridge = new HexMindAIBridge();
+    console.log('🚀 HexMind AI Bridge Engine - ONLINE');
+});
+
+// Add some CSS animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .seed-module {
+        background: rgba(74, 144, 226, 0.1) !important;
+        border-left: 4px solid #4a90e2 !important;
+        padding: 15px !important;
+        margin: 10px 0 !important;
+        border-radius: 0 8px 8px 0 !important;
+        transition: all 0.3s ease;
+    }
+    
+    .seed-module:hover {
+        background: rgba(74, 144, 226, 0.2) !important;
+        transform: translateX(5px);
+    }
+    
+    .understanding-check {
+        background: rgba(0, 255, 136, 0.1);
+        border-left: 3px solid #00ff88;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 0 5px 5px 0;
+        font-style: italic;
+    }
+`;
+document.head.appendChild(style);
 </body>
 </html>
