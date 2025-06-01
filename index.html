@@ -185,10 +185,86 @@
             gap: 10px;
         }
 
+        /* AI Intelligence Enhancements */
+        .ai-analysis-panel {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            grid-column: 1 / -1;
+        }
+
+        .analysis-step {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #8a2be2;
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .analysis-title {
+            color: #da70d6;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .prompt-optimization {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .optimization-badge {
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .intelligence-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .metric-item {
+            background: rgba(78, 205, 196, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4ecdc4;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
         /* Model Selection */
         .model-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
 
@@ -513,6 +589,10 @@
             .toast.show {
                 transform: translateY(0);
             }
+
+            .intelligence-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -549,15 +629,25 @@
                         <div class="model-name">Claude Sonnet 4</div>
                         <div class="model-desc">Deep Analysis</div>
                     </div>
-                    <div class="model-card" data-model="gpt4">
-                        <div class="model-icon">⚡</div>
-                        <div class="model-name">GPT-4</div>
-                        <div class="model-desc">Versatile Tasks</div>
+                    <div class="model-card" data-model="perplexity">
+                        <div class="model-icon">🔍</div>
+                        <div class="model-name">Perplexity</div>
+                        <div class="model-desc">Real-time Research</div>
                     </div>
                     <div class="model-card" data-model="gemini">
                         <div class="model-icon">✨</div>
                         <div class="model-name">Gemini Pro</div>
                         <div class="model-desc">Creative Solutions</div>
+                    </div>
+                    <div class="model-card" data-model="grok">
+                        <div class="model-icon">🚀</div>
+                        <div class="model-name">Grok/SuperGrok</div>
+                        <div class="model-desc">Bold Insights</div>
+                    </div>
+                    <div class="model-card" data-model="chatgpt">
+                        <div class="model-icon">⚡</div>
+                        <div class="model-name">ChatGPT</div>
+                        <div class="model-desc">Versatile Tasks</div>
                     </div>
                     <div class="model-card" data-model="copilot">
                         <div class="model-icon">💻</div>
@@ -630,10 +720,13 @@
             // State
             var selectedModels = [];
             var historyItems = [];
+            var autoSaveTimer = null;
+            var lastSaveTime = 0;
             
             // Initialize
             function init() {
                 setupEventListeners();
+                loadSavedData();
                 updateStatus('HexMind Ready - Select AI Models & Enter Your Idea');
                 setTimeout(function() {
                     showToast('🎵 HexMind Command Center Activated!', 'success');
@@ -653,11 +746,33 @@
                 document.getElementById('clearBtn').addEventListener('click', clearAll);
                 document.getElementById('focusBtn').addEventListener('click', toggleFocus);
                 
+                // Auto-save on input changes
+                var ideaInput = document.getElementById('ideaInput');
+                ideaInput.addEventListener('input', triggerAutoSave);
+                ideaInput.addEventListener('blur', saveImmediately);
+                
                 // Keyboard shortcuts
-                document.getElementById('ideaInput').addEventListener('keydown', function(e) {
+                ideaInput.addEventListener('keydown', function(e) {
                     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                         e.preventDefault();
                         generateCommands();
+                    }
+                    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                        e.preventDefault();
+                        saveImmediately();
+                        showToast('💾 Saved!', 'success');
+                    }
+                });
+                
+                // Save before page unload
+                window.addEventListener('beforeunload', function() {
+                    saveImmediately();
+                });
+                
+                // Save on visibility change (tab switching)
+                document.addEventListener('visibilitychange', function() {
+                    if (document.visibilityState === 'hidden') {
+                        saveImmediately();
                     }
                 });
             }
@@ -677,9 +792,181 @@
                 }
                 
                 updateStatus('Selected ' + selectedModels.length + ' AI model(s)');
+                triggerAutoSave();
             }
             
-            // Generate commands
+            // AI Intelligence Engine - Core Functionality
+            function analyzeIdea(idea) {
+                var analysis = {
+                    complexity: calculateComplexity(idea),
+                    researchAreas: identifyResearchAreas(idea),
+                    keyTerms: extractKeyTerms(idea),
+                    context: determineContext(idea),
+                    intent: classifyIntent(idea)
+                };
+                
+                displayAIAnalysis(analysis);
+                return analysis;
+            }
+            
+            function calculateComplexity(idea) {
+                var factors = {
+                    length: Math.min(idea.length / 200, 1),
+                    technical: (idea.match(/\b(API|database|algorithm|framework|architecture|system)\b/gi) || []).length * 0.1,
+                    research: (idea.match(/\b(analysis|study|research|investigate|explore|examine)\b/gi) || []).length * 0.15,
+                    business: (idea.match(/\b(strategy|market|revenue|growth|scale|optimize)\b/gi) || []).length * 0.1
+                };
+                
+                var complexity = (factors.length + factors.technical + factors.research + factors.business) / 1.35;
+                return Math.min(Math.max(complexity, 0.1), 1);
+            }
+            
+            function identifyResearchAreas(idea) {
+                var areas = [];
+                var keywords = {
+                    'Technical': /\b(code|programming|software|API|database|system|algorithm|framework)\b/gi,
+                    'Business': /\b(market|strategy|revenue|growth|customer|business|sales|marketing)\b/gi,
+                    'Creative': /\b(design|creative|art|visual|brand|aesthetic|user experience|UX)\b/gi,
+                    'Research': /\b(data|analysis|study|research|statistics|trends|insights)\b/gi,
+                    'Innovation': /\b(innovation|disrupt|breakthrough|novel|emerging|cutting-edge)\b/gi
+                };
+                
+                for (var area in keywords) {
+                    if (keywords[area].test(idea)) {
+                        areas.push(area);
+                    }
+                }
+                
+                return areas.length > 0 ? areas : ['General'];
+            }
+            
+            function extractKeyTerms(idea) {
+                // Remove common words and extract meaningful terms
+                var stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'how', 'what', 'where', 'when', 'why', 'i', 'you', 'we', 'they', 'it', 'this', 'that', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'can', 'may', 'might']);
+                
+                var words = idea.toLowerCase()
+                    .replace(/[^\w\s]/g, ' ')
+                    .split(/\s+/)
+                    .filter(word => word.length > 3 && !stopWords.has(word));
+                
+                // Count frequency and return top terms
+                var frequency = {};
+                words.forEach(word => {
+                    frequency[word] = (frequency[word] || 0) + 1;
+                });
+                
+                return Object.keys(frequency)
+                    .sort((a, b) => frequency[b] - frequency[a])
+                    .slice(0, 5);
+            }
+            
+            function determineContext(idea) {
+                var contexts = {
+                    'Startup/Business': /\b(startup|business|entrepreneur|venture|company|market|revenue)\b/gi,
+                    'Academic/Research': /\b(research|study|academic|university|paper|thesis|analysis)\b/gi,
+                    'Personal Project': /\b(personal|hobby|side project|learn|improve|skill)\b/gi,
+                    'Professional': /\b(work|career|professional|client|project|team|corporate)\b/gi,
+                    'Technical': /\b(code|programming|software|development|technical|system)\b/gi
+                };
+                
+                for (var context in contexts) {
+                    if (contexts[context].test(idea)) {
+                        return context;
+                    }
+                }
+                
+                return 'General Inquiry';
+            }
+            
+            function classifyIntent(idea) {
+                var intents = {
+                    'Problem Solving': /\b(solve|fix|problem|issue|challenge|overcome)\b/gi,
+                    'Research & Analysis': /\b(research|analyze|investigate|study|explore|understand)\b/gi,
+                    'Creation & Building': /\b(create|build|develop|make|design|construct)\b/gi,
+                    'Optimization': /\b(improve|optimize|enhance|better|upgrade|refine)\b/gi,
+                    'Learning': /\b(learn|understand|explain|teach|guide|tutorial)\b/gi,
+                    'Strategy & Planning': /\b(plan|strategy|roadmap|approach|framework|methodology)\b/gi
+                };
+                
+                for (var intent in intents) {
+                    if (intents[intent].test(idea)) {
+                        return intent;
+                    }
+                }
+                
+                return 'Information Seeking';
+            }
+            
+            function displayAIAnalysis(analysis) {
+                // Create or update analysis panel
+                var existingPanel = document.querySelector('.ai-analysis-panel');
+                if (existingPanel) {
+                    existingPanel.remove();
+                }
+                
+                var analysisPanel = document.createElement('div');
+                analysisPanel.className = 'ai-analysis-panel';
+                
+                var complexityPercent = Math.round(analysis.complexity * 100);
+                var complexityLevel = complexityPercent < 30 ? 'Simple' : complexityPercent < 70 ? 'Moderate' : 'Complex';
+                
+                analysisPanel.innerHTML = `
+                    <h2 class="section-title">
+                        <span>🧠</span>
+                        <span>AI Intelligence Analysis</span>
+                    </h2>
+                    
+                    <div class="analysis-step">
+                        <div class="analysis-title">🎯 Intent Classification</div>
+                        <div>Primary Intent: <strong>${analysis.intent}</strong></div>
+                    </div>
+                    
+                    <div class="analysis-step">
+                        <div class="analysis-title">🔍 Research Areas Identified</div>
+                        <div>Focus Areas: <strong>${analysis.researchAreas.join(', ')}</strong></div>
+                    </div>
+                    
+                    <div class="analysis-step">
+                        <div class="analysis-title">📊 Complexity Assessment</div>
+                        <div>Complexity Level: <strong>${complexityLevel}</strong> (${complexityPercent}%)</div>
+                    </div>
+                    
+                    <div class="analysis-step">
+                        <div class="analysis-title">🏷️ Key Terms Extracted</div>
+                        <div>Priority Terms: <strong>${analysis.keyTerms.join(', ')}</strong></div>
+                    </div>
+                    
+                    <div class="analysis-step">
+                        <div class="analysis-title">📋 Context Classification</div>
+                        <div>Primary Context: <strong>${analysis.context}</strong></div>
+                    </div>
+                    
+                    <div class="intelligence-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">${analysis.researchAreas.length}</div>
+                            <div class="metric-label">Research Areas</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">${complexityPercent}%</div>
+                            <div class="metric-label">Complexity</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">${analysis.keyTerms.length}</div>
+                            <div class="metric-label">Key Terms</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value">${selectedModels.length}</div>
+                            <div class="metric-label">AI Models</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Insert before output section
+                var outputSection = document.querySelector('.output-section');
+                outputSection.parentNode.insertBefore(analysisPanel, outputSection);
+            }
+            
+            // Generate commands with AI intelligence
             function generateCommands() {
                 var idea = document.getElementById('ideaInput').value.trim();
                 
@@ -693,23 +980,221 @@
                     return;
                 }
                 
-                var outputArea = document.getElementById('outputArea');
-                outputArea.innerHTML = '';
+                // AI Intelligence Analysis
+                updateStatus('🧠 Analyzing idea with AI intelligence...');
+                var analysis = analyzeIdea(idea);
                 
-                // Add original idea
-                addOutput('💡 Your Original Idea', idea, false);
+                setTimeout(function() {
+                    updateStatus('⚡ Generating optimized AI prompts...');
+                    
+                    var outputArea = document.getElementById('outputArea');
+                    outputArea.innerHTML = '';
+                    
+                    // Add original idea with intelligence insights
+                    var ideaWithInsights = idea + '\n\n[AI Analysis: ' + analysis.intent + ' | ' + 
+                                         analysis.context + ' | Complexity: ' + 
+                                         Math.round(analysis.complexity * 100) + '%]';
+                    addOutput('💡 Your Enhanced Idea', ideaWithInsights, false);
+                    
+                    // Generate optimized prompts for each model
+                    for (var i = 0; i < selectedModels.length; i++) {
+                        var model = selectedModels[i];
+                        var prompt = generateIntelligentPrompt(model, idea, analysis);
+                        var title = getModelIcon(model) + ' ' + getModelTitle(model);
+                        
+                        // Add optimization badges
+                        var optimizations = getOptimizationBadges(model, analysis);
+                        addOutput(title + optimizations, prompt, true);
+                    }
+                    
+                    updateStatus('✨ Generated ' + selectedModels.length + ' intelligent AI research commands');
+                    showToast('🧠 AI-optimized commands generated!', 'success');
+                    addToHistory('AI-analyzed: ' + idea.substring(0, 50) + '...');
+                    triggerAutoSave();
+                }, 1000); // Brief delay to show analysis
+            }
+            
+            // Enhanced prompt generation with AI intelligence
+            function generateIntelligentPrompt(model, idea, analysis) {
+                var basePrompt = generatePromptForModel(model, idea);
                 
-                // Generate for each model
-                for (var i = 0; i < selectedModels.length; i++) {
-                    var model = selectedModels[i];
-                    var prompt = generatePromptForModel(model, idea);
-                    var title = getModelIcon(model) + ' ' + getModelTitle(model);
-                    addOutput(title, prompt, true);
+                // Enhance prompts based on AI analysis
+                var enhancements = {
+                    complexity: analysis.complexity > 0.7 ? 
+                        '\n\n**COMPLEXITY ALERT**: This is a complex topic requiring deep analysis. Please provide comprehensive, multi-layered insights with detailed examples and step-by-step breakdowns.' : '',
+                    
+                    researchAreas: analysis.researchAreas.length > 1 ? 
+                        '\n\n**INTERDISCIPLINARY FOCUS**: This spans multiple domains (' + analysis.researchAreas.join(', ') + '). Please provide cross-disciplinary insights and connections.' : '',
+                    
+                    keyTerms: analysis.keyTerms.length > 0 ? 
+                        '\n\n**KEY TERMS TO EXPAND**: ' + analysis.keyTerms.join(', ') + '. Please ensure deep coverage of these core concepts.' : '',
+                    
+                    context: '\n\n**CONTEXT OPTIMIZATION**: This appears to be a ' + analysis.context + ' inquiry. Please tailor your response accordingly with relevant examples and applications.',
+                    
+                    intent: '\n\n**INTENT ALIGNMENT**: Primary goal is ' + analysis.intent + '. Please structure your response to directly address this objective with actionable insights.'
+                };
+                
+                // Model-specific intelligence enhancements
+                var modelEnhancements = getModelSpecificEnhancements(model, analysis);
+                
+                return basePrompt + enhancements.complexity + enhancements.researchAreas + 
+                       enhancements.keyTerms + enhancements.context + enhancements.intent + modelEnhancements;
+            }
+            
+            function getModelSpecificEnhancements(model, analysis) {
+                var enhancements = {
+                    claude: analysis.complexity > 0.6 ? 
+                        '\n\n**CLAUDE OPTIMIZATION**: Leverage your analytical depth for systematic reasoning, evidence synthesis, and nuanced interpretation of complex relationships.' : '',
+                    
+                    gpt4: analysis.researchAreas.includes('Business') || analysis.researchAreas.includes('Strategy') ?
+                        '\n\n**GPT-4 OPTIMIZATION**: Utilize your broad knowledge base for strategic insights, market analysis, and practical implementation frameworks.' : '',
+                    
+                    gemini: analysis.researchAreas.includes('Creative') || analysis.intent === 'Creation & Building' ?
+                        '\n\n**GEMINI OPTIMIZATION**: Apply your creative problem-solving capabilities for innovative approaches, design thinking, and out-of-the-box solutions.' : '',
+                    
+                    copilot: analysis.researchAreas.includes('Technical') || analysis.context === 'Technical' ?
+                        '\n\n**COPILOT OPTIMIZATION**: Focus on technical implementation, code architecture, best practices, and scalable solutions with detailed technical specifications.' : ''
+                };
+                
+                return enhancements[model] || '';
+            }
+            
+            function getOptimizationBadges(model, analysis) {
+                var badges = [];
+                
+                if (analysis.complexity > 0.7) badges.push('🔥 Deep Analysis');
+                if (analysis.researchAreas.length > 2) badges.push('🔀 Multi-Domain');
+                if (analysis.keyTerms.length > 3) badges.push('🎯 Term-Focused');
+                
+                var modelBadges = {
+                    claude: analysis.intent === 'Research & Analysis' ? ['🧠 Logic Engine'] : [],
+                    gpt4: analysis.context.includes('Business') ? ['💼 Strategy Mode'] : [],
+                    gemini: analysis.intent === 'Creation & Building' ? ['✨ Creative Mode'] : [],
+                    copilot: analysis.researchAreas.includes('Technical') ? ['⚡ Code Optimized'] : []
+                };
+                
+                badges = badges.concat(modelBadges[model] || []);
+                
+                return badges.length > 0 ? 
+                    '<div class="prompt-optimization">' + 
+                    badges.map(badge => '<span class="optimization-badge">' + badge + '</span>').join('') + 
+                    '</div>' : '';
+            }
+            
+            // Auto-save functions
+            function triggerAutoSave() {
+                // Clear existing timer
+                if (autoSaveTimer) {
+                    clearTimeout(autoSaveTimer);
                 }
                 
-                updateStatus('Generated ' + selectedModels.length + ' AI research commands');
-                showToast('✨ AI commands generated successfully!', 'success');
-                addToHistory('Generated commands for: ' + idea.substring(0, 50) + '...');
+                // Set new timer for 2 seconds after last change
+                autoSaveTimer = setTimeout(function() {
+                    saveCurrentState();
+                }, 2000);
+            }
+            
+            function saveImmediately() {
+                if (autoSaveTimer) {
+                    clearTimeout(autoSaveTimer);
+                    autoSaveTimer = null;
+                }
+                saveCurrentState();
+            }
+            
+            function saveCurrentState() {
+                try {
+                    var currentState = {
+                        idea: document.getElementById('ideaInput').value,
+                        selectedModels: selectedModels.slice(), // Create copy
+                        history: historyItems.slice(), // Create copy
+                        timestamp: new Date().toISOString(),
+                        version: '1.0'
+                    };
+                    
+                    // Use in-memory storage since localStorage isn't available
+                    window.hexmindAutoSave = currentState;
+                    lastSaveTime = Date.now();
+                    
+                    // Update status to show save
+                    var statusElement = document.getElementById('statusText');
+                    var originalText = statusElement.textContent;
+                    statusElement.textContent = '💾 Auto-saved at ' + new Date().toLocaleTimeString();
+                    
+                    setTimeout(function() {
+                        if (statusElement.textContent.includes('Auto-saved')) {
+                            statusElement.textContent = originalText;
+                        }
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.warn('Auto-save failed:', error);
+                }
+            }
+            
+            function loadSavedData() {
+                try {
+                    var savedState = window.hexmindAutoSave;
+                    if (savedState && savedState.version === '1.0') {
+                        // Restore idea text
+                        if (savedState.idea) {
+                            document.getElementById('ideaInput').value = savedState.idea;
+                        }
+                        
+                        // Restore selected models
+                        if (savedState.selectedModels && savedState.selectedModels.length > 0) {
+                            selectedModels = savedState.selectedModels.slice();
+                            
+                            // Update UI to show selected models
+                            var modelCards = document.querySelectorAll('.model-card');
+                            for (var i = 0; i < modelCards.length; i++) {
+                                var card = modelCards[i];
+                                var model = card.getAttribute('data-model');
+                                if (selectedModels.indexOf(model) > -1) {
+                                    card.classList.add('selected');
+                                }
+                            }
+                        }
+                        
+                        // Restore history
+                        if (savedState.history && savedState.history.length > 0) {
+                            historyItems = savedState.history.slice();
+                            restoreHistoryDisplay();
+                        }
+                        
+                        // Show restoration message
+                        if (savedState.idea || savedState.selectedModels.length > 0) {
+                            showToast('🔄 Session restored from auto-save', 'success');
+                            updateStatus('Session restored - ' + selectedModels.length + ' model(s) selected');
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Failed to load saved data:', error);
+                }
+            }
+            
+            function restoreHistoryDisplay() {
+                var historyArea = document.getElementById('historyArea');
+                historyArea.innerHTML = '';
+                
+                // Add session start item
+                var startItem = document.createElement('div');
+                startItem.className = 'history-item';
+                startItem.innerHTML = 
+                    '<div class="history-time">Session Start</div>' +
+                    '<div class="history-text">HexMind Orchestrator Initialized</div>';
+                historyArea.appendChild(startItem);
+                
+                // Add restored history items
+                for (var i = 0; i < historyItems.length; i++) {
+                    var item = historyItems[i];
+                    var historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = 
+                        '<div class="history-time">' + item.time + '</div>' +
+                        '<div class="history-text">' + item.text + '</div>';
+                    historyArea.appendChild(historyItem);
+                }
             }
             
             // Generate model-specific prompts
@@ -801,6 +1286,12 @@
                     '<div class="output-content">Your AI-optimized prompts will appear here...</div>' +
                     '</div>';
                 
+                // Remove analysis panel if it exists
+                var analysisPanel = document.querySelector('.ai-analysis-panel');
+                if (analysisPanel) {
+                    analysisPanel.remove();
+                }
+                
                 selectedModels = [];
                 var modelCards = document.querySelectorAll('.model-card');
                 for (var i = 0; i < modelCards.length; i++) {
@@ -810,6 +1301,7 @@
                 updateStatus('Cleared! Ready for new ideas');
                 showToast('🔄 All cleared!', 'success');
                 addToHistory('Cleared all inputs');
+                saveImmediately(); // Save the cleared state
             }
             
             // Toggle focus mode
@@ -839,19 +1331,43 @@
             
             // Add to history
             function addToHistory(text) {
-                var historyArea = document.getElementById('historyArea');
-                var historyItem = document.createElement('div');
-                historyItem.className = 'history-item';
-                historyItem.innerHTML = 
-                    '<div class="history-time">' + new Date().toLocaleTimeString() + '</div>' +
-                    '<div class="history-text">' + text + '</div>';
+                var timeString = new Date().toLocaleTimeString();
+                var historyItem = {
+                    time: timeString,
+                    text: text,
+                    timestamp: Date.now()
+                };
                 
-                historyArea.insertBefore(historyItem, historyArea.firstChild);
+                // Add to memory array
+                historyItems.unshift(historyItem);
                 
                 // Keep only last 10 items
-                while (historyArea.children.length > 10) {
+                if (historyItems.length > 10) {
+                    historyItems = historyItems.slice(0, 10);
+                }
+                
+                // Update display
+                var historyArea = document.getElementById('historyArea');
+                var historyElement = document.createElement('div');
+                historyElement.className = 'history-item';
+                historyElement.innerHTML = 
+                    '<div class="history-time">' + timeString + '</div>' +
+                    '<div class="history-text">' + text + '</div>';
+                
+                // Insert after session start item
+                var firstChild = historyArea.children[0];
+                if (historyArea.children.length > 1) {
+                    historyArea.insertBefore(historyElement, historyArea.children[1]);
+                } else {
+                    historyArea.appendChild(historyElement);
+                }
+                
+                // Keep only last 10 items in display
+                while (historyArea.children.length > 11) { // +1 for session start item
                     historyArea.removeChild(historyArea.lastChild);
                 }
+                
+                triggerAutoSave();
             }
             
             // Start the app
