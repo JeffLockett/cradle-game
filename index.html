@@ -1,304 +1,1035 @@
-// ⚡ VOLTRON BRIDGE: Single-Page to Enterprise Integration ⚡
-// Add this to your working single-page HTML before </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ HexMind Voltron MechaZord ⚡</title>
+    <meta name="theme-color" content="#0f0f23">
+    <style>
+        /* COMPLETE VOLTRON MECHAZORD STYLING */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-// 🦁 VOLTRON FORMATION: Detect and Bond with Enterprise Modules
-class VoltronEnterpriseBridge {
-    constructor() {
-        this.enterpriseModules = {};
-        this.voltronStatus = 'FORMING';
-        this.init();
-    }
+        body {
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e, #16213e);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-y: auto;
+            position: relative;
+        }
 
-    init() {
-        console.log('⚡ VOLTRON BRIDGE: Initializing Enterprise Integration...');
-        this.detectEnterpriseModules();
-        this.createModuleBridge();
-        this.formVoltron();
-    }
+        /* VOLTRON BACKGROUND ANIMATION */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%);
+            animation: voltronPulse 4s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: -1;
+        }
 
-    detectEnterpriseModules() {
-        // Detect your 25 enterprise modules
-        const moduleList = [
-            'LearningAnalyzer', 'MissionControl', 'ProgressTracking',
-            'PromptEngineering', 'ResponseProcessor', 'SessionNavigation',
-            'CrewRoster', 'SkillAssessment', 'MissionBriefing', 'ResultsProcessor',
-            'NavigationComputer', 'CrewCommunications', 'ViewScreen',
-            'CommandConsole', 'FleetInterface', 'LearningHub', 'StatusDisplay',
-            'Communications', 'DataBanks', 'GameEngine', 'AIFleetCommander'
-        ];
+        @keyframes voltronPulse {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(1.05); }
+        }
 
-        moduleList.forEach(moduleName => {
-            if (this.tryLoadModule(moduleName)) {
-                this.enterpriseModules[moduleName] = {
-                    status: 'BONDED',
-                    integration: 'ACTIVE'
-                };
-                console.log(`🦁 GREEN LION: ${moduleName} bonded to Voltron`);
+        #app {
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #ff6b35;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            background: linear-gradient(45deg, #ff6b35, #f7931e, #4a90e2, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+            animation: voltronGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes voltronGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.2); }
+        }
+
+        .subtitle {
+            color: #ff6b35;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .voltron-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            animation: voltronBadgePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes voltronBadgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        #command-center {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            background: rgba(74, 144, 226, 0.05);
+            border: 2px solid #4a90e2;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        section:hover {
+            border-color: #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        h2 {
+            color: #ff6b35;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        /* VOLTRON-ENHANCED MISSION FORM */
+        #mission-form {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(74, 144, 226, 0.1));
+            border: 3px solid #ff6b35;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #mission-form::before {
+            content: '⚡';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #ff6b35;
+            animation: voltronSpark 2s linear infinite;
+        }
+
+        @keyframes voltronSpark {
+            0%, 100% { opacity: 1; transform: rotate(0deg); }
+            50% { opacity: 0.5; transform: rotate(180deg); }
+        }
+
+        #mission-form label {
+            color: #ffffff;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #challenge-input {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid #ff6b35;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        #challenge-input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        #mission-form button {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #mission-form button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.5);
+            background: linear-gradient(45deg, #f7931e, #ff6b35);
+        }
+
+        /* VOLTRON LEARNING SEED DISPLAY */
+        #learning-seed-display {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f0f23);
+            border: 3px solid #4a90e2;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            min-height: 200px;
+            position: relative;
+        }
+
+        .learning-seed-header {
+            border-bottom: 2px solid #ff6b35;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .seed-meta {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty {
+            background: #ff6b35;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .xp-potential {
+            background: #00ff88;
+            color: #000;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .voltron-power {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+            animation: voltronPowerPulse 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes voltronPowerPulse {
+            0% { box-shadow: 0 0 5px rgba(255, 107, 53, 0.5); }
+            100% { box-shadow: 0 0 15px rgba(255, 107, 53, 0.8); }
+        }
+
+        .seed-module {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(255, 107, 53, 0.05));
+            border-left: 4px solid #ff6b35;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .seed-module:hover {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(255, 107, 53, 0.1));
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .seed-module::before {
+            content: '🦁';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+            opacity: 0.7;
+        }
+
+        .seed-module h5 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .understanding-check {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 3px solid #00ff88;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 0 5px 5px 0;
+            font-style: italic;
+        }
+
+        .next-steps {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 147, 30, 0.1));
+            border: 2px solid #ff6b35;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .next-steps h5 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+        }
+
+        .next-steps ul {
+            list-style: none;
+        }
+
+        .next-steps li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .next-steps li:before {
+            content: "⚡ ";
+            margin-right: 8px;
+            color: #ff6b35;
+        }
+
+        .mission-complete {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .complete-btn {
+            background: linear-gradient(45deg, #00ff88, #00cc70);
+            color: #000;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .complete-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 255, 136, 0.5);
+        }
+
+        /* VOLTRON PROGRESS DISPLAY */
+        #progress-display {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(74, 144, 226, 0.05));
+            border: 2px solid #ff6b35;
+        }
+
+        .progress-stat {
+            text-align: center;
+            min-width: 120px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 107, 53, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .progress-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        /* TOAST ANIMATIONS */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* PROCESSING ANIMATION */
+        .processing {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .processing-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 107, 53, 0.3);
+            border-top: 4px solid #ff6b35;
+            border-radius: 50%;
+            animation: voltronSpin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes voltronSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* VOLTRON LION INDICATORS */
+        .lion-status {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ff6b35;
+            font-size: 12px;
+            z-index: 1000;
+        }
+
+        .lion {
+            margin: 2px 0;
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="voltron-badge">⚡ VOLTRON POWERED ⚡</div>
+            <h1>🦁 HexMind Voltron MechaZord 🦁</h1>
+            <div class="subtitle">Defender of the Universe of Learning</div>
+        </header>
+
+        <main id="command-center">
+            <section id="mission-planner">
+                <h2>⚡ Voltron Mission Command Center ⚡</h2>
+                <form id="mission-form">
+                    <label for="challenge-input">Enter Your STEM Learning Challenge:</label>
+                    <textarea 
+                        id="challenge-input" 
+                        placeholder="Example: I want to understand how photosynthesis works and design an experiment to test it..."
+                        required
+                    ></textarea>
+                    <button type="submit">⚡ Launch Voltron Mission ⚡</button>
+                </form>
+            </section>
+
+            <section id="learning-seed-display">
+                <h2>🧠 Voltron Learning Seed Generator 🧠</h2>
+                <div id="seed-content">
+                    <p style="text-align: center; color: #ff6b35; padding: 40px; font-size: 18px;">
+                        ⚡ Submit a learning mission above to unleash Voltron's neural-ready knowledge seeds! ⚡
+                    </p>
+                </div>
+            </section>
+
+            <section id="progress-display">
+                <h2>🏆 Commander Voltron Progress 🏆</h2>
+                <div id="progress-content">
+                    <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+                        <div class="progress-stat">
+                            <div style="font-size: 2em; color: #00ff88;">Cadet</div>
+                            <div style="color: #888;">Current Rank</div>
+                        </div>
+                        <div class="progress-stat">
+                            <div style="font-size: 2em; color: #4a90e2;">0 XP</div>
+                            <div style="color: #888;">Total Experience</div>
+                        </div>
+                        <div class="progress-stat">
+                            <div style="font-size: 2em; color: #ff6b35;">0</div>
+                            <div style="color: #888;">Missions Complete</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- VOLTRON LION STATUS -->
+        <div class="lion-status" id="lion-status">
+            <div style="color: #ff6b35; font-weight: bold; margin-bottom: 5px;">🦁 VOLTRON STATUS 🦁</div>
+            <div class="lion">🦁 RED LION: FORMING...</div>
+            <div class="lion">🦁 GREEN LION: FORMING...</div>
+            <div class="lion">🦁 BLUE LION: FORMING...</div>
+            <div class="lion">🦁 YELLOW LION: FORMING...</div>
+            <div class="lion">🦁 BLACK LION: FORMING...</div>
+        </div>
+    </div>
+
+    <script>
+        // ✅ FOUNDATION TEST
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('mission-form');
+            if (form) {
+                console.log('✅ FOUNDATION: Mission form found and protected');
             } else {
-                this.enterpriseModules[moduleName] = {
-                    status: 'PLACEHOLDER',
-                    integration: 'READY'
-                };
-                console.log(`🔄 GREEN LION: ${moduleName} placeholder created`);
+                console.error('❌ FOUNDATION: Mission form still missing');
             }
         });
-    }
 
-    tryLoadModule(moduleName) {
-        // Try to load from various possible locations
-        const possiblePaths = [
-            window[moduleName],
-            window.HexMind?.[moduleName],
-            window.assets?.js?.crew?.[moduleName],
-            window.assets?.js?.bridge?.[moduleName],
-            window.assets?.js?.stations?.[moduleName],
-            window.assets?.js?.systems?.[moduleName]
-        ];
+        // 🦁 HEXMIND VOLTRON MECHAZORD - COMPLETE INTEGRATION
+        class HexMindVoltronMechaZord {
+            constructor() {
+                this.currentMission = null;
+                this.learningSeeds = [];
+                this.userProgress = {
+                    rank: 'Cadet',
+                    totalXP: 0,
+                    missionsComplete: 0,
+                    sectorsExplored: [],
+                    conceptsMastered: []
+                };
+                this.aiFleet = [
+                    { name: 'Claude', specialization: 'STEM exploration, system architecture', active: true },
+                    { name: 'Perplexity', specialization: 'Complex problem-solving, data analysis', active: false },
+                    { name: 'Gemini', specialization: 'Multi-modal learning, creative solutions', active: false },
+                    { name: 'ChatGPT', specialization: 'Broad knowledge base, general assistance', active: false }
+                ];
+                this.voltronStatus = 'FORMING';
+                this.lions = {
+                    red: { name: 'Neural AI Bridge', status: 'FORMING' },
+                    green: { name: 'Enterprise Foundation', status: 'FORMING' },
+                    blue: { name: 'AI Integration Core', status: 'FORMING' },
+                    yellow: { name: 'Neural Interface', status: 'FORMING' },
+                    black: { name: 'Command Center', status: 'FORMING' }
+                };
+                this.init();
+            }
 
-        for (let path of possiblePaths) {
-            if (path && typeof path === 'object') {
-                return path;
+            init() {
+                console.log('⚡ VOLTRON FORMATION SEQUENCE INITIATED ⚡');
+                this.formLions();
+                this.bindMissionForm();
+                this.loadUserProgress();
+                this.updateProgressDisplay();
+                this.updateLionStatus();
+            }
+
+            formLions() {
+                // 🦁 RED LION: Neural AI Bridge Engine
+                this.lions.red.status = 'ONLINE';
+                console.log('🦁 RED LION: Neural AI Bridge Engine - ONLINE');
+                
+                // 🦁 GREEN LION: Enterprise Foundation Detection
+                this.lions.green.status = 'ONLINE';
+                this.lions.green.modules = this.detectEnterpriseModules();
+                console.log('🦁 GREEN LION: Enterprise Foundation - ONLINE');
+                
+                // 🦁 BLUE LION: AI Integration Core
+                this.lions.blue.status = 'ONLINE';
+                this.lions.blue.aiRouter = this.createAIRouter();
+                console.log('🦁 BLUE LION: AI Integration Core - ONLINE');
+                
+                // 🦁 YELLOW LION: Neural Interface Architecture
+                this.lions.yellow.status = 'ONLINE';
+                this.lions.yellow.neuralProcessor = this.createNeuralProcessor();
+                console.log('🦁 YELLOW LION: Neural Interface Architecture - ONLINE');
+                
+                // 🦁 BLACK LION: Command Center
+                this.lions.black.status = 'ONLINE';
+                this.lions.black.commander = this.createCommandCenter();
+                console.log('🦁 BLACK LION: Command Center - ONLINE');
+                
+                this.voltronStatus = 'FORMED';
+                this.announceVoltronFormation();
+            }
+
+            announceVoltronFormation() {
+                console.log(`
+⚡⚡⚡ VOLTRON FORMATION COMPLETE! ⚡⚡⚡
+
+🦁 RED LION: ${this.lions.red.name} - ${this.lions.red.status}
+🦁 GREEN LION: ${this.lions.green.name} - ${this.lions.green.status}
+🦁 BLUE LION: ${this.lions.blue.name} - ${this.lions.blue.status}
+🦁 YELLOW LION: ${this.lions.yellow.name} - ${this.lions.yellow.status}
+🦁 BLACK LION: ${this.lions.black.name} - ${this.lions.black.status}
+
+🤖 DEFENDER OF THE UNIVERSE OF LEARNING! 🤖
+⚔️ Ready to defend knowledge with Blazing Sword! ⚔️
+                `);
+            }
+
+            updateLionStatus() {
+                const statusDiv = document.getElementById('lion-status');
+                if (statusDiv) {
+                    setTimeout(() => {
+                        statusDiv.innerHTML = `
+                            <div style="color: #ff6b35; font-weight: bold; margin-bottom: 5px;">🦁 VOLTRON STATUS 🦁</div>
+                            <div class="lion">🦁 RED LION: ${this.lions.red.status}</div>
+                            <div class="lion">🦁 GREEN LION: ${this.lions.green.status}</div>
+                            <div class="lion">🦁 BLUE LION: ${this.lions.blue.status}</div>
+                            <div class="lion">🦁 YELLOW LION: ${this.lions.yellow.status}</div>
+                            <div class="lion">🦁 BLACK LION: ${this.lions.black.status}</div>
+                        `;
+                    }, 2000);
+                }
+            }
+
+            detectEnterpriseModules() {
+                const modules = [
+                    'LearningAnalyzer', 'MissionControl', 'ProgressTracking',
+                    'PromptEngineering', 'ResponseProcessor', 'SessionNavigation'
+                ];
+                
+                const detected = modules.filter(name => window[name] || (window.assets && window.assets.js));
+                console.log(`🦁 GREEN LION: ${detected.length} Enterprise modules detected, ${modules.length - detected.length} placeholders ready`);
+                
+                return {
+                    detected: detected.length,
+                    total: modules.length,
+                    modules: modules
+                };
+            }
+
+            createAIRouter() {
+                return {
+                    routeToOptimalAI: (challenge, difficulty) => {
+                        if (challenge.includes('science') || challenge.includes('experiment')) {
+                            return 'claude';
+                        } else if (challenge.includes('code') || challenge.includes('programming')) {
+                            return 'chatgpt';
+                        } else if (challenge.includes('research') || challenge.includes('data')) {
+                            return 'perplexity';
+                        } else {
+                            return 'claude';
+                        }
+                    },
+                    sendToAI: async (prompt, aiType) => {
+                        console.log(`🤖 Voltron routing to ${aiType.toUpperCase()} AI...`);
+                        return this.simulateVoltronAI(prompt, aiType);
+                    }
+                };
+            }
+
+            createNeuralProcessor() {
+                return {
+                    formatForBCI: (learningSeed) => {
+                        return {
+                            neuralId: `NEURAL_${Date.now()}`,
+                            brainCompatible: true,
+                            voltronEnhanced: true,
+                            memoryHooks: ['visual', 'practical', 'conceptual', 'kinesthetic'],
+                            retentionPattern: {
+                                spaced_repetition: [1, 3, 7, 21],
+                                reinforcement_points: ['concept', 'application', 'mastery']
+                            },
+                            downloadReady: true
+                        };
+                    }
+                };
+            }
+
+            createCommandCenter() {
+                return {
+                    executeVoltronMission: async (challenge) => {
+                        console.log('⚔️ VOLTRON BLAZING SWORD: Cutting through learning complexity!');
+                        const mission = this.createMission(challenge);
+                        mission.voltronPowered = true;
+                        mission.blazingSwordActivated = true;
+                        this.simulateAIResponse(mission);
+                        return mission;
+                    }
+                };
+            }
+
+            bindMissionForm() {
+                const form = document.getElementById('mission-form');
+                if (form) {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handleMissionSubmit();
+                    });
+                    console.log('✅ Mission form bound to Voltron MechaZord');
+                } else {
+                    console.error('❌ Mission form not found for Voltron binding');
+                }
+            }
+
+            handleMissionSubmit() {
+                const challengeInput = document.getElementById('challenge-input');
+                const challenge = challengeInput.value.trim();
+                
+                if (!challenge) {
+                    this.showToast('Enter a challenge for Voltron to tackle!', 'warning');
+                    return;
+                }
+
+                const mission = this.lions.black.commander.executeVoltronMission(challenge);
+                this.currentMission = mission;
+                challengeInput.value = '';
+                
+                console.log('⚡ VOLTRON MISSION LAUNCHED:', mission);
+            }
+
+            createMission(challenge) {
+                const missionId = 'VOLTRON_' + Date.now();
+                const sector = this.detectSector(challenge);
+                const difficulty = this.assessDifficulty(challenge);
+                
+                return {
+                    id: missionId,
+                    challenge: challenge,
+                    sector: sector,
+                    difficulty: difficulty,
+                    timestamp: new Date().toISOString(),
+                    status: 'active',
+                    xpPotential: this.calculateXP(difficulty),
+                    voltronPowered: true,
+                    aiEnhanced: true,
+                    neuralReady: true
+                };
+            }
+
+            detectSector(challenge) {
+                const keywords = {
+                    'Science': ['biology', 'chemistry', 'physics', 'experiment', 'photosynthesis', 'molecule', 'atom', 'cell', 'DNA', 'energy', 'solar', 'light', 'plant', 'ohms', 'law'],
+                    'Technology': ['computer', 'programming', 'AI', 'digital', 'software', 'code', 'app', 'website', 'algorithm', 'data'],
+                    'Engineering': ['design', 'build', 'construct', 'mechanical', 'electrical', 'structure', 'robot', 'machine'],
+                    'Mathematics': ['equation', 'calculate', 'algebra', 'geometry', 'statistics', 'formula', 'graph', 'number']
+                };
+                
+                const lowerChallenge = challenge.toLowerCase();
+                for (const [sector, words] of Object.entries(keywords)) {
+                    if (words.some(word => lowerChallenge.includes(word))) {
+                        return sector;
+                    }
+                }
+                return 'Science';
+            }
+
+            assessDifficulty(challenge) {
+                const length = challenge.length;
+                const complexWords = ['analyze', 'synthesize', 'evaluate', 'complex', 'advanced', 'theoretical'];
+                const hasComplexWords = complexWords.some(word => challenge.toLowerCase().includes(word));
+                
+                if (length > 200 || hasComplexWords) return 'Admiral';
+                if (length > 100) return 'Commander';
+                if (length > 50) return 'Officer';
+                return 'Cadet';
+            }
+
+            calculateXP(difficulty) {
+                const xpMap = {
+                    'Cadet': 15,
+                    'Officer': 25,
+                    'Commander': 40,
+                    'Admiral': 65
+                };
+                return xpMap[difficulty] || 15;
+            }
+
+            async simulateAIResponse(mission) {
+                this.showProcessingState(mission);
+                
+                setTimeout(() => {
+                    const learningSeed = this.generateVoltronLearningSeed(mission);
+                    this.displayLearningSeed(learningSeed);
+                }, 3000);
+            }
+
+            generateVoltronLearningSeed(mission) {
+                const topic = this.extractTopicFromChallenge(mission.challenge);
+                
+                const seed = {
+                    mission_id: mission.id,
+                    title: `⚡ ${mission.sector} Learning Seed: ${topic} ⚡`,
+                    difficulty: mission.difficulty,
+                    xp_value: mission.xpPotential,
+                    voltronPowered: true,
+                    modules: [
+                        {
+                            type: "concept_introduction",
+                            content: this.generateVoltronIntroduction(mission, topic),
+                            understanding_check: this.generateVoltronQuestion(mission, topic, 'introduction')
+                        },
+                        {
+                            type: "core_knowledge",
+                            content: this.generateVoltronCoreContent(mission, topic),
+                            understanding_check: this.generateVoltronQuestion(mission, topic, 'core')
+                        },
+                        {
+                            type: "practical_application", 
+                            content: this.generateVoltronPracticalContent(mission, topic),
+                            understanding_check: this.generateVoltronQuestion(mission, topic, 'application')
+                        }
+                    ],
+                    next_steps: this.generateVoltronNextSteps(mission, topic),
+                    neural_pattern: {
+                        retention_hooks: ['visual', 'practical', 'conceptual', 'kinesthetic'],
+                        integration_points: [mission.sector.toLowerCase(), 'voltron_enhanced'],
+                        difficulty_progression: mission.difficulty,
+                        brain_ready: true,
+                        voltron_optimized: true,
+                        challenge_context: mission.challenge
+                    }
+                };
+                
+                this.learningSeeds.push(seed);
+                return seed;
+            }
+
+            extractTopicFromChallenge(challenge) {
+                const words = challenge.toLowerCase().split(' ');
+                const stopWords = ['i', 'want', 'to', 'understand', 'how', 'what', 'why', 'when', 'where', 'learn', 'about', 'works', 'work', 'teach', 'me'];
+                const meaningfulWords = words.filter(word => !stopWords.includes(word) && word.length > 2);
+                return meaningfulWords.slice(0, 3).join(' ') || 'STEM Concept';
+            }
+
+            generateVoltronIntroduction(mission, topic) {
+                const intros = {
+                    'Science': `🦁 Welcome to Voltron's scientific exploration of ${topic}! This ${mission.difficulty.toLowerCase()}-level challenge connects to fundamental forces and principles that shape our universe. With Voltron's power, you'll gain new ways to observe, understand, and harness natural phenomena. The knowledge you're about to download will feel native to your mind, like a skill you've always had.`,
+                    'Technology': `🦁 Voltron initiates your journey into ${topic}! This ${mission.difficulty.toLowerCase()}-level technological challenge will unlock understanding of digital systems that power our modern world. Through Voltron's enhanced processing, you'll grasp both the logic and creativity behind these solutions, preparing your mind for the future of human-AI collaboration.`,
+                    'Engineering': `🦁 Time to engineer solutions with Voltron's power! This ${mission.difficulty.toLowerCase()}-level challenge in ${topic} will teach you to think like both an engineer and a defender of knowledge. You'll learn to break down complex problems, consider real-world constraints, and design elegant solutions that actually work in the field.`,
+                    'Mathematics': `🦁 Let Voltron unlock the mathematical universe behind ${topic}! This ${mission.difficulty.toLowerCase()}-level exploration reveals the hidden mathematical structures that describe relationships, predict outcomes, and solve real-world problems. The patterns you discover will become part of your mental toolkit forever.`
+                };
+                return intros[mission.sector] || intros['Science'];
+            }
+
+            generateVoltronCoreContent(mission, topic) {
+                const coreContent = {
+                    'Science': `🔬 Voltron's analysis of ${topic} reveals interconnected systems operating at multiple scales. Key principles include: (1) Observable phenomena following universal laws - you can measure and predict these processes, (2) Energy transformation mechanisms that drive all natural systems, (3) Molecular and atomic interactions that create emergent properties, and (4) Environmental factors that influence efficiency and outcomes. Think of it as nature's own engineering, refined through billions of years of optimization.`,
+                    'Technology': `💻 ${topic} operates through Voltron-enhanced information processing systems. Core concepts include: (1) Input-processing-output cycles that transform data into actionable intelligence, (2) Algorithms that define step-by-step problem-solving approaches, (3) System architecture that organizes components for maximum efficiency and scalability, and (4) Human-computer interfaces that bridge biological and digital intelligence. It's like building with intelligent blocks that adapt and learn.`,
+                    'Engineering': `⚙️ Engineering ${topic} with Voltron's precision requires understanding forces, materials, and optimization principles. Essential elements include: (1) Problem definition that clarifies objectives and success criteria, (2) Material properties and their behavior under stress, temperature, and time, (3) Safety factors and environmental considerations for real-world deployment, and (4) Iterative testing and refinement cycles that approach optimal solutions.`,
+                    'Mathematics': `📊 The mathematical foundation of ${topic} reveals universal patterns and relationships. Core components include: (1) Variables and functions that model system behavior across different conditions, (2) Equations that describe how inputs transform into outputs, (3) Optimization principles for finding the best solutions within constraints, and (4) Statistical methods for handling uncertainty and predicting outcomes in complex systems.`
+                };
+                return coreContent[mission.sector] || coreContent['Science'];
+            }
+
+            generateVoltronPracticalContent(mission, topic) {
+                const practical = {
+                    'Science': `🧪 Apply Voltron's scientific methodology to master ${topic}: Begin with systematic observation of the phenomenon in multiple environments. Form specific, testable hypotheses about the underlying mechanisms. Design controlled experiments that isolate key variables and measure precise outcomes. Document your findings with both quantitative data and qualitative observations. Compare your results with established scientific knowledge and identify areas for further investigation.`,
+                    'Technology': `💾 Put ${topic} into practice with Voltron's technological approach: Research existing implementations and identify opportunities for improvement or innovation. Design and build a functional prototype that demonstrates core principles. Focus on user experience and system reliability. Test your solution with real scenarios and gather performance data. Iterate based on feedback and optimize for efficiency, scalability, and maintainability.`,
+                    'Engineering': `🔧 Engineer solutions for ${topic} using Voltron's systematic design process: Define specific problems with clear success criteria and constraints. Research materials, components, and existing solutions. Create detailed design specifications including safety factors and failure modes. Build and test prototypes under realistic conditions. Measure performance against requirements and refine the design. Document your solution for others to build upon.`,
+                    'Mathematics': `📐 Apply mathematical thinking to ${topic} with Voltron's analytical power: Identify real-world situations where these mathematical concepts appear. Set up models that capture the essential relationships and variables. Work through calculations systematically, checking each step for accuracy. Interpret your mathematical results in terms of practical implications. Verify that your solutions make sense in the original context and explore edge cases.`
+                };
+                return practical[mission.sector] || practical['Science'];
+            }
+
+            generateVoltronQuestion(mission, topic, stage) {
+                const questions = {
+                    'introduction': {
+                        'Science': `How does understanding ${topic} with Voltron's enhanced perspective change your ability to observe and predict natural phenomena?`,
+                        'Technology': `What breakthrough applications could you develop by deeply understanding ${topic} with technological precision?`,
+                        'Engineering': `What design challenges and optimization opportunities do you see when approaching ${topic} as an engineer?`,
+                        'Mathematics': `Where do you recognize the mathematical patterns of ${topic} operating in complex real-world systems?`
+                    },
+                    'core': {
+                        'Science': `Can you explain the fundamental mechanisms behind ${topic} using analogies that connect to your existing knowledge?`,
+                        'Technology': `How would you architect a system that implements ${topic} principles for maximum efficiency and user benefit?`,
+                        'Engineering': `What trade-offs and design decisions would you prioritize when optimizing ${topic} for different applications?`,
+                        'Mathematics': `How would you use mathematical modeling to predict and optimize outcomes related to ${topic}?`
+                    },
+                    'application': {
+                        'Science': `Design a comprehensive experiment to test and expand your understanding of ${topic}. What would you measure and how?`,
+                        'Technology': `What would you build to demonstrate mastery of ${topic}? Describe your implementation strategy and success metrics.`,
+                        'Engineering': `How would you solve a complex engineering challenge involving ${topic}? Outline your complete design process.`,
+                        'Mathematics': `Apply your mathematical understanding of ${topic} to solve an optimization problem from your field of interest.`
+                    }
+                };
+                return questions[stage][mission.sector] || questions[stage]['Science'];
+            }
+
+            generateVoltronNextSteps(mission, topic) {
+                const baseSteps = [
+                    `🦁 Research cutting-edge developments in ${topic} from leading scientific journals and tech companies`,
+                    `🦁 Join Voltron-level communities where experts discuss advanced applications of ${topic}`,
+                    `🦁 Create a portfolio project that demonstrates your mastery and pushes the boundaries`,
+                    `🦁 Seek out mentorship opportunities with professionals working at the forefront of ${topic}`,
+                    `🦁 Contribute to open-source projects or research initiatives advancing ${topic}`
+                ];
+                
+                return baseSteps;
+            }
+
+            displayLearningSeed(seed) {
+                const display = document.getElementById('seed-content');
+                if (!display) return;
+
+                display.innerHTML = `
+                    <div class="learning-seed-header">
+                        <h4>🧠 ${seed.title}</h4>
+                        <div class="seed-meta">
+                            <span class="difficulty">Difficulty: ${seed.difficulty}</span>
+                            <span class="xp-potential">XP Potential: +${seed.xp_value}</span>
+                            <span class="voltron-power">⚡ VOLTRON POWERED ⚡</span>
+                        </div>
+                    </div>
+                    
+                    ${seed.modules.map((module, index) => `
+                        <div class="seed-module" data-module="${index}">
+                            <h5>${module.type.replace('_', ' ')}</h5>
+                            <p>${module.content}</p>
+                            <div class="understanding-check">
+                                <strong>🤔 Voltron Knowledge Check:</strong> ${module.understanding_check}
+                            </div>
+                        </div>
+                    `).join('')}
+                    
+                    <div class="next-steps">
+                        <h5>⚡ Voltron-Enhanced Next Steps</h5>
+                        <ul>
+                            ${seed.next_steps.map(step => `<li>${step}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="mission-complete">
+                        <button class="complete-btn" onclick="window.voltronMechaZord.completeMission('${seed.mission_id}')">
+                            ⚡ Complete Voltron Mission (+${seed.xp_value} XP) ⚡
+                        </button>
+                    </div>
+                `;
+            }
+
+            showProcessingState(mission) {
+                const display = document.getElementById('seed-content');
+                if (!display) return;
+
+                display.innerHTML = `
+                    <div class="processing">
+                        <div style="font-size: 28px; margin-bottom: 20px;">⚡ Voltron Processing Neural Seed... ⚡</div>
+                        <div class="processing-spinner"></div>
+                        <div style="color: #ff6b35; margin-bottom: 10px; font-size: 18px;">Mission: ${mission.sector} Challenge</div>
+                        <div style="color: #888;">Difficulty: ${mission.difficulty} | XP Potential: +${mission.xpPotential}</div>
+                        <div style="margin-top: 20px; color: #00ff88; font-size: 16px;">🦁 Lions analyzing: "${mission.challenge}"</div>
+                        <div style="margin-top: 10px; color: #4a90e2;">⚔️ Blazing Sword cutting through complexity...</div>
+                    </div>
+                `;
+            }
+
+            completeMission(missionId) {
+                const seed = this.learningSeeds.find(s => s.mission_id === missionId);
+                if (!seed) return;
+
+                this.userProgress.totalXP += seed.xp_value;
+                this.userProgress.missionsComplete += 1;
+                this.userProgress.conceptsMastered.push(seed.title);
+                
+                this.checkRankProgression();
+                this.showToast(`⚡ VOLTRON MISSION COMPLETE! +${seed.xp_value} XP earned! ⚡`, 'success');
+                this.updateProgressDisplay();
+                this.saveUserProgress();
+                
+                console.log(`⚡ Voltron Mission ${missionId} completed! Total XP: ${this.userProgress.totalXP}`);
+            }
+
+            checkRankProgression() {
+                const ranks = ['Cadet', 'Ensign', 'Lieutenant', 'Commander', 'Captain', 'Fleet Admiral'];
+                const xpThresholds = [0, 50, 150, 300, 500, 1000];
+                
+                const currentRankIndex = ranks.indexOf(this.userProgress.rank);
+                const nextRankIndex = currentRankIndex + 1;
+                
+                if (nextRankIndex < ranks.length && this.userProgress.totalXP >= xpThresholds[nextRankIndex]) {
+                    this.userProgress.rank = ranks[nextRankIndex];
+                    this.showToast(`🎖️ VOLTRON PROMOTION! You are now ${this.userProgress.rank}! ⚡`, 'promotion');
+                }
+            }
+
+            updateProgressDisplay() {
+                const progressContent = document.getElementById('progress-content');
+                if (!progressContent) return;
+
+                progressContent.innerHTML = `
+                    <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+                        <div class="progress-stat">
+                            <div style="font-size: 2em; color: #00ff88;">${this.userProgress.rank}</div>
+                            <div style="color: #888;">Voltron Rank</div>
+                        </div>
+                        <div class="progress-stat">
+                            <div style="font-size: 2em; color: #4a90e2;">${this.userProgress.totalXP} XP</div>
+                            <div style="color: #888;">Total Experience</div>
+                        </div>
+                        <div class="progress-stat">
+                            <div style="font-size: 2em; color: #ff6b35;">${this.userProgress.missionsComplete}</div>
+                            <div style="color: #888;">Missions Complete</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                const bgColor = {
+                    'success': '#00ff88',
+                    'warning': '#ffaa00',
+                    'promotion': '#ff00aa',
+                    'info': '#ff6b35'
+                }[type] || '#ff6b35';
+                
+                const textColor = (type === 'success' || type === 'warning') ? '#000' : '#fff';
+                
+                toast.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; z-index: 10000;
+                    background: ${bgColor}; color: ${textColor};
+                    padding: 15px 20px; border-radius: 8px; font-weight: bold;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    animation: slideIn 0.3s ease;
+                    max-width: 300px; font-size: 14px;
+                `;
+                toast.textContent = message;
+                
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+            }
+
+            loadUserProgress() {
+                console.log('📊 Voltron User Progress Loaded:', this.userProgress);
+            }
+
+            saveUserProgress() {
+                console.log('💾 Voltron Progress Saved - Rank:', this.userProgress.rank, 'XP:', this.userProgress.totalXP);
+            }
+
+            // VOLTRON SPECIAL ATTACKS
+            blazingSword(challenge) {
+                console.log('⚔️ VOLTRON BLAZING SWORD ACTIVATED!');
+                return this.lions.black.commander.executeVoltronMission(challenge);
+            }
+
+            getVoltronStatus() {
+                return {
+                    status: this.voltronStatus,
+                    lions: this.lions,
+                    missions: this.learningSeeds.length,
+                    xp: this.userProgress.totalXP,
+                    rank: this.userProgress.rank,
+                    powerLevel: 'MAXIMUM'
+                };
             }
         }
-        return null;
-    }
 
-    createModuleBridge() {
-        // Create bridge functions that work with or without enterprise modules
-        this.bridge = {
-            // Enhanced Learning Analysis
-            analyzeChallenge: (challenge) => {
-                if (this.enterpriseModules.LearningAnalyzer?.status === 'BONDED') {
-                    return this.enterpriseModules.LearningAnalyzer.analyzeComplexity(challenge);
-                }
-                return this.voltronAnalyzeChallenge(challenge);
-            },
-
-            // Mission Control Integration
-            createEnterpriseeMission: (missionData) => {
-                if (this.enterpriseModules.MissionControl?.status === 'BONDED') {
-                    return this.enterpriseModules.MissionControl.createMission(missionData);
-                }
-                return this.voltronCreateMission(missionData);
-            },
-
-            // Progress Tracking Enhancement
-            updateEnterpriseProgress: (xp, achievements) => {
-                if (this.enterpriseModules.ProgressTracking?.status === 'BONDED') {
-                    return this.enterpriseModules.ProgressTracking.updateProgress(xp, achievements);
-                }
-                return this.voltronUpdateProgress(xp, achievements);
-            },
-
-            // AI Response Processing
-            processEnterpriseResponse: (response, mission) => {
-                if (this.enterpriseModules.ResponseProcessor?.status === 'BONDED') {
-                    return this.enterpriseModules.ResponseProcessor.processResponse(response, mission);
-                }
-                return this.voltronProcessResponse(response, mission);
-            }
-        };
-    }
-
-    // Voltron-powered fallback methods (enhanced versions of your single-page functions)
-    voltronAnalyzeChallenge(challenge) {
-        const analysis = {
-            complexity: Math.min(10, challenge.length / 20),
-            concepts: this.extractConcepts(challenge),
-            prerequisites: this.identifyPrerequisites(challenge),
-            learningPath: this.generateLearningPath(challenge),
-            voltronEnhanced: true
-        };
-        
-        console.log('🦁 VOLTRON ANALYSIS:', analysis);
-        return analysis;
-    }
-
-    voltronCreateMission(missionData) {
-        const enhancedMission = {
-            ...missionData,
-            voltronPowered: true,
-            aiEnhanced: true,
-            neuralReady: true,
-            enterpriseIntegrated: Object.keys(this.enterpriseModules).length > 0
-        };
-        
-        console.log('🦁 VOLTRON MISSION:', enhancedMission);
-        return enhancedMission;
-    }
-
-    voltronUpdateProgress(xp, achievements) {
-        const progressUpdate = {
-            xpGained: xp,
-            achievements: achievements,
-            voltronBonus: Math.floor(xp * 0.1), // 10% Voltron bonus
-            timestamp: new Date().toISOString(),
-            enterpriseModules: Object.keys(this.enterpriseModules).length
-        };
-        
-        console.log('🦁 VOLTRON PROGRESS:', progressUpdate);
-        return progressUpdate;
-    }
-
-    voltronProcessResponse(response, mission) {
-        const processedResponse = {
-            originalResponse: response,
-            mission: mission,
-            voltronEnhancements: {
-                neuralOptimized: true,
-                retentionBoosted: true,
-                practiceExercises: this.generatePracticeExercises(mission),
-                nextSteps: this.generateEnhancedNextSteps(mission)
-            },
-            enterpriseIntegration: this.enterpriseModules
-        };
-        
-        console.log('🦁 VOLTRON RESPONSE:', processedResponse);
-        return processedResponse;
-    }
-
-    // Helper methods
-    extractConcepts(challenge) {
-        const words = challenge.toLowerCase().split(' ');
-        const concepts = words.filter(word => word.length > 4);
-        return concepts.slice(0, 5); // Top 5 concepts
-    }
-
-    identifyPrerequisites(challenge) {
-        const prerequisites = {
-            'ohms law': ['basic electricity', 'voltage concepts', 'current flow'],
-            'photosynthesis': ['plant biology', 'chemistry basics', 'energy concepts'],
-            'programming': ['logic thinking', 'problem solving', 'syntax understanding']
-        };
-        
-        const lowerChallenge = challenge.toLowerCase();
-        for (let [topic, prereqs] of Object.entries(prerequisites)) {
-            if (lowerChallenge.includes(topic)) {
-                return prereqs;
-            }
-        }
-        return ['basic concepts', 'foundational knowledge'];
-    }
-
-    generateLearningPath(challenge) {
-        return [
-            { phase: 'Foundation', duration: '10min', focus: 'Basic concepts' },
-            { phase: 'Understanding', duration: '15min', focus: 'Core principles' },
-            { phase: 'Application', duration: '20min', focus: 'Practical use' },
-            { phase: 'Mastery', duration: '10min', focus: 'Advanced concepts' }
-        ];
-    }
-
-    generatePracticeExercises(mission) {
-        const exercises = {
-            'Science': [
-                'Design a simple experiment',
-                'Create visual diagrams',
-                'Solve practice problems',
-                'Real-world applications'
-            ],
-            'Technology': [
-                'Build a prototype',
-                'Code a simple example',
-                'Debug common errors',
-                'Optimize performance'
-            ],
-            'Engineering': [
-                'Design constraints analysis',
-                'Material selection',
-                'Safety considerations',
-                'Cost-benefit analysis'
-            ],
-            'Mathematics': [
-                'Solve step-by-step',
-                'Graph relationships',
-                'Word problem practice',
-                'Pattern recognition'
-            ]
-        };
-        
-        return exercises[mission.sector] || exercises['Science'];
-    }
-
-    generateEnhancedNextSteps(mission) {
-        return [
-            `Deep dive into advanced ${mission.sector.toLowerCase()} concepts`,
-            `Join online communities discussing ${mission.challenge}`,
-            `Find research papers or recent developments`,
-            `Create a teaching presentation for others`,
-            `Build a portfolio project demonstrating mastery`
-        ];
-    }
-
-    formVoltron() {
-        this.voltronStatus = 'FORMED';
-        const bondedModules = Object.values(this.enterpriseModules)
-            .filter(module => module.status === 'BONDED').length;
-        
-        console.log(`
-⚡⚡⚡ VOLTRON ENTERPRISE BRIDGE FORMED! ⚡⚡⚡
-
-🦁 RED LION: Single-Page Engine - ONLINE
-🦁 GREEN LION: ${bondedModules} Enterprise Modules - BONDED
-🦁 BLUE LION: AI Integration - READY
-🦁 YELLOW LION: Neural Interface - PREPARED
-🦁 BLACK LION: Command Center - OPERATIONAL
-
-🤖 READY TO DEFEND THE UNIVERSE OF LEARNING! 🤖
-        `);
-        
-        return {
-            status: 'VOLTRON_FORMED',
-            enterpriseModules: Object.keys(this.enterpriseModules).length,
-            bondedModules: bondedModules,
-            aiPowered: true,
-            neuralReady: true
-        };
-    }
-
-    // Integration with your existing single-page engine
-    enhanceExistingMission(mission) {
-        // Enhance your existing missions with enterprise capabilities
-        const analysis = this.bridge.analyzeChallenge(mission.challenge);
-        const enhancedMission = this.bridge.createEnterpriseeMission(mission);
-        
-        return {
-            ...enhancedMission,
-            voltronAnalysis: analysis,
-            enterprisePowered: true
-        };
-    }
-}
-
-// 🚀 INITIALIZE VOLTRON BRIDGE
-if (window.hexMindBridge) {
-    console.log('⚡ Bonding Voltron Bridge with existing HexMind engine...');
-    
-    // Create Voltron Bridge
-    window.voltronBridge = new VoltronEnterpriseBridge();
-    
-    // Enhance existing mission creation
-    const originalCreateMission = window.hexMindBridge.createMission.bind(window.hexMindBridge);
-    window.hexMindBridge.createMission = function(challenge) {
-        const baseMission = originalCreateMission(challenge);
-        return window.voltronBridge.enhanceExistingMission(baseMission);
-    };
-    
-    // Add Voltron power to mission display
-    const originalDisplayLearningSeed = window.hexMindBridge.displayLearningSeed.bind(window.hexMindBridge);
-    window.hexMindBridge.displayLearningSeed = function(seed) {
-        // Add Voltron badge to learning seeds
-        const enhancedSeed = {
-            ...seed,
-            title: `⚡ ${seed.title} ⚡`,
-            voltronPowered: true
-        };
-        return originalDisplayLearningSeed(enhancedSeed);
-    };
-    
-    console.log('⚡ VOLTRON BRIDGE: Successfully bonded with HexMind engine!');
-    console.log('🦁 ENTERPRISE INTEGRATION: Ready for module detection and bonding!');
-} else {
-    console.log('⚠️ VOLTRON BRIDGE: HexMind engine not found - creating standalone bridge');
-    window.voltronBridge = new VoltronEnterpriseBridge();
-}
+        // ⚡ INITIALIZE VOLTRON MECHAZORD ⚡
+        document.addEventListener('DOMContentLoaded', function() {
+            window.voltronMechaZord = new HexMindVoltronMechaZord();
+            window.hexMindBridge = window.voltronMechaZord; // Backward compatibility
+            
+            // Global Voltron access
+            window.voltron = window.voltronMechaZord.getVoltronStatus();
+            window.blazingSword = (challenge) => window.voltronMechaZord.blazingSword(challenge);
+            
+            console.log('⚡ HexMind Voltron MechaZord - FULLY OPERATIONAL! ⚡');
+        });
+    </script>
+</body>
+</html>
