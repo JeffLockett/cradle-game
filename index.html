@@ -562,7 +562,163 @@
             box-shadow: 0 8px 25px rgba(78, 205, 196, 0.5);
         }
 
-        /* Mobile Responsive */
+        /* AI Response Processor Section */
+        .processor-section {
+            background: rgba(255, 105, 180, 0.1);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-out 0.5s both;
+        }
+
+        .response-input {
+            width: 100%;
+            min-height: 200px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 105, 180, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            color: #ffffff;
+            font-size: 14px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .response-input:focus {
+            outline: none;
+            border-color: #ff69b4;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+        }
+
+        .response-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .ai-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .ai-tag {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .ai-tag:hover {
+            background: rgba(255, 105, 180, 0.2);
+        }
+
+        .ai-tag.selected {
+            background: rgba(255, 105, 180, 0.3);
+            border-color: #ff69b4;
+            color: #ff69b4;
+            font-weight: bold;
+        }
+
+        .processing-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .process-btn {
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .process-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        /* Processed Output */
+        .processed-output {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 105, 180, 0.3);
+        }
+
+        .chunk-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff69b4;
+        }
+
+        .chunk-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .chunk-title {
+            color: #ff69b4;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .chunk-meta {
+            font-size: 0.8em;
+            color: #a8b2d1;
+            margin-left: auto;
+        }
+
+        .chunk-content {
+            color: #ffffff;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* Export Options */
+        .export-panel {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .export-btn {
+            background: rgba(78, 205, 196, 0.8);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: #4ecdc4;
+            transform: scale(1.05);
+        }
         @media (max-width: 768px) {
             .main-grid {
                 grid-template-columns: 1fr;
@@ -573,7 +729,7 @@
             }
             
             .model-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .button-group {
@@ -592,6 +748,14 @@
 
             .intelligence-metrics {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .ai-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .processing-options {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -692,6 +856,54 @@
             </div>
         </div>
 
+        <!-- AI Response Processor -->
+        <div class="processor-section">
+            <h2 class="section-title">
+                <span>🤖</span>
+                <span>AI Response Processor</span>
+            </h2>
+            
+            <div>
+                <h3 style="color: #ff69b4; margin-bottom: 10px;">Select Source AI:</h3>
+                <div class="ai-selector">
+                    <div class="ai-tag" data-ai="claude">🧠 Claude</div>
+                    <div class="ai-tag" data-ai="perplexity">🔍 Perplexity</div>
+                    <div class="ai-tag" data-ai="gemini">✨ Gemini</div>
+                    <div class="ai-tag" data-ai="grok">🚀 Grok</div>
+                    <div class="ai-tag" data-ai="chatgpt">⚡ ChatGPT</div>
+                    <div class="ai-tag" data-ai="copilot">💻 Copilot</div>
+                </div>
+                
+                <textarea 
+                    id="responseInput" 
+                    class="response-input" 
+                    placeholder="Paste the AI response here for intelligent processing, chunking, and formatting..."
+                ></textarea>
+                
+                <div class="processing-options">
+                    <button class="process-btn" onclick="processResponse('chunk')">
+                        📋 Smart Chunking
+                    </button>
+                    <button class="process-btn" onclick="processResponse('markdown')">
+                        📝 Generate Markdown
+                    </button>
+                    <button class="process-btn" onclick="processResponse('html')">
+                        🌐 Generate HTML
+                    </button>
+                </div>
+            </div>
+            
+            <div id="processedOutput" class="processed-output" style="display: none;">
+                <div class="export-panel">
+                    <span style="color: #ff69b4; font-weight: bold;">Export Options:</span>
+                    <button class="export-btn" onclick="exportProcessed('copy')">📋 Copy All</button>
+                    <button class="export-btn" onclick="exportProcessed('download')">💾 Download</button>
+                    <button class="export-btn" onclick="exportProcessed('clear')">🗑️ Clear</button>
+                </div>
+                <div id="processedContent"></div>
+            </div>
+        </div>
+
         <!-- History Section -->
         <div class="history-section">
             <h2 class="section-title">
@@ -722,6 +934,8 @@
             var historyItems = [];
             var autoSaveTimer = null;
             var lastSaveTime = 0;
+            var selectedAI = '';
+            var processedData = null;
             
             // Initialize
             function init() {
@@ -745,6 +959,16 @@
                 document.getElementById('generateBtn').addEventListener('click', generateCommands);
                 document.getElementById('clearBtn').addEventListener('click', clearAll);
                 document.getElementById('focusBtn').addEventListener('click', toggleFocus);
+                
+                // AI Selector tags
+                var aiTags = document.querySelectorAll('.ai-tag');
+                for (var i = 0; i < aiTags.length; i++) {
+                    aiTags[i].addEventListener('click', handleAISelection);
+                }
+                
+                // Response input auto-save
+                var responseInput = document.getElementById('responseInput');
+                responseInput.addEventListener('input', triggerAutoSave);
                 
                 // Auto-save on input changes
                 var ideaInput = document.getElementById('ideaInput');
@@ -794,6 +1018,290 @@
                 updateStatus('Selected ' + selectedModels.length + ' AI model(s)');
                 triggerAutoSave();
             }
+            
+            // AI Selection Handler
+            function handleAISelection(e) {
+                var aiTags = document.querySelectorAll('.ai-tag');
+                for (var i = 0; i < aiTags.length; i++) {
+                    aiTags[i].classList.remove('selected');
+                }
+                
+                e.currentTarget.classList.add('selected');
+                selectedAI = e.currentTarget.getAttribute('data-ai');
+                updateStatus('Selected ' + selectedAI + ' for response processing');
+            }
+            
+            // AI Response Processing Functions
+            window.processResponse = function(type) {
+                var responseText = document.getElementById('responseInput').value.trim();
+                
+                if (!responseText) {
+                    showToast('Please paste an AI response first!', 'error');
+                    return;
+                }
+                
+                if (!selectedAI) {
+                    showToast('Please select the source AI first!', 'error');
+                    return;
+                }
+                
+                updateStatus('🤖 Processing ' + selectedAI + ' response...');
+                
+                setTimeout(function() {
+                    var processed;
+                    
+                    switch(type) {
+                        case 'chunk':
+                            processed = smartChunking(responseText, selectedAI);
+                            break;
+                        case 'markdown':
+                            processed = generateMarkdown(responseText, selectedAI);
+                            break;
+                        case 'html':
+                            processed = generateHTML(responseText, selectedAI);
+                            break;
+                        default:
+                            processed = smartChunking(responseText, selectedAI);
+                    }
+                    
+                    displayProcessedOutput(processed, type);
+                    processedData = { content: processed, type: type, source: selectedAI };
+                    
+                    updateStatus('✨ Response processed successfully!');
+                    showToast('🎯 ' + selectedAI + ' response processed!', 'success');
+                    addToHistory('Processed ' + selectedAI + ' response (' + type + ')');
+                }, 1000);
+            };
+            
+            function smartChunking(text, source) {
+                // Intelligent chunking based on content structure
+                var chunks = [];
+                var lines = text.split('\n');
+                var currentChunk = '';
+                var chunkTitle = '';
+                var chunkNumber = 1;
+                
+                // Patterns for identifying sections
+                var headerPatterns = [
+                    /^#+\s+(.+)/, // Markdown headers
+                    /^(.+):$/, // Colon-ended titles
+                    /^\*\*(.+)\*\*/, // Bold titles
+                    /^(\d+\.|[A-Z]\.)\s+(.+)/, // Numbered/lettered items
+                    /^[-*]\s+(.+)/ // Bullet points
+                ];
+                
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i].trim();
+                    
+                    if (!line) {
+                        if (currentChunk.trim()) {
+                            currentChunk += '\n';
+                        }
+                        continue;
+                    }
+                    
+                    // Check if this line is a header
+                    var isHeader = false;
+                    for (var j = 0; j < headerPatterns.length; j++) {
+                        var match = line.match(headerPatterns[j]);
+                        if (match) {
+                            // Save previous chunk
+                            if (currentChunk.trim()) {
+                                chunks.push({
+                                    title: chunkTitle || 'Section ' + chunkNumber,
+                                    content: currentChunk.trim(),
+                                    source: source,
+                                    length: currentChunk.length
+                                });
+                                chunkNumber++;
+                            }
+                            
+                            // Start new chunk
+                            chunkTitle = match[1] || match[2] || line;
+                            currentChunk = '';
+                            isHeader = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!isHeader) {
+                        currentChunk += line + '\n';
+                    }
+                    
+                    // Auto-chunk if getting too long (2000 chars)
+                    if (currentChunk.length > 2000) {
+                        chunks.push({
+                            title: chunkTitle || 'Section ' + chunkNumber,
+                            content: currentChunk.trim(),
+                            source: source,
+                            length: currentChunk.length
+                        });
+                        chunkNumber++;
+                        currentChunk = '';
+                        chunkTitle = '';
+                    }
+                }
+                
+                // Add final chunk
+                if (currentChunk.trim()) {
+                    chunks.push({
+                        title: chunkTitle || 'Section ' + chunkNumber,
+                        content: currentChunk.trim(),
+                        source: source,
+                        length: currentChunk.length
+                    });
+                }
+                
+                return chunks;
+            }
+            
+            function generateMarkdown(text, source) {
+                var chunks = smartChunking(text, source);
+                var markdown = '# ' + getAIName(source) + ' Research Results\n\n';
+                markdown += '*Generated by HexMind Command Center*\n\n';
+                markdown += '---\n\n';
+                
+                for (var i = 0; i < chunks.length; i++) {
+                    var chunk = chunks[i];
+                    markdown += '## ' + chunk.title + '\n\n';
+                    markdown += chunk.content + '\n\n';
+                    if (i < chunks.length - 1) {
+                        markdown += '---\n\n';
+                    }
+                }
+                
+                return markdown;
+            }
+            
+            function generateHTML(text, source) {
+                var chunks = smartChunking(text, source);
+                var html = '<!DOCTYPE html>\n<html>\n<head>\n';
+                html += '<title>' + getAIName(source) + ' Research Results</title>\n';
+                html += '<style>\nbody { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }\n';
+                html += 'h1 { color: #333; border-bottom: 2px solid #4ecdc4; }\n';
+                html += 'h2 { color: #666; margin-top: 30px; }\n';
+                html += '.chunk { background: #f9f9f9; padding: 20px; margin: 20px 0; border-radius: 8px; }\n';
+                html += '.meta { color: #888; font-size: 0.9em; }\n';
+                html += '</style>\n</head>\n<body>\n';
+                
+                html += '<h1>' + getAIName(source) + ' Research Results</h1>\n';
+                html += '<p class="meta">Generated by HexMind Command Center</p>\n';
+                
+                for (var i = 0; i < chunks.length; i++) {
+                    var chunk = chunks[i];
+                    html += '<div class="chunk">\n';
+                    html += '<h2>' + chunk.title + '</h2>\n';
+                    html += '<pre>' + chunk.content + '</pre>\n';
+                    html += '</div>\n';
+                }
+                
+                html += '</body>\n</html>';
+                return html;
+            }
+            
+            function getAIName(aiKey) {
+                var names = {
+                    claude: 'Claude Sonnet 4',
+                    perplexity: 'Perplexity',
+                    gemini: 'Gemini Pro',
+                    grok: 'Grok/SuperGrok',
+                    chatgpt: 'ChatGPT',
+                    copilot: 'GitHub Copilot'
+                };
+                return names[aiKey] || aiKey;
+            }
+            
+            function displayProcessedOutput(data, type) {
+                var outputDiv = document.getElementById('processedOutput');
+                var contentDiv = document.getElementById('processedContent');
+                
+                outputDiv.style.display = 'block';
+                
+                if (type === 'chunk') {
+                    var html = '';
+                    for (var i = 0; i < data.length; i++) {
+                        var chunk = data[i];
+                        html += '<div class="chunk-item">';
+                        html += '<div class="chunk-header">';
+                        html += '<div class="chunk-title">' + chunk.title + '</div>';
+                        html += '<div class="chunk-meta">' + chunk.length + ' chars | ' + chunk.source + '</div>';
+                        html += '</div>';
+                        html += '<div class="chunk-content">' + chunk.content + '</div>';
+                        html += '</div>';
+                    }
+                    contentDiv.innerHTML = html;
+                } else {
+                    contentDiv.innerHTML = '<pre style="color: #fff; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; overflow-x: auto;">' + 
+                                         data.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
+                }
+            }
+            
+            // Export Functions
+            window.exportProcessed = function(action) {
+                if (!processedData) {
+                    showToast('No processed data to export!', 'error');
+                    return;
+                }
+                
+                switch(action) {
+                    case 'copy':
+                        var textToCopy = processedData.type === 'chunk' ? 
+                            processedData.content.map(c => c.title + '\n' + c.content).join('\n\n---\n\n') :
+                            processedData.content;
+                        
+                        var textarea = document.createElement('textarea');
+                        textarea.value = textToCopy;
+                        textarea.style.position = 'fixed';
+                        textarea.style.opacity = '0';
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        
+                        try {
+                            document.execCommand('copy');
+                            showToast('📋 Processed content copied!', 'success');
+                        } catch (err) {
+                            showToast('Copy failed!', 'error');
+                        }
+                        
+                        document.body.removeChild(textarea);
+                        break;
+                        
+                    case 'download':
+                        var filename = getAIName(processedData.source) + '_processed_' + 
+                                     new Date().toISOString().slice(0,10) + 
+                                     (processedData.type === 'html' ? '.html' : 
+                                      processedData.type === 'markdown' ? '.md' : '.txt');
+                        
+                        var content = processedData.type === 'chunk' ? 
+                            processedData.content.map(c => c.title + '\n' + c.content).join('\n\n---\n\n') :
+                            processedData.content;
+                        
+                        var blob = new Blob([content], { type: 'text/plain' });
+                        var url = URL.createObjectURL(blob);
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = filename;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        
+                        showToast('💾 File downloaded!', 'success');
+                        break;
+                        
+                    case 'clear':
+                        document.getElementById('processedOutput').style.display = 'none';
+                        document.getElementById('responseInput').value = '';
+                        processedData = null;
+                        selectedAI = '';
+                        
+                        var aiTags = document.querySelectorAll('.ai-tag');
+                        for (var i = 0; i < aiTags.length; i++) {
+                            aiTags[i].classList.remove('selected');
+                        }
+                        
+                        showToast('🗑️ Processor cleared!', 'success');
+                        break;
+                }
+            };
             
             // AI Intelligence Engine - Core Functionality
             function analyzeIdea(idea) {
@@ -1046,11 +1554,17 @@
                     claude: analysis.complexity > 0.6 ? 
                         '\n\n**CLAUDE OPTIMIZATION**: Leverage your analytical depth for systematic reasoning, evidence synthesis, and nuanced interpretation of complex relationships.' : '',
                     
-                    gpt4: analysis.researchAreas.includes('Business') || analysis.researchAreas.includes('Strategy') ?
-                        '\n\n**GPT-4 OPTIMIZATION**: Utilize your broad knowledge base for strategic insights, market analysis, and practical implementation frameworks.' : '',
+                    perplexity: analysis.researchAreas.includes('Research') || analysis.intent === 'Research & Analysis' ?
+                        '\n\n**PERPLEXITY OPTIMIZATION**: Use your real-time search capabilities to provide the most current data, recent developments, and cite specific sources with publication dates.' : '',
                     
                     gemini: analysis.researchAreas.includes('Creative') || analysis.intent === 'Creation & Building' ?
                         '\n\n**GEMINI OPTIMIZATION**: Apply your creative problem-solving capabilities for innovative approaches, design thinking, and out-of-the-box solutions.' : '',
+                    
+                    grok: analysis.complexity > 0.5 ?
+                        '\n\n**GROK OPTIMIZATION**: Challenge conventional wisdom with bold, contrarian insights. Think first-principles and suggest disruptive alternatives that others might miss.' : '',
+                    
+                    chatgpt: analysis.researchAreas.includes('Business') || analysis.context.includes('Professional') ?
+                        '\n\n**CHATGPT OPTIMIZATION**: Utilize your broad knowledge base for strategic insights, practical frameworks, and comprehensive problem-solving approaches.' : '',
                     
                     copilot: analysis.researchAreas.includes('Technical') || analysis.context === 'Technical' ?
                         '\n\n**COPILOT OPTIMIZATION**: Focus on technical implementation, code architecture, best practices, and scalable solutions with detailed technical specifications.' : ''
@@ -1068,9 +1582,11 @@
                 
                 var modelBadges = {
                     claude: analysis.intent === 'Research & Analysis' ? ['🧠 Logic Engine'] : [],
-                    gpt4: analysis.context.includes('Business') ? ['💼 Strategy Mode'] : [],
+                    perplexity: analysis.researchAreas.includes('Research') ? ['🔍 Live Data'] : [],
                     gemini: analysis.intent === 'Creation & Building' ? ['✨ Creative Mode'] : [],
-                    copilot: analysis.researchAreas.includes('Technical') ? ['⚡ Code Optimized'] : []
+                    grok: analysis.complexity > 0.5 ? ['🚀 Contrarian Mode'] : [],
+                    chatgpt: analysis.context.includes('Business') ? ['⚡ Strategy Mode'] : [],
+                    copilot: analysis.researchAreas.includes('Technical') ? ['💻 Code Optimized'] : []
                 };
                 
                 badges = badges.concat(modelBadges[model] || []);
@@ -1202,11 +1718,15 @@
                 var prompts = {
                     claude: '<role>Expert Research Analyst and Strategic Thinker</role>\n<context>Deep analysis request from Sacred Artist Jeff\'s HexMind system</context>\n\n<task>\nConduct a comprehensive, multi-layered analysis of: "' + idea + '"\n\n**Phase 1: Foundation Analysis**\n- Break down core components and stakeholders\n- Identify primary objectives and constraints\n- Map current landscape and existing solutions\n\n**Phase 2: Deep Research Investigation**\n- Analyze market trends and emerging patterns\n- Review academic research and best practices\n- Examine case studies and real-world implementations\n\n**Phase 3: Strategic Synthesis**\n- Develop actionable insights and recommendations\n- Create implementation roadmap with milestones\n- Identify potential obstacles and mitigation strategies\n\n**Phase 4: Innovation Opportunities**\n- Explore cutting-edge approaches and technologies\n- Consider interdisciplinary connections\n- Suggest novel applications and future directions\n</task>\n\n<output_format>\nStructure as a comprehensive research report with:\n- Executive Summary (key findings)\n- Detailed Analysis (evidence-based insights)\n- Strategic Recommendations (actionable steps)\n- Implementation Timeline\n- Risk Assessment\n- Innovation Opportunities\n</output_format>',
                     
-                    gpt4: 'You are a master strategist and problem-solver working with Sacred Artist Jeff\'s HexMind Command Center. I need comprehensive assistance with: "' + idea + '"\n\n**Strategic Analysis Framework:**\n\n🎯 **Objective Clarification**\n- What are the core goals and desired outcomes?\n- Who are the key stakeholders and beneficiaries?\n- What constraints and limitations must be considered?\n\n🔍 **Multi-Perspective Evaluation**\n- Technical feasibility and resource requirements\n- Market dynamics and competitive landscape\n- Social impact and ethical considerations\n- Financial implications and ROI potential\n\n💡 **Solution Architecture**\n- Generate 5-7 strategic approaches with pros/cons\n- Recommend optimal path with clear justification\n- Design implementation phases with success metrics\n- Plan for iteration and continuous improvement\n\n⚡ **Execution Blueprint**\n- Break down into actionable tasks and milestones\n- Identify required resources and team structure\n- Create timeline with realistic deadlines\n- Establish monitoring and feedback systems\n\n🚀 **Innovation Enhancement**\n- Consider emerging technologies and trends\n- Explore cross-industry best practices\n- Suggest creative alternatives and improvements\n- Plan for scalability and future expansion\n\nPlease provide detailed, actionable guidance focused on practical implementation while maintaining strategic vision.',
+                    perplexity: '🔍 **REAL-TIME RESEARCH COMMAND** 🔍\n*Sacred Artist Jeff\'s HexMind Intelligence Network*\n\n**Research Mission:** "' + idea + '"\n\n**Phase 1: Current State Analysis**\n- What are the latest developments and trends (2024-2025)?\n- Who are the leading experts, companies, and thought leaders?\n- What recent studies, papers, or reports have been published?\n- What real-time data and statistics are available?\n\n**Phase 2: Market Intelligence**\n- Current market size, growth rates, and projections\n- Recent funding, investments, and acquisitions\n- Emerging competitors and disruptive technologies\n- Regulatory changes and policy updates\n\n**Phase 3: Expert Perspectives**\n- Recent interviews, podcasts, and expert opinions\n- Conference presentations and industry insights\n- Social media sentiment and community discussions\n- Academic research and peer-reviewed findings\n\n**Phase 4: Forward-Looking Analysis**\n- Predicted trends and future scenarios\n- Potential challenges and opportunities ahead\n- Recommended resources for deeper exploration\n- Key metrics and KPIs to monitor\n\n**Research Requirements:**\n- Prioritize sources from the last 6-12 months\n- Include specific data points, statistics, and quotes\n- Cite all sources with dates and credibility context\n- Highlight conflicting viewpoints or debates\n- Provide actionable next steps for further research\n\nPlease leverage your real-time search capabilities to provide the most current, evidence-based analysis available.',
                     
                     gemini: '🎨 **CREATIVE INNOVATION LAB** 🎨\n*Sacred Artist Jeff\'s HexMind Creative Engine*\n\n**Mission:** Transform "' + idea + '" into breakthrough innovation\n\n🌟 **Creative Exploration Matrix:**\n\n**Inspiration Phase:**\n- What unconventional approaches could revolutionize this space?\n- How might we reframe this challenge through different lenses?\n- What innovative solutions exist in completely different industries?\n- How would a child, artist, engineer, and philosopher each approach this?\n\n💡 **Ideation Acceleration:**\n- Generate 10+ wildly creative concepts (no limits!)\n- Combine opposing ideas for hybrid breakthrough solutions\n- Apply design thinking principles and human-centered design\n- Consider future-forward approaches (5-10 years ahead)\n\n🎯 **Creative-Practical Fusion:**\n- How can visionary ideas become actionable reality?\n- What rapid prototyping strategies could test concepts quickly?\n- How to maintain innovation while ensuring practical implementation?\n- What creative constraints could actually enhance the solution?\n\n🚀 **Innovation Implementation:**\n- Design thinking methodology application\n- Rapid experimentation and iteration cycles\n- User experience optimization strategies\n- Creative project management approaches\n\n🌈 **Multimodal Enhancement:**\n- Visual design and aesthetic considerations\n- Interactive and experiential elements\n- Storytelling and narrative frameworks\n- Community engagement and co-creation opportunities\n\nPlease unleash creative, boundary-pushing solutions while providing concrete implementation pathways.',
                     
-                    copilot: '// 🛠️ TECHNICAL IMPLEMENTATION BLUEPRINT\n// Project: ' + idea + '\n// Sacred Artist Jeff\'s HexMind Development Command\n\n/*\n=====================================================\nCOMPREHENSIVE DEVELOPMENT STRATEGY\n=====================================================\n\n1. SYSTEM ARCHITECTURE DESIGN\n   ├── Technology Stack Selection\n   ├── Database Design & Data Flow\n   ├── API Architecture & Integration Points\n   ├── Security & Authentication Framework\n   └── Scalability & Performance Optimization\n\n2. DEVELOPMENT PHASES\n   ├── Phase 1: Core MVP Development\n   ├── Phase 2: Feature Enhancement\n   ├── Phase 3: Advanced Functionality\n   ├── Phase 4: Optimization & Polish\n   └── Phase 5: Deployment & Monitoring\n\n3. CODE QUALITY STANDARDS\n   ├── Clean Architecture Principles\n   ├── SOLID Design Patterns\n   ├── Comprehensive Error Handling\n   ├── Unit Testing & Integration Testing\n   └── Code Documentation & Comments\n\n4. DEPLOYMENT STRATEGY\n   ├── CI/CD Pipeline Setup\n   ├── Environment Configuration\n   ├── Monitoring & Logging Systems\n   ├── Backup & Recovery Procedures\n   └── Performance Monitoring Tools\n*/\n\n// REQUEST SCOPE: ' + idea + '\n\n// Please provide:\n// 1. **Technical Architecture** - System design and component breakdown\n// 2. **Code Examples** - Key implementations with best practices\n// 3. **File Structure** - Complete project organization\n// 4. **Setup Instructions** - Development environment configuration\n// 5. **Testing Strategy** - Unit tests, integration tests, and QA approach\n// 6. **Deployment Guide** - Production deployment steps and monitoring\n// 7. **Security Measures** - Authentication, authorization, and data protection\n// 8. **Performance Optimization** - Caching, database optimization, and scaling\n// 9. **Documentation** - API docs, code comments, and user guides\n// 10. **Maintenance Plan** - Updates, monitoring, and issue resolution\n\n// Focus on production-ready, scalable, and maintainable solutions.\n// Include mobile-responsive design and cross-platform compatibility.\n// Emphasize security, performance, and user experience best practices.'
+                    grok: '🚀 **GROK SUPERBRAIN ACTIVATION** 🚀\n*Sacred Artist Jeff\'s HexMind Rebellious Intelligence*\n\n**BOLD MISSION:** Disrupt everything about "' + idea + '"\n\n💥 **Unconventional Wisdom Protocol:**\n\n**Reality Check Phase:**\n- What sacred cows need to be slaughtered in this space?\n- What "obvious" assumptions are actually completely wrong?\n- Where is everyone else zigging when we should be zagging?\n- What would Elon Musk, Steve Jobs, and a pirate captain do?\n\n🎯 **Contrarian Analysis:**\n- What if we did the exact opposite of conventional wisdom?\n- Where are the hidden opportunities everyone else is missing?\n- What controversial takes might actually be brilliant?\n- How can we 10x this instead of incrementally improving?\n\n⚡ **Supergrok Insights:**\n- Connect seemingly unrelated dots across industries\n- Apply first-principles thinking to demolish assumptions\n- Find the humor and absurdity in traditional approaches\n- Suggest wildly ambitious but somehow feasible alternatives\n\n🔥 **Rebellious Implementation:**\n- What would a startup with unlimited funding do?\n- How can we move fast and break things (safely)?\n- What rules should we deliberately ignore or rewrite?\n- Where can we create unfair advantages through boldness?\n\n🌟 **Future-Backward Thinking:**\n- If this succeeded beyond our wildest dreams, what would that look like?\n- What would the world look like if this problem was completely solved?\n- How can we think like we\'re already living in that future?\n\nBe bold, be witty, be brilliant. Channel that Grok energy and give me perspectives that will make conventional thinkers uncomfortable but ultimately change the game.',
+                    
+                    chatgpt: 'You are a master strategist and problem-solver working with Sacred Artist Jeff\'s HexMind Command Center. I need comprehensive assistance with: "' + idea + '"\n\n**Strategic Analysis Framework:**\n\n🎯 **Objective Clarification**\n- What are the core goals and desired outcomes?\n- Who are the key stakeholders and beneficiaries?\n- What constraints and limitations must be considered?\n\n🔍 **Multi-Perspective Evaluation**\n- Technical feasibility and resource requirements\n- Market dynamics and competitive landscape\n- Social impact and ethical considerations\n- Financial implications and ROI potential\n\n💡 **Solution Architecture**\n- Generate 5-7 strategic approaches with pros/cons\n- Recommend optimal path with clear justification\n- Design implementation phases with success metrics\n- Plan for iteration and continuous improvement\n\n⚡ **Execution Blueprint**\n- Break down into actionable tasks and milestones\n- Identify required resources and team structure\n- Create timeline with realistic deadlines\n- Establish monitoring and feedback systems\n\n🚀 **Innovation Enhancement**\n- Consider emerging technologies and trends\n- Explore cross-industry best practices\n- Suggest creative alternatives and improvements\n- Plan for scalability and future expansion\n\n📊 **Risk Assessment & Mitigation**\n- Identify potential risks and failure points\n- Develop contingency plans and backup strategies\n- Create early warning systems and success metrics\n- Plan for pivot opportunities if needed\n\nPlease provide detailed, actionable guidance focused on practical implementation while maintaining strategic vision. Structure your response with clear headings and actionable bullet points.',
+                    
+                    copilot: '// 🛠️ TECHNICAL IMPLEMENTATION BLUEPRINT\n// Project: ' + idea + '\n// Sacred Artist Jeff\'s HexMind Development Command\n\n/*\n=====================================================\nCOMPREHENSIVE DEVELOPMENT STRATEGY\n=====================================================\n\n1. SYSTEM ARCHITECTURE DESIGN\n   ├── Technology Stack Selection\n   ├── Database Design & Data Flow\n   ├── API Architecture & Integration Points\n   ├── Security & Authentication Framework\n   └── Scalability & Performance Optimization\n\n2. DEVELOPMENT PHASES\n   ├── Phase 1: Core MVP Development\n   ├── Phase 2: Feature Enhancement\n   ├── Phase 3: Advanced Functionality\n   ├── Phase 4: Optimization & Polish\n   └── Phase 5: Deployment & Monitoring\n\n3. CODE QUALITY STANDARDS\n   ├── Clean Architecture Principles\n   ├── SOLID Design Patterns\n   ├── Comprehensive Error Handling\n   ├── Unit Testing & Integration Testing\n   └── Code Documentation & Comments\n\n4. DEPLOYMENT STRATEGY\n   ├── CI/CD Pipeline Setup\n   ├── Environment Configuration\n   ├── Monitoring & Logging Systems\n   ├── Backup & Recovery Procedures\n   └── Performance Monitoring Tools\n*/\n\n// REQUEST SCOPE: ' + idea + '\n\n// Please provide:\n// 1. **Technical Architecture** - System design and component breakdown\n// 2. **Code Examples** - Key implementations with best practices\n// 3. **File Structure** - Complete project organization\n// 4. **Setup Instructions** - Development environment configuration\n// 5. **Testing Strategy** - Unit tests, integration tests, and QA approach\n// 6. **Deployment Guide** - Production deployment steps and monitoring\n// 7. **Security Measures** - Authentication, authorization, and data protection\n// 8. **Performance Optimization** - Caching, database optimization, and scaling\n// 9. **Documentation** - API docs, code comments, and user guides\n// 10. **Maintenance Plan** - Updates, monitoring, and issue resolution\n\n// Focus on production-ready, scalable, and maintainable solutions.\n// Include mobile-responsive design and cross-platform compatibility.\n// Emphasize security, performance, and user experience best practices.\n// Provide specific code examples and architectural patterns.\n// Consider modern frameworks, cloud deployment, and DevOps practices.'
                 };
                 
                 return prompts[model] || 'Help me with: ' + idea;
@@ -1216,8 +1736,10 @@
             function getModelIcon(model) {
                 var icons = {
                     claude: '🧠',
-                    gpt4: '⚡',
+                    perplexity: '🔍',
                     gemini: '✨',
+                    grok: '🚀',
+                    chatgpt: '⚡',
                     copilot: '💻'
                 };
                 return icons[model] || '🤖';
@@ -1227,8 +1749,10 @@
             function getModelTitle(model) {
                 var titles = {
                     claude: 'Claude Sonnet 4 - Deep Analysis',
-                    gpt4: 'GPT-4 - Versatile Problem Solving',
+                    perplexity: 'Perplexity - Real-time Research',
                     gemini: 'Gemini Pro - Creative Solutions',
+                    grok: 'Grok/SuperGrok - Bold Insights',
+                    chatgpt: 'ChatGPT - Versatile Problem Solving',
                     copilot: 'GitHub Copilot - Code Generation'
                 };
                 return titles[model] || model;
