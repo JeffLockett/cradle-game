@@ -961,7 +961,10 @@
                 var saved = window.hexmindAuth;
                 if (saved && saved === HIDDEN_ACCESS_KEY) {
                     isAuthenticated = true;
-                    document.getElementById('passwordOverlay').classList.add('hidden');
+                    var overlay = document.getElementById('passwordOverlay');
+                    if (overlay) {
+                        overlay.style.display = 'none';
+                    }
                     return true;
                 }
                 return false;
@@ -975,12 +978,22 @@
                 if (input === HIDDEN_ACCESS_KEY) {
                     isAuthenticated = true;
                     window.hexmindAuth = HIDDEN_ACCESS_KEY; // Save auth in memory
-                    document.getElementById('passwordOverlay').classList.add('hidden');
+                    
+                    // Hide overlay
+                    var overlay = document.getElementById('passwordOverlay');
+                    overlay.style.display = 'none';
+                    
+                    // Initialize main app
+                    setupMainApp();
+                    
                     showToast('🎉 Welcome to HexMind, Sacred Artist Jeff!', 'success');
                     
                     // Cool unlock animation
                     setTimeout(function() {
-                        document.querySelector('.header').style.animation = 'glow 2s ease-in-out';
+                        var header = document.querySelector('.header');
+                        if (header) {
+                            header.style.animation = 'glow 2s ease-in-out';
+                        }
                     }, 500);
                     
                 } else {
