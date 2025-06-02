@@ -845,24 +845,62 @@ Keep it engaging, scientifically accurate, and appropriate for ${mission.difficu
             async callSecureClaudeAPI(prompt) {
                 try {
                     this.requestCount++;
-                    console.log(`🔑 Secure Claude API call #${this.requestCount}`);
+                    console.log(`🔑 Secure Claude API call #${this.requestCount} - Using CORS proxy`);
                     
-                    const response = await fetch('https://api.anthropic.com/v1/messages', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${window.userClaudeKey}`,
-                            'anthropic-version': '2023-06-01'
-                        },
-                        body: JSON.stringify({
-                            model: 'claude-3-sonnet-20240229',
-                            max_tokens: 1500,
-                            messages: [{
-                                role: 'user',
-                                content: prompt
-                            }]
-                        })
-                    });
+                    // Multiple CORS proxy options for reliability
+                    const proxyOptions = [
+                        'https://api.allorigins.win/raw?url=',
+                        'https://cors-anywhere.herokuapp.com/',
+                        'https://thingproxy.freeboard.io/fetch/'
+                    ];
+                    
+                    let response;
+                    let lastError;
+                    
+                    // Try different proxies until one works
+                    for (const proxy of proxyOptions) {
+                        try {
+                            console.log(`🔄 Trying proxy: ${proxy}`);
+                            const targetUrl = proxy === 'https://api.allorigins.win/raw?url=' ? 
+                                proxy + encodeURIComponent('https://api.anthropic.com/v1/messages') :
+                                proxy + 'https://api.anthropic.com/v1/messages';
+                            
+                            response = await fetch(targetUrl, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${window.userClaudeKey}`,
+                                    'anthropic-version': '2023-06-01',
+                                    ...(proxy === 'https://cors-anywhere.herokuapp.com/' && {
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    })
+                                },
+                                body: JSON.stringify({
+                                    model: 'claude-3-sonnet-20240229',
+                                    max_tokens: 1500,
+                                    messages: [{
+                                        role: 'user',
+                                        content: prompt
+                                    }]
+                                })
+                            });
+                            
+                            if (response.ok) {
+                                console.log(`✅ Proxy ${proxy} successful`);
+                                break;
+                            } else {
+                                lastError = new Error(`Proxy ${proxy} failed: ${response.status}`);
+                            }
+                        } catch (error) {
+                            console.log(`❌ Proxy ${proxy} failed:`, error.message);
+                            lastError = error;
+                            continue;
+                        }
+                    }
+                    
+                    if (!response || !response.ok) {
+                        throw lastError || new Error('All CORS proxies failed');
+                    }
 
                     if (!response.ok) {
                         if (response.status === 401) {
@@ -899,7 +937,10 @@ Keep it engaging, scientifically accurate, and appropriate for ${mission.difficu
                 // Enhanced simulation for fallback
                 console.log('🔄 Using enhanced simulation for security...');
                 
-                const topic = this.extractTopicFromChallenge(this.currentMission.challenge);
+                // Get topic from current mission or prompt
+                const topic = this.currentMission ? 
+                    this.extractTopicFromChallenge(this.currentMission.challenge) :
+                    this.extractTopicFromPrompt(prompt);
                 
                 return `CONCEPT_INTRODUCTION:
 Let's explore ${topic} through cutting-edge scientific understanding! This fascinating area bridges fundamental principles with breakthrough applications that are transforming our world. Mastering this concept gives you powerful tools for innovation and problem-solving.
@@ -918,6 +959,13 @@ NEXT_STEPS:
 
 NEURAL_HOOKS:
 Mathematical visualization - create mental models of key equations; Historical narrative - connect discoveries to scientific breakthroughs; Practical anchoring - link abstract concepts to everyday applications.`;
+            }
+
+            extractTopicFromPrompt(prompt) {
+                // Extract topic from prompt if no current mission
+                const words = prompt.toLowerCase().split(' ');
+                const meaningfulWords = words.filter(word => word.length > 4);
+                return meaningfulWords.slice(0, 3).join(' ') || 'advanced concept';
             }
 
             parseClaudeResponse(response, mission) {
