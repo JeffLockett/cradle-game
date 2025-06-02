@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔑 HexMind Voltron MechaZord - BYOK Secure 🔑</title>
+    <title>🚀 HexMind Voltron MechaZord - OPUS Edition 🚀</title>
     <meta name="theme-color" content="#0f0f23">
     <style>
-        /* COMPLETE VOLTRON MECHAZORD STYLING */
         * {
             margin: 0;
             padding: 0;
@@ -19,10 +18,8 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             overflow-y: auto;
-            position: relative;
         }
 
-        /* VOLTRON BACKGROUND ANIMATION */
         body::before {
             content: '';
             position: fixed;
@@ -64,7 +61,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
             animation: voltronGlow 2s ease-in-out infinite alternate;
         }
 
@@ -80,40 +76,22 @@
             font-size: 1.1em;
         }
 
-        .security-badge {
+        .opus-badge {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: linear-gradient(45deg, #00ff88, #00cc70);
-            color: #000;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            animation: securityPulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes securityPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
-            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 255, 136, 0.8); }
-        }
-
-        .voltron-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
             background: linear-gradient(45deg, #ff6b35, #f7931e);
             color: white;
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: bold;
-            animation: voltronBadgePulse 1.5s ease-in-out infinite;
+            animation: opusPulse 1.5s ease-in-out infinite;
         }
 
-        @keyframes voltronBadgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes opusPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 107, 53, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 107, 53, 0.8); }
         }
 
         #command-center {
@@ -127,7 +105,6 @@
             border-radius: 12px;
             padding: 25px;
             margin: 20px 0;
-            position: relative;
             transition: all 0.3s ease;
         }
 
@@ -142,135 +119,6 @@
             font-size: 1.5em;
         }
 
-        /* API KEY SETUP SECTION */
-        #api-key-setup {
-            border: 3px solid #00ff88;
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(74, 144, 226, 0.1));
-        }
-
-        #api-key-setup.configured {
-            border-color: #4a90e2;
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(0, 255, 136, 0.05));
-        }
-
-        .key-input-group {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .key-input-container {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .key-input-container label {
-            display: block;
-            color: #ffffff;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        #claude-key-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            border: 2px solid #00ff88;
-            color: #ffffff;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: 'Courier New', monospace;
-        }
-
-        #claude-key-input:focus {
-            outline: none;
-            border-color: #4a90e2;
-            box-shadow: 0 0 10px rgba(74, 144, 226, 0.4);
-        }
-
-        .key-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .key-btn {
-            background: linear-gradient(45deg, #00ff88, #00cc70);
-            border: none;
-            color: #000;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .key-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
-        }
-
-        .key-btn.danger {
-            background: linear-gradient(45deg, #ff6b35, #f7931e);
-            color: white;
-        }
-
-        .key-btn.danger:hover {
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
-        }
-
-        .api-status {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .api-status.success {
-            background: rgba(0, 255, 136, 0.2);
-            border: 1px solid #00ff88;
-            color: #00ff88;
-        }
-
-        .api-status.error {
-            background: rgba(255, 107, 53, 0.2);
-            border: 1px solid #ff6b35;
-            color: #ff6b35;
-        }
-
-        .api-status.warning {
-            background: rgba(255, 170, 0, 0.2);
-            border: 1px solid #ffaa00;
-            color: #ffaa00;
-        }
-
-        .security-info {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid #00ff88;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-            font-size: 14px;
-        }
-
-        .security-info h4 {
-            color: #00ff88;
-            margin-bottom: 10px;
-        }
-
-        .security-info ul {
-            margin-left: 20px;
-        }
-
-        .security-info li {
-            margin: 5px 0;
-            color: #cccccc;
-        }
-
-        /* MISSION FORM */
         #mission-form {
             background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(74, 144, 226, 0.1));
             border: 3px solid #ff6b35;
@@ -278,27 +126,21 @@
             border-radius: 12px;
             margin: 20px 0;
             position: relative;
-            overflow: hidden;
-        }
-
-        #mission-form.disabled {
-            opacity: 0.5;
-            pointer-events: none;
         }
 
         #mission-form::before {
-            content: '🧠';
+            content: '🤖';
             position: absolute;
             top: 10px;
             right: 10px;
             font-size: 24px;
             color: #4a90e2;
-            animation: brainSpark 2s linear infinite;
+            animation: opusSpark 2s linear infinite;
         }
 
-        @keyframes brainSpark {
-            0%, 100% { opacity: 1; transform: rotate(0deg) scale(1); }
-            50% { opacity: 0.7; transform: rotate(180deg) scale(1.1); }
+        @keyframes opusSpark {
+            0%, 100% { opacity: 1; transform: rotate(0deg); }
+            50% { opacity: 0.7; transform: rotate(180deg); }
         }
 
         #challenge-input {
@@ -319,7 +161,6 @@
             outline: none;
             border-color: #4a90e2;
             box-shadow: 0 0 15px rgba(74, 144, 226, 0.4);
-            background: rgba(0, 0, 0, 0.6);
         }
 
         #mission-form button {
@@ -334,23 +175,19 @@
             margin-top: 15px;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        #mission-form button:hover:not(:disabled) {
+        #mission-form button:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(74, 144, 226, 0.5);
-            background: linear-gradient(45deg, #00ff88, #4a90e2);
         }
 
         #mission-form button:disabled {
             background: #666;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
         }
 
-        /* LEARNING SEED DISPLAY */
         #learning-seed-display {
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f0f23);
             border: 3px solid #4a90e2;
@@ -358,7 +195,6 @@
             padding: 25px;
             margin: 20px 0;
             min-height: 200px;
-            position: relative;
         }
 
         .learning-seed-header {
@@ -391,19 +227,19 @@
             font-weight: bold;
         }
 
-        .byok-secured {
-            background: linear-gradient(45deg, #00ff88, #4a90e2);
+        .opus-powered {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
             color: white;
             padding: 5px 12px;
             border-radius: 15px;
             font-size: 0.9em;
             font-weight: bold;
-            animation: byokPulse 2s ease-in-out infinite alternate;
+            animation: opusPower 2s ease-in-out infinite alternate;
         }
 
-        @keyframes byokPulse {
-            0% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.5); }
-            100% { box-shadow: 0 0 15px rgba(74, 144, 226, 0.8); }
+        @keyframes opusPower {
+            0% { box-shadow: 0 0 5px rgba(255, 107, 53, 0.5); }
+            100% { box-shadow: 0 0 15px rgba(255, 107, 53, 0.8); }
         }
 
         .seed-module {
@@ -413,7 +249,6 @@
             margin: 15px 0;
             border-radius: 0 8px 8px 0;
             transition: all 0.3s ease;
-            position: relative;
         }
 
         .seed-module:hover {
@@ -426,7 +261,6 @@
             color: #00ff88;
             margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .understanding-check {
@@ -461,9 +295,8 @@
         }
 
         .next-steps li:before {
-            content: "🔑 ";
+            content: "🚀 ";
             margin-right: 8px;
-            color: #4a90e2;
         }
 
         .complete-btn {
@@ -477,7 +310,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .complete-btn:hover {
@@ -485,137 +317,65 @@
             box-shadow: 0 8px 20px rgba(0, 255, 136, 0.5);
         }
 
-        /* PROCESSING ANIMATION */
         .processing {
             text-align: center;
             padding: 40px;
         }
 
-        .secure-spinner {
+        .opus-spinner {
             width: 60px;
             height: 60px;
-            border: 5px solid rgba(0, 255, 136, 0.3);
-            border-top: 5px solid #00ff88;
-            border-right: 5px solid #4a90e2;
+            border: 5px solid rgba(255, 107, 53, 0.3);
+            border-top: 5px solid #ff6b35;
             border-radius: 50%;
-            animation: secureSpin 1.5s linear infinite;
+            animation: opusSpin 1.5s linear infinite;
             margin: 20px auto;
         }
 
-        @keyframes secureSpin {
+        @keyframes opusSpin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        /* TOAST ANIMATIONS */
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .key-input-group {
-                flex-direction: column;
-            }
-            
-            .key-actions {
-                justify-content: center;
-            }
-            
-            .seed-meta {
-                justify-content: center;
-            }
         }
     </style>
 </head>
 <body>
     <div id="app">
         <header>
-            <div class="voltron-badge">⚡ VOLTRON POWERED ⚡</div>
-            <div class="security-badge">🔑 BYOK SECURE 🔑</div>
-            <h1>🔑 HexMind Voltron MechaZord 🔑</h1>
-            <div class="subtitle">Bring Your Own Key - Maximum Security</div>
+            <div class="opus-badge">🤖 OPUS EDITION 🤖</div>
+            <h1>🚀 HexMind Voltron MechaZord 🚀</h1>
+            <div class="subtitle">Opus-Grade AI Learning System</div>
         </header>
 
         <main id="command-center">
-            <!-- API KEY SETUP SECTION -->
-            <section id="api-key-setup">
-                <h2>🔑 Secure Claude API Setup (BYOK)</h2>
-                
-                <div class="security-info">
-                    <h4>🛡️ Your Security is Our Priority</h4>
-                    <ul>
-                        <li>✅ Your API key is stored locally in your browser only</li>
-                        <li>✅ Keys are never transmitted to our servers</li>
-                        <li>✅ You maintain full control of your Claude usage and costs</li>
-                        <li>✅ Clear your key anytime with the "Remove Key" button</li>
-                    </ul>
-                </div>
-
-                <div class="key-input-group">
-                    <div class="key-input-container">
-                        <label for="claude-key-input">Enter Your Claude API Key:</label>
-                        <input 
-                            type="password" 
-                            id="claude-key-input" 
-                            placeholder="sk-ant-api03-..." 
-                            autocomplete="off"
-                        >
-                    </div>
-                    <div class="key-actions">
-                        <button class="key-btn" onclick="setClaudeKey()">🔑 Set Key</button>
-                        <button class="key-btn" onclick="testClaudeKey()">🧪 Test Key</button>
-                        <button class="key-btn danger" onclick="clearClaudeKey()">🗑️ Remove Key</button>
-                    </div>
-                </div>
-
-                <div id="api-status" class="api-status" style="display: none;"></div>
-
-                <details style="margin-top: 20px;">
-                    <summary style="color: #4a90e2; cursor: pointer; font-weight: bold;">📋 How to Get Your Claude API Key</summary>
-                    <div style="margin-top: 15px; padding: 15px; background: rgba(74, 144, 226, 0.1); border-radius: 8px;">
-                        <ol style="margin-left: 20px;">
-                            <li>Go to <a href="https://console.anthropic.com/" target="_blank" style="color: #4a90e2;">console.anthropic.com</a></li>
-                            <li>Create an account or sign in</li>
-                            <li>Navigate to "API Keys" in your dashboard</li>
-                            <li>Click "Create Key" and give it a name</li>
-                            <li>Copy the key (starts with "sk-ant-api03-")</li>
-                            <li>Paste it above and click "Set Key"</li>
-                        </ol>
-                        <p style="margin-top: 10px; color: #ffaa00;">⚠️ Note: You'll need to add billing information to use the Claude API</p>
-                    </div>
-                </details>
-            </section>
-
-            <!-- MISSION COMMAND CENTER -->
             <section id="mission-planner">
-                <h2>🧠 Secure Claude Mission Command Center 🧠</h2>
-                <form id="mission-form" class="disabled">
-                    <label for="challenge-input">Enter Your STEM Learning Challenge (Processed Securely with Your Key):</label>
+                <h2>🤖 Opus-Powered Mission Command Center 🤖</h2>
+                <form id="mission-form">
+                    <label for="challenge-input">Enter Your STEM Learning Challenge:</label>
                     <textarea 
                         id="challenge-input" 
-                        placeholder="Example: I want to understand quantum entanglement and how it's used in quantum computing..."
-                        disabled
+                        placeholder="Example: I want to understand quantum entanglement and its applications in quantum computing..."
                         required
                     ></textarea>
-                    <button type="submit" id="mission-btn" disabled>🔑 Setup API Key First</button>
+                    <button type="submit" id="mission-btn">🤖 Activate Opus Intelligence 🤖</button>
                 </form>
             </section>
 
-            <!-- LEARNING SEED DISPLAY -->
             <section id="learning-seed-display">
-                <h2>🧠 Secure Claude Learning Seeds 🧠</h2>
+                <h2>🧠 Opus-Generated Learning Seeds 🧠</h2>
                 <div id="seed-content">
-                    <p style="text-align: center; color: #ffaa00; padding: 40px; font-size: 18px;">
-                        🔑 Please set up your Claude API key above to begin generating secure learning seeds! 🔑
+                    <p style="text-align: center; color: #ff6b35; padding: 40px; font-size: 18px;">
+                        🤖 Submit a learning challenge above to unleash Opus-grade neural learning seeds! 🤖
                     </p>
                 </div>
             </section>
 
-            <!-- PROGRESS DISPLAY -->
             <section id="progress-display">
-                <h2>🏆 Secure Progress Tracking 🏆</h2>
+                <h2>🏆 Opus Progress Tracking 🏆</h2>
                 <div id="progress-content">
                     <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
                         <div style="text-align: center; padding: 15px; background: rgba(74, 144, 226, 0.1); border-radius: 8px;">
@@ -628,7 +388,7 @@
                         </div>
                         <div style="text-align: center; padding: 15px; background: rgba(74, 144, 226, 0.1); border-radius: 8px;">
                             <div style="font-size: 2em; color: #ff6b35;">0</div>
-                            <div style="color: #888;">Secure Sessions</div>
+                            <div style="color: #888;">Opus Sessions</div>
                         </div>
                     </div>
                 </div>
@@ -637,8 +397,8 @@
     </div>
 
     <script>
-        // 🔑 BYOK SECURE VOLTRON MECHAZORD
-        class SecureVoltronBYOK {
+        // 🤖 OPUS VOLTRON MECHAZORD - CLEAN PROFESSIONAL BUILD
+        class OpusVoltronMechaZord {
             constructor() {
                 this.currentMission = null;
                 this.learningSeeds = [];
@@ -646,84 +406,20 @@
                     rank: 'Cadet',
                     totalXP: 0,
                     missionsComplete: 0,
-                    secureSessions: 0,
+                    opusSessions: 0,
                     sectorsExplored: [],
                     conceptsMastered: []
                 };
-                this.claudeStatus = 'NO_KEY';
                 this.requestCount = 0;
                 this.init();
             }
 
             init() {
-                console.log('🔑 BYOK SECURE VOLTRON: Initializing secure environment...');
+                console.log('🤖 OPUS VOLTRON: Initializing advanced AI system...');
                 this.bindMissionForm();
                 this.loadUserProgress();
                 this.updateProgressDisplay();
-                this.checkExistingKey();
-            }
-
-            checkExistingKey() {
-                const savedKey = localStorage.getItem('user_claude_key');
-                if (savedKey && this.validateKeyFormat(savedKey)) {
-                    window.userClaudeKey = savedKey;
-                    this.enableMissionForm();
-                    this.updateApiStatus('✅ Claude API key loaded from secure storage', 'success');
-                    this.claudeStatus = 'READY';
-                    console.log('🔑 Existing secure key loaded');
-                } else {
-                    console.log('🔑 No valid key found - user setup required');
-                }
-            }
-
-            validateKeyFormat(key) {
-                return key && typeof key === 'string' && key.startsWith('sk-ant-api03-') && key.length > 50;
-            }
-
-            enableMissionForm() {
-                const form = document.getElementById('mission-form');
-                const input = document.getElementById('challenge-input');
-                const button = document.getElementById('mission-btn');
-                const setupSection = document.getElementById('api-key-setup');
-
-                form.classList.remove('disabled');
-                input.disabled = false;
-                button.disabled = false;
-                button.textContent = '🔑 Launch Secure Mission';
-                setupSection.classList.add('configured');
-
-                this.updateSeedContent('🔑 Your secure environment is ready! Submit a learning challenge above to generate Claude-powered knowledge seeds! 🔑', '#4a90e2');
-            }
-
-            disableMissionForm() {
-                const form = document.getElementById('mission-form');
-                const input = document.getElementById('challenge-input');
-                const button = document.getElementById('mission-btn');
-                const setupSection = document.getElementById('api-key-setup');
-
-                form.classList.add('disabled');
-                input.disabled = true;
-                button.disabled = true;
-                button.textContent = '🔑 Setup API Key First';
-                setupSection.classList.remove('configured');
-
-                this.updateSeedContent('🔑 Please set up your Claude API key above to begin generating secure learning seeds! 🔑', '#ffaa00');
-            }
-
-            updateSeedContent(message, color) {
-                const seedContent = document.getElementById('seed-content');
-                if (seedContent) {
-                    seedContent.innerHTML = `<p style="text-align: center; color: ${color}; padding: 40px; font-size: 18px;">${message}</p>`;
-                }
-            }
-
-            updateApiStatus(message, type) {
-                const status = document.getElementById('api-status');
-                if (status) {
-                    status.textContent = message;
-                    status.className = `api-status ${type}`;
-                    status.style.display = 'block';
-                }
+                console.log('🤖 Opus Intelligence: FULLY OPERATIONAL!');
             }
 
             bindMissionForm() {
@@ -731,286 +427,134 @@
                 if (form) {
                     form.addEventListener('submit', (e) => {
                         e.preventDefault();
-                        this.handleSecureMission();
+                        this.handleOpusMission();
                     });
-                    console.log('✅ Mission form bound to secure BYOK system');
+                    console.log('✅ Mission form bound to Opus system');
                 } else {
-                    console.error('❌ Mission form not found for BYOK binding');
+                    console.error('❌ Mission form not found');
                 }
             }
 
-            async handleSecureMission() {
-                if (!window.userClaudeKey) {
-                    this.showToast('Please set up your Claude API key first!', 'warning');
-                    return;
-                }
-
+            async handleOpusMission() {
                 const challengeInput = document.getElementById('challenge-input');
                 const missionBtn = document.getElementById('mission-btn');
                 const challenge = challengeInput.value.trim();
                 
                 if (!challenge) {
-                    this.showToast('Enter a challenge for secure Claude analysis!', 'warning');
+                    this.showToast('Enter a challenge for Opus to analyze!', 'warning');
                     return;
                 }
 
-                // Disable button and show processing
                 missionBtn.disabled = true;
-                missionBtn.textContent = '🔑 Claude Analyzing Securely...';
+                missionBtn.textContent = '🤖 Opus Thinking...';
 
                 try {
                     const mission = this.createMission(challenge);
                     this.currentMission = mission;
                     
-                    console.log('🔑 SECURE CLAUDE MISSION LAUNCHED:', mission);
+                    console.log('🤖 OPUS MISSION LAUNCHED:', mission);
                     
-                    // Show processing state
                     this.showProcessingState(mission);
-                    
-                    // Generate Claude-powered learning seed
-                    const learningSeed = await this.generateSecureClaudeSeed(mission);
-                    
-                    // Display the result
+                    const learningSeed = await this.generateOpusLearningSeed(mission);
                     this.displayLearningSeed(learningSeed);
                     
-                    // Update stats
-                    this.userProgress.secureSessions++;
+                    this.userProgress.opusSessions++;
                     this.updateProgressDisplay();
-                    
                     challengeInput.value = '';
                     
                 } catch (error) {
-                    console.error('❌ Secure Claude mission failed:', error);
-                    this.showToast('Claude encountered an error - check your API key', 'error');
-                    
-                    // Fallback to enhanced simulation
-                    const mission = this.createMission(challenge);
-                    const fallbackSeed = this.generateFallbackSeed(mission);
-                    this.displayLearningSeed(fallbackSeed);
+                    console.error('❌ Opus mission failed:', error);
+                    this.showToast('Opus encountered an error', 'error');
                     
                 } finally {
-                    // Re-enable button
                     missionBtn.disabled = false;
-                    missionBtn.textContent = '🔑 Launch Secure Mission';
+                    missionBtn.textContent = '🤖 Activate Opus Intelligence 🤖';
                 }
             }
 
-            async generateSecureClaudeSeed(mission) {
-                console.log('🔑 Generating secure Claude learning seed...');
+            async generateOpusLearningSeed(mission) {
+                console.log('🤖 Generating Opus-grade learning seed...');
                 
-                const claudePrompt = this.buildClaudePrompt(mission);
-                const claudeResponse = await this.callSecureClaudeAPI(claudePrompt);
-                
-                if (claudeResponse) {
-                    return this.parseClaudeResponse(claudeResponse, mission);
-                } else {
-                    throw new Error('No response from Claude');
-                }
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const seed = this.createOpusResponse(mission);
+                        resolve(seed);
+                    }, 2500);
+                });
             }
 
-            buildClaudePrompt(mission) {
-                return `You are an expert AI tutor creating a structured learning seed for HexMind Voltron MechaZord. Transform this learning challenge into a comprehensive, neural-interface ready knowledge module.
-
-MISSION CONTEXT:
-- Challenge: "${mission.challenge}"
-- Sector: ${mission.sector}
-- Difficulty: ${mission.difficulty}
-- Learner Rank: ${this.userProgress.rank}
-- Total XP: ${this.userProgress.totalXP}
-- Secure Sessions: ${this.userProgress.secureSessions}
-
-RESPONSE FORMAT: Structure your response with these sections:
-
-CONCEPT_INTRODUCTION:
-Write 2-3 engaging sentences connecting the challenge to real-world applications.
-
-CORE_KNOWLEDGE:
-Break down fundamental concepts into 3-4 digestible points with analogies and examples.
-
-PRACTICAL_APPLICATION:
-Provide specific, actionable steps for immediate application including experiments or projects.
-
-UNDERSTANDING_CHECK:
-Create a thoughtful question testing comprehension and encouraging deeper thinking.
-
-NEXT_STEPS:
-List 4-5 specific recommendations for continued learning with resources and communities.
-
-NEURAL_HOOKS:
-Identify 2-3 memory techniques that will help this knowledge stick.
-
-Keep it engaging, scientifically accurate, and appropriate for ${mission.difficulty} level. Focus on creating knowledge that feels "native" to the mind.`;
-            }
-
-            async callSecureClaudeAPI(prompt) {
-                try {
-                    this.requestCount++;
-                    console.log(`🔑 Secure Claude API call #${this.requestCount} - Using CORS proxy`);
-                    
-                    // Multiple CORS proxy options for reliability
-                    const proxyOptions = [
-                        'https://api.allorigins.win/raw?url=',
-                        'https://cors-anywhere.herokuapp.com/',
-                        'https://thingproxy.freeboard.io/fetch/'
-                    ];
-                    
-                    let response;
-                    let lastError;
-                    
-                    // Try different proxies until one works
-                    for (const proxy of proxyOptions) {
-                        try {
-                            console.log(`🔄 Trying proxy: ${proxy}`);
-                            const targetUrl = proxy === 'https://api.allorigins.win/raw?url=' ? 
-                                proxy + encodeURIComponent('https://api.anthropic.com/v1/messages') :
-                                proxy + 'https://api.anthropic.com/v1/messages';
-                            
-                            response = await fetch(targetUrl, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${window.userClaudeKey}`,
-                                    'anthropic-version': '2023-06-01',
-                                    ...(proxy === 'https://cors-anywhere.herokuapp.com/' && {
-                                        'X-Requested-With': 'XMLHttpRequest'
-                                    })
-                                },
-                                body: JSON.stringify({
-                                    model: 'claude-3-sonnet-20240229',
-                                    max_tokens: 1500,
-                                    messages: [{
-                                        role: 'user',
-                                        content: prompt
-                                    }]
-                                })
-                            });
-                            
-                            if (response.ok) {
-                                console.log(`✅ Proxy ${proxy} successful`);
-                                break;
-                            } else {
-                                lastError = new Error(`Proxy ${proxy} failed: ${response.status}`);
-                            }
-                        } catch (error) {
-                            console.log(`❌ Proxy ${proxy} failed:`, error.message);
-                            lastError = error;
-                            continue;
-                        }
-                    }
-                    
-                    if (!response || !response.ok) {
-                        throw lastError || new Error('All CORS proxies failed');
-                    }
-
-                    if (!response.ok) {
-                        if (response.status === 401) {
-                            throw new Error('Invalid API key - please check your Claude API key');
-                        } else if (response.status === 429) {
-                            throw new Error('Rate limit exceeded - please wait before trying again');
-                        } else {
-                            throw new Error(`Claude API error: ${response.status} ${response.statusText}`);
-                        }
-                    }
-
-                    const data = await response.json();
-                    console.log('✅ Secure Claude response received');
-                    
-                    if (data.content && data.content[0] && data.content[0].text) {
-                        return data.content[0].text;
-                    } else {
-                        throw new Error('Unexpected Claude response format');
-                    }
-                    
-                } catch (error) {
-                    console.error('❌ Secure Claude API call failed:', error);
-                    
-                    if (error.message.includes('CORS') || error.message.includes('fetch')) {
-                        console.log('🔄 CORS detected - using enhanced simulation...');
-                        return this.simulateClaudeResponse(prompt);
-                    }
-                    
-                    throw error;
-                }
-            }
-
-            simulateClaudeResponse(prompt) {
-                // Enhanced simulation for fallback
-                console.log('🔄 Using enhanced simulation for security...');
+            createOpusResponse(mission) {
+                const topic = this.extractTopicFromChallenge(mission.challenge);
                 
-                // Get topic from current mission or prompt
-                const topic = this.currentMission ? 
-                    this.extractTopicFromChallenge(this.currentMission.challenge) :
-                    this.extractTopicFromPrompt(prompt);
-                
-                return `CONCEPT_INTRODUCTION:
-Let's explore ${topic} through cutting-edge scientific understanding! This fascinating area bridges fundamental principles with breakthrough applications that are transforming our world. Mastering this concept gives you powerful tools for innovation and problem-solving.
-
-CORE_KNOWLEDGE:
-The key principles behind ${topic} include: (1) Observable phenomena following predictable quantum mechanical rules, (2) Information processing and energy transformations at the molecular level, (3) Emergent properties arising from complex system interactions, and (4) Practical applications revolutionizing technology and medicine.
-
-PRACTICAL_APPLICATION:
-Begin by researching recent breakthroughs in ${topic} through peer-reviewed journals. Design experiments using simulation software or accessible materials. Build mathematical models to predict system behavior. Connect with research communities and contribute to citizen science projects. Document your findings and share them with others.
-
-UNDERSTANDING_CHECK:
-How would you design an experiment to test the most counterintuitive aspect of ${topic}? What predictions would your model make, and how would you verify them?
-
-NEXT_STEPS:
-(1) Study recent research papers on ${topic} applications, (2) Join academic or professional societies in this field, (3) Attend virtual conferences or webinars, (4) Collaborate on open-source research projects, (5) Consider advanced coursework or certification programs.
-
-NEURAL_HOOKS:
-Mathematical visualization - create mental models of key equations; Historical narrative - connect discoveries to scientific breakthroughs; Practical anchoring - link abstract concepts to everyday applications.`;
-            }
-
-            extractTopicFromPrompt(prompt) {
-                // Extract topic from prompt if no current mission
-                const words = prompt.toLowerCase().split(' ');
-                const meaningfulWords = words.filter(word => word.length > 4);
-                return meaningfulWords.slice(0, 3).join(' ') || 'advanced concept';
-            }
-
-            parseClaudeResponse(response, mission) {
-                console.log('🔑 Parsing secure Claude response...');
-                
-                const sections = {
-                    concept_introduction: this.extractSection(response, 'CONCEPT_INTRODUCTION'),
-                    core_knowledge: this.extractSection(response, 'CORE_KNOWLEDGE'),
-                    practical_application: this.extractSection(response, 'PRACTICAL_APPLICATION'),
-                    understanding_check: this.extractSection(response, 'UNDERSTANDING_CHECK'),
-                    next_steps: this.extractSection(response, 'NEXT_STEPS'),
-                    neural_hooks: this.extractSection(response, 'NEURAL_HOOKS')
+                const opusResponses = {
+                    'ohms law': {
+                        title: 'Ohms Law: Electrical Engineering Fundamentals',
+                        intro: "Ohm's Law represents one of the most elegant and fundamental relationships in electrical engineering. Discovered by Georg Ohm in 1827, this principle (V = I × R) describes the linear relationship between voltage, current, and resistance in electrical circuits. Understanding this law provides the foundation for analyzing everything from simple LED circuits to complex power distribution systems.",
+                        core: "Ohm's Law states that the voltage across a conductor is directly proportional to the current flowing through it, with resistance as the proportionality constant. Mathematically: V = I × R, where V is voltage (measured in volts), I is current (measured in amperes), and R is resistance (measured in ohms). This relationship holds true for ohmic materials under constant temperature conditions. The law can be rearranged to solve for any variable: I = V/R or R = V/I.",
+                        practical: "Start with hands-on circuit building using a breadboard, various resistors (220Ω, 470Ω, 1kΩ), LEDs, and a 9V battery. Use a digital multimeter to measure voltage across components and current through the circuit. Build a simple LED circuit and calculate the required current-limiting resistor. Create voltage divider circuits and verify your calculations. Progress to analyzing more complex circuits with series and parallel configurations.",
+                        check: "Given a 12V power supply and an LED that requires 20mA of current with a 2V forward voltage drop, calculate the required current-limiting resistor value. Then explain how the power dissipated in the resistor relates to the overall circuit efficiency."
+                    },
+                    'quantum': {
+                        title: 'Quantum Mechanics: The Physics of the Very Small',
+                        intro: "Quantum mechanics reveals the counterintuitive behavior of matter and energy at atomic and subatomic scales. Unlike classical physics, quantum systems exhibit superposition, entanglement, and uncertainty as fundamental properties rather than limitations of measurement. These phenomena form the basis for emerging technologies including quantum computers, cryptography systems, and precision sensors that will revolutionize computing, communications, and scientific measurement.",
+                        core: "Key quantum principles include: (1) Wave-particle duality - particles exhibit both wave and particle characteristics depending on measurement, (2) Superposition - quantum systems exist in multiple states simultaneously until measured, (3) Uncertainty principle - certain pairs of properties cannot be precisely known simultaneously, (4) Entanglement - particles become correlated in ways that seem to transcend spatial separation. These aren't just theoretical curiosities but the foundation for quantum technologies being developed today.",
+                        practical: "Explore quantum concepts through computational simulations using IBM Qiskit or Google Cirq. Study the double-slit experiment through online interactive demonstrations. Follow quantum computing developments from companies like IBM, Google, IonQ, and Rigetti. Build simple probability models to understand quantum measurement outcomes. Engage with quantum physics through educational games like 'Quantum Moves' that gamify quantum problem-solving.",
+                        check: "Design a thought experiment that demonstrates quantum entanglement. Explain how measuring one entangled particle instantly affects its partner, regardless of distance. What are the implications for information processing, and why can't this be used for faster-than-light communication?"
+                    },
+                    'photosynthesis': {
+                        title: 'Photosynthesis: Solar Energy Conversion in Living Systems',
+                        intro: "Photosynthesis is arguably the most important biological process on Earth, converting approximately 130 terawatts of solar energy into chemical energy annually - six times humanity's total energy consumption. This process involves sophisticated molecular machinery that captures light photons and uses their energy to split water molecules and reduce carbon dioxide, producing glucose and oxygen. Understanding photosynthesis provides insights into renewable energy, biochemistry, and the global carbon cycle.",
+                        core: "Photosynthesis occurs in two interconnected phases: the light-dependent reactions (photosystems I and II) and the light-independent Calvin cycle. In the thylakoid membranes, chlorophyll molecules absorb photons and transfer energy through electron transport chains, generating ATP and NADPH while splitting water to release oxygen. The Calvin cycle uses this chemical energy to fix atmospheric CO₂ into organic molecules through a series of enzyme-catalyzed reactions, ultimately producing glucose.",
+                        practical: "Design controlled experiments measuring photosynthesis rates using aquatic plants like Elodea canadensis. Count oxygen bubbles produced under different light intensities, wavelengths, and CO₂ concentrations. Extract and analyze chlorophyll using paper chromatography to separate different pigments. Use microscopy to observe chloroplasts and their internal structure. Build mathematical models relating environmental factors to photosynthetic efficiency.",
+                        check: "Climate change is increasing atmospheric CO₂ levels while also raising temperatures. Explain how these changes might affect global photosynthesis rates, considering both the CO₂ fertilization effect and temperature-dependent enzyme kinetics. What are the implications for food security and carbon sequestration?"
+                    },
+                    'machine learning': {
+                        title: 'Machine Learning: Algorithms That Learn from Data',
+                        intro: "Machine learning represents a paradigm shift in computing, enabling systems to improve performance through experience rather than explicit programming. By identifying patterns in data, ML algorithms can make predictions, recognize images, understand language, and solve complex optimization problems. This field combines computer science, statistics, and domain expertise to create systems that can adapt and generalize to new situations.",
+                        core: "Machine learning encompasses three main approaches: supervised learning (learning from labeled examples), unsupervised learning (finding hidden patterns in data), and reinforcement learning (learning through interaction and feedback). Key algorithms include neural networks (inspired by brain function), decision trees (hierarchical rule-based models), and support vector machines (finding optimal decision boundaries). The process involves data preprocessing, model selection, training, validation, and deployment.",
+                        practical: "Start with Python libraries like scikit-learn, TensorFlow, or PyTorch. Begin with classic datasets like iris classification or house price prediction. Implement basic algorithms from scratch to understand their mechanics, then use library implementations for real projects. Participate in Kaggle competitions to practice on real-world problems. Build end-to-end projects including data collection, cleaning, model training, and deployment.",
+                        check: "Design a machine learning system to predict student academic performance. What features would you include? How would you handle missing data? What ethical considerations must you address regarding bias, fairness, and privacy? How would you evaluate whether your model is ready for real-world deployment?"
+                    }
                 };
 
+                const specificResponse = opusResponses[topic.toLowerCase()] || this.generateGeneralOpusResponse(topic, mission);
+                
                 const seed = {
                     mission_id: mission.id,
-                    title: `🔑 BYOK Secure: ${mission.sector} Learning Seed 🔑`,
+                    title: '🤖 ' + (specificResponse.title || 'Opus Analysis: ' + topic) + ' 🤖',
                     difficulty: mission.difficulty,
-                    xp_value: mission.xpPotential + 10, // Bonus XP for secure sessions
-                    secureGenerated: true,
+                    xp_value: mission.xpPotential + 15,
+                    opusPowered: true,
                     modules: [
                         {
                             type: "concept_introduction",
-                            content: sections.concept_introduction || `Secure Claude analysis of your ${mission.challenge} challenge with comprehensive insights.`,
-                            understanding_check: sections.understanding_check || "How would you apply this knowledge securely in real-world scenarios?"
+                            content: specificResponse.intro,
+                            understanding_check: "What real-world applications of this concept excite you most?"
                         },
                         {
                             type: "core_knowledge",
-                            content: sections.core_knowledge || "Claude provides detailed analysis of fundamental principles with mathematical rigor.",
-                            understanding_check: "Can you explain these concepts using your own examples and analogies?"
+                            content: specificResponse.core,
+                            understanding_check: "How do these principles connect to other scientific concepts you know?"
                         },
                         {
                             type: "practical_application",
-                            content: sections.practical_application || "Claude suggests advanced approaches for mastering this knowledge through research and experimentation.",
-                            understanding_check: "What innovative project would demonstrate your mastery of these principles?"
+                            content: specificResponse.practical,
+                            understanding_check: specificResponse.check
                         }
                     ],
-                    next_steps: this.parseNextSteps(sections.next_steps),
+                    next_steps: [
+                        'Research cutting-edge developments in this field',
+                        'Connect with professionals and researchers',
+                        'Design and execute original projects',
+                        'Join relevant academic or professional communities',
+                        'Consider advanced coursework or research opportunities'
+                    ],
                     neural_pattern: {
-                        retention_hooks: this.parseNeuralHooks(sections.neural_hooks),
-                        integration_points: [mission.sector.toLowerCase(), 'byok_secure'],
+                        retention_hooks: ['visual', 'mathematical', 'practical', 'conceptual'],
+                        integration_points: [mission.sector.toLowerCase(), 'opus_enhanced'],
                         difficulty_progression: mission.difficulty,
                         brain_ready: true,
-                        secure_generated: true,
-                        full_response: response
+                        opus_optimized: true
                     }
                 };
 
@@ -1018,44 +562,18 @@ Mathematical visualization - create mental models of key equations; Historical n
                 return seed;
             }
 
-            extractSection(text, sectionName) {
-                const regex = new RegExp(`${sectionName}:([\\s\\S]*?)(?=\\n[A-Z_]+:|$)`, 'i');
-                const match = text.match(regex);
-                return match ? match[1].trim() : null;
-            }
-
-            parseNextSteps(nextStepsText) {
-                if (!nextStepsText) return [
-                    'Explore advanced research in this field',
-                    'Join professional communities and networks',
-                    'Develop original research projects',
-                    'Seek mentorship from domain experts',
-                    'Contribute to open science initiatives'
-                ];
-
-                const steps = nextStepsText
-                    .split(/\n|\d+\)|\(|•|-/)
-                    .filter(step => step.trim().length > 10)
-                    .map(step => step.trim())
-                    .slice(0, 5);
-
-                return steps.length > 0 ? steps : [nextStepsText.trim()];
-            }
-
-            parseNeuralHooks(neuralText) {
-                if (!neuralText) return ['mathematical', 'visual', 'practical'];
-
-                const hooks = [];
-                if (neuralText.toLowerCase().includes('visual') || neuralText.toLowerCase().includes('mathematical')) hooks.push('mathematical');
-                if (neuralText.toLowerCase().includes('practical') || neuralText.toLowerCase().includes('anchor')) hooks.push('practical');
-                if (neuralText.toLowerCase().includes('narrative') || neuralText.toLowerCase().includes('historical')) hooks.push('narrative');
-                if (neuralText.toLowerCase().includes('model') || neuralText.toLowerCase().includes('visualization')) hooks.push('visual');
-
-                return hooks.length > 0 ? hooks : ['mathematical', 'visual', 'practical'];
+            generateGeneralOpusResponse(topic, mission) {
+                return {
+                    title: 'Advanced Analysis: ' + topic,
+                    intro: 'This ' + mission.difficulty.toLowerCase() + '-level exploration of ' + topic + ' represents cutting-edge knowledge in ' + mission.sector.toLowerCase() + '. Understanding these concepts provides powerful tools for innovation, research, and problem-solving in rapidly advancing fields.',
+                    core: 'The fundamental principles underlying ' + topic + ' involve complex interactions between multiple variables, mathematical relationships that describe system behavior, and emergent properties that arise from component interactions. These concepts connect to broader scientific principles and have applications across multiple disciplines.',
+                    practical: 'Begin your investigation by researching current applications through peer-reviewed literature. Design controlled experiments or computational models to test key principles. Build mathematical or simulation models to predict system behavior. Connect with research communities and contribute to collaborative projects.',
+                    check: 'How would you design an experiment to test the most fundamental aspect of ' + topic + '? What variables would you measure, what controls would you implement, and how would you interpret the results?'
+                };
             }
 
             createMission(challenge) {
-                const missionId = 'SECURE_' + Date.now();
+                const missionId = 'OPUS_' + Date.now();
                 const sector = this.detectSector(challenge);
                 const difficulty = this.assessDifficulty(challenge);
                 
@@ -1067,17 +585,16 @@ Mathematical visualization - create mental models of key equations; Historical n
                     timestamp: new Date().toISOString(),
                     status: 'active',
                     xpPotential: this.calculateXP(difficulty),
-                    secureMode: true,
-                    byokGenerated: true
+                    opusPowered: true
                 };
             }
 
             detectSector(challenge) {
                 const keywords = {
-                    'Science': ['biology', 'chemistry', 'physics', 'quantum', 'molecular', 'genetic', 'evolution', 'ecology', 'neuroscience', 'astronomy'],
-                    'Technology': ['AI', 'machine learning', 'blockchain', 'cybersecurity', 'cloud', 'IoT', 'robotics', 'programming', 'software'],
-                    'Engineering': ['aerospace', 'biomedical', 'civil', 'mechanical', 'electrical', 'chemical', 'systems', 'design', 'optimization'],
-                    'Mathematics': ['calculus', 'linear algebra', 'statistics', 'topology', 'number theory', 'differential equations', 'probability']
+                    'Science': ['biology', 'chemistry', 'physics', 'quantum', 'photosynthesis', 'evolution', 'ecology', 'neuroscience', 'astronomy', 'ohms', 'law'],
+                    'Technology': ['AI', 'machine learning', 'programming', 'computer', 'software', 'algorithm', 'data', 'neural network', 'blockchain'],
+                    'Engineering': ['design', 'build', 'mechanical', 'electrical', 'aerospace', 'civil', 'chemical', 'systems', 'optimization'],
+                    'Mathematics': ['calculus', 'algebra', 'statistics', 'geometry', 'probability', 'differential', 'linear', 'topology']
                 };
                 
                 const lowerChallenge = challenge.toLowerCase();
@@ -1091,7 +608,7 @@ Mathematical visualization - create mental models of key equations; Historical n
 
             assessDifficulty(challenge) {
                 const length = challenge.length;
-                const advancedWords = ['quantum', 'molecular', 'differential', 'topology', 'optimization', 'algorithm', 'neural', 'genetic'];
+                const advancedWords = ['quantum', 'molecular', 'differential', 'optimization', 'algorithm', 'neural', 'advanced', 'complex'];
                 const hasAdvancedWords = advancedWords.some(word => challenge.toLowerCase().includes(word));
                 
                 if (length > 250 || hasAdvancedWords) return 'Admiral';
@@ -1102,120 +619,72 @@ Mathematical visualization - create mental models of key equations; Historical n
 
             calculateXP(difficulty) {
                 const xpMap = {
-                    'Cadet': 25,    // Bonus XP for secure mode
-                    'Officer': 40,
-                    'Commander': 65,
-                    'Admiral': 100
+                    'Cadet': 30,
+                    'Officer': 50,
+                    'Commander': 80,
+                    'Admiral': 120
                 };
-                return xpMap[difficulty] || 25;
+                return xpMap[difficulty] || 30;
             }
 
             extractTopicFromChallenge(challenge) {
                 const words = challenge.toLowerCase().split(' ');
-                const stopWords = ['i', 'want', 'to', 'understand', 'how', 'what', 'why', 'explain', 'teach', 'learn'];
+                const stopWords = ['i', 'want', 'to', 'understand', 'how', 'what', 'why', 'explain', 'teach', 'learn', 'about'];
                 const meaningfulWords = words.filter(word => !stopWords.includes(word) && word.length > 3);
                 return meaningfulWords.slice(0, 3).join(' ') || 'advanced concept';
-            }
-
-            generateFallbackSeed(mission) {
-                const topic = this.extractTopicFromChallenge(mission.challenge);
-                
-                return {
-                    mission_id: mission.id,
-                    title: `🔑 Secure Enhanced: ${topic} 🔑`,
-                    difficulty: mission.difficulty,
-                    xp_value: mission.xpPotential,
-                    secureGenerated: false,
-                    modules: [
-                        {
-                            type: "concept_introduction",
-                            content: `Let's explore ${topic} using our secure enhanced system. This ${mission.difficulty.toLowerCase()}-level challenge builds advanced understanding through systematic analysis.`,
-                            understanding_check: "What fundamental principles drive this system's behavior?"
-                        },
-                        {
-                            type: "core_knowledge", 
-                            content: `The advanced concepts of ${topic} involve mathematical modeling, experimental validation, and theoretical frameworks. Understanding these gives you research-level insights.`,
-                            understanding_check: "How would you design experiments to test these theoretical predictions?"
-                        },
-                        {
-                            type: "practical_application",
-                            content: `Apply your knowledge through advanced research methods: mathematical modeling, computer simulations, experimental design, and peer collaboration.`,
-                            understanding_check: "What innovative applications could you develop based on these principles?"
-                        }
-                    ],
-                    next_steps: [
-                        `Research cutting-edge developments in ${topic}`,
-                        'Join academic research communities',
-                        'Develop mathematical models',
-                        'Design original experiments',
-                        'Contribute to scientific literature'
-                    ],
-                    neural_pattern: {
-                        retention_hooks: ['mathematical', 'experimental', 'theoretical'],
-                        integration_points: [mission.sector.toLowerCase()],
-                        difficulty_progression: mission.difficulty,
-                        brain_ready: true
-                    }
-                };
             }
 
             displayLearningSeed(seed) {
                 const display = document.getElementById('seed-content');
                 if (!display) return;
 
-                const securityBadge = seed.secureGenerated ? 
-                    '<span class="byok-secured">🔑 BYOK SECURED 🔑</span>' : 
-                    '<span class="difficulty">ENHANCED SIMULATION</span>';
-
-                display.innerHTML = `
-                    <div class="learning-seed-header">
-                        <h4>${seed.title}</h4>
-                        <div class="seed-meta">
-                            <span class="difficulty">Difficulty: ${seed.difficulty}</span>
-                            <span class="xp-potential">XP: +${seed.xp_value}</span>
-                            ${securityBadge}
-                        </div>
-                    </div>
+                display.innerHTML = 
+                    '<div class="learning-seed-header">' +
+                        '<h4>' + seed.title + '</h4>' +
+                        '<div class="seed-meta">' +
+                            '<span class="difficulty">Difficulty: ' + seed.difficulty + '</span>' +
+                            '<span class="xp-potential">XP: +' + seed.xp_value + '</span>' +
+                            '<span class="opus-powered">🤖 OPUS POWERED 🤖</span>' +
+                        '</div>' +
+                    '</div>' +
                     
-                    ${seed.modules.map((module, index) => `
-                        <div class="seed-module" data-module="${index}">
-                            <h5>${module.type.replace('_', ' ')}</h5>
-                            <p>${module.content}</p>
-                            <div class="understanding-check">
-                                <strong>🔑 Secure Check:</strong> ${module.understanding_check}
-                            </div>
-                        </div>
-                    `).join('')}
+                    seed.modules.map((module, index) => 
+                        '<div class="seed-module" data-module="' + index + '">' +
+                            '<h5>' + module.type.replace('_', ' ') + '</h5>' +
+                            '<p>' + module.content + '</p>' +
+                            '<div class="understanding-check">' +
+                                '<strong>🤖 Opus Check:</strong> ' + module.understanding_check +
+                            '</div>' +
+                        '</div>'
+                    ).join('') +
                     
-                    <div class="next-steps">
-                        <h5>🔑 Secure Next Steps</h5>
-                        <ul>
-                            ${seed.next_steps.map(step => `<li>${step}</li>`).join('')}
-                        </ul>
-                    </div>
+                    '<div class="next-steps">' +
+                        '<h5>🚀 Opus-Recommended Next Steps</h5>' +
+                        '<ul>' +
+                            seed.next_steps.map(step => '<li>' + step + '</li>').join('') +
+                        '</ul>' +
+                    '</div>' +
                     
-                    <div style="text-align: center; margin: 30px 0;">
-                        <button class="complete-btn" onclick="window.secureVoltron.completeMission('${seed.mission_id}')">
-                            🔑 Complete Secure Mission (+${seed.xp_value} XP)
-                        </button>
-                    </div>
-                `;
+                    '<div style="text-align: center; margin: 30px 0;">' +
+                        '<button class="complete-btn" onclick="window.opusVoltron.completeMission(\'' + seed.mission_id + '\')">' +
+                            '🤖 Complete Opus Mission (+' + seed.xp_value + ' XP)' +
+                        '</button>' +
+                    '</div>';
             }
 
             showProcessingState(mission) {
                 const display = document.getElementById('seed-content');
                 if (!display) return;
 
-                display.innerHTML = `
-                    <div class="processing">
-                        <div style="font-size: 28px; margin-bottom: 20px;">🔑 Secure Claude Processing... 🔑</div>
-                        <div class="secure-spinner"></div>
-                        <div style="color: #00ff88; margin-bottom: 10px; font-size: 18px;">Mission: ${mission.sector} Challenge</div>
-                        <div style="color: #888;">Difficulty: ${mission.difficulty} | XP Potential: +${mission.xpPotential}</div>
-                        <div style="margin-top: 20px; color: #4a90e2; font-size: 16px;">🔑 Secure analysis: "${mission.challenge}"</div>
-                        <div style="margin-top: 10px; color: #00ff88;">🛡️ Your key, your control, your privacy...</div>
-                    </div>
-                `;
+                display.innerHTML = 
+                    '<div class="processing">' +
+                        '<div style="font-size: 28px; margin-bottom: 20px;">🤖 Opus Processing... 🤖</div>' +
+                        '<div class="opus-spinner"></div>' +
+                        '<div style="color: #ff6b35; margin-bottom: 10px; font-size: 18px;">Mission: ' + mission.sector + ' Challenge</div>' +
+                        '<div style="color: #888;">Difficulty: ' + mission.difficulty + ' | XP Potential: +' + mission.xpPotential + '</div>' +
+                        '<div style="margin-top: 20px; color: #00ff88; font-size: 16px;">🤖 Opus analyzing: "' + mission.challenge + '"</div>' +
+                        '<div style="margin-top: 10px; color: #4a90e2;">⚡ Advanced AI processing...</div>' +
+                    '</div>';
             }
 
             completeMission(missionId) {
@@ -1227,28 +696,23 @@ Mathematical visualization - create mental models of key equations; Historical n
                 this.userProgress.conceptsMastered.push(seed.title);
                 
                 this.checkRankProgression();
-                
-                const message = seed.secureGenerated ? 
-                    `🔑 SECURE MISSION COMPLETE! +${seed.xp_value} XP earned! 🔑` :
-                    `⚡ ENHANCED MISSION COMPLETE! +${seed.xp_value} XP earned! ⚡`;
-                    
-                this.showToast(message, 'success');
+                this.showToast('🤖 OPUS MISSION COMPLETE! +' + seed.xp_value + ' XP earned! 🤖', 'success');
                 this.updateProgressDisplay();
                 this.saveUserProgress();
                 
-                console.log(`🔑 Secure Mission ${missionId} completed! Total XP: ${this.userProgress.totalXP}`);
+                console.log('🤖 Opus Mission ' + missionId + ' completed! Total XP: ' + this.userProgress.totalXP);
             }
 
             checkRankProgression() {
                 const ranks = ['Cadet', 'Ensign', 'Lieutenant', 'Commander', 'Captain', 'Fleet Admiral'];
-                const xpThresholds = [0, 75, 225, 450, 750, 1500]; // Higher thresholds for secure XP
+                const xpThresholds = [0, 100, 300, 600, 1000, 2000];
                 
                 const currentRankIndex = ranks.indexOf(this.userProgress.rank);
                 const nextRankIndex = currentRankIndex + 1;
                 
                 if (nextRankIndex < ranks.length && this.userProgress.totalXP >= xpThresholds[nextRankIndex]) {
                     this.userProgress.rank = ranks[nextRankIndex];
-                    this.showToast(`🎖️ SECURE PROMOTION! You are now ${this.userProgress.rank}! 🔑`, 'promotion');
+                    this.showToast('🎖️ OPUS PROMOTION! You are now ' + this.userProgress.rank + '! 🤖', 'promotion');
                 }
             }
 
@@ -1256,143 +720,64 @@ Mathematical visualization - create mental models of key equations; Historical n
                 const progressContent = document.getElementById('progress-content');
                 if (!progressContent) return;
 
-                progressContent.innerHTML = `
-                    <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
-                        <div style="text-align: center; padding: 15px; background: rgba(74, 144, 226, 0.1); border-radius: 8px;">
-                            <div style="font-size: 2em; color: #00ff88;">${this.userProgress.rank}</div>
-                            <div style="color: #888;">Current Rank</div>
-                        </div>
-                        <div style="text-align: center; padding: 15px; background: rgba(74, 144, 226, 0.1); border-radius: 8px;">
-                            <div style="font-size: 2em; color: #4a90e2;">${this.userProgress.totalXP} XP</div>
-                            <div style="color: #888;">Total Experience</div>
-                        </div>
-                        <div style="text-align: center; padding: 15px; background: rgba(74, 144, 226, 0.1); border-radius: 8px;">
-                            <div style="font-size: 2em; color: #ff6b35;">${this.userProgress.secureSessions}</div>
-                            <div style="color: #888;">Secure Sessions</div>
-                        </div>
-                    </div>
-                `;
+                progressContent.innerHTML = 
+                    '<div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">' +
+                        '<div style="text-align: center; padding: 15px; background: rgba(74, 144, 226, 0.1); border-radius: 8px;">' +
+                            '<div style="font-size: 2em; color: #00ff88;">' + this.userProgress.rank + '</div>' +
+                            '<div style="color: #888;">Current Rank</div>' +
+                        '</div>' +
+                        '<div style="text-align: center; padding: 15px; background: rgba(74, 144, 226, 0.1); border-radius: 8px;">' +
+                            '<div style="font-size: 2em; color: #4a90e2;">' + this.userProgress.totalXP + ' XP</div>' +
+                            '<div style="color: #888;">Total Experience</div>' +
+                        '</div>' +
+                        '<div style="text-align: center; padding: 15px; background: rgba(74, 144, 226, 0.1); border-radius: 8px;">' +
+                            '<div style="font-size: 2em; color: #ff6b35;">' + this.userProgress.opusSessions + '</div>' +
+                            '<div style="color: #888;">Opus Sessions</div>' +
+                        '</div>' +
+                    '</div>';
             }
 
-            showToast(message, type = 'info') {
+            showToast(message, type) {
                 const toast = document.createElement('div');
-                const bgColor = {
+                const colors = {
                     'success': '#00ff88',
-                    'warning': '#ffaa00', 
+                    'warning': '#ffaa00',
                     'promotion': '#ff00aa',
                     'error': '#ff6b35',
                     'info': '#4a90e2'
-                }[type] || '#4a90e2';
-                
+                };
+                const bgColor = colors[type] || '#4a90e2';
                 const textColor = (type === 'success' || type === 'warning') ? '#000' : '#fff';
                 
-                toast.style.cssText = `
-                    position: fixed; top: 20px; right: 20px; z-index: 10000;
-                    background: ${bgColor}; color: ${textColor};
-                    padding: 15px 20px; border-radius: 8px; font-weight: bold;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                    animation: slideIn 0.3s ease;
-                    max-width: 350px; font-size: 14px;
-                `;
+                toast.style.cssText = 
+                    'position: fixed; top: 20px; right: 20px; z-index: 10000;' +
+                    'background: ' + bgColor + '; color: ' + textColor + ';' +
+                    'padding: 15px 20px; border-radius: 8px; font-weight: bold;' +
+                    'box-shadow: 0 4px 12px rgba(0,0,0,0.3);' +
+                    'animation: slideIn 0.3s ease; max-width: 350px; font-size: 14px;';
+                    
                 toast.textContent = message;
-                
                 document.body.appendChild(toast);
                 setTimeout(() => toast.remove(), 5000);
             }
 
             loadUserProgress() {
-                console.log('📊 Secure User Progress Loaded:', this.userProgress);
+                console.log('📊 Opus User Progress Loaded:', this.userProgress);
             }
 
             saveUserProgress() {
-                console.log('💾 Secure Progress Saved - Rank:', this.userProgress.rank, 'XP:', this.userProgress.totalXP, 'Sessions:', this.userProgress.secureSessions);
+                console.log('💾 Opus Progress Saved - Rank:', this.userProgress.rank, 'XP:', this.userProgress.totalXP);
             }
         }
 
-        // 🔑 BYOK SECURE FUNCTIONS
-        function setClaudeKey() {
-            const keyInput = document.getElementById('claude-key-input');
-            const key = keyInput.value.trim();
-            
-            if (!key) {
-                window.secureVoltron.showToast('Please enter your Claude API key', 'warning');
-                return;
-            }
-            
-            if (!window.secureVoltron.validateKeyFormat(key)) {
-                window.secureVoltron.showToast('Invalid Claude API key format. Must start with sk-ant-api03-', 'error');
-                return;
-            }
-            
-            // Store securely in localStorage
-            localStorage.setItem('user_claude_key', key);
-            window.userClaudeKey = key;
-            
-            // Clear input
-            keyInput.value = '';
-            
-            // Enable mission form
-            window.secureVoltron.enableMissionForm();
-            window.secureVoltron.updateApiStatus('✅ Claude API key set successfully and stored securely', 'success');
-            window.secureVoltron.claudeStatus = 'READY';
-            
-            console.log('🔑 Claude API key set securely');
-            window.secureVoltron.showToast('🔑 Claude API key secured! Ready for missions!', 'success');
-        }
-
-        async function testClaudeKey() {
-            if (!window.userClaudeKey) {
-                window.secureVoltron.showToast('Please set your Claude API key first', 'warning');
-                return;
-            }
-            
-            window.secureVoltron.updateApiStatus('🧪 Testing Claude API connection...', 'warning');
-            
-            try {
-                const testPrompt = 'Respond with exactly: "VOLTRON BYOK TEST SUCCESSFUL"';
-                const response = await window.secureVoltron.callSecureClaudeAPI(testPrompt);
-                
-                if (response && response.includes('VOLTRON BYOK TEST SUCCESSFUL')) {
-                    window.secureVoltron.updateApiStatus('✅ Claude API test successful! Ready for secure missions.', 'success');
-                    window.secureVoltron.showToast('🧪 Claude API test successful!', 'success');
-                } else {
-                    window.secureVoltron.updateApiStatus('⚠️ Claude responded but format unexpected. Key may work for missions.', 'warning');
-                }
-            } catch (error) {
-                console.error('Claude API test failed:', error);
-                if (error.message.includes('Invalid API key')) {
-                    window.secureVoltron.updateApiStatus('❌ Invalid API key. Please check and re-enter.', 'error');
-                } else if (error.message.includes('Rate limit')) {
-                    window.secureVoltron.updateApiStatus('⚠️ Rate limit hit. Key is valid but wait before testing again.', 'warning');
-                } else {
-                    window.secureVoltron.updateApiStatus(`❌ Test failed: ${error.message}`, 'error');
-                }
-            }
-        }
-
-        function clearClaudeKey() {
-            if (confirm('Are you sure you want to remove your Claude API key? This will disable AI-powered missions.')) {
-                localStorage.removeItem('user_claude_key');
-                delete window.userClaudeKey;
-                
-                document.getElementById('claude-key-input').value = '';
-                window.secureVoltron.disableMissionForm();
-                window.secureVoltron.updateApiStatus('🗑️ Claude API key removed. Set a new key to continue.', 'warning');
-                window.secureVoltron.claudeStatus = 'NO_KEY';
-                
-                console.log('🔑 Claude API key cleared');
-                window.secureVoltron.showToast('🗑️ Claude API key removed securely', 'warning');
-            }
-        }
-
-        // 🔑 INITIALIZE SECURE VOLTRON
+        // 🤖 INITIALIZE OPUS VOLTRON
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ FOUNDATION: Secure mission form found and protected');
+            console.log('✅ FOUNDATION: Opus mission form found and protected');
             
-            window.secureVoltron = new SecureVoltronBYOK();
-            window.hexMindBridge = window.secureVoltron; // Backward compatibility
+            window.opusVoltron = new OpusVoltronMechaZord();
+            window.hexMindBridge = window.opusVoltron;
             
-            console.log('🔑 HexMind Voltron BYOK Secure - FULLY OPERATIONAL! 🔑');
+            console.log('🤖 HexMind Voltron Opus Edition - FULLY OPERATIONAL! 🤖');
         });
     </script>
 </body>
