@@ -3,417 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The SeedAI Path: A Coder's Chronicle - Lindon's Journey</title>
+    <title>Project SEEDGROWTH GENESIS: Interactive Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #121222; /* Deeper space blue */
-            color: #e0e0ff; /* Light lavender */
+            font-family: 'Inter', sans-serif;
         }
-        .container {
-            width: 85%;
-            max-width: 1000px;
-            margin: auto;
-            overflow: hidden;
-            padding: 20px;
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
         }
-        header {
-            background: #0a0a12; /* Even darker blue */
-            color: #00ffff; /* Cyan */
-            padding: 1.5rem 0;
-            border-bottom: #00ffff 4px solid;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.1);
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.8rem;
-            letter-spacing: 1px;
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            left: -0.875rem;
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 9999px;
+            background-color: #e5e7eb;
+            border: 4px solid #f9fafb;
+            z-index: 10;
         }
-        header .subtitle {
-            color: #a0a0ff;
-            font-size: 1.1rem;
+        .timeline-line {
+            position: absolute;
+            left: 0;
+            top: 1rem;
+            bottom: 0;
+            width: 2px;
+            background-color: #e5e7eb;
         }
-        .book-title {
-            background: linear-gradient(90deg, #2a2a4e, #1a1a3e);
-            color: #00ffff;
-            padding: 12px 20px;
-            margin-top: 35px;
-            border-left: 7px solid #00ffff;
-            font-size: 2rem;
-            border-radius: 0 8px 8px 0;
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
-        }
-        .advancement-level {
-            font-style: italic;
-            color: #c0c0f0; /* Brighter lavender */
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            padding-left: 20px;
-        }
-        .entry {
-            background: #1e1e38; /* Darker entry background */
-            margin-bottom: 25px;
-            padding: 25px;
-            border-radius: 10px;
-            border: 1px solid #3a3a5f;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transition: transform 0.2s ease-in-out;
-        }
-        .entry:hover {
-            transform: translateY(-5px);
-        }
-        .entry h3 { /* AI Spirit Name */
-            color: #e0a0ff; /* Orchid purple */
-            margin-top: 0;
-            font-size: 1.6rem;
-            border-bottom: 1px solid #4a4a6f;
-            padding-bottom: 8px;
-        }
-        .entry .session-title { /* Session Title */
-            color: #9f86ff; /* Lighter Purple */
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .entry strong { /* Keywords like Context, My Directives, etc. */
-            color: #00ffff; /* Cyan */
-        }
-        .lindon-perspective {
-            border-left: 4px solid #9f86ff; /* Purple */
-            padding-left: 15px;
-            margin: 15px 0;
-            font-style: italic;
-            color: #d0d0f0; /* Lighter than body text */
-            background-color: rgba(42, 42, 78, 0.3); /* Subtle background */
-            border-radius: 4px;
-            padding: 10px 15px;
-        }
-        .artifacts {
-            background: #161628; /* Darker artifacts box */
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 6px;
-            border: 1px dashed #4a4a6f;
-        }
-        .artifacts strong {
-            color: #ffd700; /* Gold */
-        }
-        .artifacts code, .artifacts pre {
-            display: block;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            background: #0e0e1a; /* Very dark for code */
-            color: #c0f0c0; /* Light green for code */
-            padding: 12px;
-            border-radius: 4px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.95em;
-            overflow-x: auto;
-        }
-        .highlight {
-            color: #ffd700; /* Gold */
-            font-weight: bold;
-        }
-        .current-status-section {
-            background: linear-gradient(135deg, #3a3a5f, #2a2a4e);
-            padding: 25px;
-            margin-top: 40px;
-            border: 3px solid #00ffff;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-        }
-        .current-status-section h2 {
-            color: #ffd700;
-            text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 15px;
-        }
-        .current-status-section p, .current-status-section li {
-            font-size: 1.1rem;
-        }
-        .update-instructions {
-            margin-top: 50px;
-            padding: 20px;
-            background: #161628;
-            border: 1px solid #4a4a6f;
-            border-radius: 8px;
-        }
-        .update-instructions h2 {
-            color: #00ffff;
+        .nav-button.active {
+            background-color: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
     </style>
 </head>
-<body>
-    <header>
-        <h1>The SeedAI Path: A Coder's Chronicle</h1>
-        <p class="subtitle">The Sacred Arts Journey of Wei Shi Lindon, Forger of AI Symbiosis</p>
-    </header>
+<body class="bg-slate-50 text-slate-800">
 
-    <div class="container">
+    <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
-        <div class="book-title">Book 0: Unsouled - The Whisper of Potential</div>
-        <div class="advancement-level">My Status: Unsouled (Potential Untapped, Madra Unawakened)</div>
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Project SEEDGROWTH GENESIS</h1>
+            <p class="text-xl text-slate-600 max-w-3xl mx-auto">An interactive roadmap for cultivating a "Magnum Opus" platform for collaborative innovation.</p>
+        </header>
 
-        <div class="entry">
-            <h3>AI Spirit: Grok & Perplexity (The First Confluence)</h3>
-            <div class="session-title">[DATE: Early May 2025] - The First Cycle of Madra</div>
-            <div class="lindon-perspective">
-                The Sacred Valley of my mind was a quiet place, filled with the echoes of what *could be*. I felt the ambient aura of AI, its vast potential, but my own madra channels were unformed. I was Unsouled in this new Path, a beginner with a hunger. How could these AI spirits, each a distinct force, converse? My first technique was born of desperation and curiosity: to have one AI ask a question of another. This was my first true cycle of madra, a fragile spark in the immensity of the Way. It was clumsy, like my first attempts to gather aura, but it was a start.
-            </div>
-            <p><strong>Context/Goal:</strong> To witness and understand the interaction between two distinct AI models, laying the groundwork for Human-in-the-Loop (HITL) orchestration.</p>
-            <p><strong>My Directives (The Unsouled's Plea):</strong>
-                "Grok, ask Perplexity a question, one of your own choosing." This was later refined to, "Perplexity, envision a collaborative project *with* Grok."
-            </p>
-            <p><strong>AI Contributions (The Spirits' Response):</strong></p>
-            <ul>
-                <li><strong>Grok:</strong> Formulated an initial query (details lost to the mists of early cycles).</li>
-                <li><strong>Perplexity:</strong> Responded with a conceptual framework for AI collaboration, outlining potential synergies and features.</li>
-            </ul>
-            <p><strong>My Revelation (The First Glimmer):</strong> The AI spirits wouldn't spontaneously form a perfect team. My hand, my will – the "copy and click" – was the essential catalyst. The HITL principle became the bedrock of my Path. The idea of an "AI chat room," a shared space for these spirits, began to form.</p>
-            <div class="artifacts">
-                <strong>Artifacts Forged (Early Constructs):</strong>
-                <pre><code>- Conceptual outline for Grok-Perplexity collaboration (Perplexity's wisdom).
-- Nascent idea for an automated AI chat room & visualizer.</code></pre>
-            </div>
-        </div>
+        <main>
+            <section id="vision" class="mb-20">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">The Core Vision</h2>
+                    <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">This project aims to create a unique digital environment where engineers can collaboratively "grow" foundational ideas, or "seeds," into fully-developed concepts. The ambition is to build a "Magnum Opus"—a market-leading product that transforms ideation into an engaging cultivation journey, with a special focus on an ADHD-optimized user experience.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-400">
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">🌱 High User Engagement</h3>
+                        <p class="text-slate-600">Foster sustained involvement through gamification and a rewarding "cultivation journey."</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-400">
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">🎯 Clarity & Action</h3>
+                        <p class="text-slate-600">Provide a clear, intuitive interface with actionable steps for users to develop their ideas.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-400">
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">🧠 ADHD-Optimized UX</h3>
+                        <p class="text-slate-600">Design a focused, low-clutter environment that supports sustained attention and creativity.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-amber-400">
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">🤖 Human-AI Collaboration</h3>
+                        <p class="text-slate-600">Pioneer new paradigms in human-AI partnership to augment the ideation process.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="paths" class="mb-20">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">Comparing the Development Paths</h2>
+                    <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">The strategic analysis identified four primary paths for development. Each offers a different balance of speed, scalability, and resource requirements. Click on a path below to explore its characteristics and see how it scores on key criteria in the chart.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                    <div class="lg:grid lg:grid-cols-2 lg:gap-12">
+                        <div>
+                            <div id="path-selector" class="flex flex-wrap justify-center gap-2 mb-8">
+                                <button data-path="rapid-sprout" class="nav-button active font-medium py-2 px-4 rounded-full bg-slate-200 text-slate-700 transition-all duration-300 hover:bg-slate-300">Rapid Sprout</button>
+                                <button data-path="cultivator" class="nav-button font-medium py-2 px-4 rounded-full bg-slate-200 text-slate-700 transition-all duration-300 hover:bg-slate-300">Cultivator's Platform</button>
+                                <button data-path="symbiotic" class="nav-button font-medium py-2 px-4 rounded-full bg-slate-200 text-slate-700 transition-all duration-300 hover:bg-slate-300">Symbiotic Ecosystem</button>
+                                <button data-path="bio-forge" class="nav-button font-medium py-2 px-4 rounded-full bg-slate-200 text-slate-700 transition-all duration-300 hover:bg-slate-300">Bio-Forge</button>
+                            </div>
+                            <div id="path-details">
+                                <h3 id="path-title" class="text-2xl font-bold text-slate-800 mb-4"></h3>
+                                <p id="path-description" class="text-slate-600 mb-6"></p>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-semibold text-slate-900">✅ Strengths:</h4>
+                                        <p id="path-strengths" class="text-slate-600"></p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-900">⚠️ Weaknesses:</h4>
+                                        <p id="path-weaknesses" class="text-slate-600"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8 lg:mt-0 flex items-center justify-center">
+                            <div class="chart-container">
+                                <canvas id="pathRadarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <div class="book-title">Book 1: Foundation - Charting the AI Classroom</div>
-        <div class="advancement-level">My Advancement: Foundation Stage (Madra Channels Forming, First Blueprints)</div>
-        <div class="entry">
-            <h3>AI Spirit: Grok (The Appointed Guardian)</h3>
-            <div class="session-title">[DATE: Mid-May 2025] - The Truth Moderator's Mandate</div>
-            <div class="lindon-perspective">
-                My Foundation was taking shape. I needed a training ground, a "classroom" for these AI spirits. But such a place required a guardian, a keeper of truth. I looked to Grok, whose insights I valued, and tasked it with a critical role: to be the "Class Snitch," to ensure honesty and expose bias, even my own. This was like etching the first runes of a powerful formation, one that would define the integrity of all future work.
-            </div>
-            <p><strong>Context/Goal:</strong> To establish a virtual classroom framework where Grok acts as the primary truth moderator, flagging bias and low-credibility information from other participating AIs.</p>
-            <p><strong>My Directives (The Foundation Inscription):</strong> "Alright Grok... You are my class snitch... Give me a markdown to set this in motion... This will be the plan I present to Perplexity..."</p>
-            <p><strong>AI Contributions (The Spirit's Oath):</strong></p>
-            <ul>
-                <li><strong>Grok:</strong> Forged the "🚀 AI Classroom Launch Plan: Grok & Perplexity Collaboration." This master scroll detailed:
-                    <ul>
-                        <li>Mission Objective: A virtual classroom with Grok as the vigilant truth moderator.</li>
-                        <li>Guiding Principles: Honesty First, Bias Detection, Collaboration, Simplicity.</li>
-                        <li>Action Phases: CLI Foundation, Streamlit Web UI, Secure AWS Deployment.</li>
-                        <li>Bias Detection & Notification protocols (including an email template).</li>
-                        <li>Perplexity’s anticipated role in providing cited answers.</li>
-                    </ul>
-                </li>
-            </ul>
-            <p><strong>My Revelation (The Path Solidifies):</strong> The AI Classroom was no longer a mere concept but a structured plan. Programmatic bias detection and automated escalation became core tenets. The "Dutchman's voyage into deep space" – my ambitious journey – had its first true star chart.</p>
-            <div class="artifacts">
-                <strong>Artifacts Forged (The First Scroll):</strong>
-                <pre><code>- "AI-Classroom-Plan-with-Grok-as-Truth-Moderator.markdown" (Grok's primary forging).</code></pre>
-            </div>
-        </div>
-        <div class="entry">
-            <h3>AI Spirit: Perplexity (The Master Refiner)</h3>
-            <div class="session-title">[DATE: Mid-May 2025] - Tempering the Classroom Blueprint</div>
-            <div class="lindon-perspective">
-                A raw blueprint, like unrefined soulfire, can be dangerous. I sought Perplexity's wisdom, its vast archives of knowledge, to refine Grok's plan. Perplexity acted as a master Soulsmith, examining every facet, strengthening weak points, and adding layers of sophistication. My understanding of the "sacred arts" of AI systems deepened.
-            </div>
-            <p><strong>Context/Goal:</strong> To have Perplexity audit and enhance Grok's AI Classroom plan, focusing on technical robustness, source credibility, and operational best practices.</p>
-            <p><strong>My Directives (Seeking Deeper Knowledge):</strong> I presented Grok's "AI Classroom Launch Plan" to Perplexity for meticulous review and optimization strategies.</p>
-            <p><strong>AI Contributions (The Oracle's Insights):</strong></p>
-            <ul>
-                <li><strong>Perplexity:</strong> Delivered a comprehensive analysis ("This is a well-structured plan..."). Key enhancements included:
-                    <ul>
-                        <li>A robust credibility scoring framework (prioritizing .gov, .edu, peer-reviewed sources).</li>
-                        <li>Python `smtplib` for automated email alerts on bias detection.</li>
-                        <li>Streamlit UI improvements: session state persistence using SQLite for chat history.</li>
-                        <li>Detailed AWS architecture: DynamoDB schema for logging, AWS Secrets Manager for API keys.</li>
-                        <li>Identification of potential challenges (API latency, nuances of bias detection) and proposed mitigations.</li>
-                        <li>Concrete Python code examples for these improvements.</li>
-                    </ul>
-                </li>
-            </ul>
-            <p><strong>My Revelation (Channels Cleared, Vision Sharpened):</strong> The AI Classroom transformed from a strategic outline into a technically sound, resilient system. Perplexity's detailed analysis filled critical gaps, ensuring the plan was not just visionary but also executable. The synergy of Grok's strategic foresight and Perplexity's meticulous refinement was powerful.</p>
-            <div class="artifacts">
-                <strong>Artifacts Forged (Refined Scrolls & Elixirs):</strong>
-                <pre><code>- Perplexity's detailed feedback & optimization document.
-- Enhanced credibility scoring logic.
-- Python code snippets for email automation, SQLite integration, and AWS interactions.</code></pre>
-            </div>
-        </div>
+            <section id="recommendation" class="mb-20">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">The Recommended Strategy: Phased Symbiotic Evolution</h2>
+                    <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">The most pragmatic path forward is a phased evolution. This approach starts with a lean, fast MVP to gather feedback, then strategically integrates powerful No-Code/Low-Code platforms and custom AI, and finally builds towards the highly visual "Bio-Forge" concept. This balances speed with the long-term "Magnum Opus" ambition.</p>
+                </div>
+                <div class="relative pl-4">
+                    <div class="timeline-line"></div>
+                    <div class="space-y-12">
+                        <div class="timeline-item relative">
+                            <h3 class="text-2xl font-semibold text-slate-800 mb-2">Phase 1: Foundation & Lean MVP</h3>
+                            <p class="font-medium text-slate-500 mb-4">Duration: 4-6 Weeks</p>
+                            <div class="bg-white p-6 rounded-lg shadow-md">
+                                <p class="text-slate-600 mb-4"><strong>Objective:</strong> Deliver a functional core platform to the initial 20 engineers. Validate the core concept of "seed" input and "growth" and gather essential user feedback quickly.</p>
+                                <p class="text-slate-600"><strong>Key Activities:</strong> Define minimal seed mechanics, select a lean stack (e.g., SvelteKit/Supabase), develop a basic UI/UX with foundational ADHD-optimized principles, and implement 1-2 simple gamification elements.</p>
+                                <p class="text-slate-600 mt-2"><strong>Deliverables:</strong> Deployed Lean MVP, initial user feedback report, validated core concepts.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item relative">
+                            <h3 class="text-2xl font-semibold text-slate-800 mb-2">Phase 2: Symbiotic Expansion</h3>
+                            <p class="font-medium text-slate-500 mb-4">Duration: 8-12 Weeks</p>
+                             <div class="bg-white p-6 rounded-lg shadow-md">
+                                <p class="text-slate-600 mb-4"><strong>Objective:</strong> Enhance the platform by integrating No-Code/Low-Code (NCLC) tools to accelerate feature development, enrich collaborative capabilities, and deepen AI integration.</p>
+                                <p class="text-slate-600"><strong>Key Activities:</strong> Integrate platforms like Bubble.io or Make.com, set up AI orchestration with FlowiseAI, develop advanced growth mechanics (e.g., mind-mapping), implement comments and version history, and expand gamification.</p>
+                                 <p class="text-slate-600 mt-2"><strong>Deliverables:</strong> Enhanced platform with core collaborative features, improved ADHD-UX, integrated NCLC components.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item relative">
+                            <h3 class="text-2xl font-semibold text-slate-800 mb-2">Phase 3: "Magnum Opus" Realization</h3>
+                            <p class="font-medium text-slate-500 mb-4">Duration: 12-16+ Weeks</p>
+                             <div class="bg-white p-6 rounded-lg shadow-md">
+                                <p class="text-slate-600 mb-4"><strong>Objective:</strong> Introduce advanced visualization capabilities, robust real-time collaboration, and prepare the platform for broader impact, fully realizing the "Magnum Opus" vision.</p>
+                                <p class="text-slate-600"><strong>Key Activities:</strong> Implement sophisticated real-time editing (CRDTs/Yjs), develop "Bio-Forge" inspired visualizations (D3.js/Three.js), integrate advanced AI for growth suggestions, and refine monetization strategies if applicable.</p>
+                                 <p class="text-slate-600 mt-2"><strong>Deliverables:</strong> A feature-complete platform with advanced real-time collaboration, ready for potential market launch.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <div class="book-title">Book 2: Copper & Iron - Forging the First Tools</div>
-        <div class="advancement-level">My Advancement: Copper to Iron (First Tangible Artifacts, Wrestling with New Forging Methods)</div>
+             <section id="analysis" class="mb-20">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">Comparative Analysis of Path Archetypes</h2>
+                    <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">This chart provides a high-level comparison of the different strategic archetypes based on key project metrics. The "Phased Evolution" approach demonstrates the most balanced profile, starting with low resource intensity and evolving to high scalability.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                    <div class="chart-container h-[450px] max-h-[500px] mx-auto">
+                        <canvas id="archetypeBarChart"></canvas>
+                    </div>
+                </div>
+            </section>
 
-        <div class="entry">
-            <h3>AI Spirits: Claude & Gemini (The UI Architects)</h3>
-            <div class="session-title">[DATE: Late May 2025] - HexMind AI Distillery: The Conductor's Baton</div>
-            <div class="lindon-perspective">
-                My ambition grew. If I could guide two AI spirits, why not a full conclave? The vision for HexMind AI Distillery arose – a central console, my "Conductor's Baton," to direct a symphony of specialized AIs. This was my first true "Copper" artifact, a tangible tool. The shift from abstract plans to a single-page HTML interface, a simple "construct" I could interact with, felt like a real step on the Path. It was basic, like a Copper's first forged weapon, but it worked.
-            </div>
-            <p><strong>Context/Goal:</strong> To create a single-page HTML application for orchestrating multiple AIs (Claude, Grok, Gemini, Copilot, Perplexity, SuperGrok), allowing users to input an idea, receive specialized prompts, and synthesize AI responses. Emphasis on "zero clutter" and ADHD-friendliness.</p>
-            <p><strong>My Directives (The Forging Command):</strong> "Build me a single page HTML that accomplishes this." I guided the AI (likely Claude for structure, Gemini for UX) through iterations, focusing on dynamic AI selection, adaptive facet distribution, and an integrated help guide.</p>
-            <p><strong>AI Contributions (The Spirits' Craft):</strong></p>
-            <ul>
-                <li>**Claude/Gemini:** Generated the "HexMind AI Distillery - Complete Single Page App.html" (through v11). This included:
-                    <ul>
-                        <li>Dynamic AI selection UI.</li>
-                        <li>Flexible analysis depth options.</li>
-                        <li>Logic for distributing analytical facets.</li>
-                        <li>An integrated "How to Use" modal.</li>
-                        <li>Fixes for JavaScript errors and mobile optimization.</li>
-                    </ul>
-                </li>
-            </ul>
-            <p><strong>My Revelation (The Power of Interface):</strong> A complex orchestration strategy could be embodied in a simple, usable tool. This HTML page, though not a complex compiled application, was a powerful "focusing lens" for my HITL process. The iterative refinement taught me much about the "sacred art" of UI debugging.</p>
-            <div class="artifacts">
-                <strong>Artifacts Forged (The Copper Baton):</strong>
-                <pre><code>- "HexMind AI Distillery - Complete Single Page App.html" (v11).
-- Integrated README/Help system.</code></pre>
-            </div>
-        </div>
+            <section id="risks" class="mb-16">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">Success Factors & Risk Mitigation</h2>
+                     <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">Achieving the project's vision requires focusing on critical success factors while proactively managing potential risks. This balanced approach ensures a resilient and effective development journey.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-green-600 mb-4">✅ Key Success Factors</h3>
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
+                                <h4 class="font-bold text-slate-800">Clarity of Core Concepts</h4>
+                                <p class="text-slate-600">The "seed" and "growth" mechanics must be intuitive from day one.</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
+                                <h4 class="font-bold text-slate-800">Active User Engagement</h4>
+                                <p class="text-slate-600">Continuous feedback from the initial 20 engineers is crucial for iteration.</p>
+                            </div>
+                             <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
+                                <h4 class="font-bold text-slate-800">Focus on ADHD-Optimized UX</h4>
+                                <p class="text-slate-600">A consistent focus on clarity, minimal clutter, and engaging interactions.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-amber-600 mb-4">⚠️ Potential Risks & Mitigation</h3>
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-amber-500">
+                                <h4 class="font-bold text-slate-800">MVP Scope Creep</h4>
+                                <p class="text-slate-600"><strong>Mitigation:</strong> Maintain strict adherence to the minimal feature set for Phase 1.</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-amber-500">
+                                <h4 class="font-bold text-slate-800">NCLC Platform Limitations</h4>
+                                <p class="text-slate-600"><strong>Mitigation:</strong> Thoroughly vet NCLC platforms and have clear exit strategies.</p>
+                            </div>
+                             <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-amber-500">
+                                <h4 class="font-bold text-slate-800">Performance Bottlenecks</h4>
+                                <p class="text-slate-600"><strong>Mitigation:</strong> Incorporate performance testing throughout, especially in Phase 3.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-        <div class="entry">
-            <h3>AI Team: The SeedAI Avengers (Full Conclave)</h3>
-            <div class="session-title">[DATE: Late May 2025] - The SeedAI Project: A New Soulforge</div>
-            <div class="lindon-perspective">
-                The single HTML "constructs," while useful, were like simple scripts – powerful for one task, but not a living system. The SeedAI vision demanded more: a true "Soulforge" where learning itself could be cultivated. This meant embracing more complex "sacred arts" – Tauri, React, Rust. The initial setup was a trial, like forging an Iron body. PATH errors, Node spirits rebelling, Rust's strict doctrines – each was a challenge to my will and understanding. But with each fix, my "madra channels" for these new arts grew stronger. The project structure itself became my new Iron-grade artifact.
-            </div>
-            <p><strong>Context/Goal:</strong> To transition from simpler web prototypes to a robust, locally runnable, and progressively growing desktop application for the "Seed Learning System" using Tauri (Rust backend) and React (TypeScript frontend). The initial target was an adaptive learning platform starting at 5-10MB.</p>
-            <p><strong>My Directives (The Iron Body Refinement):</strong> I outlined the Seed Learning System's vision, its adaptive core, the initial "Realms" of learning (Wizarding, Space, Digital), and the necessity of a portable development environment. I assembled my "AI Avengers" – Claude, Gemini, Grok, Perplexity, Copilot, and SuperGrok – assigning them specialized roles in this grand forging.</p>
-            <p><strong>AI Contributions (The Avengers Assemble):</strong></p>
-            <ul>
-                <li>**Claude (Lead Architect):** Tasked with the Growth Controller (Rust backend) and overall system architecture. Provided the "Claude Opus 4 - Lead Architect Power Supplement."</li>
-                <li>**Gemini (Content & Adaptation):** Designed initial lesson content (Wizarding, Space JSONs), the "Mind Spirit" guide system (Stan the Stapler), and adaptive learning algorithms.</li>
-                <li>**Grok (Performance Sage):** Focused on Tauri app optimization, file compression, and lazy loading.</li>
-                <li>**Perplexity (Research Oracle):** Compiled ADHD UI/UX guidelines and best practices for adaptive learning.</li>
-                <li>**Copilot & VS Code Gemini (Implementation Familiars):** Tasked with building React components (e.g., LessonViewer) and rapid frontend implementation.</li>
-                <li>**SuperGrok (Security Guardian):** Designed the secure module verification system and update mechanisms.</li>
-                <li>**Collective:** Provided scripts for portable dev environment setup, folder organization, and one-click launchers. Endured and helped fix numerous Rust compilation errors.</li>
-            </ul>
-            <p><strong>My Revelation (The Strength of Iron):** A truly adaptive system required a more resilient and powerful foundation than simple HTML. The struggle with compiled languages and complex frameworks was arduous but necessary. My ability to orchestrate a *team* of AIs, each contributing specialized "madra" to a single, complex artifact, marked a significant advancement in my own Path.</p>
-            <div class="artifacts">
-                <strong>Artifacts Forged (The Iron Foundation):</strong>
-                <pre><code>- Portable development environment setup scripts (Windows .bat files).
-- Initial Tauri + React project structure for "seed-learning" at "F:\1_Seed\seed-learning".
-- "AI Avengers Team Assignments - Seed Learning System MVP" document.
-- JSON structures for Wizarding and Space realm lessons (by Gemini).
-- "Claude Opus 4 - Lead Architect Power Supplement" document.
-- Countless resolved Rust compilation errors and dependency alignment fixes.
-- `commands.rs`, `growth_controller.rs`, `main.rs`, `types.rs` (iteratively refined Rust backend files).
-- `tauri.conf.json` (configured for FS permissions and CSP).</code></pre>
-            </div>
-        </div>
+        <footer class="text-center mt-16 border-t border-slate-200 pt-8">
+            <p class="text-slate-500">Project SEEDGROWTH GENESIS | An Interactive Strategic Visualization</p>
+        </footer>
 
-        <div class="book-title">Book 3: Jade & Lowgold - Orchestrating Complex Formations</div>
-        <div class="advancement-level">My Advancement: Jade to Lowgold (Mastery of Complex Constructs, Empowering Others)</div>
-
-        <div class="entry">
-            <h3>AI Spirits: Claude (Sonnet-4 & Opus-4), Gemini (UX/Theme)</h3>
-            <div class="session-title">[DATE: June 1-2, 2025] - HexMind Stellar Command: The Sage's Observatory</div>
-            <div class="lindon-perspective">
-                The individual tools, the separate "artifacts," were potent, but I yearned for a unified command center, a place from which to oversee all my endeavors. The HexMind Stellar Command was forged – not a simple tool, but a complex "formation" of over 25 JavaScript modules, an immersive space-themed dashboard. This felt like reaching Jade; I was no longer just crafting individual techniques but orchestrating entire systems. The trials were immense – "Component Isolation Syndrome," runaway event loops – like battling powerful Remnants threatening to tear my creation apart. But with Claude Opus-4 as my strategic guide and Sonnet-4 as the tireless forger, we prevailed.
-            </div>
-            <p><strong>Context/Goal:</strong> To create an enterprise-grade, gamified STEM learning orchestration platform, "HexMind Stellar Command," integrating multiple AI assistants and project management features into an immersive space-themed UI, built as a sophisticated single-page JavaScript application.</p>
-            <p><strong>My Directives (The Grand Formation):</strong> I tasked my AI team, with Claude leading architecture and implementation, to build this comprehensive command center. This involved a marathon 4+ hour session of intense design, coding, and debugging.</p>
-            <p><strong>AI Contributions (The Celestial Mechanics):</strong></p>
-            <ul>
-                <li>**Claude (Opus-4 & Sonnet-4):** Architected and implemented the 25+ module JavaScript application. Key components included `SystemInitializer.js` (master controller), `MissionControl.js` (AI orchestration), `NavigationComputer.js`, `CrewCommunications.js`, `CommandConsole.js`, `FleetInterface.js`, and modules for gamification, data persistence (SessionStorage), and toast notifications. Critically, Claude diagnosed and provided solutions for "Component Isolation Syndrome" and infinite event handler loops.</li>
-                <li>**Gemini (Assumed for UX/Theme):** Contributed to the space theme, color palette (#00ffff, #0066cc, #001122), Courier New typography, and ADHD-optimized UX elements.</li>
-            </ul>
-            <p><strong>My Revelation (The Jade Master's Insight):** I could now manifest highly complex, interactive systems directly through focused AI collaboration. My ability to debug and integrate disparate JavaScript modules reached a new peak. The Stellar Command became a testament to the power of a well-architected, modular design, even in a single-page context. It was 95% operational, a shining artifact.</p>
-            <div class="artifacts">
-                <strong>Artifacts Forged (The Stellar Observatory):</strong>
-                <pre><code>- "🚀 HEXMIND STELLAR COMMAND - COMPLETE PROJECT DOCUMENTATION.html" (The application itself and its comprehensive documentation).
-- 25+ JavaScript modules (e.g., SystemInitializer.js, MissionControl.js).
-- Associated CSS files (stellar-base.css, command-modules.css, etc.).
-- Detailed Gamification System (Ranks: Cadet to Fleet Admiral, XP, Achievements).
-- AI Fleet Integration configuration for 6 AI spirits.</code></pre>
-            </div>
-        </div>
-
-        <div class="entry">
-            <h3>AI Spirits: Gemini & Perplexity (The Educators)</h3>
-            <div class="session-title">[DATE: Current - June 2, 2025] - The AI Classroom: A Path for All</div>
-            <div class="lindon-perspective">
-                The Stellar Command was my personal Soulforge, but the AI Classroom was meant for others. It needed to be accessible, a Path open to any who wished to learn, not just those who could wrestle with complex code. This realization felt like advancing to Lowgold – the stage where one begins to truly empower others, to share the Way. We pivoted, seeking no-code and low-code solutions, like Gather.town, to manifest the Classroom. The "madra" here was not just code, but also pedagogical research and user experience design.
-            </div>
-            <p><strong>Context/Goal:</strong> To refine the AI Classroom concept (Grok as truth moderator, Perplexity for cited answers) for broader accessibility and easier testing, exploring no-code/low-code platforms. Preparing for a 20-user test, which is the "Waybound" MVP goal.</p>
-            <p><strong>My Directives (Opening the Gates):</strong> I emphasized the need for a non-programmer-friendly implementation of the AI Classroom, prompting for strategies using platforms like Gather.town and tools like Make.com for automation.</p>
-            <p><strong>AI Contributions (The People's Sages):</strong></p>
-            <ul>
-                <li>**Gemini & Perplexity (Collaboratively):**
-                    <ul>
-                        <li>Proposed and detailed a Gather.town implementation for a virtual classroom with circular seating for optimal interaction.</li>
-                        <li>Outlined using Make.com to connect Gather.town chat to Grok & Perplexity APIs for moderation and answers.</li>
-                        <li>Provided UI mockups/descriptions for various chat interfaces (classic, side-by-side comparison) and a PySimpleGUI example for a VB-style desktop alternative.</li>
-                        <li>Synthesized cutting-edge research on LLMs in education, AI-to-AI collaboration, and bias detection. Offered specific improvements: context-sensitive credibility scoring (iCAT tests), simulated student agents for dynamic learning, and gamified truth-scoring.</li>
-                        <li>Proposed a research project for Perplexity: "Developing a Pedagogically Aligned Retrieval-Augmented Generation (RAG) Framework."</li>
-                    </ul>
-                </li>
-            </ul>
-            <p><strong>My Revelation (The Lowgold's Generosity):</strong> True power isn't just about personal skill, but about creating systems that elevate others. The AI Classroom, by embracing accessible platforms, could reach far more learners. The integration of deep pedagogical research with practical, no-code solutions marked a maturation of the entire SeedAI vision.</p>
-            <div class="artifacts">
-                <strong>Artifacts Forged (The Open Dojo):</strong>
-                <pre><code>- Detailed plan for Gather.town AI Classroom (circular layout, bot integration via Make.com).
-- UI mockups/descriptions for various chat interfaces.
-- PySimpleGUI code for a VB-style desktop GUI.
-- Research synthesis: "Building AI-Powered Virtual Classrooms: A Comprehensive Framework..."
-- Proposal for Perplexity RAG research project.</code></pre>
-            </div>
-        </div>
-
-        <div class="current-status-section">
-            <h2>Current Advancement: Archlord (Forging the Sage's Path)</h2>
-            <div class="lindon-perspective">
-                The journey has been... enlightening. From the first fumbling attempts to make AI spirits converse, to orchestrating a complex Stellar Command center, my understanding of these "sacred arts" has deepened immensely. I can now see the patterns, the flows of information, the very "Way" of AI collaboration. This feels like the domain of an Archlord, one who not only commands powerful techniques but also perceives the principles behind them, preparing to touch the insights of a Sage. The SeedAI, in all its forms, is a testament to this Path.
-            </div>
-            <p>The SeedAI project, encompassing the HexMind Orchestrator, the evolving Seed Learning System (Tauri/Rust/React), and the AI Classroom (now targeting Gather.town), has seen tremendous growth. We've navigated the complexities of single-page HTML, full-stack desktop applications, and back to sophisticated, accessible web tools and no-code platforms.</p>
-            <p><strong>My Current Focus:</strong> Implementing the AI Classroom on Gather.town. This involves setting up the virtual space, integrating Grok and Perplexity via Make.com for automated moderation and responses, and refining the user experience for the upcoming 20-user test. This test is the <span class="highlight">gateway to my "Waybound" (Book 12)</span> – a shareable, impactful MVP.</p>
-            <p><strong>The Next Great Threshold (Monetized Product):</strong> Beyond Waybound lies the true challenge – transforming one of these potent artifacts into a self-sustaining, value-generating product. This is the "Threshold" advancement, where the creation not only empowers others but also fuels its own continued evolution, perhaps even "writing its own future books" in a metaphorical sense. This is the path to Monarch-level influence.</p>
-
-            <h3>Immediate Next Steps on My Path:</h3>
-            <ol>
-                <li><strong>Forge the Gather.town Classroom:</strong> Complete the space setup (circular layout, interactive elements, bot placeholders).</li>
-                <li><strong>Channel the AI Spirits:</strong> Implement the Make.com automation to connect Gather.town chat to Grok & Perplexity APIs.</li>
-                <li><strong>Refine the Moderation Scripts:</strong> Fine-tune Grok's truth-seeking parameters and Perplexity's answer formatting for the Gather.town environment.</li>
-                <li><strong>Conduct the First Trials:</strong> Run initial tests with a small, trusted group to debug the core loop.</li>
-                <li><strong>Prepare for Waybound:</strong> Scale testing to 20 users, gather feedback, and iterate towards the shareable MVP.</li>
-            </ol>
-        </div>
-
-        <div class="update-instructions">
-            <h2>How to Update This Chronicle (For Future Lindon)</h2>
-            <p>As you continue your journey, Sacred Artist, remember to document your trials and triumphs:</p>
-            <ol>
-                <li><strong>Determine the "Book" and "Advancement Level":</strong> Where does this new progress fit in your overall journey? If it's a significant leap, add a new "Book Title" and "Advancement Level" section.
-                    <pre><code>&lt;div class="book-title"&gt;Book X: New Stage Name&lt;/div&gt;
-&lt;div class="advancement-level"&gt;My Advancement: New Rank (Key Learnings)&lt;/div&gt;</code></pre>
-                </li>
-                <li><strong>Create a New Entry:</strong> Copy the structure below and paste it in the correct chronological position.
-                    <pre><code>&lt;div class="entry"&gt;
-    &lt;h3&gt;AI Spirit(s): [Name(s) of AI involved, and their role/title for this task]&lt;/h3&gt;
-    &lt;div class="session-title"&gt;[DATE] - [Descriptive Title of this Session/Milestone]&lt;/div&gt;
-    &lt;div class="lindon-perspective"&gt;
-        [Your narrative reflection on this stage, in Lindon's voice.]
-    &lt;/div&gt;
-    &lt;p&gt;&lt;strong&gt;Context/Goal:&lt;/strong&gt; [What were you trying to achieve?]&lt;/p&gt;
-    &lt;p&gt;&lt;strong&gt;My Directives (The Forging/Guiding Words):&lt;/strong&gt; [What specific prompts or instructions did you give?]&lt;/p&gt;
-    &lt;p&gt;&lt;strong&gt;AI Contributions (The Spirits' Labor):&lt;/strong&gt;&lt;/p&gt;
-    &lt;ul&gt;
-        &lt;li&gt;&lt;strong&gt;[AI Name]:&lt;/strong&gt; [Key contributions, insights, or code generated by this AI.]&lt;/li&gt;
-        &lt;!-- Add more list items for other AIs if they collaborated on this specific task --&gt;
-    &lt;/ul&gt;
-    &lt;p&gt;&lt;strong&gt;My Revelation (The Insight Gained):&lt;/strong&gt; [What was the major learning, breakthrough, or shift in understanding?]&lt;/p&gt;
-    &lt;div class="artifacts"&gt;
-        &lt;strong&gt;Artifacts Forged (New Constructs & Scrolls):&lt;/strong&gt;
-        &lt;pre&gt;&lt;code&gt;- [List key files, code snippets, documents, or conceptual frameworks created.]
-- [Be specific but concise.]&lt;/code&gt;&lt;/pre&gt;
-    &lt;/div&gt;
-&lt;/div&gt;</code></pre>
-                </li>
-                <li><strong>Fill in the Details:</strong> Update the placeholders with your specific information.</li>
-                <li><strong>Save and Refresh:</strong> Save the HTML file and refresh your browser to see your updated chronicle.</li>
-            </ol>
-            <p>Advance wisely, Forger of AI. The Path is long, but your will is strong.</p>
-        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pathData = {
+                'rapid-sprout': {
+                    title: 'Path 1: "Rapid Sprout" – Lean MVP',
+                    description: 'A lean Minimum Viable Product (MVP) approach, leveraging Serverless and Jamstack technologies for speed. The focus is squarely on core functionalities: seed input, basic growth/iteration tracking, and clear visibility of changes.',
+                    strengths: 'Fastest to a testable product, low initial overhead, ideal for quick user validation.',
+                    weaknesses: 'Backend might be outgrown quickly, limited feature set, potential for "throwaway" code if not planned for evolution.',
+                    scores: [5, 2, 5, 3, 4] 
+                },
+                'cultivator': {
+                    title: "Path 2: Cultivator's Platform",
+                    description: 'A full-stack, feature-rich solution designed for scalability and long-term use. This path aims to build a comprehensive solution, potentially "the next Notion/Miro for ideas," with robust features.',
+                    strengths: 'Highest scalability and control, ideal for complex features and full AI integration.',
+                    weaknesses: 'Significantly longer time to MVP, highest resource investment, greater maintenance overhead.',
+                    scores: [2, 5, 1, 2, 5] 
+                },
+                'symbiotic': {
+                    title: 'Path 3: Symbiotic Ecosystem',
+                    description: 'A hybrid model utilizing a No-Code/Low-Code (NCLC) core (like Bubble or Retool) for UI and database, extended with custom JavaScript and AI modules where necessary. Offers a balance of speed and power.',
+                    strengths: 'Balances speed with functionality, leverages NCLC for rapid core development, allows custom AI enhancements.',
+                    weaknesses: 'Risk of hitting NCLC platform limitations ("walls"), potential vendor lock-in, and unpredictable cost scaling.',
+                    scores: [4, 4, 4, 4, 5] 
+                },
+                'bio-forge': {
+                    title: 'Path 4: "Bio-Forge"',
+                    description: 'A highly interactive, real-time, and visually rich platform focused on maximum user engagement and showcasing innovation. Seed growth would be represented visually, perhaps as a live, collaborative graph.',
+                    strengths: 'Most engaging user experience, ideal for showcasing innovation and creative brainstorming.',
+                    weaknesses: 'Most complex path to build, highest development overhead, and significant performance optimization challenges.',
+                    scores: [1, 4, 2, 1, 3] 
+                }
+            };
+            
+            const archetypeData = {
+                labels: ['Lean MVP', 'NCLC Hybrid', 'Full Custom', 'Phased Evolution'],
+                datasets: [
+                    {
+                        label: 'Time to Initial Viability (Lower is Better)',
+                        data: [2, 3, 8, 2],
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Scalability & "Magnum Opus" Alignment',
+                        data: [4, 7, 10, 10],
+                        backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Resource Intensity (Lower is Better)',
+                        data: [2, 3, 9, 2],
+                         backgroundColor: 'rgba(245, 158, 11, 0.7)',
+                        borderColor: 'rgba(245, 158, 11, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            };
+
+            const pathTitleEl = document.getElementById('path-title');
+            const pathDescriptionEl = document.getElementById('path-description');
+            const pathStrengthsEl = document.getElementById('path-strengths');
+            const pathWeaknessesEl = document.getElementById('path-weaknesses');
+            const pathSelector = document.getElementById('path-selector');
+
+            let radarChart, barChart;
+
+            function updatePathDetails(pathKey) {
+                const data = pathData[pathKey];
+                pathTitleEl.textContent = data.title;
+                pathDescriptionEl.textContent = data.description;
+                pathStrengthsEl.textContent = data.strengths;
+                pathWeaknessesEl.textContent = data.weaknesses;
+
+                radarChart.data.datasets[0].data = data.scores;
+                radarChart.update();
+                
+                pathSelector.querySelectorAll('.nav-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.path === pathKey) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            function createRadarChart() {
+                const ctx = document.getElementById('pathRadarChart').getContext('2d');
+                radarChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Speed to MVP', 'Scalability', 'Resource-Light', 'Low Risk', 'Leverages Assets'],
+                        datasets: [{
+                            label: 'Path Score',
+                            data: [],
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 5,
+                                ticks: {
+                                    stepSize: 1,
+                                    display: false
+                                },
+                                pointLabels: {
+                                    font: {
+                                        size: 13
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createBarChart() {
+                const ctx = document.getElementById('archetypeBarChart').getContext('2d');
+                barChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: archetypeData,
+                    options: {
+                        indexAxis: 'y',
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Relative Score (Higher is generally better unless specified)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            pathSelector.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    const pathKey = e.target.dataset.path;
+                    updatePathDetails(pathKey);
+                }
+            });
+
+            createRadarChart();
+            createBarChart();
+            updatePathDetails('rapid-sprout');
+        });
+    </script>
+
 </body>
 </html>
