@@ -230,8 +230,16 @@
             margin-left: 10px;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .generate-btn.cooling-down {
+            background: #ff6600;
+            cursor: wait;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
         }
 
         /* Loading overlay */
@@ -387,6 +395,38 @@
 
         let currentProject = '';
         let generatedPrompts = {};
+        
+        // Rate limiting with ADHD-friendly feedback
+        const rateLimiter = {
+            requests: [],
+            maxRequests: 10, // 10 requests
+            timeWindow: 300000, // per 5 minutes
+            cooldownTime: 30000, // 30 second cooldown
+            
+            canMakeRequest() {
+                const now = Date.now();
+                // Remove old requests outside time window
+                this.requests = this.requests.filter(time => now - time < this.timeWindow);
+                
+                if (this.requests.length >= this.maxRequests) {
+                    const oldestRequest = this.requests[0];
+                    const timeUntilReset = Math.ceil((this.timeWindow - (now - oldestRequest)) / 1000);
+                    return { allowed: false, timeUntilReset, inCooldown: true };
+                }
+                
+                return { allowed: true };
+            },
+            
+            recordRequest() {
+                this.requests.push(Date.now());
+            },
+            
+            getRemainingRequests() {
+                const now = Date.now();
+                this.requests = this.requests.filter(time => now - time < this.timeWindow);
+                return this.maxRequests - this.requests.length;
+            }
+        };
 
         async function generatePrompts() {
             const projectInput = document.getElementById('projectInput').value;
@@ -394,6 +434,32 @@
             
             if (!projectInput.trim()) {
                 showError('Please describe your web app project first!');
+                return;
+            }
+
+            // Check rate limit
+            const rateCheck = rateLimiter.canMakeRequest();
+            if (!rateCheck.allowed) {
+                showError(`🔋 Circuit breaker activated! Cooling down... ${rateCheck.timeUntilReset}s remaining. Perfect time for a stretch!`);
+                
+                // Add visual feedback
+                const btn = document.querySelector('.generate-btn');
+                btn.classList.add('cooling-down');
+                btn.innerHTML = `⏸️ Cooling Down (${rateCheck.timeUntilReset}s)`;
+                
+                // Countdown timer
+                const cooldownInterval = setInterval(() => {
+                    const check = rateLimiter.canMakeRequest();
+                    if (check.allowed) {
+                        clearInterval(cooldownInterval);
+                        btn.classList.remove('cooling-down');
+                        btn.innerHTML = '🚀 Generate AI Prompts';
+                        updateStatus(`🔋 Recharged! ${rateLimiter.getRemainingRequests()} requests available.`);
+                    } else {
+                        btn.innerHTML = `⏸️ Cooling Down (${check.timeUntilReset}s)`;
+                    }
+                }, 1000);
+                
                 return;
             }
 
@@ -460,6 +526,9 @@
                 }
 
                 if (data.success && data.prompts) {
+                    // Record successful request
+                    rateLimiter.recordRequest();
+                    
                     generatedPrompts = data.prompts;
                     displayPrompts(data.prompts);
                     
@@ -467,7 +536,7 @@
                     document.getElementById('aiSection').classList.remove('hidden');
                     document.getElementById('synthesisSection').classList.remove('hidden');
                     
-                    updateStatus('Prompts generated successfully! Copy each prompt to its respective AI.');
+                    updateStatus(`Prompts generated! ${rateLimiter.getRemainingRequests()} generations remaining in this session.`);
                     
                     // Smooth scroll to AI section
                     document.getElementById('aiSection').scrollIntoView({ behavior: 'smooth' });
