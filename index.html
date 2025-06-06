@@ -3,410 +3,606 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project SEEDGROWTH GENESIS: Interactive Roadmap</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>HexMind AI Orchestra - Web App Development</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
         }
-        .chart-container {
-            position: relative;
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .input-section {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+
+        .input-section h2 {
+            color: #00ff88;
+            margin-bottom: 15px;
+        }
+
+        textarea {
             width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
+            min-height: 150px;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            border: 2px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 16px;
+            resize: vertical;
         }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 400px;
-            }
+
+        textarea:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
         }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 1rem;
-            left: -0.875rem;
-            width: 1.75rem;
-            height: 1.75rem;
-            border-radius: 9999px;
-            background-color: #e5e7eb;
-            border: 4px solid #f9fafb;
-            z-index: 10;
+
+        .generate-btn {
+            background: #00ff88;
+            color: #0a0a0a;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
-        .timeline-line {
-            position: absolute;
+
+        .generate-btn:hover {
+            background: #00cc70;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .generate-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .ai-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .ai-card:hover {
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .ai-name {
+            color: #00ff88;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .ai-role {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .prompt-box {
+            background: #0a0a0a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            background: #444;
+            color: #e0e0e0;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #00ff88;
+            color: #0a0a0a;
+        }
+
+        .copy-btn.copied {
+            background: #00ff88;
+            color: #0a0a0a;
+        }
+
+        .response-area {
+            margin-top: 15px;
+        }
+
+        .response-textarea {
+            min-height: 100px;
+            font-size: 14px;
+        }
+
+        .synthesis-section {
+            background: #1a1a1a;
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .synthesis-section h2 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status {
+            text-align: center;
+            color: #888;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .error {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        /* ADHD-friendly visual cues */
+        .step-indicator {
+            background: #00ff88;
+            color: #0a0a0a;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            border-top-color: #00ff88;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
             left: 0;
-            top: 1rem;
+            right: 0;
             bottom: 0;
-            width: 2px;
-            background-color: #e5e7eb;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
-        .nav-button.active {
-            background-color: #3b82f6;
-            color: white;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+        .loading-content {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #00ff88;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #333;
+            border-radius: 50%;
+            border-top-color: #00ff88;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 20px;
+        }
+
+        /* API Configuration Section */
+        .config-section {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .config-input {
+            width: 100%;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            padding: 8px 12px;
+            border-radius: 3px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .config-label {
+            color: #888;
+            font-size: 0.9em;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body>
+    <div class="container">
+        <h1>🎭 HexMind AI Orchestra</h1>
+        <p class="subtitle">Web App Development Command Center - Powered by Gemini 1.5 Flash</p>
 
-    <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- API Configuration -->
+        <div class="config-section">
+            <div class="config-label">API Endpoint (Your Vercel URL)</div>
+            <input type="text" 
+                   id="apiEndpoint" 
+                   class="config-input" 
+                   placeholder="https://your-project.vercel.app/api/orchestrate"
+                   value="https://hexmind-api.vercel.app/api/orchestrate">
+        </div>
 
-        <header class="text-center mb-16">
-            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Project SEEDGROWTH GENESIS</h1>
-            <p class="text-xl text-slate-600 max-w-3xl mx-auto">An interactive roadmap for cultivating a "Magnum Opus" platform for collaborative innovation.</p>
-        </header>
+        <!-- Input Section -->
+        <div class="input-section">
+            <span class="step-indicator">Step 1</span>
+            <h2>🎯 Describe Your Web App Project</h2>
+            <textarea id="projectInput" placeholder="Example: I want to build a task management app with real-time collaboration, user authentication, and a clean modern interface..."></textarea>
+            <button class="generate-btn" onclick="generatePrompts()">
+                🚀 Generate AI Prompts
+            </button>
+            <div id="errorMessage" class="error hidden"></div>
+        </div>
 
-        <main>
-            <section id="vision" class="mb-20">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-slate-900">The Core Vision</h2>
-                    <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">This project aims to create a unique digital environment where engineers can collaboratively "grow" foundational ideas, or "seeds," into fully-developed concepts. The ambition is to build a "Magnum Opus"—a market-leading product that transforms ideation into an engaging cultivation journey, with a special focus on an ADHD-optimized user experience.</p>
-                </div>
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-400">
-                        <h3 class="font-bold text-lg text-slate-900 mb-2">🌱 High User Engagement</h3>
-                        <p class="text-slate-600">Foster sustained involvement through gamification and a rewarding "cultivation journey."</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-400">
-                        <h3 class="font-bold text-lg text-slate-900 mb-2">🎯 Clarity & Action</h3>
-                        <p class="text-slate-600">Provide a clear, intuitive interface with actionable steps for users to develop their ideas.</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-400">
-                        <h3 class="font-bold text-lg text-slate-900 mb-2">🧠 ADHD-Optimized UX</h3>
-                        <p class="text-slate-600">Design a focused, low-clutter environment that supports sustained attention and creativity.</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-amber-400">
-                        <h3 class="font-bold text-lg text-slate-900 mb-2">🤖 Human-AI Collaboration</h3>
-                        <p class="text-slate-600">Pioneer new paradigms in human-AI partnership to augment the ideation process.</p>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="paths" class="mb-20">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-slate-900">Comparing the Development Paths</h2>
-                    <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">The strategic analysis identified four primary paths for development. Each offers a different balance of speed, scalability, and resource requirements. Click on a path below to explore its characteristics and see how it scores on key criteria in the chart.</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
-                    <div class="lg:grid lg:grid-cols-2 lg:gap-12">
-                        <div>
-                            <div id="path-selector" class="flex flex-wrap justify-center gap-2 mb-8">
-                                <button data-path="rapid-sprout" class="nav-button active font-medium py-2 px-4 rounded-full bg-slate-200 text-slate-700 transition-all duration-300 hover:bg-slate-300">Rapid Sprout</button>
-                                <button data-path="cultivator" class="nav-button font-medium py-2 px-4 rounded-full bg-slate-200 text-slate-700 transition-all duration-300 hover:bg-slate-300">Cultivator's Platform</button>
-                                <button data-path="symbiotic" class="nav-button font-medium py-2 px-4 rounded-full bg-slate-200 text-slate-700 transition-all duration-300 hover:bg-slate-300">Symbiotic Ecosystem</button>
-                                <button data-path="bio-forge" class="nav-button font-medium py-2 px-4 rounded-full bg-slate-200 text-slate-700 transition-all duration-300 hover:bg-slate-300">Bio-Forge</button>
-                            </div>
-                            <div id="path-details">
-                                <h3 id="path-title" class="text-2xl font-bold text-slate-800 mb-4"></h3>
-                                <p id="path-description" class="text-slate-600 mb-6"></p>
-                                <div class="space-y-4">
-                                    <div>
-                                        <h4 class="font-semibold text-slate-900">✅ Strengths:</h4>
-                                        <p id="path-strengths" class="text-slate-600"></p>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-semibold text-slate-900">⚠️ Weaknesses:</h4>
-                                        <p id="path-weaknesses" class="text-slate-600"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-8 lg:mt-0 flex items-center justify-center">
-                            <div class="chart-container">
-                                <canvas id="pathRadarChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <!-- AI Cards Grid -->
+        <div id="aiSection" class="hidden">
+            <span class="step-indicator">Step 2</span>
+            <h2 style="color: #00ff88; margin: 20px 0;">📋 Copy These Prompts to Each AI</h2>
+            <div class="ai-grid" id="aiGrid">
+                <!-- AI cards will be generated here -->
+            </div>
+        </div>
 
-            <section id="recommendation" class="mb-20">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-slate-900">The Recommended Strategy: Phased Symbiotic Evolution</h2>
-                    <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">The most pragmatic path forward is a phased evolution. This approach starts with a lean, fast MVP to gather feedback, then strategically integrates powerful No-Code/Low-Code platforms and custom AI, and finally builds towards the highly visual "Bio-Forge" concept. This balances speed with the long-term "Magnum Opus" ambition.</p>
-                </div>
-                <div class="relative pl-4">
-                    <div class="timeline-line"></div>
-                    <div class="space-y-12">
-                        <div class="timeline-item relative">
-                            <h3 class="text-2xl font-semibold text-slate-800 mb-2">Phase 1: Foundation & Lean MVP</h3>
-                            <p class="font-medium text-slate-500 mb-4">Duration: 4-6 Weeks</p>
-                            <div class="bg-white p-6 rounded-lg shadow-md">
-                                <p class="text-slate-600 mb-4"><strong>Objective:</strong> Deliver a functional core platform to the initial 20 engineers. Validate the core concept of "seed" input and "growth" and gather essential user feedback quickly.</p>
-                                <p class="text-slate-600"><strong>Key Activities:</strong> Define minimal seed mechanics, select a lean stack (e.g., SvelteKit/Supabase), develop a basic UI/UX with foundational ADHD-optimized principles, and implement 1-2 simple gamification elements.</p>
-                                <p class="text-slate-600 mt-2"><strong>Deliverables:</strong> Deployed Lean MVP, initial user feedback report, validated core concepts.</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item relative">
-                            <h3 class="text-2xl font-semibold text-slate-800 mb-2">Phase 2: Symbiotic Expansion</h3>
-                            <p class="font-medium text-slate-500 mb-4">Duration: 8-12 Weeks</p>
-                             <div class="bg-white p-6 rounded-lg shadow-md">
-                                <p class="text-slate-600 mb-4"><strong>Objective:</strong> Enhance the platform by integrating No-Code/Low-Code (NCLC) tools to accelerate feature development, enrich collaborative capabilities, and deepen AI integration.</p>
-                                <p class="text-slate-600"><strong>Key Activities:</strong> Integrate platforms like Bubble.io or Make.com, set up AI orchestration with FlowiseAI, develop advanced growth mechanics (e.g., mind-mapping), implement comments and version history, and expand gamification.</p>
-                                 <p class="text-slate-600 mt-2"><strong>Deliverables:</strong> Enhanced platform with core collaborative features, improved ADHD-UX, integrated NCLC components.</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item relative">
-                            <h3 class="text-2xl font-semibold text-slate-800 mb-2">Phase 3: "Magnum Opus" Realization</h3>
-                            <p class="font-medium text-slate-500 mb-4">Duration: 12-16+ Weeks</p>
-                             <div class="bg-white p-6 rounded-lg shadow-md">
-                                <p class="text-slate-600 mb-4"><strong>Objective:</strong> Introduce advanced visualization capabilities, robust real-time collaboration, and prepare the platform for broader impact, fully realizing the "Magnum Opus" vision.</p>
-                                <p class="text-slate-600"><strong>Key Activities:</strong> Implement sophisticated real-time editing (CRDTs/Yjs), develop "Bio-Forge" inspired visualizations (D3.js/Three.js), integrate advanced AI for growth suggestions, and refine monetization strategies if applicable.</p>
-                                 <p class="text-slate-600 mt-2"><strong>Deliverables:</strong> A feature-complete platform with advanced real-time collaboration, ready for potential market launch.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <!-- Synthesis Section -->
+        <div id="synthesisSection" class="synthesis-section hidden">
+            <span class="step-indicator">Step 3</span>
+            <h2>🎼 Final Orchestration</h2>
+            <p style="text-align: center; margin-bottom: 20px;">Paste all AI responses below for final synthesis</p>
+            <textarea id="synthesisInput" class="response-textarea" placeholder="Paste all 6 AI responses here, separated by '---' or just paste them one after another"></textarea>
+            <button class="generate-btn" onclick="generateSynthesis()">
+                ✨ Create Master Plan
+            </button>
+            <div id="finalOutput" class="hidden">
+                <h3 style="color: #00ff88; margin: 20px 0;">📊 Your Orchestrated Action Plan</h3>
+                <div class="prompt-box" id="masterPlan"></div>
+                <button class="copy-btn" onclick="copyToClipboard('masterPlan', this)">Copy Master Plan</button>
+            </div>
+        </div>
 
-             <section id="analysis" class="mb-20">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-slate-900">Comparative Analysis of Path Archetypes</h2>
-                    <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">This chart provides a high-level comparison of the different strategic archetypes based on key project metrics. The "Phased Evolution" approach demonstrates the most balanced profile, starting with low resource intensity and evolving to high scalability.</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
-                    <div class="chart-container h-[450px] max-h-[500px] mx-auto">
-                        <canvas id="archetypeBarChart"></canvas>
-                    </div>
-                </div>
-            </section>
+        <p class="status" id="status"></p>
+    </div>
 
-            <section id="risks" class="mb-16">
-                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-slate-900">Success Factors & Risk Mitigation</h2>
-                     <p class="mt-4 text-lg text-slate-600 max-w-4xl mx-auto">Achieving the project's vision requires focusing on critical success factors while proactively managing potential risks. This balanced approach ensures a resilient and effective development journey.</p>
-                </div>
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-2xl font-semibold text-green-600 mb-4">✅ Key Success Factors</h3>
-                        <div class="space-y-4">
-                            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
-                                <h4 class="font-bold text-slate-800">Clarity of Core Concepts</h4>
-                                <p class="text-slate-600">The "seed" and "growth" mechanics must be intuitive from day one.</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
-                                <h4 class="font-bold text-slate-800">Active User Engagement</h4>
-                                <p class="text-slate-600">Continuous feedback from the initial 20 engineers is crucial for iteration.</p>
-                            </div>
-                             <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
-                                <h4 class="font-bold text-slate-800">Focus on ADHD-Optimized UX</h4>
-                                <p class="text-slate-600">A consistent focus on clarity, minimal clutter, and engaging interactions.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-semibold text-amber-600 mb-4">⚠️ Potential Risks & Mitigation</h3>
-                        <div class="space-y-4">
-                            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-amber-500">
-                                <h4 class="font-bold text-slate-800">MVP Scope Creep</h4>
-                                <p class="text-slate-600"><strong>Mitigation:</strong> Maintain strict adherence to the minimal feature set for Phase 1.</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-amber-500">
-                                <h4 class="font-bold text-slate-800">NCLC Platform Limitations</h4>
-                                <p class="text-slate-600"><strong>Mitigation:</strong> Thoroughly vet NCLC platforms and have clear exit strategies.</p>
-                            </div>
-                             <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-amber-500">
-                                <h4 class="font-bold text-slate-800">Performance Bottlenecks</h4>
-                                <p class="text-slate-600"><strong>Mitigation:</strong> Incorporate performance testing throughout, especially in Phase 3.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer class="text-center mt-16 border-t border-slate-200 pt-8">
-            <p class="text-slate-500">Project SEEDGROWTH GENESIS | An Interactive Strategic Visualization</p>
-        </footer>
-
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>🎭 Orchestrating your AI ensemble...</p>
+            <p style="color: #888; font-size: 0.9em; margin-top: 10px;">Gemini 1.5 Flash is analyzing your project</p>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const pathData = {
-                'rapid-sprout': {
-                    title: 'Path 1: "Rapid Sprout" – Lean MVP',
-                    description: 'A lean Minimum Viable Product (MVP) approach, leveraging Serverless and Jamstack technologies for speed. The focus is squarely on core functionalities: seed input, basic growth/iteration tracking, and clear visibility of changes.',
-                    strengths: 'Fastest to a testable product, low initial overhead, ideal for quick user validation.',
-                    weaknesses: 'Backend might be outgrown quickly, limited feature set, potential for "throwaway" code if not planned for evolution.',
-                    scores: [5, 2, 5, 3, 4] 
-                },
-                'cultivator': {
-                    title: "Path 2: Cultivator's Platform",
-                    description: 'A full-stack, feature-rich solution designed for scalability and long-term use. This path aims to build a comprehensive solution, potentially "the next Notion/Miro for ideas," with robust features.',
-                    strengths: 'Highest scalability and control, ideal for complex features and full AI integration.',
-                    weaknesses: 'Significantly longer time to MVP, highest resource investment, greater maintenance overhead.',
-                    scores: [2, 5, 1, 2, 5] 
-                },
-                'symbiotic': {
-                    title: 'Path 3: Symbiotic Ecosystem',
-                    description: 'A hybrid model utilizing a No-Code/Low-Code (NCLC) core (like Bubble or Retool) for UI and database, extended with custom JavaScript and AI modules where necessary. Offers a balance of speed and power.',
-                    strengths: 'Balances speed with functionality, leverages NCLC for rapid core development, allows custom AI enhancements.',
-                    weaknesses: 'Risk of hitting NCLC platform limitations ("walls"), potential vendor lock-in, and unpredictable cost scaling.',
-                    scores: [4, 4, 4, 4, 5] 
-                },
-                'bio-forge': {
-                    title: 'Path 4: "Bio-Forge"',
-                    description: 'A highly interactive, real-time, and visually rich platform focused on maximum user engagement and showcasing innovation. Seed growth would be represented visually, perhaps as a live, collaborative graph.',
-                    strengths: 'Most engaging user experience, ideal for showcasing innovation and creative brainstorming.',
-                    weaknesses: 'Most complex path to build, highest development overhead, and significant performance optimization challenges.',
-                    scores: [1, 4, 2, 1, 3] 
-                }
-            };
+        // AI Orchestra Configuration
+        const aiOrchestra = {
+            claude: {
+                name: "Claude",
+                role: "System Architecture & Technical Docs",
+                icon: "🏗️"
+            },
+            gpt4: {
+                name: "GPT-4",
+                role: "UX Design & Creative Features",
+                icon: "🎨"
+            },
+            gemini: {
+                name: "Gemini",
+                role: "Data Analysis & Performance",
+                icon: "📊"
+            },
+            perplexity: {
+                name: "Perplexity",
+                role: "Market Research & Competition",
+                icon: "🔍"
+            },
+            copilot: {
+                name: "GitHub Copilot",
+                role: "Code Implementation & DevOps",
+                icon: "💻"
+            },
+            midjourney: {
+                name: "Midjourney",
+                role: "Visual Design & Branding",
+                icon: "🎭"
+            }
+        };
+
+        let currentProject = '';
+        let generatedPrompts = {};
+
+        async function generatePrompts() {
+            const projectInput = document.getElementById('projectInput').value;
+            const apiEndpoint = document.getElementById('apiEndpoint').value;
             
-            const archetypeData = {
-                labels: ['Lean MVP', 'NCLC Hybrid', 'Full Custom', 'Phased Evolution'],
-                datasets: [
-                    {
-                        label: 'Time to Initial Viability (Lower is Better)',
-                        data: [2, 3, 8, 2],
-                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Scalability & "Magnum Opus" Alignment',
-                        data: [4, 7, 10, 10],
-                        backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                        borderColor: 'rgba(16, 185, 129, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Resource Intensity (Lower is Better)',
-                        data: [2, 3, 9, 2],
-                         backgroundColor: 'rgba(245, 158, 11, 0.7)',
-                        borderColor: 'rgba(245, 158, 11, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            };
-
-            const pathTitleEl = document.getElementById('path-title');
-            const pathDescriptionEl = document.getElementById('path-description');
-            const pathStrengthsEl = document.getElementById('path-strengths');
-            const pathWeaknessesEl = document.getElementById('path-weaknesses');
-            const pathSelector = document.getElementById('path-selector');
-
-            let radarChart, barChart;
-
-            function updatePathDetails(pathKey) {
-                const data = pathData[pathKey];
-                pathTitleEl.textContent = data.title;
-                pathDescriptionEl.textContent = data.description;
-                pathStrengthsEl.textContent = data.strengths;
-                pathWeaknessesEl.textContent = data.weaknesses;
-
-                radarChart.data.datasets[0].data = data.scores;
-                radarChart.update();
-                
-                pathSelector.querySelectorAll('.nav-button').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.path === pathKey) {
-                        btn.classList.add('active');
-                    }
-                });
+            if (!projectInput.trim()) {
+                showError('Please describe your web app project first!');
+                return;
             }
 
-            function createRadarChart() {
-                const ctx = document.getElementById('pathRadarChart').getContext('2d');
-                radarChart = new Chart(ctx, {
-                    type: 'radar',
-                    data: {
-                        labels: ['Speed to MVP', 'Scalability', 'Resource-Light', 'Low Risk', 'Leverages Assets'],
-                        datasets: [{
-                            label: 'Path Score',
-                            data: [],
-                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                            borderColor: 'rgba(59, 130, 246, 1)',
-                            pointBackgroundColor: 'rgba(59, 130, 246, 1)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgba(59, 130, 246, 1)',
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        scales: {
-                            r: {
-                                beginAtZero: true,
-                                max: 5,
-                                ticks: {
-                                    stepSize: 1,
-                                    display: false
-                                },
-                                pointLabels: {
-                                    font: {
-                                        size: 13
-                                    }
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        }
-                    }
-                });
+            if (!apiEndpoint.trim()) {
+                showError('Please enter your Vercel API endpoint URL!');
+                return;
             }
 
-            function createBarChart() {
-                const ctx = document.getElementById('archetypeBarChart').getContext('2d');
-                barChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: archetypeData,
-                    options: {
-                        indexAxis: 'y',
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Relative Score (Higher is generally better unless specified)'
-                                }
-                            }
-                        },
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.x !== null) {
-                                            label += context.parsed.x;
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
+            currentProject = projectInput;
             
-            pathSelector.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON') {
-                    const pathKey = e.target.dataset.path;
-                    updatePathDetails(pathKey);
+            // Show loading
+            showLoading(true);
+            updateStatus('Generating prompts with Gemini 1.5 Flash...');
+            
+            try {
+                // Call Vercel API
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        projectDescription: projectInput
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to generate prompts');
                 }
+
+                if (data.success && data.prompts) {
+                    generatedPrompts = data.prompts;
+                    displayPrompts(data.prompts);
+                    
+                    // Show sections
+                    document.getElementById('aiSection').classList.remove('hidden');
+                    document.getElementById('synthesisSection').classList.remove('hidden');
+                    
+                    updateStatus('Prompts generated successfully! Copy each prompt to its respective AI.');
+                    
+                    // Smooth scroll to AI section
+                    document.getElementById('aiSection').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error('Invalid response from API');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showError(`Error: ${error.message}`);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function displayPrompts(prompts) {
+            const aiGrid = document.getElementById('aiGrid');
+            aiGrid.innerHTML = '';
+
+            // Generate AI cards with the prompts from API
+            Object.entries(aiOrchestra).forEach(([key, ai]) => {
+                const prompt = prompts[key]?.prompt || `Error: No prompt generated for ${ai.name}`;
+                const card = createAICard(key, ai, prompt);
+                aiGrid.appendChild(card);
             });
+        }
 
-            createRadarChart();
-            createBarChart();
-            updatePathDetails('rapid-sprout');
-        });
+        function createAICard(key, ai, prompt) {
+            const card = document.createElement('div');
+            card.className = 'ai-card';
+            card.innerHTML = `
+                <div class="ai-name">${ai.icon} ${ai.name}</div>
+                <div class="ai-role">${ai.role}</div>
+                <div class="prompt-box" id="prompt-${key}">${prompt}</div>
+                <button class="copy-btn" onclick="copyToClipboard('prompt-${key}', this)">Copy Prompt</button>
+                <div class="response-area">
+                    <label style="color: #888; font-size: 0.9em;">Paste ${ai.name}'s response here:</label>
+                    <textarea class="response-textarea" id="response-${key}" placeholder="Paste response after getting it from ${ai.name}..."></textarea>
+                </div>
+            `;
+            return card;
+        }
+
+        function copyToClipboard(elementId, button) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent || element.value;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                button.textContent = '✓ Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = button.textContent.includes('Master') ? 'Copy Master Plan' : 'Copy Prompt';
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                showError('Failed to copy to clipboard');
+            });
+        }
+
+        function generateSynthesis() {
+            const synthesisInput = document.getElementById('synthesisInput').value;
+            const individualResponses = [];
+
+            // Collect individual responses if synthesis input is empty
+            if (!synthesisInput.trim()) {
+                Object.keys(aiOrchestra).forEach(key => {
+                    const response = document.getElementById(`response-${key}`).value;
+                    if (response.trim()) {
+                        individualResponses.push(`${aiOrchestra[key].name}:\n${response}`);
+                    }
+                });
+
+                if (individualResponses.length === 0) {
+                    showError('Please paste the AI responses first!');
+                    return;
+                }
+            }
+
+            // Create synthesis prompt
+            const allResponses = synthesisInput || individualResponses.join('\n\n---\n\n');
+            const synthesisPrompt = `As the Lead Orchestrator, synthesize these 6 AI responses into one comprehensive action plan for building this web app:
+
+PROJECT: ${currentProject}
+
+AI RESPONSES:
+${allResponses}
+
+Create a unified action plan that:
+1. Prioritizes tasks in logical build order
+2. Identifies dependencies between components
+3. Highlights critical path items
+4. Suggests team roles if applicable
+5. Provides a realistic timeline
+6. Lists key success metrics
+7. Includes all bonus innovations suggested
+
+Format as a clear, actionable project plan with phases and milestones.`;
+
+            document.getElementById('masterPlan').textContent = synthesisPrompt;
+            document.getElementById('finalOutput').classList.remove('hidden');
+            
+            updateStatus('Synthesis prompt ready! Copy this to Claude or GPT-4 for final orchestration.');
+        }
+
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (show) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        function updateStatus(message) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            setTimeout(() => {
+                status.textContent = '';
+            }, 5000);
+        }
+
+        // ADHD-friendly: Auto-save to localStorage (with sandbox safety)
+        setInterval(() => {
+            try {
+                const projectInput = document.getElementById('projectInput').value;
+                const apiEndpoint = document.getElementById('apiEndpoint').value;
+                if (typeof localStorage !== 'undefined') {
+                    if (projectInput) localStorage.setItem('hexmind-project', projectInput);
+                    if (apiEndpoint) localStorage.setItem('hexmind-api-endpoint', apiEndpoint);
+                }
+            } catch (e) {
+                // Silently fail if localStorage is blocked
+                console.log('Auto-save disabled in sandbox mode');
+            }
+        }, 30000); // Every 30 seconds
+
+        // Load saved data on page load
+        window.onload = () => {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    const savedProject = localStorage.getItem('hexmind-project');
+                    const savedEndpoint = localStorage.getItem('hexmind-api-endpoint');
+                    
+                    if (savedProject) {
+                        document.getElementById('projectInput').value = savedProject;
+                    }
+                    if (savedEndpoint) {
+                        document.getElementById('apiEndpoint').value = savedEndpoint;
+                    }
+                }
+            } catch (e) {
+                console.log('Loading saved data disabled in sandbox mode');
+            }
+        };
     </script>
-
 </body>
 </html>
