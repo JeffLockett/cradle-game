@@ -402,12 +402,45 @@
                 return;
             }
 
+            currentProject = projectInput;
+            
+            // TEST MODE - Skip API call and use mock data
+            const testMode = true; // Toggle this to false when API is working
+            
+            if (testMode) {
+                showLoading(true);
+                updateStatus('TEST MODE - Using mock prompts...');
+                
+                setTimeout(() => {
+                    const mockPrompts = {
+                        claude: { prompt: `As Claude, analyze this web app: ${projectInput}. Design the system architecture, database schema, API endpoints, and security measures. Include one innovative architectural pattern.` },
+                        chatgpt: { prompt: `As ChatGPT, design the UX for: ${projectInput}. Create user flows, wireframes, interaction patterns, and accessibility features. Suggest one delightful surprise feature.` },
+                        gemini: { prompt: `As Gemini, analyze data needs for: ${projectInput}. Design data models, analytics dashboards, performance metrics, and optimization strategies. Identify one unique data insight.` },
+                        perplexity: { prompt: `As Perplexity, research the market for: ${projectInput}. Find competitors, trends, user pain points, and monetization options. Discover one underserved niche.` },
+                        grok: { prompt: `As Grok, implement: ${projectInput}. Choose tech stack, code architecture, testing approach, and CI/CD pipeline. Include one advanced coding technique.` },
+                        supergrok: { prompt: `As SuperGrok, innovate for: ${projectInput}. Design AI features, cutting-edge algorithms, and future expansions. Propose one breakthrough capability.` }
+                    };
+                    
+                    generatedPrompts = mockPrompts;
+                    displayPrompts(mockPrompts);
+                    
+                    document.getElementById('aiSection').classList.remove('hidden');
+                    document.getElementById('synthesisSection').classList.remove('hidden');
+                    
+                    updateStatus('TEST MODE: Mock prompts generated! (API bypassed)');
+                    document.getElementById('aiSection').scrollIntoView({ behavior: 'smooth' });
+                    
+                    showLoading(false);
+                }, 1500); // Simulate API delay
+                
+                return;
+            }
+
+            // REAL API CALL (when testMode = false)
             if (!apiEndpoint.trim()) {
                 showError('Please enter your Vercel API endpoint URL!');
                 return;
             }
-
-            currentProject = projectInput;
             
             // Show loading
             showLoading(true);
@@ -602,6 +635,9 @@ Format as a clear, actionable project plan with phases and milestones.`;
             } catch (e) {
                 console.log('Loading saved data disabled in sandbox mode');
             }
+            
+            // Make sure loading overlay is hidden on page load
+            showLoading(false);
         };
     </script>
 </body>
