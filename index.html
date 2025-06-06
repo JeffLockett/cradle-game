@@ -295,7 +295,7 @@
 <body>
     <div class="container">
         <h1>🎭 HexMind AI Orchestra</h1>
-        <p class="subtitle">Web App Development Command Center - Powered by Gemini 1.5 Flash</p>
+        <p class="subtitle">Web App Development Command Center - Orchestrated by Claude</p>
 
         <!-- API Configuration -->
         <div class="config-section">
@@ -351,7 +351,7 @@
         <div class="loading-content">
             <div class="loading-spinner"></div>
             <p>🎭 Orchestrating your AI ensemble...</p>
-            <p style="color: #888; font-size: 0.9em; margin-top: 10px;">Gemini 1.5 Flash is analyzing your project</p>
+                            <p style="color: #888; font-size: 0.9em; margin-top: 10px;">Claude is analyzing your project</p>
         </div>
     </div>
 
@@ -405,7 +405,7 @@
             currentProject = projectInput;
             
             // TEST MODE - Skip API call and use mock data
-            const testMode = true; // Toggle this to false when API is working
+            const testMode = false; // Set to false for production with Claude API
             
             if (testMode) {
                 showLoading(true);
@@ -444,7 +444,7 @@
             
             // Show loading
             showLoading(true);
-            updateStatus('Generating prompts with Gemini 1.5 Flash...');
+            updateStatus('Generating prompts with Claude...');
             
             try {
                 // Call Vercel API
