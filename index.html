@@ -192,11 +192,41 @@
             margin: 5px 0;
             white-space: pre-wrap;
             font-family: monospace;
+            max-height: 120px;
+            overflow-y: auto;
+            transition: max-height 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .prompt-display.expanded {
+            max-height: 400px;
+        }
+        
+        .prompt-display:hover {
+            border-color: #4fc3f7;
+        }
+        
+        .prompt-display::after {
+            content: "Click to expand/collapse";
+            position: absolute;
+            bottom: 5px;
+            right: 8px;
+            font-size: 9px;
+            color: #666;
+            background: #1a1a1a;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .prompt-display.expanded::after {
+            content: "Click to collapse";
         }
         
         .response-input {
             width: 100%;
-            min-height: 80px;
+            min-height: 60px;
+            max-height: 150px;
             background: #1a1a1a;
             border: 1px solid #444;
             color: #e0e0e0;
@@ -205,6 +235,12 @@
             resize: vertical;
             font-size: clamp(11px, 2vw, 13px);
             box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        
+        .response-input:focus {
+            border-color: #4fc3f7;
+            outline: none;
         }
         
         .progress-bar {
@@ -430,7 +466,7 @@
                         <tr class="ai-row" data-ai="Claude" id="claude-row">
                             <td><strong>Claude</strong><br><small>System Architecture</small><span class="ai-status-badge" id="claude-badge"></span></td>
                             <td>
-                                <div class="prompt-display" id="claude-prompt">Prompts will appear here after generation...</div>
+                                <div class="prompt-display" id="claude-prompt" onclick="togglePromptExpansion('claude-prompt')">Prompts will appear here after generation...</div>
                                 <textarea class="response-input" id="claude-response" placeholder="Paste Claude's response here..."></textarea>
                             </td>
                             <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
@@ -439,7 +475,7 @@
                         <tr class="ai-row" data-ai="ChatGPT">
                             <td><strong>ChatGPT</strong><br><small>UX/UI Design</small></td>
                             <td>
-                                <div class="prompt-display" id="chatgpt-prompt">Prompts will appear here after generation...</div>
+                                <div class="prompt-display" id="chatgpt-prompt" onclick="togglePromptExpansion('chatgpt-prompt')">Prompts will appear here after generation...</div>
                                 <textarea class="response-input" id="chatgpt-response" placeholder="Paste ChatGPT's response here..."></textarea>
                             </td>
                             <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
@@ -448,7 +484,7 @@
                         <tr class="ai-row" data-ai="Perplexity">
                             <td><strong>Perplexity</strong><br><small>Market Research</small></td>
                             <td>
-                                <div class="prompt-display" id="perplexity-prompt">Prompts will appear here after generation...</div>
+                                <div class="prompt-display" id="perplexity-prompt" onclick="togglePromptExpansion('perplexity-prompt')">Prompts will appear here after generation...</div>
                                 <textarea class="response-input" id="perplexity-response" placeholder="Paste Perplexity's response here..."></textarea>
                             </td>
                             <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
@@ -457,7 +493,7 @@
                         <tr class="ai-row" data-ai="Gemini">
                             <td><strong>Gemini</strong><br><small>Data Analysis</small></td>
                             <td>
-                                <div class="prompt-display" id="gemini-prompt">Prompts will appear here after generation...</div>
+                                <div class="prompt-display" id="gemini-prompt" onclick="togglePromptExpansion('gemini-prompt')">Prompts will appear here after generation...</div>
                                 <textarea class="response-input" id="gemini-response" placeholder="Paste Gemini's response here..."></textarea>
                             </td>
                             <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
@@ -466,7 +502,7 @@
                         <tr class="ai-row" data-ai="Grok">
                             <td><strong>Grok</strong><br><small>Backend Development</small></td>
                             <td>
-                                <div class="prompt-display" id="grok-prompt">Prompts will appear here after generation...</div>
+                                <div class="prompt-display" id="grok-prompt" onclick="togglePromptExpansion('grok-prompt')">Prompts will appear here after generation...</div>
                                 <textarea class="response-input" id="grok-response" placeholder="Paste Grok's response here..."></textarea>
                             </td>
                             <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
@@ -475,7 +511,7 @@
                         <tr class="ai-row" data-ai="SuperGrok">
                             <td><strong>SuperGrok</strong><br><small>AI/ML Innovation</small></td>
                             <td>
-                                <div class="prompt-display" id="supergrok-prompt">Prompts will appear here after generation...</div>
+                                <div class="prompt-display" id="supergrok-prompt" onclick="togglePromptExpansion('supergrok-prompt')">Prompts will appear here after generation...</div>
                                 <textarea class="response-input" id="supergrok-response" placeholder="Paste SuperGrok's response here..."></textarea>
                             </td>
                             <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
@@ -484,7 +520,7 @@
                         <tr class="ai-row" data-ai="Copilot">
                             <td><strong>Copilot</strong><br><small>Code Implementation</small></td>
                             <td>
-                                <div class="prompt-display" id="copilot-prompt">Prompts will appear here after generation...</div>
+                                <div class="prompt-display" id="copilot-prompt" onclick="togglePromptExpansion('copilot-prompt')">Prompts will appear here after generation...</div>
                                 <textarea class="response-input" id="copilot-response" placeholder="Paste Copilot's response here..."></textarea>
                             </td>
                             <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
@@ -654,6 +690,13 @@
             } finally {
                 document.getElementById('loadingOverlay').style.display = 'none';
                 document.getElementById('generateBtn').disabled = false;
+            }
+        }
+        
+        function togglePromptExpansion(promptId) {
+            const promptEl = document.getElementById(promptId);
+            if (promptEl) {
+                promptEl.classList.toggle('expanded');
             }
         }
         
