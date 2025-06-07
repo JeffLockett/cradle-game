@@ -339,7 +339,34 @@
             background-color: #333;
         }
         
-        @media (max-width: 479px) {
+        .ai-status-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .badge-active {
+            background: #4fc3f7;
+            color: #000;
+        }
+        
+        .badge-not-needed {
+            background: #666;
+            color: #ccc;
+        }
+        
+        .ai-row.not-needed {
+            opacity: 0.5;
+            background-color: #222;
+        }
+        
+        .ai-row.not-needed .response-input {
+            background-color: #1a1a1a;
+            color: #666;
+        }
             .section {
                 padding: 10px;
             }
@@ -400,8 +427,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="ai-row" data-ai="Claude">
-                            <td><strong>Claude</strong><br><small>System Architecture</small></td>
+                        <tr class="ai-row" data-ai="Claude" id="claude-row">
+                            <td><strong>Claude</strong><br><small>System Architecture</small><span class="ai-status-badge" id="claude-badge"></span></td>
                             <td>
                                 <div class="prompt-display" id="claude-prompt">Prompts will appear here after generation...</div>
                                 <textarea class="response-input" id="claude-response" placeholder="Paste Claude's response here..."></textarea>
@@ -581,12 +608,31 @@
                 
                 const data = await response.json();
                 
-                // Populate prompts
+                // Update AI status badges and row styling
                 const ais = ['claude', 'chatgpt', 'perplexity', 'gemini', 'grok', 'supergrok', 'copilot'];
                 ais.forEach(ai => {
                     const promptEl = document.getElementById(`${ai}-prompt`);
+                    const row = document.getElementById(`${ai}-row`);
+                    const badge = document.getElementById(`${ai}-badge`);
+                    
                     if (promptEl && data[ai]) {
-                        promptEl.textContent = data[ai];
+                        if (data[ai].includes('is not needed for this')) {
+                            // Mark as not needed
+                            promptEl.textContent = data[ai];
+                            if (row) row.classList.add('not-needed');
+                            if (badge) {
+                                badge.textContent = 'NOT NEEDED';
+                                badge.className = 'ai-status-badge badge-not-needed';
+                            }
+                        } else {
+                            // Mark as active
+                            promptEl.textContent = data[ai];
+                            if (row) row.classList.remove('not-needed');
+                            if (badge) {
+                                badge.textContent = 'ACTIVE';
+                                badge.className = 'ai-status-badge badge-active';
+                            }
+                        }
                     }
                 });
                 
