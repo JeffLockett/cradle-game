@@ -403,6 +403,30 @@
             background-color: #1a1a1a;
             color: #666;
         }
+        
+        .debug-info {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #888;
+            white-space: pre-wrap;
+            display: none;
+        }
+        
+        .debug-info.active {
+            display: block;
+        }
+        
+        .debug-info h3 {
+            color: #4fc3f7;
+            margin-top: 0;
+        }
+        
+        @media (max-width: 767px) {
             .section {
                 padding: 10px;
             }
@@ -560,6 +584,11 @@
         <div class="export-format" id="exportPreview">
             <!-- Markdown export preview will appear here -->
         </div>
+        
+        <div class="debug-info" id="debugInfo">
+            <h3>🔍 Debug Information</h3>
+            <div id="debugContent"></div>
+        </div>
     </div>
     
     <div class="loading-overlay" id="loadingOverlay">
@@ -609,6 +638,13 @@
             return remaining > 0;
         }
         
+        function showDebugInfo(title, data) {
+            const debugInfo = document.getElementById('debugInfo');
+            const debugContent = document.getElementById('debugContent');
+            debugInfo.classList.add('active');
+            debugContent.textContent = `${title}:\n${JSON.stringify(data, null, 2)}`;
+        }
+        
         async function generatePrompts() {
             const projectDescription = document.getElementById('projectInput').value.trim();
             
@@ -630,12 +666,16 @@
                 requestCount++;
                 checkRateLimit();
                 
+                // FIXED: Send 'query' instead of 'projectDescription'
                 const response = await fetch(API_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ projectDescription })
+                    body: JSON.stringify({ 
+                        query: projectDescription,  // Changed from projectDescription to query
+                        conversationHistory: []
+                    })
                 });
                 
                 if (!response.ok) {
@@ -644,49 +684,65 @@
                 
                 const data = await response.json();
                 
-                // Update AI status badges and row styling
-                const ais = ['claude', 'chatgpt', 'perplexity', 'gemini', 'grok', 'supergrok', 'copilot'];
-                ais.forEach(ai => {
-                    const promptEl = document.getElementById(`${ai}-prompt`);
-                    const row = document.getElementById(`${ai}-row`);
-                    const badge = document.getElementById(`${ai}-badge`);
+                // Show debug info
+                showDebugInfo('API Response', data);
+                
+                // Handle the new response format
+                if (data.success && data.plan && data.plan.prompts) {
+                    // Update prompts from the orchestration plan
+                    const prompts = data.plan.prompts;
+                    const ais = ['claude', 'chatgpt', 'perplexity', 'gemini'];
                     
-                    if (promptEl && data[ai]) {
-                        if (data[ai].includes('is not needed for this')) {
-                            // Mark as not needed
-                            promptEl.textContent = data[ai];
-                            if (row) row.classList.add('not-needed');
-                            if (badge) {
-                                badge.textContent = 'NOT NEEDED';
-                                badge.className = 'ai-status-badge badge-not-needed';
-                            }
-                        } else {
-                            // Mark as active
-                            promptEl.textContent = data[ai];
+                    ais.forEach(ai => {
+                        const promptEl = document.getElementById(`${ai}-prompt`);
+                        const row = document.querySelector(`[data-ai="${ai.charAt(0).toUpperCase() + ai.slice(1)}"]`);
+                        const badge = document.getElementById(`${ai}-badge`);
+                        
+                        if (promptEl && prompts[ai]) {
+                            promptEl.textContent = prompts[ai];
                             if (row) row.classList.remove('not-needed');
                             if (badge) {
                                 badge.textContent = 'ACTIVE';
                                 badge.className = 'ai-status-badge badge-active';
                             }
                         }
+                    });
+                    
+                    // Handle AIs not in the plan
+                    ['grok', 'supergrok', 'copilot'].forEach(ai => {
+                        const promptEl = document.getElementById(`${ai}-prompt`);
+                        const row = document.querySelector(`[data-ai="${ai.charAt(0).toUpperCase() + ai.slice(1)}"]`);
+                        const badge = document.getElementById(`${ai}-badge`);
+                        
+                        if (promptEl) {
+                            promptEl.textContent = `${ai.charAt(0).toUpperCase() + ai.slice(1)} is not needed for this ${data.analysis.complexity} complexity query.`;
+                            if (row) row.classList.add('not-needed');
+                            if (badge) {
+                                badge.textContent = 'NOT NEEDED';
+                                badge.className = 'ai-status-badge badge-not-needed';
+                            }
+                        }
+                    });
+                    
+                    // If there's a response, show it in Claude's response box
+                    if (data.response) {
+                        document.getElementById('claude-response').value = data.response;
                     }
-                });
+                } else {
+                    // Fallback to old format if available
+                    console.error('Unexpected response format:', data);
+                }
                 
                 // Reset all status indicators
                 document.querySelectorAll('.status').forEach(status => {
                     status.textContent = '⏳';
                 });
                 
-                // Clear previous responses
-                document.querySelectorAll('.response-input').forEach(textarea => {
-                    textarea.value = '';
-                });
-                
                 updateProgress();
                 
             } catch (error) {
                 console.error('Error generating prompts:', error);
-                alert('Error generating prompts. Please try again.');
+                alert('Error generating prompts: ' + error.message);
             } finally {
                 document.getElementById('loadingOverlay').style.display = 'none';
                 document.getElementById('generateBtn').disabled = false;
@@ -794,8 +850,8 @@ Format as a clear, actionable project plan with phases and milestones.`;
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ 
-                        projectDescription: synthesisPrompt,
-                        isSynthesis: true 
+                        query: synthesisPrompt,  // Changed to use 'query'
+                        conversationHistory: []
                     })
                 });
                 
@@ -807,7 +863,7 @@ Format as a clear, actionable project plan with phases and milestones.`;
                 
                 // Display synthesis in the output area
                 const synthesisOutput = document.getElementById('synthesisOutput');
-                synthesisOutput.value = data.claude || 'Synthesis completed. Check the response above.';
+                synthesisOutput.value = data.response || 'Synthesis completed. Check the response above.';
                 
             } catch (error) {
                 console.error('Error synthesizing responses:', error);
@@ -879,6 +935,7 @@ Format as a clear, actionable project plan with phases and milestones.`;
                 // Clear all prompts
                 document.querySelectorAll('[id$="-prompt"]').forEach(el => {
                     el.textContent = 'Prompts will appear here after generation...';
+                    el.classList.remove('expanded');
                 });
                 
                 // Clear all responses
@@ -891,8 +948,20 @@ Format as a clear, actionable project plan with phases and milestones.`;
                     status.textContent = '⏳';
                 });
                 
-                // Hide export preview
+                // Reset all badges
+                document.querySelectorAll('.ai-status-badge').forEach(badge => {
+                    badge.textContent = '';
+                    badge.className = 'ai-status-badge';
+                });
+                
+                // Reset row styling
+                document.querySelectorAll('.ai-row').forEach(row => {
+                    row.classList.remove('not-needed');
+                });
+                
+                // Hide export preview and debug
                 document.getElementById('exportPreview').style.display = 'none';
+                document.getElementById('debugInfo').classList.remove('active');
                 
                 updateProgress();
             }
