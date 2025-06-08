@@ -426,6 +426,20 @@
             margin-top: 0;
         }
         
+        .error-banner {
+            background: #d32f2f;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: bold;
+        }
+        
+        .error-banner.active {
+            display: block;
+        }
+        
         @media (max-width: 767px) {
             .section {
                 padding: 10px;
@@ -450,6 +464,8 @@
     <div class="container">
         <h1>🎭 HexMind AI Orchestra</h1>
         <div class="subtitle">Orchestrated by Claude | 7 AI Ensemble</div>
+        
+        <div class="error-banner" id="errorBanner"></div>
         
         <input type="text" class="project-input" id="projectInput" 
                placeholder="Describe your project (e.g., 'Build an ADHD-friendly calendar app that isn't like Outlook')"
@@ -638,6 +654,15 @@
             return remaining > 0;
         }
         
+        function showError(message) {
+            const errorBanner = document.getElementById('errorBanner');
+            errorBanner.textContent = message;
+            errorBanner.classList.add('active');
+            setTimeout(() => {
+                errorBanner.classList.remove('active');
+            }, 10000); // Hide after 10 seconds
+        }
+        
         function showDebugInfo(title, data) {
             const debugInfo = document.getElementById('debugInfo');
             const debugContent = document.getElementById('debugContent');
@@ -666,23 +691,41 @@
                 requestCount++;
                 checkRateLimit();
                 
-                // FIXED: Send 'query' instead of 'projectDescription'
+                console.log('Sending request with query:', projectDescription);
+                
                 const response = await fetch(API_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ 
-                        query: projectDescription,  // Changed from projectDescription to query
+                        query: projectDescription,
                         conversationHistory: []
                     })
                 });
                 
+                console.log('Response status:', response.status);
+                
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    // Get detailed error information
+                    let errorDetails = '';
+                    try {
+                        const errorData = await response.json();
+                        console.error('Error response:', errorData);
+                        errorDetails = errorData.details || errorData.error || 'Unknown error';
+                        showError(`API Error: ${errorDetails}`);
+                        showDebugInfo('Error Details', errorData);
+                    } catch (e) {
+                        const errorText = await response.text();
+                        console.error('Error text:', errorText);
+                        errorDetails = errorText || 'Unknown error';
+                        showError(`API Error: ${errorDetails}`);
+                    }
+                    throw new Error(`HTTP error! status: ${response.status} - ${errorDetails}`);
                 }
                 
                 const data = await response.json();
+                console.log('Success response:', data);
                 
                 // Show debug info
                 showDebugInfo('API Response', data);
@@ -728,9 +771,14 @@
                     if (data.response) {
                         document.getElementById('claude-response').value = data.response;
                     }
+                } else if (data.debug && !data.success) {
+                    // Handle debug mode response
+                    showError('Debug mode active - check debug info for details');
+                    console.log('Debug mode data:', data);
                 } else {
-                    // Fallback to old format if available
-                    console.error('Unexpected response format:', data);
+                    // Fallback to echo format or other formats
+                    console.log('Unexpected response format:', data);
+                    showError('Unexpected response format - check console');
                 }
                 
                 // Reset all status indicators
@@ -742,7 +790,7 @@
                 
             } catch (error) {
                 console.error('Error generating prompts:', error);
-                alert('Error generating prompts: ' + error.message);
+                showError(error.message);
             } finally {
                 document.getElementById('loadingOverlay').style.display = 'none';
                 document.getElementById('generateBtn').disabled = false;
@@ -850,7 +898,7 @@ Format as a clear, actionable project plan with phases and milestones.`;
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ 
-                        query: synthesisPrompt,  // Changed to use 'query'
+                        query: synthesisPrompt,
                         conversationHistory: []
                     })
                 });
@@ -962,6 +1010,7 @@ Format as a clear, actionable project plan with phases and milestones.`;
                 // Hide export preview and debug
                 document.getElementById('exportPreview').style.display = 'none';
                 document.getElementById('debugInfo').classList.remove('active');
+                document.getElementById('errorBanner').classList.remove('active');
                 
                 updateProgress();
             }
