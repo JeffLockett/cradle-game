@@ -526,8 +526,33 @@ Each AI will contribute their unique strengths to give you the best possible res
         let currentResponses = {};
         let activeTab = 'all';
 
-        // Your HexMind API endpoint
+        // Your Secure HexMind API endpoint
         const HEXMIND_API = 'http://localhost:3001/api';
+
+        // Secure API caller - connects to your protected server
+        async function callSecureAPI(endpoint, data) {
+            try {
+                const response = await fetch(`${HEXMIND_API}/${endpoint}`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `Server error: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error(`API Error (${endpoint}):`, error);
+                throw error;
+            }
+        }
+
         // Tab switching
         document.querySelectorAll('.response-tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -575,21 +600,72 @@ Each AI will contribute their unique strengths to give you the best possible res
                 return;
             }
 
-            showLoading('🎭 Orchestrating all AIs...');
+            showLoading('🎭 Orchestrating all AIs via secure server...');
             currentResponses = {};
 
             try {
-                // Simulate AI orchestration - replace with real API calls
-                const response = await simulateOrchestration(task);
-                currentResponses = response.responses;
-                updateCosts(response.cost);
-                displayCurrentTab();
+                const maxCost = parseFloat(document.getElementById('maxCost').value) || 1.00;
+                const useSubscriptions = document.getElementById('useSubscriptions').checked;
                 
-                // Show success notification
-                showNotification('🎉 Orchestra complete! All AIs have responded.', 'success');
+                showNotification('🔒 Calling secure server...', 'success');
+                
+                const response = await callSecureAPI('orchestrate', {
+                    task: task,
+                    services: ['openai', 'claude', 'perplexity'],
+                    maxCost: maxCost,
+                    options: {
+                        prioritizeSubscriptions: useSubscriptions
+                    }
+                });
+
+                if (response.success) {
+                    // Process real API responses
+                    const orchestration = response.orchestration;
+                    currentResponses = {};
+                    
+                    Object.entries(orchestration.results).forEach(([service, result]) => {
+                        if (result.error) {
+                            currentResponses[service] = `${service.toUpperCase()} (Error): ${result.error}`;
+                        } else {
+                            currentResponses[service] = `${service.toUpperCase()} (LIVE API): ${result.content}`;
+                            
+                            // Update service card to show it's live
+                            const serviceCard = document.querySelector(`[data-ai="${service}"]`);
+                            if (serviceCard) {
+                                const statusElement = serviceCard.querySelector('.ai-status');
+                                statusElement.textContent = 'LIVE API';
+                                statusElement.className = 'ai-status status-active';
+                                
+                                const costElement = serviceCard.querySelector(`#${service}-cost`);
+                                if (costElement && result.cost) {
+                                    costElement.textContent = `${result.cost.toFixed(4)}`;
+                                }
+                            }
+                        }
+                    });
+
+                    // Add synthesis
+                    const liveServices = Object.keys(orchestration.results).filter(
+                        service => !orchestration.results[service].error
+                    );
+                    
+                    currentResponses.synthesis = `🎭 SECURE ORCHESTRATION COMPLETE!\n\n✅ Live APIs used: ${liveServices.join(', ')}\n✅ Total cost: ${orchestration.totalCost.toFixed(4)}\n✅ Task processed securely\n✅ API keys protected\n\n🎯 All responses generated through your secure server - no API keys exposed!`;
+
+                    updateCosts(orchestration.totalCost);
+                    displayCurrentTab();
+                    
+                    showNotification(`🎉 Secure orchestration complete! Cost: ${orchestration.totalCost.toFixed(4)}`, 'success');
+                } else {
+                    throw new Error(response.error || 'Unknown orchestration error');
+                }
+                
             } catch (error) {
-                document.getElementById('responseContent').textContent = 'Error: ' + error.message;
-                showNotification('❌ Orchestration failed: ' + error.message, 'error');
+                currentResponses = {
+                    error: `🚨 Secure Server Error: ${error.message}\n\nThis means:\n• Your secure server might not be running\n• API keys might not be configured\n• Network connection issue\n\nCheck that your server is running at http://localhost:3001`
+                };
+                displayCurrentTab();
+                showNotification('❌ Secure server error: ' + error.message, 'error');
+                console.error('Orchestration Error:', error);
             }
         }
 
@@ -600,17 +676,29 @@ Each AI will contribute their unique strengths to give you the best possible res
                 return;
             }
 
-            showLoading('🎯 Finding the best AI for your task...');
+            showLoading('🎯 Finding the best AI via secure server...');
             
             try {
-                const response = await simulateRouting(task);
-                currentResponses = { route: response.recommendation };
+                showNotification('🔒 Consulting secure server...', 'success');
+                
+                const response = await callSecureAPI('route', {
+                    task: task,
+                    complexity: 'auto-detect',
+                    type: 'auto-detect'
+                });
+
+                currentResponses = { 
+                    route: `🎯 SECURE ROUTING RECOMMENDATION:\n\n${response.recommendation.service.toUpperCase()} is recommended\n\nReasoning: ${response.recommendation.reasoning}\nEstimated Cost: ${response.recommendation.estimatedCost}\nComplexity: ${response.recommendation.complexity}\n\n🔒 Recommendation generated securely without exposing API keys!`
+                };
                 displayCurrentTab();
                 updateCosts(0.01);
                 
-                showNotification(`🎯 Task routed to ${response.bestAI}`, 'success');
+                showNotification(`🎯 Task routed to ${response.recommendation.service}`, 'success');
             } catch (error) {
-                document.getElementById('responseContent').textContent = 'Error: ' + error.message;
+                currentResponses = {
+                    route: `🚨 Secure Routing Error: ${error.message}\n\nCheck that your secure server is running at http://localhost:3001`
+                };
+                displayCurrentTab();
                 showNotification('❌ Routing failed: ' + error.message, 'error');
             }
         }
@@ -618,26 +706,48 @@ Each AI will contribute their unique strengths to give you the best possible res
         async function quickConsult() {
             const task = document.getElementById('taskInput').value.trim() || 'System status check';
             
-            showLoading('⚡ Quick consulting with real AI...');
+            showLoading('⚡ Quick consulting via secure server...');
             
             try {
-                // Try real OpenAI for quick consult
-                const response = await callRealOpenAI(`Quick consultation: ${task}`);
+                showNotification('🔒 Calling secure server...', 'success');
+                
+                const response = await callSecureAPI('consult', {
+                    task: task,
+                    service: 'openai',
+                    options: {
+                        maxTokens: 500,
+                        temperature: 0.7
+                    }
+                });
+
+                if (response.success) {
+                    currentResponses = { 
+                        openai: `OpenAI Quick Consult (SECURE): ${response.result.content}\n\nCost: ${response.result.cost.toFixed(4)}\nModel: ${response.result.model}\n\n🔒 Generated securely through your protected server!`
+                    };
+                    updateCosts(response.result.cost);
+                    
+                    // Update OpenAI card
+                    const openaiCard = document.querySelector('[data-ai="openai"]');
+                    if (openaiCard) {
+                        openaiCard.querySelector('.ai-status').textContent = 'LIVE API';
+                        openaiCard.querySelector('.ai-status').className = 'ai-status status-active';
+                    }
+                    
+                    showNotification('⚡ Secure AI consult complete!', 'success');
+                } else {
+                    throw new Error(response.error || 'Consult failed');
+                }
+                
+                displayCurrentTab();
+                
+            } catch (error) {
                 currentResponses = { 
-                    openai: `ChatGPT Quick Consult (REAL): ${response.content}` 
+                    openai: `🚨 Secure Consult Error: ${error.message}\n\nPossible issues:\n• Secure server not running\n• OpenAI API key not configured\n• Network connection problem\n\nCheck your server at http://localhost:3001`
                 };
                 displayCurrentTab();
-                updateCosts(response.cost);
+                updateCosts(0.01);
                 
-                showNotification('⚡ Real AI consult complete!', 'success');
-            } catch (error) {
-                // Fallback to simulation
-                const response = await simulateQuickConsult(task);
-                currentResponses = { claude: response.response };
-                displayCurrentTab();
-                updateCosts(response.cost);
-                
-                showNotification('⚡ Quick consult complete (simulation)!', 'success');
+                showNotification('❌ Secure consult failed: ' + error.message, 'error');
             }
         }
 
@@ -837,7 +947,10 @@ Each AI will contribute their unique strengths to give you the best possible res
 
         // Initialize on load
         document.addEventListener('DOMContentLoaded', function() {
-            showNotification('🎭 HexMind Orchestra initialized! Your AI army awaits.', 'success');
+            showNotification('🎭 HexMind Orchestra initialized! Connecting to secure server...', 'success');
+            
+            // Test server connection
+            testServerConnection();
             
             // Simulate real-time status updates
             setInterval(() => {
@@ -845,6 +958,62 @@ Each AI will contribute their unique strengths to give you the best possible res
                 document.getElementById('successRate').textContent = successRate + '%';
             }, 5000);
         });
+
+        // Test server connection on startup
+        async function testServerConnection() {
+            try {
+                const response = await fetch(`${HEXMIND_API}/health`);
+                if (response.ok) {
+                    const data = await response.json();
+                    showNotification('✅ Secure server connected!', 'success');
+                    console.log('Server health:', data);
+                    
+                    // Check available services
+                    const servicesResponse = await fetch(`${HEXMIND_API}/services`);
+                    if (servicesResponse.ok) {
+                        const servicesData = await servicesResponse.json();
+                        console.log('Available services:', servicesData);
+                        
+                        // Update service cards based on actual availability
+                        Object.entries(servicesData.services).forEach(([service, available]) => {
+                            const serviceCard = document.querySelector(`[data-ai="${service}"]`);
+                            if (serviceCard) {
+                                const statusElement = serviceCard.querySelector('.ai-status');
+                                if (available) {
+                                    statusElement.textContent = 'READY';
+                                    statusElement.className = 'ai-status status-active';
+                                } else {
+                                    statusElement.textContent = 'NO KEY';
+                                    statusElement.className = 'ai-status status-offline';
+                                }
+                            }
+                        });
+                        
+                        document.getElementById('activeCount').textContent = servicesData.available;
+                    }
+                } else {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+            } catch (error) {
+                showNotification('❌ Secure server not connected. Start server at localhost:3001', 'error');
+                console.error('Server connection failed:', error);
+                
+                // Show helpful error message
+                document.getElementById('responseContent').textContent = `🚨 SECURE SERVER NOT CONNECTED
+
+Your HexMind secure server is not running!
+
+To start your server:
+1. Open PowerShell in your server directory
+2. Run: node secure-hexmind-server.js
+3. Look for "Ready to orchestrate securely!" message
+4. Refresh this page
+
+Server should be at: http://localhost:3001
+
+Current error: ${error.message}`;
+            }
+        }
 
         // Add some CSS animations
         const style = document.createElement('style');
