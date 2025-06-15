@@ -3,1087 +3,559 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HexMind AI Orchestra - Orchestrated by Claude</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <title>Car Detective 🚗 - Fix This Car!</title>
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1a1a1a;
-            color: #e0e0e0;
-            padding: 10px;
-            margin: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
         }
         
-        .container {
-            max-width: 100%;
+        .game-container {
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
         
-        h1 {
-            color: #4fc3f7;
+        .header {
             text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 3em;
             margin-bottom: 10px;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        .subtitle {
-            text-align: center;
-            color: #999;
-            margin-bottom: 20px;
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-        }
-        
-        .project-input {
-            width: 100%;
-            padding: 15px;
-            font-size: clamp(14px, 2.5vw, 18px);
-            background: #2a2a2a;
-            border: 2px solid #4fc3f7;
-            color: #fff;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-        
-        .button-group {
+        .stats-bar {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            justify-content: space-around;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 15px;
             margin-bottom: 30px;
+            backdrop-filter: blur(10px);
         }
         
-        button {
-            flex: 1;
-            min-width: 120px;
-            padding: 12px 15px;
-            background: #4fc3f7;
-            color: #000;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: clamp(12px, 2vw, 14px);
-            transition: all 0.3s;
+        .stat {
             text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         
-        button:hover {
-            background: #29b6f6;
-            transform: translateY(-2px);
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #FFD700;
         }
         
-        button:active {
-            transform: translateY(0);
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
         }
         
-        button:disabled {
-            background: #666;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        @media (min-width: 768px) {
-            .container {
-                max-width: 1200px;
-                padding: 0 20px;
-            }
-            
-            body {
-                padding: 20px;
-            }
-            
-            .grid-container {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            button {
-                flex: 0 1 auto;
-                min-width: 160px;
-            }
-        }
-        
-        .section {
-            background: #2a2a2a;
+        .level-progress {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.2);
             border-radius: 10px;
-            padding: 15px;
-            border: 1px solid #444;
-        }
-        
-        .section h2 {
-            color: #4fc3f7;
-            margin-top: 0;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: clamp(1.1rem, 3vw, 1.5rem);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: clamp(12px, 2vw, 14px);
-        }
-        
-        th, td {
-            padding: 8px 4px;
-            text-align: left;
-            border-bottom: 1px solid #444;
-            word-wrap: break-word;
-        }
-        
-        @media (min-width: 480px) {
-            th, td {
-                padding: 10px 8px;
-            }
-        }
-        
-        th {
-            background: #333;
-            color: #4fc3f7;
-            font-size: clamp(11px, 2vw, 13px);
-        }
-        
-        .status {
-            cursor: pointer;
-            font-size: clamp(16px, 3vw, 20px);
-            user-select: none;
-            display: inline-block;
-            min-width: 24px;
-            text-align: center;
-        }
-        
-        .copy-btn {
-            background: #4fc3f7;
-            border: none;
-            color: #000;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 10px;
-            font-weight: bold;
-        }
-        
-        .copy-btn:hover {
-            background: #29b6f6;
-        }
-        
-        .prompt-display {
-            background: #1a1a1a;
-            border: 1px solid #444;
-            color: #e0e0e0;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: clamp(11px, 2vw, 13px);
-            margin: 5px 0;
-            white-space: pre-wrap;
-            font-family: monospace;
-            max-height: 120px;
-            overflow-y: auto;
-            transition: max-height 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .prompt-display.expanded {
-            max-height: 400px;
-        }
-        
-        .prompt-display:hover {
-            border-color: #4fc3f7;
-        }
-        
-        .prompt-display::after {
-            content: "Click to expand/collapse";
-            position: absolute;
-            bottom: 5px;
-            right: 8px;
-            font-size: 9px;
-            color: #666;
-            background: #1a1a1a;
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-        
-        .prompt-display.expanded::after {
-            content: "Click to collapse";
-        }
-        
-        .response-input {
-            width: 100%;
-            min-height: 60px;
-            max-height: 150px;
-            background: #1a1a1a;
-            border: 1px solid #444;
-            color: #e0e0e0;
-            padding: 8px;
-            border-radius: 4px;
-            resize: vertical;
-            font-size: clamp(11px, 2vw, 13px);
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-        
-        .response-input:focus {
-            border-color: #4fc3f7;
-            outline: none;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: clamp(25px, 4vw, 35px);
-            background: #333;
-            border-radius: 15px;
             overflow: hidden;
-            margin: 20px 0;
+            margin: 10px 0;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4fc3f7, #29b6f6);
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            width: 30%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .car-visual {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .car-svg {
+            width: 100%;
+            height: auto;
+        }
+        
+        .car-part {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .car-part:hover {
+            filter: brightness(1.3);
+            transform: scale(1.05);
+        }
+        
+        .symptom-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .symptom-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border: none;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .symptom-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .symptom-btn.selected {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            transform: scale(1.05);
+        }
+        
+        .diagnosis-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+        
+        .steps-container {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .step {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 5px solid #FFD700;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(10px);
+        }
+        
+        .step-number {
+            background: #FFD700;
+            color: #333;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #000;
             font-weight: bold;
-            font-size: clamp(12px, 2.5vw, 16px);
+            margin-right: 20px;
         }
         
-        .synthesis-box {
-            background: #2a2a2a;
-            border-radius: 10px;
-            padding: 15px;
-            border: 1px solid #444;
-            min-height: 150px;
+        .step.completed {
+            background: rgba(0,255,0,0.2);
+            border-left-color: #00ff00;
         }
         
-        .synthesis-textarea {
-            width: 100%;
-            min-height: clamp(120px, 20vh, 200px);
-            background: #1a1a1a;
-            border: 1px solid #444;
-            color: #e0e0e0;
-            padding: 10px;
-            border-radius: 5px;
-            resize: vertical;
-            font-size: clamp(12px, 2vw, 14px);
-            box-sizing: border-box;
-        }
-        
-        .loading-overlay {
+        .celebration {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
             z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.5s ease;
         }
         
-        .loading-content {
-            text-align: center;
-            color: #fff;
+        .celebration.show {
+            opacity: 1;
+            animation: bounce 0.6s ease;
         }
         
-        .spinner {
-            border: 4px solid #333;
-            border-top: 4px solid #4fc3f7;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            40% { transform: translate(-50%, -50%) translateY(-30px); }
+            60% { transform: translate(-50%, -50%) translateY(-15px); }
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .rate-limit-info {
-            text-align: center;
-            margin: 10px 0;
-            font-size: clamp(12px, 2vw, 14px);
-            color: #999;
-        }
-        
-        .shortcut-hint {
+        .achievement-popup {
             position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: #333;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #4fc3f7;
-            font-size: clamp(10px, 1.5vw, 12px);
-            max-width: 200px;
-            z-index: 1000;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #333;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateX(400px);
+            transition: transform 0.5s ease;
+            z-index: 1001;
         }
         
-        @media (max-width: 767px) {
-            .shortcut-hint {
-                display: none;
-            }
+        .achievement-popup.show {
+            transform: translateX(0);
         }
         
-        .shortcut-hint h3 {
-            margin: 0 0 8px 0;
-            color: #4fc3f7;
-            font-size: clamp(11px, 1.8vw, 14px);
-        }
-        
-        .shortcut-hint div {
-            margin-bottom: 4px;
-        }
-        
-        .export-format {
-            background: #1a1a1a;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre-wrap;
-            border: 1px solid #444;
-            font-size: clamp(10px, 1.5vw, 12px);
-            overflow-x: auto;
-            display: none;
-        }
-        
-        .ai-row {
-            transition: background-color 0.3s;
-        }
-        
-        .ai-row:hover {
-            background-color: #333;
-        }
-        
-        .ai-status-badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: bold;
-            margin-left: 8px;
-        }
-        
-        .badge-active {
-            background: #4fc3f7;
-            color: #000;
-        }
-        
-        .badge-not-needed {
-            background: #666;
-            color: #ccc;
-        }
-        
-        .ai-row.not-needed {
-            opacity: 0.5;
-            background-color: #222;
-        }
-        
-        .ai-row.not-needed .response-input {
-            background-color: #1a1a1a;
-            color: #666;
-        }
-        
-        .debug-info {
-            background: #1a1a1a;
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-            font-family: monospace;
-            font-size: 12px;
-            color: #888;
-            white-space: pre-wrap;
-            display: none;
-        }
-        
-        .debug-info.active {
-            display: block;
-        }
-        
-        .debug-info h3 {
-            color: #4fc3f7;
-            margin-top: 0;
-        }
-        
-        .error-banner {
-            background: #d32f2f;
+        .next-btn {
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border: none;
             color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2em;
             font-weight: bold;
-        }
-        
-        .error-banner.active {
+            margin: 20px auto;
             display: block;
+            transition: all 0.3s ease;
         }
         
-        @media (max-width: 767px) {
-            .section {
-                padding: 10px;
+        .next-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2em;
             }
             
-            .synthesis-box {
-                padding: 10px;
-            }
-            
-            .button-group {
+            .stats-bar {
                 flex-direction: column;
+                gap: 10px;
             }
             
-            button {
-                min-width: 100%;
-                margin-bottom: 5px;
+            .symptom-buttons {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎭 HexMind AI Orchestra</h1>
-        <div class="subtitle">Orchestrated by Claude | 7 AI Ensemble</div>
-        
-        <div class="error-banner" id="errorBanner"></div>
-        
-        <input type="text" class="project-input" id="projectInput" 
-               placeholder="Describe your project (e.g., 'Build an ADHD-friendly calendar app that isn't like Outlook')"
-               value="">
-        
-        <div class="button-group">
-            <button onclick="generatePrompts()" id="generateBtn" title="Generate specialized prompts for each AI">
-                🎯 Generate AI Prompts
-            </button>
-            <button onclick="synthesizeResponses()" title="Create final synthesis from all responses">
-                🔄 Synthesize Results
-            </button>
-            <button onclick="exportMarkdown()" title="Export complete session as markdown">
-                📋 Export Report
-            </button>
-            <button onclick="clearAll()" title="Reset everything">
-                🗑️ Clear All
-            </button>
+    <div class="game-container">
+        <div class="header">
+            <h1 class="title">🚗 Car Detective Game</h1>
+            <p>Level up your car knowledge! Click symptoms, earn XP, become a master!</p>
+            <button class="reset-btn" onclick="resetProgress()">🔄 Reset Progress</button>
         </div>
         
-        <div class="rate-limit-info" id="rateLimitInfo">
-            🔋 10 requests remaining (resets every 5 minutes)
-        </div>
-        
-        <div class="grid-container">
-            <div class="section">
-                <h2>🤖 AI Delegation Matrix</h2>
-                <table id="aiTable">
-                    <thead>
-                        <tr>
-                            <th>AI</th>
-                            <th>Generated Prompt / Response</th>
-                            <th>Status</th>
-                            <th>Copy</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="ai-row" data-ai="Claude" id="claude-row">
-                            <td><strong>Claude</strong><br><small>System Architecture</small><span class="ai-status-badge" id="claude-badge"></span></td>
-                            <td>
-                                <div class="prompt-display" id="claude-prompt" onclick="togglePromptExpansion('claude-prompt')">Prompts will appear here after generation...</div>
-                                <textarea class="response-input" id="claude-response" placeholder="Paste Claude's response here..."></textarea>
-                            </td>
-                            <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
-                            <td><button class="copy-btn" onclick="copyPrompt('claude-prompt')">Copy</button></td>
-                        </tr>
-                        <tr class="ai-row" data-ai="ChatGPT">
-                            <td><strong>ChatGPT</strong><br><small>UX/UI Design</small></td>
-                            <td>
-                                <div class="prompt-display" id="chatgpt-prompt" onclick="togglePromptExpansion('chatgpt-prompt')">Prompts will appear here after generation...</div>
-                                <textarea class="response-input" id="chatgpt-response" placeholder="Paste ChatGPT's response here..."></textarea>
-                            </td>
-                            <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
-                            <td><button class="copy-btn" onclick="copyPrompt('chatgpt-prompt')">Copy</button></td>
-                        </tr>
-                        <tr class="ai-row" data-ai="Perplexity">
-                            <td><strong>Perplexity</strong><br><small>Market Research</small></td>
-                            <td>
-                                <div class="prompt-display" id="perplexity-prompt" onclick="togglePromptExpansion('perplexity-prompt')">Prompts will appear here after generation...</div>
-                                <textarea class="response-input" id="perplexity-response" placeholder="Paste Perplexity's response here..."></textarea>
-                            </td>
-                            <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
-                            <td><button class="copy-btn" onclick="copyPrompt('perplexity-prompt')">Copy</button></td>
-                        </tr>
-                        <tr class="ai-row" data-ai="Gemini">
-                            <td><strong>Gemini</strong><br><small>Data Analysis</small></td>
-                            <td>
-                                <div class="prompt-display" id="gemini-prompt" onclick="togglePromptExpansion('gemini-prompt')">Prompts will appear here after generation...</div>
-                                <textarea class="response-input" id="gemini-response" placeholder="Paste Gemini's response here..."></textarea>
-                            </td>
-                            <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
-                            <td><button class="copy-btn" onclick="copyPrompt('gemini-prompt')">Copy</button></td>
-                        </tr>
-                        <tr class="ai-row" data-ai="Grok">
-                            <td><strong>Grok</strong><br><small>Backend Development</small></td>
-                            <td>
-                                <div class="prompt-display" id="grok-prompt" onclick="togglePromptExpansion('grok-prompt')">Prompts will appear here after generation...</div>
-                                <textarea class="response-input" id="grok-response" placeholder="Paste Grok's response here..."></textarea>
-                            </td>
-                            <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
-                            <td><button class="copy-btn" onclick="copyPrompt('grok-prompt')">Copy</button></td>
-                        </tr>
-                        <tr class="ai-row" data-ai="SuperGrok">
-                            <td><strong>SuperGrok</strong><br><small>AI/ML Innovation</small></td>
-                            <td>
-                                <div class="prompt-display" id="supergrok-prompt" onclick="togglePromptExpansion('supergrok-prompt')">Prompts will appear here after generation...</div>
-                                <textarea class="response-input" id="supergrok-response" placeholder="Paste SuperGrok's response here..."></textarea>
-                            </td>
-                            <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
-                            <td><button class="copy-btn" onclick="copyPrompt('supergrok-prompt')">Copy</button></td>
-                        </tr>
-                        <tr class="ai-row" data-ai="Copilot">
-                            <td><strong>Copilot</strong><br><small>Code Implementation</small></td>
-                            <td>
-                                <div class="prompt-display" id="copilot-prompt" onclick="togglePromptExpansion('copilot-prompt')">Prompts will appear here after generation...</div>
-                                <textarea class="response-input" id="copilot-response" placeholder="Paste Copilot's response here..."></textarea>
-                            </td>
-                            <td><span class="status" onclick="toggleStatus(this)" title="Click to toggle status">⏳</span></td>
-                            <td><button class="copy-btn" onclick="copyPrompt('copilot-prompt')">Copy</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-number" id="xp">0</div>
+                <div class="stat-label">XP Points</div>
             </div>
-            
-            <div class="section">
-                <h2>📊 Progress Tracking</h2>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressBar" style="width: 0%">
-                        0/7 Responses Collected
-                    </div>
-                </div>
+            <div class="stat">
+                <div class="stat-number" id="level">1</div>
+                <div class="stat-label">Mechanic Level</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="streak">0</div>
+                <div class="stat-label">Success Streak</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="solved">0</div>
+                <div class="stat-label">Cars Fixed</div>
+            </div>
+        </div>
+        
+        <div class="level-progress">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+        
+        <div class="car-visual">
+            <svg class="car-svg" viewBox="0 0 400 200">
+                <!-- Car Body -->
+                <rect x="50" y="120" width="300" height="60" rx="10" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
                 
-                <h3>📋 Response Status</h3>
-                <ul id="statusList">
-                    <li>⏳ Claude - System Architecture</li>
-                    <li>⏳ ChatGPT - UX/UI Design</li>
-                    <li>⏳ Perplexity - Market Research</li>
-                    <li>⏳ Gemini - Data Analysis</li>
-                    <li>⏳ Grok - Backend Development</li>
-                    <li>⏳ SuperGrok - AI/ML Innovation</li>
-                    <li>⏳ Copilot - Code Implementation</li>
-                </ul>
-            </div>
+                <!-- Car Roof -->
+                <path d="M 80 120 L 120 80 L 280 80 L 320 120 Z" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                
+                <!-- Windows -->
+                <path d="M 90 115 L 120 90 L 170 90 L 170 115 Z" fill="#3498db" stroke="#2980b9" stroke-width="2" class="car-part" data-part="windshield"/>
+                <path d="M 180 115 L 180 90 L 270 90 L 300 115 Z" fill="#3498db" stroke="#2980b9" stroke-width="2" class="car-part" data-part="windows"/>
+                
+                <!-- Wheels -->
+                <circle cx="100" cy="170" r="25" fill="#2c3e50" stroke="#34495e" stroke-width="3" class="car-part" data-part="front-wheel"/>
+                <circle cx="300" cy="170" r="25" fill="#2c3e50" stroke="#34495e" stroke-width="3" class="car-part" data-part="rear-wheel"/>
+                
+                <!-- Headlights -->
+                <circle cx="40" cy="140" r="12" fill="#f1c40f" stroke="#f39c12" stroke-width="2" class="car-part" data-part="headlights"/>
+                
+                <!-- Engine Area -->
+                <rect x="50" y="120" width="80" height="60" rx="5" fill="#95a5a6" stroke="#7f8c8d" stroke-width="2" class="car-part" data-part="engine" opacity="0.7"/>
+                
+                <!-- Exhaust -->
+                <rect x="350" y="155" width="20" height="8" rx="4" fill="#34495e" class="car-part" data-part="exhaust"/>
+            </svg>
         </div>
         
-        <div class="synthesis-box">
-            <h2>🎭 Final Synthesis</h2>
-            <textarea class="synthesis-textarea" id="synthesisOutput" 
-                      placeholder="Final synthesized action plan will appear here..." readonly></textarea>
+        <div class="symptom-buttons">
+            <button class="symptom-btn" data-symptom="wont-start">🔋 Car Won't Start</button>
+            <button class="symptom-btn" data-symptom="strange-noise">🔊 Strange Noises</button>
+            <button class="symptom-btn" data-symptom="overheating">🌡️ Engine Overheating</button>
+            <button class="symptom-btn" data-symptom="brake-issues">🛑 Brake Problems</button>
+            <button class="symptom-btn" data-symptom="electrical">⚡ Electrical Issues</button>
+            <button class="symptom-btn" data-symptom="vibration">📳 Car Vibrating</button>
         </div>
         
-        <div class="export-format" id="exportPreview">
-            <!-- Markdown export preview will appear here -->
-        </div>
-        
-        <div class="debug-info" id="debugInfo">
-            <h3>🔍 Debug Information</h3>
-            <div id="debugContent"></div>
+        <div class="diagnosis-section" id="diagnosis">
+            <h2>🎯 Diagnosis & Action Plan</h2>
+            <div class="steps-container" id="steps"></div>
+            <button class="next-btn" onclick="completeTask()">✅ Mark Complete & Get XP!</button>
         </div>
     </div>
     
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-content">
-            <div class="spinner"></div>
-            <h3>Orchestrating your AI ensemble...</h3>
-            <p>Claude is analyzing your project</p>
-        </div>
-    </div>
-    
-    <div class="shortcut-hint">
-        <h3>⌨️ Shortcuts</h3>
-        <div>Alt+G - Generate Prompts</div>
-        <div>Alt+S - Synthesize</div>
-        <div>Alt+E - Export</div>
-        <div>Alt+C - Clear All</div>
-        <div>Click Status - Toggle ⏳/✅</div>
-    </div>
+    <div class="celebration" id="celebration">🎉</div>
+    <div class="achievement-popup" id="achievement"></div>
     
     <script>
-        // Rate limiting
-        let requestCount = 0;
-        const maxRequests = 10;
-        const resetInterval = 5 * 60 * 1000; // 5 minutes
-        let lastReset = Date.now();
+        // DEPLOYMENT VERSION - WITH LOCALSTORAGE
+        let gameState = {
+            xp: parseInt(localStorage.getItem('carGameXP')) || 0,
+            level: parseInt(localStorage.getItem('carGameLevel')) || 1,
+            streak: parseInt(localStorage.getItem('carGameStreak')) || 0,
+            solved: parseInt(localStorage.getItem('carGameSolved')) || 0,
+            currentSymptom: null
+        };
         
-        // API Configuration
-        const API_ENDPOINT = 'https://hexmind-api.vercel.app/api/orchestrate';
+        const symptoms = {
+            'wont-start': {
+                title: "Car Won't Start Diagnosis",
+                steps: [
+                    "Check if lights/radio work (battery test)",
+                    "Listen for clicking sounds when turning key",
+                    "Check battery connections for corrosion",
+                    "Try jump-starting the battery",
+                    "Test starter motor if battery is good"
+                ],
+                xp: 50
+            },
+            'strange-noise': {
+                title: "Strange Noise Investigation", 
+                steps: [
+                    "Identify when noise occurs (idle, driving, braking)",
+                    "Locate noise source (engine, wheels, exhaust)",
+                    "Check belt tension and condition",
+                    "Inspect exhaust system for loose parts",
+                    "Schedule professional inspection if unsure"
+                ],
+                xp: 40
+            },
+            'overheating': {
+                title: "Engine Overheating Protocol",
+                steps: [
+                    "STOP driving immediately - pull over safely",
+                    "Turn off A/C, turn on heater full blast",
+                    "Check coolant level when engine cools",
+                    "Look for visible leaks under the car",
+                    "Check radiator fan operation"
+                ],
+                xp: 60
+            },
+            'brake-issues': {
+                title: "Brake System Check",
+                steps: [
+                    "Test brake pedal feel (spongy vs firm)",
+                    "Listen for squealing or grinding sounds",
+                    "Check brake fluid level and color",
+                    "Inspect brake pads through wheel spokes",
+                    "Get professional inspection ASAP"
+                ],
+                xp: 70
+            },
+            'electrical': {
+                title: "Electrical Troubleshooting",
+                steps: [
+                    "Check all fuses in fuse box",
+                    "Test battery voltage (should be 12.6V+)",
+                    "Clean battery terminals",
+                    "Check alternator belt condition",
+                    "Test individual electrical components"
+                ],
+                xp: 55
+            },
+            'vibration': {
+                title: "Vibration Diagnosis",
+                steps: [
+                    "Note when vibration occurs (idle, highway, braking)",
+                    "Check tire pressure and wear patterns",
+                    "Inspect wheels for balance weights",
+                    "Check engine mounts for wear",
+                    "Schedule wheel balance/alignment check"
+                ],
+                xp: 45
+            }
+        };
         
-        function checkRateLimit() {
-            const now = Date.now();
-            if (now - lastReset > resetInterval) {
-                requestCount = 0;
-                lastReset = now;
+        function updateDisplay() {
+            document.getElementById('xp').textContent = gameState.xp;
+            document.getElementById('level').textContent = gameState.level;
+            document.getElementById('streak').textContent = gameState.streak;
+            document.getElementById('solved').textContent = gameState.solved;
+            
+            // Update progress bar
+            const progressPercent = ((gameState.xp % 100) / 100) * 100;
+            document.getElementById('progress').style.width = progressPercent + '%';
+            
+            // Check for level up
+            const newLevel = Math.floor(gameState.xp / 100) + 1;
+            if (newLevel > gameState.level) {
+                gameState.level = newLevel;
+                showAchievement(`🎊 LEVEL UP! You're now Level ${gameState.level}!`);
+                celebrate('🆙');
             }
-            
-            const remaining = maxRequests - requestCount;
-            document.getElementById('rateLimitInfo').textContent = 
-                `🔋 ${remaining} requests remaining (resets every 5 minutes)`;
-            
-            if (remaining <= 3) {
-                document.getElementById('rateLimitInfo').style.color = '#ff6b6b';
-            } else {
-                document.getElementById('rateLimitInfo').style.color = '#999';
-            }
-            
-            return remaining > 0;
         }
         
-        function showError(message) {
-            const errorBanner = document.getElementById('errorBanner');
-            errorBanner.textContent = message;
-            errorBanner.classList.add('active');
+        function saveProgress() {
+            localStorage.setItem('carGameXP', gameState.xp);
+            localStorage.setItem('carGameLevel', gameState.level);
+            localStorage.setItem('carGameStreak', gameState.streak);
+            localStorage.setItem('carGameSolved', gameState.solved);
+        }
+        
+        function resetProgress() {
+            if (confirm('Reset all progress? This cannot be undone!')) {
+                localStorage.clear();
+                gameState = { xp: 0, level: 1, streak: 0, solved: 0, currentSymptom: null };
+                updateDisplay();
+                celebrate('🔄');
+                showAchievement('Progress reset! Time for a fresh start!');
+            }
+        }
+        
+        function selectSymptom(symptom) {
+            gameState.currentSymptom = symptom;
+            
+            // Update button states
+            document.querySelectorAll('.symptom-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            // Show diagnosis
+            const diagnosisData = symptoms[symptom];
+            const stepsContainer = document.getElementById('steps');
+            stepsContainer.innerHTML = '';
+            
+            diagnosisData.steps.forEach((step, index) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'step';
+                stepDiv.innerHTML = `
+                    <div class="step-number">${index + 1}</div>
+                    <div>${step}</div>
+                `;
+                stepDiv.onclick = () => toggleStep(stepDiv);
+                stepsContainer.appendChild(stepDiv);
+            });
+            
+            document.getElementById('diagnosis').style.display = 'block';
+            document.getElementById('diagnosis').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function toggleStep(stepDiv) {
+            stepDiv.classList.toggle('completed');
+            celebrate('✅');
+        }
+        
+        function completeTask() {
+            if (!gameState.currentSymptom) return;
+            
+            const symptomData = symptoms[gameState.currentSymptom];
+            gameState.xp += symptomData.xp;
+            gameState.solved++;
+            gameState.streak++;
+            
+            celebrate('🎉');
+            showAchievement(`+${symptomData.xp} XP! Great troubleshooting!`);
+            
+            updateDisplay();
+            saveProgress();
+            
+            // Reset for next problem
             setTimeout(() => {
-                errorBanner.classList.remove('active');
-            }, 10000); // Hide after 10 seconds
-        }
-        
-        function showDebugInfo(title, data) {
-            const debugInfo = document.getElementById('debugInfo');
-            const debugContent = document.getElementById('debugContent');
-            debugInfo.classList.add('active');
-            debugContent.textContent = `${title}:\n${JSON.stringify(data, null, 2)}`;
-        }
-        
-        async function generatePrompts() {
-            const projectDescription = document.getElementById('projectInput').value.trim();
-            
-            if (!projectDescription) {
-                alert('Please enter a project description first!');
-                return;
-            }
-            
-            if (!checkRateLimit()) {
-                alert('Rate limit exceeded! Please wait before making another request.');
-                return;
-            }
-            
-            // Show loading
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            document.getElementById('generateBtn').disabled = true;
-            
-            try {
-                requestCount++;
-                checkRateLimit();
-                
-                console.log('Sending request with query:', projectDescription);
-                
-                const response = await fetch(API_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        query: projectDescription,
-                        conversationHistory: []
-                    })
+                document.getElementById('diagnosis').style.display = 'none';
+                document.querySelectorAll('.symptom-btn').forEach(btn => {
+                    btn.classList.remove('selected');
                 });
-                
-                console.log('Response status:', response.status);
-                
-                if (!response.ok) {
-                    // Get detailed error information
-                    let errorDetails = '';
-                    try {
-                        const errorData = await response.json();
-                        console.error('Error response:', errorData);
-                        errorDetails = errorData.details || errorData.error || 'Unknown error';
-                        showError(`API Error: ${errorDetails}`);
-                        showDebugInfo('Error Details', errorData);
-                    } catch (e) {
-                        const errorText = await response.text();
-                        console.error('Error text:', errorText);
-                        errorDetails = errorText || 'Unknown error';
-                        showError(`API Error: ${errorDetails}`);
-                    }
-                    throw new Error(`HTTP error! status: ${response.status} - ${errorDetails}`);
-                }
-                
-                const data = await response.json();
-                console.log('Success response:', data);
-                
-                // Show debug info
-                showDebugInfo('API Response', data);
-                
-                // Handle the new response format
-                if (data.success && data.plan && data.plan.prompts) {
-                    // Update prompts from the orchestration plan
-                    const prompts = data.plan.prompts;
-                    const ais = ['claude', 'chatgpt', 'perplexity', 'gemini'];
-                    
-                    ais.forEach(ai => {
-                        const promptEl = document.getElementById(`${ai}-prompt`);
-                        const row = document.querySelector(`[data-ai="${ai.charAt(0).toUpperCase() + ai.slice(1)}"]`);
-                        const badge = document.getElementById(`${ai}-badge`);
-                        
-                        if (promptEl && prompts[ai]) {
-                            promptEl.textContent = prompts[ai];
-                            if (row) row.classList.remove('not-needed');
-                            if (badge) {
-                                badge.textContent = 'ACTIVE';
-                                badge.className = 'ai-status-badge badge-active';
-                            }
-                        }
-                    });
-                    
-                    // Handle AIs not in the plan
-                    ['grok', 'supergrok', 'copilot'].forEach(ai => {
-                        const promptEl = document.getElementById(`${ai}-prompt`);
-                        const row = document.querySelector(`[data-ai="${ai.charAt(0).toUpperCase() + ai.slice(1)}"]`);
-                        const badge = document.getElementById(`${ai}-badge`);
-                        
-                        if (promptEl) {
-                            promptEl.textContent = `${ai.charAt(0).toUpperCase() + ai.slice(1)} is not needed for this ${data.analysis.complexity} complexity query.`;
-                            if (row) row.classList.add('not-needed');
-                            if (badge) {
-                                badge.textContent = 'NOT NEEDED';
-                                badge.className = 'ai-status-badge badge-not-needed';
-                            }
-                        }
-                    });
-                    
-                    // If there's a response, show it in Claude's response box
-                    if (data.response) {
-                        document.getElementById('claude-response').value = data.response;
-                    }
-                } else if (data.debug && !data.success) {
-                    // Handle debug mode response
-                    showError('Debug mode active - check debug info for details');
-                    console.log('Debug mode data:', data);
-                } else {
-                    // Fallback to echo format or other formats
-                    console.log('Unexpected response format:', data);
-                    showError('Unexpected response format - check console');
-                }
-                
-                // Reset all status indicators
-                document.querySelectorAll('.status').forEach(status => {
-                    status.textContent = '⏳';
-                });
-                
-                updateProgress();
-                
-            } catch (error) {
-                console.error('Error generating prompts:', error);
-                showError(error.message);
-            } finally {
-                document.getElementById('loadingOverlay').style.display = 'none';
-                document.getElementById('generateBtn').disabled = false;
-            }
+                gameState.currentSymptom = null;
+            }, 2000);
         }
         
-        function togglePromptExpansion(promptId) {
-            const promptEl = document.getElementById(promptId);
-            if (promptEl) {
-                promptEl.classList.toggle('expanded');
-            }
+        function celebrate(emoji) {
+            const celebration = document.getElementById('celebration');
+            celebration.textContent = emoji;
+            celebration.classList.add('show');
+            setTimeout(() => {
+                celebration.classList.remove('show');
+            }, 600);
         }
         
-        function copyPrompt(promptId) {
-            const promptElement = document.getElementById(promptId);
-            const text = promptElement.textContent;
-            
-            navigator.clipboard.writeText(text).then(() => {
-                showNotification('Prompt copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
+        function showAchievement(message) {
+            const achievement = document.getElementById('achievement');
+            achievement.textContent = message;
+            achievement.classList.add('show');
+            setTimeout(() => {
+                achievement.classList.remove('show');
+            }, 3000);
         }
         
-        function toggleStatus(element) {
-            if (element.textContent === '⏳') {
-                element.textContent = '✅';
-            } else {
-                element.textContent = '⏳';
-            }
-            updateProgress();
-        }
-        
-        function updateProgress() {
-            const statusElements = document.querySelectorAll('.status');
-            const completed = document.querySelectorAll('.status').length;
-            const checkedCount = Array.from(statusElements).filter(el => el.textContent === '✅').length;
-            
-            const percentage = (checkedCount / completed) * 100;
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = percentage + '%';
-            progressBar.textContent = `${checkedCount}/${completed} Responses Collected`;
-            
-            // Update status list
-            const statusList = document.getElementById('statusList');
-            const ais = ['Claude', 'ChatGPT', 'Perplexity', 'Gemini', 'Grok', 'SuperGrok', 'Copilot'];
-            const roles = ['System Architecture', 'UX/UI Design', 'Market Research', 'Data Analysis', 'Backend Development', 'AI/ML Innovation', 'Code Implementation'];
-            
-            statusList.innerHTML = '';
-            statusElements.forEach((status, index) => {
-                const li = document.createElement('li');
-                li.textContent = `${status.textContent} ${ais[index]} - ${roles[index]}`;
-                statusList.appendChild(li);
-            });
-        }
-        
-        async function synthesizeResponses() {
-            const responses = [];
-            const ais = ['claude', 'chatgpt', 'perplexity', 'gemini', 'grok', 'supergrok', 'copilot'];
-            
-            ais.forEach(ai => {
-                const responseEl = document.getElementById(`${ai}-response`);
-                if (responseEl && responseEl.value.trim()) {
-                    responses.push(`${ai.toUpperCase()}: ${responseEl.value.trim()}`);
-                }
-            });
-            
-            if (responses.length === 0) {
-                alert('Please paste at least one AI response before synthesizing!');
-                return;
-            }
-            
-            if (!checkRateLimit()) {
-                alert('Rate limit exceeded! Please wait before making another request.');
-                return;
-            }
-            
-            // Show loading
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            
-            try {
-                requestCount++;
-                checkRateLimit();
-                
-                const projectDescription = document.getElementById('projectInput').value.trim();
-                const synthesisPrompt = `As the Lead Orchestrator, synthesize these ${responses.length} AI responses into one comprehensive action plan for: "${projectDescription}"
-
-AI RESPONSES:
-${responses.join('\n\n---\n\n')}
-
-Create a unified action plan that:
-1. Prioritizes tasks in logical build order
-2. Identifies dependencies between components  
-3. Highlights critical path items
-4. Suggests team roles if applicable
-5. Provides a realistic timeline
-6. Lists key success metrics
-7. Includes all bonus innovations suggested
-
-Format as a clear, actionable project plan with phases and milestones.`;
-                
-                const response = await fetch(API_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        query: synthesisPrompt,
-                        conversationHistory: []
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                // Display synthesis in the output area
-                const synthesisOutput = document.getElementById('synthesisOutput');
-                synthesisOutput.value = data.response || 'Synthesis completed. Check the response above.';
-                
-            } catch (error) {
-                console.error('Error synthesizing responses:', error);
-                alert('Error during synthesis. Please try again.');
-            } finally {
-                document.getElementById('loadingOverlay').style.display = 'none';
-            }
-        }
-        
-        function exportMarkdown() {
-            const projectDescription = document.getElementById('projectInput').value.trim();
-            const date = new Date().toLocaleDateString();
-            
-            let markdown = `# HexMind AI Orchestra Session\n`;
-            markdown += `**Project:** ${projectDescription}\n`;
-            markdown += `**Date:** ${date}\n`;
-            markdown += `**Orchestrator:** Claude\n\n`;
-            
-            markdown += `## 🎯 AI Delegation Matrix\n\n`;
-            
-            const ais = [
-                { id: 'claude', name: 'Claude', role: 'System Architecture' },
-                { id: 'chatgpt', name: 'ChatGPT', role: 'UX/UI Design' },
-                { id: 'perplexity', name: 'Perplexity', role: 'Market Research' },
-                { id: 'gemini', name: 'Gemini', role: 'Data Analysis' },
-                { id: 'grok', name: 'Grok', role: 'Backend Development' },
-                { id: 'supergrok', name: 'SuperGrok', role: 'AI/ML Innovation' },
-                { id: 'copilot', name: 'Copilot', role: 'Code Implementation' }
-            ];
-            
-            ais.forEach((ai, index) => {
-                const promptEl = document.getElementById(`${ai.id}-prompt`);
-                const responseEl = document.getElementById(`${ai.id}-response`);
-                const statusEl = document.querySelectorAll('.status')[index];
-                
-                markdown += `### ${ai.name} - ${ai.role}\n`;
-                markdown += `**Status:** ${statusEl.textContent}\n\n`;
-                
-                if (promptEl && promptEl.textContent !== 'Prompts will appear here after generation...') {
-                    markdown += `**Prompt:**\n\`\`\`\n${promptEl.textContent}\n\`\`\`\n\n`;
-                }
-                
-                if (responseEl && responseEl.value.trim()) {
-                    markdown += `**Response:**\n${responseEl.value.trim()}\n\n`;
-                }
-                
-                markdown += `---\n\n`;
-            });
-            
-            const synthesis = document.getElementById('synthesisOutput').value;
-            if (synthesis && synthesis !== 'Final synthesized action plan will appear here...') {
-                markdown += `## 🎭 Final Synthesis\n\n${synthesis}\n\n`;
-            }
-            
-            // Show preview
-            document.getElementById('exportPreview').style.display = 'block';
-            document.getElementById('exportPreview').textContent = markdown;
-            
-            // Copy to clipboard
-            navigator.clipboard.writeText(markdown);
-            showNotification('Markdown exported and copied to clipboard!');
-        }
-        
-        function clearAll() {
-            if (confirm('Clear all prompts, responses, and progress?')) {
-                document.getElementById('projectInput').value = '';
-                document.getElementById('synthesisOutput').value = '';
-                
-                // Clear all prompts
-                document.querySelectorAll('[id$="-prompt"]').forEach(el => {
-                    el.textContent = 'Prompts will appear here after generation...';
-                    el.classList.remove('expanded');
-                });
-                
-                // Clear all responses
-                document.querySelectorAll('.response-input').forEach(el => {
-                    el.value = '';
-                });
-                
-                // Reset all statuses
-                document.querySelectorAll('.status').forEach(status => {
-                    status.textContent = '⏳';
-                });
-                
-                // Reset all badges
-                document.querySelectorAll('.ai-status-badge').forEach(badge => {
-                    badge.textContent = '';
-                    badge.className = 'ai-status-badge';
-                });
-                
-                // Reset row styling
-                document.querySelectorAll('.ai-row').forEach(row => {
-                    row.classList.remove('not-needed');
-                });
-                
-                // Hide export preview and debug
-                document.getElementById('exportPreview').style.display = 'none';
-                document.getElementById('debugInfo').classList.remove('active');
-                document.getElementById('errorBanner').classList.remove('active');
-                
-                updateProgress();
-            }
-        }
-        
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #4fc3f7;
-                color: #000;
-                padding: 15px 25px;
-                border-radius: 5px;
-                font-weight: bold;
-                z-index: 1001;
-                animation: slideIn 0.3s ease;
-            `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => notification.remove(), 3000);
-        }
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.altKey) {
-                switch(e.key) {
-                    case 'g': e.preventDefault(); generatePrompts(); break;
-                    case 's': e.preventDefault(); synthesizeResponses(); break;
-                    case 'e': e.preventDefault(); exportMarkdown(); break;
-                    case 'c': e.preventDefault(); clearAll(); break;
-                }
-            }
+        // Event listeners
+        document.querySelectorAll('.symptom-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => selectSymptom(e.target.dataset.symptom));
         });
         
-        // Add CSS animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Auto-save project input
-        let saveTimeout;
-        document.getElementById('projectInput').addEventListener('input', () => {
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => {
-                try {
-                    localStorage.setItem('hexmind_project', document.getElementById('projectInput').value);
-                } catch (e) {
-                    console.log('Auto-save disabled in sandbox mode');
-                }
-            }, 1000);
+        // Car part interactions
+        document.querySelectorAll('.car-part').forEach(part => {
+            part.addEventListener('click', () => {
+                celebrate('🔧');
+                showAchievement(`Good eye! You clicked the ${part.dataset.part}!`);
+            });
         });
         
-        // Load saved project on page load
-        try {
-            const saved = localStorage.getItem('hexmind_project');
-            if (saved) {
-                document.getElementById('projectInput').value = saved;
-            }
-        } catch (e) {
-            console.log('Loading saved data disabled in sandbox mode');
-        }
-        
-        // Initialize
-        updateProgress();
-        checkRateLimit();
+        // Initialize display
+        updateDisplay();
     </script>
 </body>
 </html>
