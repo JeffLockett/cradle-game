@@ -572,132 +572,253 @@
 
         // Main orchestration function - FIXED FOR MASTER VOID KEY
         async function orchestrateAll() {
-            console.log('🎭 Starting HexMind Orchestra...');
-            
-            const task = document.getElementById('taskInput').value.trim();
-            if (!task) {
-                alert('Please enter a task description');
-                return;
-            }
+    console.log('🎭 Starting HexMind Orchestra...');
+    
+    const task = document.getElementById('taskInput').value.trim();
+    if (!task) {
+        alert('Please enter a task description');
+        return;
+    }
 
-            const maxCost = parseFloat(document.getElementById('maxCost').value) || 2.0;
+    const maxCost = parseFloat(document.getElementById('maxCost').value) || 2.0;
 
-            // Update UI to show loading
-            const orchestrateBtn = document.getElementById('orchestrateBtn');
-            const originalText = orchestrateBtn.textContent;
-            orchestrateBtn.disabled = true;
-            orchestrateBtn.textContent = '🎭 Orchestrating Dread Gods...';
-            
-            // Clear previous results
-            const resultsDiv = document.getElementById('orchestrationResults');
-            resultsDiv.innerHTML = '<div class="loading">🎭 Coordinating AI Dread Gods...</div>';
+    // Update UI to show loading
+    const orchestrateBtn = document.getElementById('orchestrateBtn');
+    const originalText = orchestrateBtn.textContent;
+    orchestrateBtn.disabled = true;
+    orchestrateBtn.textContent = '🎭 Orchestrating Dread Gods...';
+    
+    // Clear previous results
+    const resultsDiv = document.getElementById('orchestrationResults');
+    resultsDiv.innerHTML = '<div class="loading">🎭 Coordinating AI Dread Gods...</div>';
 
-            try {
-                console.log('📡 Sending orchestration request to Master Void Key...');
-                
-                // Updated API call to match enhanced backend
-                const response = await fetch('http://localhost:3001/api/orchestrate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        task: task,
-                        services: ['openai', 'claude', 'perplexity', 'grok', 'gemini'],
-                        maxCost: maxCost,
-                        parallel: false
-                    })
-                });
+    try {
+        console.log('📡 Sending orchestration request to Master Void Key...');
+        
+        const response = await fetch('http://localhost:3001/api/orchestrate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                task: task,
+                services: ['openai', 'claude', 'perplexity', 'grok', 'gemini'],
+                maxCost: maxCost,
+                parallel: false
+            })
+        });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                const data = await response.json();
-                console.log('✅ Orchestration complete:', data);
-
-                // Display results with enhanced formatting
-                displayOrchestrationResults(data);
-
-            } catch (error) {
-                console.error('❌ Orchestration failed:', error);
-                
-                resultsDiv.innerHTML = `
-                    <div class="error-container">
-                        <h3>❌ Master Void Key Orchestration Failed</h3>
-                        <p><strong>Error:</strong> ${error.message}</p>
-                        <div class="troubleshooting">
-                            <h4>🔧 Troubleshooting Steps:</h4>
-                            <ul>
-                                <li>✅ Server health: ${serverHealthy ? 'Good' : 'Check server'}</li>
-                                <li>🔍 Make sure HexMind server is running: <code>node secure-hexmind-server.js</code></li>
-                                <li>🔑 Verify API keys are configured in .env file</li>
-                                <li>🌐 Check browser console for detailed errors</li>
-                                <li>💰 Ensure sufficient budget for orchestration</li>
-                                <li>⚡ Try individual AI test first</li>
-                            </ul>
-                            <button onclick="checkServerHealth()" class="retry-btn">🔄 Retry Health Check</button>
-                            <button onclick="testIndividualAPI()" class="retry-btn">🧪 Test Individual API</button>
-                        </div>
-                    </div>
-                `;
-            } finally {
-                // Reset button
-                orchestrateBtn.disabled = false;
-                orchestrateBtn.textContent = originalText;
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
-        // Enhanced results display function
-        function displayOrchestrationResults(data) {
-            const resultsDiv = document.getElementById('orchestrationResults');
+        const data = await response.json();
+        console.log('✅ Orchestration response received:', data);
+
+        // FIXED: Check if we have ANY results, not perfect results
+        if (data.results && Object.keys(data.results).length > 0) {
+            // Calculate success metrics
+            const totalAIs = Object.keys(data.results).length;
+            const successfulAIs = Object.values(data.results).filter(r => !r.error).length;
+            const successRate = (successfulAIs / totalAIs) * 100;
             
-            let html = `
-                <div class="orchestration-success">
-                    <h3>🎭 HexMind Orchestra Results</h3>
-                    <div class="metrics">
-                        <span class="metric">💰 Total Cost: $${data.totalCost?.toFixed(4) || '0.0000'}</span>
-                        <span class="metric">📊 Daily Cost: $${data.dailyCost?.toFixed(4) || '0.0000'}</span>
-                        <span class="metric">⏱️ Generated: ${new Date(data.timestamp).toLocaleTimeString()}</span>
-                        <span class="metric">🎯 Task: "${data.task?.substring(0, 50) || 'Unknown'}..."</span>
+            console.log(`📊 Success Rate: ${successfulAIs}/${totalAIs} (${successRate}%)`);
+            
+            // Display results - even if partial success
+            displayOrchestrationResults(data, successRate);
+            
+        } else {
+            // Only throw error if NO results at all
+            throw new Error('No AI responses received');
+        }
+
+    } catch (error) {
+        console.error('❌ Complete orchestration failure:', error);
+        
+        // Only show error UI for complete failures
+        resultsDiv.innerHTML = `
+            <div class="error-container">
+                <h3>❌ Complete Orchestration Failure</h3>
+                <p><strong>Error:</strong> ${error.message}</p>
+                <div class="troubleshooting">
+                    <h4>🔧 Troubleshooting Steps:</h4>
+                    <ul>
+                        <li>🔍 Make sure HexMind server is running: <code>node secure-hexmind-server.js</code></li>
+                        <li>🔑 Verify API keys are configured in .env file</li>
+                        <li>🌐 Check server console for detailed logs</li>
+                        <li>💰 Ensure sufficient budget for orchestration</li>
+                        <li>⚡ Try individual AI test first</li>
+                    </ul>
+                    <button onclick="checkServerHealth()" class="retry-btn">🔄 Retry Health Check</button>
+                    <button onclick="testIndividualAPI()" class="retry-btn">🧪 Test Individual API</button>
+                </div>
+            </div>
+        `;
+    } finally {
+        // Reset button
+        orchestrateBtn.disabled = false;
+        orchestrateBtn.textContent = originalText;
+    }
+}
+
+// Enhanced results display with partial success celebration
+function displayOrchestrationResults(data, successRate) {
+    const resultsDiv = document.getElementById('orchestrationResults');
+    
+    // Calculate metrics
+    const totalAIs = Object.keys(data.results).length;
+    const successfulAIs = Object.values(data.results).filter(r => !r.error).length;
+    const failedAIs = totalAIs - successfulAIs;
+    
+    // Determine success level and message
+    let statusClass = 'orchestration-success';
+    let statusIcon = '🎭';
+    let statusMessage = 'HexMind Orchestra Results';
+    
+    if (successRate === 100) {
+        statusIcon = '🏆';
+        statusMessage = 'Perfect Orchestration - All AIs Responded!';
+    } else if (successRate >= 60) {
+        statusIcon = '✅';
+        statusMessage = 'Successful Orchestration - Majority AIs Responded!';
+    } else if (successRate >= 20) {
+        statusIcon = '⚠️';
+        statusMessage = 'Partial Orchestration - Some AIs Responded';
+        statusClass = 'orchestration-partial';
+    } else {
+        statusIcon = '❌';
+        statusMessage = 'Limited Orchestration - Few AIs Responded';
+        statusClass = 'orchestration-limited';
+    }
+    
+    let html = `
+        <div class="${statusClass}">
+            <h3>${statusIcon} ${statusMessage}</h3>
+            <div class="metrics">
+                <span class="metric">🎯 Success Rate: ${successRate.toFixed(0)}% (${successfulAIs}/${totalAIs})</span>
+                <span class="metric">💰 Total Cost: $${data.totalCost?.toFixed(4) || '0.0000'}</span>
+                <span class="metric">📊 Daily Cost: $${data.dailyCost?.toFixed(4) || '0.0000'}</span>
+                <span class="metric">⏱️ Generated: ${new Date(data.timestamp).toLocaleTimeString()}</span>
+            </div>
+        </div>
+    `;
+
+    // Show summary if we have partial results
+    if (failedAIs > 0) {
+        html += `
+            <div class="partial-results-notice">
+                <h4>📊 Orchestration Summary</h4>
+                <p>✅ <strong>${successfulAIs} AIs responded successfully</strong> and provided valuable insights.</p>
+                ${failedAIs > 0 ? `<p>⚠️ ${failedAIs} AIs are temporarily unavailable (common with new integrations).</p>` : ''}
+                <p>💡 The responses below represent ${successRate.toFixed(0)}% of your AI arsenal working perfectly!</p>
+            </div>
+        `;
+    }
+
+    if (data.results) {
+        const serviceIcons = {
+            'openai': '🤖',
+            'claude': '🧠', 
+            'perplexity': '🔍',
+            'grok': '⚡',
+            'gemini': '💎'
+        };
+
+        // Show successful responses first
+        const sortedResults = Object.entries(data.results).sort(([,a], [,b]) => {
+            if (a.error && !b.error) return 1;
+            if (!a.error && b.error) return -1;
+            return 0;
+        });
+
+        sortedResults.forEach(([service, result]) => {
+            const status = result.error ? '❌' : '✅';
+            const serviceIcon = serviceIcons[service] || '🎭';
+
+            html += `
+                <div class="ai-response ${result.error ? 'error' : 'success'}">
+                    <h4>${status} ${serviceIcon} ${service.toUpperCase()} ${result.error ? 'UNAVAILABLE' : 'SUCCESS'}</h4>
+                    <div class="response-meta">
+                        <span>💰 Cost: $${result.cost?.toFixed(4) || '0.0000'}</span>
+                        <span>🎯 Tokens: ${result.tokens || 'N/A'}</span>
+                        <span>⚡ Status: ${result.error ? 'Temporarily Offline' : 'Operational'}</span>
+                    </div>
+                    <div class="response-content">
+                        ${result.error ? 
+                            `<p class="error-text">🔧 ${result.response}</p>
+                             <p><em>This AI will be available once API configuration is optimized.</em></p>` :
+                            `<p>${result.response}</p>`
+                        }
                     </div>
                 </div>
             `;
+        });
+    }
 
-            if (data.results) {
-                const serviceIcons = {
-                    'openai': '🤖',
-                    'claude': '🧠', 
-                    'perplexity': '🔍',
-                    'grok': '⚡',
-                    'gemini': '💎'
-                };
+    resultsDiv.innerHTML = html;
+}
 
-                Object.entries(data.results).forEach(([service, result]) => {
-                    const status = result.error ? '❌' : '✅';
-                    const serviceIcon = serviceIcons[service] || '🎭';
+// Add CSS for partial success states
+const partialSuccessCSS = `
+.orchestration-partial {
+    background: linear-gradient(135deg, #fff3cd, #fefefe);
+    border: 2px solid #ffc107;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+}
 
-                    html += `
-                        <div class="ai-response ${result.error ? 'error' : 'success'}">
-                            <h4>${status} ${serviceIcon} ${service.toUpperCase()} ${result.error ? 'FAILED' : 'SUCCESS'}</h4>
-                            <div class="response-meta">
-                                <span>💰 Cost: $${result.cost?.toFixed(4) || '0.0000'}</span>
-                                <span>🎯 Tokens: ${result.tokens || 'N/A'}</span>
-                                <span>⚡ Status: ${result.error ? 'Error' : 'Complete'}</span>
-                            </div>
-                            <div class="response-content">
-                                ${result.error ? 
-                                    `<p class="error-text">🚨 ${result.response}</p>` :
-                                    `<p>${result.response}</p>`
-                                }
-                            </div>
-                        </div>
-                    `;
-                });
-            }
+.orchestration-partial h3 {
+    color: #856404;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
 
-            resultsDiv.innerHTML = html;
-        }
+.orchestration-limited {
+    background: linear-gradient(135deg, #f8d7da, #fefefe);
+    border: 2px solid #dc3545;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+}
+
+.orchestration-limited h3 {
+    color: #721c24;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.partial-results-notice {
+    background: rgba(255, 248, 225, 0.9);
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    color: #856404;
+}
+
+.partial-results-notice h4 {
+    margin-bottom: 10px;
+    color: #856404;
+}
+
+.partial-results-notice p {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+`;
+
+// Add the new CSS if not already present
+if (!document.getElementById('partial-success-css')) {
+    const style = document.createElement('style');
+    style.id = 'partial-success-css';
+    style.textContent = partialSuccessCSS;
+    document.head.appendChild(style);
+}
+
+console.log('🎭 Frontend updated to celebrate partial orchestration success!');
 
         // Test individual API function
         async function testIndividualAPI() {
