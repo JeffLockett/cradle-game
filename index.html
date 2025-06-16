@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HexMind Orchestra - AI Command Center</title>
+    <title>🎭 HexMind Orchestra - AI Command Center</title>
     <style>
         * {
             margin: 0;
@@ -15,11 +15,11 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: white;
+            color: #333;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -27,272 +27,402 @@
         .header {
             text-align: center;
             margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
-        .logo {
-            font-size: 3rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-            background-size: 200% 200%;
-            animation: gradient 3s ease infinite;
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            background-clip: text;
         }
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .header p {
+            font-size: 1.2em;
+            color: #666;
         }
 
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 20px;
+        .server-status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 10px 0;
         }
 
-        .status-bar {
+        .server-status.healthy {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .server-status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffc107;
+        }
+
+        .server-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .status-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .status-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .ai-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
-        .ai-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .ai-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .ai-card.active {
-            border-color: #4ecdc4;
-            box-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
-        }
-
-        .ai-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .ai-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-
-        .ai-status {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .status-active { background: #4ecdc4; color: #333; }
-        .status-limited { background: #f39c12; color: #333; }
-        .status-offline { background: #e74c3c; color: white; }
-
-        .ai-metrics {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .metric {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 10px;
+        .service-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card.online {
+            border-left: 5px solid #28a745;
+        }
+
+        .service-card.offline {
+            border-left: 5px solid #dc3545;
+            opacity: 0.6;
+        }
+
+        .service-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .service-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .service-cost {
+            font-size: 0.9em;
+            color: #666;
         }
 
         .orchestration-panel {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
             padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
+        }
+
+        .orchestration-panel h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
         }
 
         .task-input {
             width: 100%;
-            padding: 15px 20px;
-            border: none;
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s ease;
+        }
+
+        .task-input:focus {
             outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
         }
 
-        .task-input::placeholder {
-            color: #666;
-        }
-
-        .control-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        .controls {
+            display: flex;
             gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
             margin-bottom: 20px;
         }
 
-        .control-button {
-            padding: 15px 25px;
+        .cost-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 120px;
+        }
+
+        .orchestrate-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
             border: none;
-            border-radius: 15px;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-primary {
-            background: linear-gradient(45deg, #4ecdc4, #44a08d);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-danger {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-            color: white;
-        }
-
-        .control-button:hover {
+        .orchestrate-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
 
-        .response-area {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+        .orchestrate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-container {
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            min-height: 300px;
-        }
-
-        .response-tab {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-right: 10px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .response-tab.active {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #4ecdc4;
-        }
-
-        .response-content {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            min-height: 200px;
             padding: 20px;
-            max-height: 400px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
         }
 
         .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #4ecdc4;
-            animation: spin 1s ease-in-out infinite;
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 20px;
+            color: #666;
+            animation: pulse 1.5s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
 
-        .cost-tracker {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 15px 20px;
+        .orchestration-success {
+            background: linear-gradient(135deg, #e8f5e8, #f0fff0);
+            border: 2px solid #28a745;
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 1000;
-        }
-
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .quick-action {
-            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
         }
 
-        .quick-action:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .orchestration-success h3 {
+            color: #155724;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .metrics {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .metric {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .ai-response {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            margin: 15px 0;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-response::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: #28a745;
+        }
+
+        .ai-response.success {
+            background: linear-gradient(135deg, #f8fff8, #ffffff);
+            border-color: #28a745;
+        }
+
+        .ai-response.success::before {
+            background: #28a745;
+        }
+
+        .ai-response.error {
+            background: linear-gradient(135deg, #fff8f8, #ffffff);
+            border-color: #dc3545;
+        }
+
+        .ai-response.error::before {
+            background: #dc3545;
+        }
+
+        .ai-response h4 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .response-meta {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .response-meta span {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .response-content {
+            margin-top: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .response-content p {
+            margin-bottom: 10px;
+        }
+
+        .error-text {
+            color: #dc3545;
+            font-style: italic;
+            background: rgba(220, 53, 69, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .error-container {
+            background: linear-gradient(135deg, #ffe6e6, #fff0f0);
+            border: 2px solid #ff4444;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.2);
+        }
+
+        .error-container h3 {
+            color: #721c24;
+            margin-bottom: 15px;
+        }
+
+        .troubleshooting {
+            background: rgba(248, 249, 250, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #dee2e6;
+        }
+
+        .troubleshooting h4 {
+            color: #495057;
+            margin-bottom: 12px;
+        }
+
+        .troubleshooting ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .troubleshooting li {
+            margin: 8px 0;
+            color: #495057;
+        }
+
+        .retry-btn {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .retry-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
-            .ai-grid {
-                grid-template-columns: 1fr;
+            .container {
+                padding: 10px;
             }
             
-            .control-grid {
-                grid-template-columns: 1fr;
+            .header h1 {
+                font-size: 2em;
             }
             
-            .logo {
-                font-size: 2rem;
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .metrics {
+                flex-direction: column;
+            }
+            
+            .response-meta {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -300,734 +430,306 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">🎭 HexMind Orchestra</div>
-            <div class="subtitle">AI Command Center - Orchestrate Your Digital Army</div>
+            <h1>🎭 HexMind Orchestra</h1>
+            <p>AI Command Center - Orchestrating Intelligence Across 5 AI Systems</p>
+            <div id="serverStatus" class="server-status">🔍 Checking server...</div>
         </div>
 
-        <div class="status-bar">
-            <div class="status-card">
-                <h3>🔥 Active AIs</h3>
-                <div style="font-size: 2rem; font-weight: bold;" id="activeCount">6</div>
-            </div>
-            <div class="status-card">
-                <h3>💰 Today's Cost</h3>
-                <div style="font-size: 2rem; font-weight: bold;" id="todayCost">$0.00</div>
-            </div>
-            <div class="status-card">
-                <h3>⚡ Requests</h3>
-                <div style="font-size: 2rem; font-weight: bold;" id="requestCount">0</div>
-            </div>
-            <div class="status-card">
-                <h3>🎯 Success Rate</h3>
-                <div style="font-size: 2rem; font-weight: bold;" id="successRate">100%</div>
-            </div>
-        </div>
-
-        <div class="quick-actions">
-            <div class="quick-action" onclick="quickTask('Check all AI availability')">
-                <h3>🔍 System Status</h3>
-                <p>Check which AIs are available and their limits</p>
-            </div>
-            <div class="quick-action" onclick="quickTask('Create a responsive landing page for a tech startup')">
-                <h3>🚀 Web Development</h3>
-                <p>Get HTML/CSS/JS from multiple AIs</p>
-            </div>
-            <div class="quick-action" onclick="quickTask('Write a marketing email for a new product launch')">
-                <h3>📧 Content Creation</h3>
-                <p>Generate marketing content with AI ensemble</p>
-            </div>
-            <div class="quick-action" onclick="quickTask('Analyze this data and create visualizations')">
-                <h3>📊 Data Analysis</h3>
-                <p>Get insights from multiple AI perspectives</p>
-            </div>
-        </div>
-
-        <div class="ai-grid">
-            <div class="ai-card active" data-ai="claude">
-                <div class="ai-header">
-                    <div class="ai-name">🧠 Claude Max</div>
-                    <div class="ai-status status-active">ACTIVE</div>
-                </div>
-                <div class="ai-metrics">
-                    <div class="metric">
-                        <div>Usage</div>
-                        <div id="claude-usage">42/100</div>
-                    </div>
-                    <div class="metric">
-                        <div>Cost</div>
-                        <div id="claude-cost">$0.00</div>
-                    </div>
-                </div>
-                <div>Best for: Complex reasoning, coding, analysis</div>
-            </div>
-
-            <div class="ai-card active" data-ai="openai">
-                <div class="ai-header">
-                    <div class="ai-name">🤖 ChatGPT Plus</div>
-                    <div class="ai-status status-limited">LIMITED</div>
-                </div>
-                <div class="ai-metrics">
-                    <div class="metric">
-                        <div>Usage</div>
-                        <div id="openai-usage">12/50</div>
-                    </div>
-                    <div class="metric">
-                        <div>Cost</div>
-                        <div id="openai-cost">$0.00</div>
-                    </div>
-                </div>
-                <div>Best for: Code generation, creative writing</div>
-            </div>
-
-            <div class="ai-card active" data-ai="perplexity">
-                <div class="ai-header">
-                    <div class="ai-name">🔍 Perplexity Pro</div>
-                    <div class="ai-status status-active">ACTIVE</div>
-                </div>
-                <div class="ai-metrics">
-                    <div class="metric">
-                        <div>Usage</div>
-                        <div id="perplexity-usage">87/300</div>
-                    </div>
-                    <div class="metric">
-                        <div>Cost</div>
-                        <div id="perplexity-cost">$0.00</div>
-                    </div>
-                </div>
-                <div>Best for: Research, real-time data</div>
-            </div>
-
-            <div class="ai-card active" data-ai="gemini">
-                <div class="ai-header">
-                    <div class="ai-name">💎 Gemini Pro</div>
-                    <div class="ai-status status-active">ACTIVE</div>
-                </div>
-                <div class="ai-metrics">
-                    <div class="metric">
-                        <div>Usage</div>
-                        <div id="gemini-usage">5/60/min</div>
-                    </div>
-                    <div class="metric">
-                        <div>Cost</div>
-                        <div id="gemini-cost">$0.00</div>
-                    </div>
-                </div>
-                <div>Best for: Speed, analysis, multimodal</div>
-            </div>
-
-            <div class="ai-card active" data-ai="grok">
-                <div class="ai-header">
-                    <div class="ai-name">🦾 Grok</div>
-                    <div class="ai-status status-active">UNLIMITED</div>
-                </div>
-                <div class="ai-metrics">
-                    <div class="metric">
-                        <div>Usage</div>
-                        <div id="grok-usage">∞</div>
-                    </div>
-                    <div class="metric">
-                        <div>Cost</div>
-                        <div id="grok-cost">$0.00</div>
-                    </div>
-                </div>
-                <div>Best for: Uncensored creativity, real-time data</div>
-            </div>
-
-            <div class="ai-card active" data-ai="copilot">
-                <div class="ai-header">
-                    <div class="ai-name">👨‍💻 Copilot</div>
-                    <div class="ai-status status-active">ACTIVE</div>
-                </div>
-                <div class="ai-metrics">
-                    <div class="metric">
-                        <div>Usage</div>
-                        <div id="copilot-usage">Good</div>
-                    </div>
-                    <div class="metric">
-                        <div>Cost</div>
-                        <div id="copilot-cost">$0.00</div>
-                    </div>
-                </div>
-                <div>Best for: Code completion, debugging</div>
-            </div>
+        <div class="services-grid" id="servicesGrid">
+            <!-- Services will be populated by JavaScript -->
         </div>
 
         <div class="orchestration-panel">
-            <h2>🎼 Task Orchestration</h2>
-            <textarea 
-                class="task-input" 
-                id="taskInput" 
-                placeholder="Describe your project or task... (e.g., 'Create a responsive car diagnostic interface with symptom checker')"
-                rows="3"></textarea>
+            <h2>🎯 AI Orchestration Command Center</h2>
             
-            <div class="control-grid">
-                <button class="control-button btn-primary" onclick="orchestrateAll()">
+            <div class="input-group">
+                <label for="taskInput">📝 Task Description:</label>
+                <textarea 
+                    id="taskInput" 
+                    class="task-input" 
+                    placeholder="Describe your challenge, project, or question. The AI Orchestra will provide multiple perspectives and comprehensive analysis..."
+                ></textarea>
+            </div>
+
+            <div class="controls">
+                <label>💰 Max Cost: $</label>
+                <input type="number" id="maxCost" class="cost-input" value="2.0" min="0.1" max="10" step="0.1">
+                
+                <button id="orchestrateBtn" class="orchestrate-btn" onclick="orchestrateAll()">
                     🎭 Orchestrate All AIs
                 </button>
-                <button class="control-button btn-secondary" onclick="routeTask()">
-                    🎯 Smart Route Task
-                </button>
-                <button class="control-button btn-secondary" onclick="quickConsult()">
-                    ⚡ Quick Consult
-                </button>
-                <button class="control-button btn-danger" onclick="clearAll()">
-                    🗑️ Clear Results
-                </button>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center;">
-                <div>
-                    <label>Max Cost: $<input type="number" id="maxCost" value="1.00" step="0.10" style="width: 80px; padding: 5px; border-radius: 5px; border: none;"></label>
-                </div>
-                <div>
-                    <label><input type="checkbox" id="useSubscriptions" checked> Prioritize Subscriptions</label>
-                </div>
             </div>
         </div>
 
-        <div class="response-area">
-            <h2>🎵 Orchestra Responses</h2>
-            <div id="responseTabs">
-                <div class="response-tab active" data-tab="all">All Responses</div>
-                <div class="response-tab" data-tab="claude">Claude</div>
-                <div class="response-tab" data-tab="openai">ChatGPT</div>
-                <div class="response-tab" data-tab="perplexity">Perplexity</div>
-                <div class="response-tab" data-tab="gemini">Gemini</div>
-                <div class="response-tab" data-tab="grok">Grok</div>
-                <div class="response-tab" data-tab="synthesis">Synthesis</div>
-            </div>
-            <div class="response-content" id="responseContent">
-Welcome to HexMind Orchestra! 🎭
-
-Choose a quick action above or describe your task in the orchestration panel.
-Your AI ensemble is ready to collaborate on any project.
-
-Example tasks:
-• "Create a mobile-responsive website for a restaurant"
-• "Analyze this dataset and provide insights"
-• "Write a comprehensive business plan for a tech startup"
-• "Debug this JavaScript code and suggest improvements"
-• "Generate marketing content for a product launch"
-
-Each AI will contribute their unique strengths to give you the best possible result!
+        <div class="results-container">
+            <div id="orchestrationResults">
+                <div class="loading">🎭 Ready to orchestrate AI intelligence...</div>
             </div>
         </div>
-    </div>
 
-    <div class="cost-tracker">
-        <div>💰 Session Cost: $<span id="sessionCost">0.00</span></div>
-        <div>⚡ API Calls: <span id="apiCalls">0</span></div>
+        <div class="footer">
+            <p>🔑 Master Void Key Technology | Powered by OpenAI, Claude, Perplexity, Grok & Gemini</p>
+            <p>Built for <a href="https://www.magicmechaniclv.com/" target="_blank">Jeff the Magic Mechanic</a></p>
+        </div>
     </div>
 
     <script>
-        // HexMind Orchestra JavaScript
-        let sessionCost = 0.00;
-        let apiCalls = 0;
-        let currentResponses = {};
-        let activeTab = 'all';
+        // Global variables
+        let serverHealthy = false;
+        let availableServices = [];
 
-        // Your Secure HexMind API endpoint
-        const HEXMIND_API = 'http://localhost:3001/api';
-
-        // Secure API caller - connects to your protected server
-        async function callSecureAPI(endpoint, data) {
-            try {
-                const response = await fetch(`${HEXMIND_API}/${endpoint}`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error || `Server error: ${response.status}`);
-                }
-                
-                return await response.json();
-            } catch (error) {
-                console.error(`API Error (${endpoint}):`, error);
-                throw error;
-            }
-        }
-
-        // Tab switching
-        document.querySelectorAll('.response-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelector('.response-tab.active').classList.remove('active');
-                tab.classList.add('active');
-                activeTab = tab.dataset.tab;
-                displayCurrentTab();
-            });
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎭 HexMind Orchestra initializing...');
+            checkServerHealth();
+            loadAvailableServices();
         });
 
-        function displayCurrentTab() {
-            const content = document.getElementById('responseContent');
-            if (activeTab === 'all') {
-                content.textContent = Object.values(currentResponses).join('\n\n---\n\n');
-            } else if (currentResponses[activeTab]) {
-                content.textContent = currentResponses[activeTab];
-            } else {
-                content.textContent = `No response from ${activeTab} yet.`;
+        // Enhanced server health check
+        async function checkServerHealth() {
+            try {
+                console.log('🔍 Checking server health...');
+                
+                const response = await fetch('http://localhost:3001/api/health', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('✅ Server health:', data);
+                
+                serverHealthy = true;
+                updateServerStatus('✅ HexMind Server Online', 'healthy');
+                
+                return data;
+            } catch (error) {
+                console.error('❌ Server health check failed:', error);
+                serverHealthy = false;
+                updateServerStatus('❌ HexMind Server Offline', 'error');
+                return null;
             }
         }
 
-        function updateCosts(cost = 0) {
-            sessionCost += cost;
-            apiCalls++;
-            document.getElementById('sessionCost').textContent = sessionCost.toFixed(2);
-            document.getElementById('apiCalls').textContent = apiCalls;
-            document.getElementById('todayCost').textContent = '$' + sessionCost.toFixed(2);
-            document.getElementById('requestCount').textContent = apiCalls;
+        // Load available services
+        async function loadAvailableServices() {
+            try {
+                const response = await fetch('http://localhost:3001/api/services');
+                const data = await response.json();
+                
+                console.log('Available services:', data);
+                availableServices = data.services || [];
+                displayServices();
+            } catch (error) {
+                console.error('Failed to load services:', error);
+                displayServices([]);
+            }
         }
 
-        function showLoading(message = 'Orchestrating AIs...') {
-            const content = document.getElementById('responseContent');
-            content.innerHTML = `
-                <div style="text-align: center; padding: 40px;">
-                    <div class="loading"></div>
-                    <div style="margin-top: 20px;">${message}</div>
+        // Display services grid
+        function displayServices() {
+            const servicesGrid = document.getElementById('servicesGrid');
+            
+            const defaultServices = [
+                { name: 'openai', icon: '🤖', model: 'gpt-4o-mini', cost: 0.0005, status: 'unknown' },
+                { name: 'claude', icon: '🧠', model: 'claude-3-haiku', cost: 0.0011, status: 'unknown' },
+                { name: 'perplexity', icon: '🔍', model: 'llama-3.1-sonar', cost: 0.02, status: 'unknown' },
+                { name: 'grok', icon: '⚡', model: 'grok-beta', cost: 0.03, status: 'unknown' },
+                { name: 'gemini', icon: '💎', model: 'gemini-pro', cost: 0.01, status: 'unknown' }
+            ];
+
+            const services = availableServices.length > 0 ? availableServices : defaultServices;
+            
+            servicesGrid.innerHTML = services.map(service => {
+                const statusClass = serverHealthy ? 'online' : 'offline';
+                const statusIcon = serverHealthy ? '✅' : '❌';
+                
+                return `
+                    <div class="service-card ${statusClass}">
+                        <div class="service-icon">${service.icon || '🎭'}</div>
+                        <div class="service-name">${service.name.toUpperCase()}</div>
+                        <div class="service-model">${service.model || 'Unknown Model'}</div>
+                        <div class="service-cost">~$${(service.cost || 0).toFixed(4)} per request</div>
+                        <div class="service-status">${statusIcon} ${statusClass}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update server status display
+        function updateServerStatus(message, status) {
+            const statusElement = document.getElementById('serverStatus');
+            if (statusElement) {
+                statusElement.textContent = message;
+                statusElement.className = `server-status ${status}`;
+            }
+        }
+
+        // Main orchestration function - FIXED FOR MASTER VOID KEY
+        async function orchestrateAll() {
+            console.log('🎭 Starting HexMind Orchestra...');
+            
+            const task = document.getElementById('taskInput').value.trim();
+            if (!task) {
+                alert('Please enter a task description');
+                return;
+            }
+
+            const maxCost = parseFloat(document.getElementById('maxCost').value) || 2.0;
+
+            // Update UI to show loading
+            const orchestrateBtn = document.getElementById('orchestrateBtn');
+            const originalText = orchestrateBtn.textContent;
+            orchestrateBtn.disabled = true;
+            orchestrateBtn.textContent = '🎭 Orchestrating Dread Gods...';
+            
+            // Clear previous results
+            const resultsDiv = document.getElementById('orchestrationResults');
+            resultsDiv.innerHTML = '<div class="loading">🎭 Coordinating AI Dread Gods...</div>';
+
+            try {
+                console.log('📡 Sending orchestration request to Master Void Key...');
+                
+                // Updated API call to match enhanced backend
+                const response = await fetch('http://localhost:3001/api/orchestrate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        task: task,
+                        services: ['openai', 'claude', 'perplexity', 'grok', 'gemini'],
+                        maxCost: maxCost,
+                        parallel: false
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('✅ Orchestration complete:', data);
+
+                // Display results with enhanced formatting
+                displayOrchestrationResults(data);
+
+            } catch (error) {
+                console.error('❌ Orchestration failed:', error);
+                
+                resultsDiv.innerHTML = `
+                    <div class="error-container">
+                        <h3>❌ Master Void Key Orchestration Failed</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <div class="troubleshooting">
+                            <h4>🔧 Troubleshooting Steps:</h4>
+                            <ul>
+                                <li>✅ Server health: ${serverHealthy ? 'Good' : 'Check server'}</li>
+                                <li>🔍 Make sure HexMind server is running: <code>node secure-hexmind-server.js</code></li>
+                                <li>🔑 Verify API keys are configured in .env file</li>
+                                <li>🌐 Check browser console for detailed errors</li>
+                                <li>💰 Ensure sufficient budget for orchestration</li>
+                                <li>⚡ Try individual AI test first</li>
+                            </ul>
+                            <button onclick="checkServerHealth()" class="retry-btn">🔄 Retry Health Check</button>
+                            <button onclick="testIndividualAPI()" class="retry-btn">🧪 Test Individual API</button>
+                        </div>
+                    </div>
+                `;
+            } finally {
+                // Reset button
+                orchestrateBtn.disabled = false;
+                orchestrateBtn.textContent = originalText;
+            }
+        }
+
+        // Enhanced results display function
+        function displayOrchestrationResults(data) {
+            const resultsDiv = document.getElementById('orchestrationResults');
+            
+            let html = `
+                <div class="orchestration-success">
+                    <h3>🎭 HexMind Orchestra Results</h3>
+                    <div class="metrics">
+                        <span class="metric">💰 Total Cost: $${data.totalCost?.toFixed(4) || '0.0000'}</span>
+                        <span class="metric">📊 Daily Cost: $${data.dailyCost?.toFixed(4) || '0.0000'}</span>
+                        <span class="metric">⏱️ Generated: ${new Date(data.timestamp).toLocaleTimeString()}</span>
+                        <span class="metric">🎯 Task: "${data.task?.substring(0, 50) || 'Unknown'}..."</span>
+                    </div>
                 </div>
             `;
-        }
 
-        async function orchestrateAll() {
-            const task = document.getElementById('taskInput').value.trim();
-            if (!task) {
-                alert('Please enter a task description first!');
-                return;
-            }
+            if (data.results) {
+                const serviceIcons = {
+                    'openai': '🤖',
+                    'claude': '🧠', 
+                    'perplexity': '🔍',
+                    'grok': '⚡',
+                    'gemini': '💎'
+                };
 
-            showLoading('🎭 Orchestrating all AIs via secure server...');
-            currentResponses = {};
+                Object.entries(data.results).forEach(([service, result]) => {
+                    const status = result.error ? '❌' : '✅';
+                    const serviceIcon = serviceIcons[service] || '🎭';
 
-            try {
-                const maxCost = parseFloat(document.getElementById('maxCost').value) || 1.00;
-                const useSubscriptions = document.getElementById('useSubscriptions').checked;
-                
-                showNotification('🔒 Calling secure server...', 'success');
-                
-                const response = await callSecureAPI('orchestrate', {
-                    task: task,
-                    services: ['openai', 'claude', 'perplexity'],
-                    maxCost: maxCost,
-                    options: {
-                        prioritizeSubscriptions: useSubscriptions
-                    }
-                });
-
-                if (response.success) {
-                    // Process real API responses
-                    const orchestration = response.orchestration;
-                    currentResponses = {};
-                    
-                    Object.entries(orchestration.results).forEach(([service, result]) => {
-                        if (result.error) {
-                            currentResponses[service] = `${service.toUpperCase()} (Error): ${result.error}`;
-                        } else {
-                            currentResponses[service] = `${service.toUpperCase()} (LIVE API): ${result.content}`;
-                            
-                            // Update service card to show it's live
-                            const serviceCard = document.querySelector(`[data-ai="${service}"]`);
-                            if (serviceCard) {
-                                const statusElement = serviceCard.querySelector('.ai-status');
-                                statusElement.textContent = 'LIVE API';
-                                statusElement.className = 'ai-status status-active';
-                                
-                                const costElement = serviceCard.querySelector(`#${service}-cost`);
-                                if (costElement && result.cost) {
-                                    costElement.textContent = `${result.cost.toFixed(4)}`;
+                    html += `
+                        <div class="ai-response ${result.error ? 'error' : 'success'}">
+                            <h4>${status} ${serviceIcon} ${service.toUpperCase()} ${result.error ? 'FAILED' : 'SUCCESS'}</h4>
+                            <div class="response-meta">
+                                <span>💰 Cost: $${result.cost?.toFixed(4) || '0.0000'}</span>
+                                <span>🎯 Tokens: ${result.tokens || 'N/A'}</span>
+                                <span>⚡ Status: ${result.error ? 'Error' : 'Complete'}</span>
+                            </div>
+                            <div class="response-content">
+                                ${result.error ? 
+                                    `<p class="error-text">🚨 ${result.response}</p>` :
+                                    `<p>${result.response}</p>`
                                 }
-                            }
-                        }
-                    });
-
-                    // Add synthesis
-                    const liveServices = Object.keys(orchestration.results).filter(
-                        service => !orchestration.results[service].error
-                    );
-                    
-                    currentResponses.synthesis = `🎭 SECURE ORCHESTRATION COMPLETE!\n\n✅ Live APIs used: ${liveServices.join(', ')}\n✅ Total cost: ${orchestration.totalCost.toFixed(4)}\n✅ Task processed securely\n✅ API keys protected\n\n🎯 All responses generated through your secure server - no API keys exposed!`;
-
-                    updateCosts(orchestration.totalCost);
-                    displayCurrentTab();
-                    
-                    showNotification(`🎉 Secure orchestration complete! Cost: ${orchestration.totalCost.toFixed(4)}`, 'success');
-                } else {
-                    throw new Error(response.error || 'Unknown orchestration error');
-                }
-                
-            } catch (error) {
-                currentResponses = {
-                    error: `🚨 Secure Server Error: ${error.message}\n\nThis means:\n• Your secure server might not be running\n• API keys might not be configured\n• Network connection issue\n\nCheck that your server is running at http://localhost:3001`
-                };
-                displayCurrentTab();
-                showNotification('❌ Secure server error: ' + error.message, 'error');
-                console.error('Orchestration Error:', error);
+                            </div>
+                        </div>
+                    `;
+                });
             }
+
+            resultsDiv.innerHTML = html;
         }
 
-        async function routeTask() {
-            const task = document.getElementById('taskInput').value.trim();
-            if (!task) {
-                alert('Please enter a task description first!');
-                return;
-            }
-
-            showLoading('🎯 Finding the best AI via secure server...');
-            
+        // Test individual API function
+        async function testIndividualAPI() {
             try {
-                showNotification('🔒 Consulting secure server...', 'success');
-                
-                const response = await callSecureAPI('route', {
-                    task: task,
-                    complexity: 'auto-detect',
-                    type: 'auto-detect'
+                const response = await fetch('http://localhost:3001/api/consult', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        service: 'openai',
+                        message: 'Test message for individual API',
+                        maxTokens: 100
+                    })
                 });
 
-                currentResponses = { 
-                    route: `🎯 SECURE ROUTING RECOMMENDATION:\n\n${response.recommendation.service.toUpperCase()} is recommended\n\nReasoning: ${response.recommendation.reasoning}\nEstimated Cost: ${response.recommendation.estimatedCost}\nComplexity: ${response.recommendation.complexity}\n\n🔒 Recommendation generated securely without exposing API keys!`
-                };
-                displayCurrentTab();
-                updateCosts(0.01);
-                
-                showNotification(`🎯 Task routed to ${response.recommendation.service}`, 'success');
-            } catch (error) {
-                currentResponses = {
-                    route: `🚨 Secure Routing Error: ${error.message}\n\nCheck that your secure server is running at http://localhost:3001`
-                };
-                displayCurrentTab();
-                showNotification('❌ Routing failed: ' + error.message, 'error');
-            }
-        }
-
-        async function quickConsult() {
-            const task = document.getElementById('taskInput').value.trim() || 'System status check';
-            
-            showLoading('⚡ Quick consulting via secure server...');
-            
-            try {
-                showNotification('🔒 Calling secure server...', 'success');
-                
-                const response = await callSecureAPI('consult', {
-                    task: task,
-                    service: 'openai',
-                    options: {
-                        maxTokens: 500,
-                        temperature: 0.7
-                    }
-                });
-
-                if (response.success) {
-                    currentResponses = { 
-                        openai: `OpenAI Quick Consult (SECURE): ${response.result.content}\n\nCost: ${response.result.cost.toFixed(4)}\nModel: ${response.result.model}\n\n🔒 Generated securely through your protected server!`
-                    };
-                    updateCosts(response.result.cost);
-                    
-                    // Update OpenAI card
-                    const openaiCard = document.querySelector('[data-ai="openai"]');
-                    if (openaiCard) {
-                        openaiCard.querySelector('.ai-status').textContent = 'LIVE API';
-                        openaiCard.querySelector('.ai-status').className = 'ai-status status-active';
-                    }
-                    
-                    showNotification('⚡ Secure AI consult complete!', 'success');
-                } else {
-                    throw new Error(response.error || 'Consult failed');
-                }
-                
-                displayCurrentTab();
-                
-            } catch (error) {
-                currentResponses = { 
-                    openai: `🚨 Secure Consult Error: ${error.message}\n\nPossible issues:\n• Secure server not running\n• OpenAI API key not configured\n• Network connection problem\n\nCheck your server at http://localhost:3001`
-                };
-                displayCurrentTab();
-                updateCosts(0.01);
-                
-                showNotification('❌ Secure consult failed: ' + error.message, 'error');
-            }
-        }
-
-        function quickTask(taskDescription) {
-            document.getElementById('taskInput').value = taskDescription;
-            orchestrateAll();
-        }
-
-        function clearAll() {
-            currentResponses = {};
-            document.getElementById('responseContent').textContent = 'Results cleared. Ready for new task!';
-            document.getElementById('taskInput').value = '';
-        }
-
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 25px;
-                border-radius: 10px;
-                color: white;
-                font-weight: bold;
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-                background: ${type === 'success' ? '#4ecdc4' : '#e74c3c'};
-            `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => notification.remove(), 300);
-            }, 3000);
-        }
-
-        // API Configuration - ADD YOUR REAL API KEYS HERE!
-        const API_KEYS = {
-            openai: 'sk-proj-YOUR_OPENAI_KEY_HERE', // Replace with your actual OpenAI key
-            claude: 'sk-ant-YOUR_CLAUDE_KEY_HERE',  // Replace with your actual Claude key
-            perplexity: 'pplx-YOUR_PERPLEXITY_KEY_HERE', // Replace with your actual Perplexity key
-            gemini: 'YOUR_GEMINI_KEY_HERE' // Replace with your actual Gemini key
-        };
-
-        // REAL API FUNCTIONS
-        async function callRealOpenAI(task) {
-            if (!API_KEYS.openai.startsWith('sk-proj-') || API_KEYS.openai.includes('YOUR_')) {
-                throw new Error('Please add your real OpenAI API key to API_KEYS.openai');
-            }
-
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${API_KEYS.openai}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    model: 'gpt-4',
-                    messages: [{ 
-                        role: 'user', 
-                        content: `Task: ${task}\n\nProvide a comprehensive response with actionable insights.` 
-                    }],
-                    max_tokens: 800,
-                    temperature: 0.7
-                })
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(`OpenAI API Error: ${error.error?.message || 'Unknown error'}`);
-            }
-
-            const data = await response.json();
-            return {
-                content: data.choices[0].message.content,
-                cost: (data.usage.total_tokens / 1000) * 0.03 // Approximate cost
-            };
-        }
-
-        async function callRealClaude(task) {
-            if (!API_KEYS.claude.startsWith('sk-ant-') || API_KEYS.claude.includes('YOUR_')) {
-                throw new Error('Please add your real Claude API key to API_KEYS.claude');
-            }
-
-            const response = await fetch('https://api.anthropic.com/v1/messages', {
-                method: 'POST',
-                headers: {
-                    'x-api-key': API_KEYS.claude,
-                    'Content-Type': 'application/json',
-                    'anthropic-version': '2023-06-01'
-                },
-                body: JSON.stringify({
-                    model: 'claude-3-sonnet-20240229',
-                    max_tokens: 1000,
-                    messages: [{ 
-                        role: 'user', 
-                        content: `Task: ${task}\n\nProvide a detailed analysis with structured recommendations.` 
-                    }]
-                })
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(`Claude API Error: ${error.error?.message || 'Unknown error'}`);
-            }
-
-            const data = await response.json();
-            return {
-                content: data.content[0].text,
-                cost: (data.usage.output_tokens / 1000) * 0.015 // Approximate cost
-            };
-        }
-
-        // HYBRID ORCHESTRATION - Real APIs + Simulations
-        async function simulateOrchestration(task) {
-            const responses = {};
-            let totalCost = 0;
-
-            // Try real OpenAI first
-            try {
-                showNotification('🤖 Calling real ChatGPT...', 'success');
-                const openaiResult = await callRealOpenAI(task);
-                responses.openai = `ChatGPT (REAL API): ${openaiResult.content}`;
-                totalCost += openaiResult.cost;
-                
-                // Update the OpenAI card to show it's live
-                document.querySelector('[data-ai="openai"] .ai-status').textContent = 'LIVE API';
-                document.querySelector('[data-ai="openai"] .ai-status').className = 'ai-status status-active';
-                
-            } catch (error) {
-                responses.openai = `ChatGPT (API Error): ${error.message}\n\nFallback simulation: Here's my approach to "${task}":\n\n// Example implementation\nfunction createSolution() {\n  const architecture = {\n    frontend: 'React/Vue',\n    styling: 'Tailwind CSS',\n    state: 'Context API'\n  };\n  return architecture;\n}\n\nFocus on modular, scalable code.`;
-                console.error('OpenAI API Error:', error);
-            }
-
-            // Try real Claude if key is available
-            try {
-                if (API_KEYS.claude && !API_KEYS.claude.includes('YOUR_')) {
-                    showNotification('🧠 Calling real Claude...', 'success');
-                    const claudeResult = await callRealClaude(task);
-                    responses.claude = `Claude (REAL API): ${claudeResult.content}`;
-                    totalCost += claudeResult.cost;
-                    
-                    document.querySelector('[data-ai="claude"] .ai-status').textContent = 'LIVE API';
-                    document.querySelector('[data-ai="claude"] .ai-status').className = 'ai-status status-active';
-                } else {
-                    throw new Error('Claude API key not configured');
-                }
-            } catch (error) {
-                responses.claude = `Claude (API Error): ${error.message}\n\nFallback simulation: Analyzed "${task}". I recommend breaking this into these components:\n1. Frontend architecture\n2. Backend API design\n3. Database structure\n4. User experience flow\n\nThis task requires moderate complexity with emphasis on user-centered design.`;
-                console.error('Claude API Error:', error);
-            }
-
-            // Simulate other AIs for now
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            responses.perplexity = `Perplexity (Simulation): Research shows current best practices for "${task}" include:\n• Mobile-first responsive design (82% of users)\n• Performance optimization (Core Web Vitals)\n• Accessibility compliance (WCAG 2.1)\n• Modern framework adoption trends\n\nSources: Latest industry reports and developer surveys.`;
-            
-            responses.gemini = `Gemini (Simulation): Speed-optimized solution for "${task}":\n\nKey performance metrics:\n- Load time: <2s\n- Lighthouse score: 95+\n- Bundle size: <100KB\n- API response: <200ms\n\nRecommended tech stack balances performance with maintainability.`;
-            
-            responses.grok = `Grok (Simulation): Real-talk on "${task}" - here's what actually works in 2025:\n\n🔥 Hot takes:\n- Skip the complexity, focus on user value\n- Use what you know, perfect what you build\n- Performance > Features every time\n- Test with real users, not just developers\n\nNo BS, just results.`;
-            
-            responses.synthesis = `🎭 SYNTHESIS: Combining real AI responses with simulated insights:\n\n✅ User-centered design approach\n✅ Performance-first architecture\n✅ Modern, maintainable tech stack\n✅ Accessibility and mobile focus\n\n🎯 Real APIs provided actual implementation details while simulations added strategic context.`;
-
-            return {
-                responses: responses,
-                cost: Math.max(totalCost, 0.05) // Minimum cost for simulation fallbacks
-            };
-        }
-
-        async function simulateRouting(task) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            const complexity = task.length > 100 ? 'high' : task.length > 50 ? 'moderate' : 'low';
-            const isCode = task.toLowerCase().includes('code') || task.toLowerCase().includes('programming');
-            const isResearch = task.toLowerCase().includes('research') || task.toLowerCase().includes('analyze');
-            
-            let bestAI = 'claude';
-            if (isCode) bestAI = 'openai';
-            if (isResearch) bestAI = 'perplexity';
-            if (complexity === 'low') bestAI = 'gemini';
-            
-            return {
-                recommendation: `Task: "${task}"\nComplexity: ${complexity}\nType: ${isCode ? 'Code Generation' : isResearch ? 'Research' : 'General'}\n\nRecommended AI: ${bestAI.toUpperCase()}\n\nReasoning: ${bestAI === 'claude' ? 'Complex reasoning required' : bestAI === 'openai' ? 'Code generation task' : bestAI === 'perplexity' ? 'Research and analysis needed' : 'Simple task, speed optimized'}`,
-                bestAI: bestAI
-            };
-        }
-
-        async function simulateQuickConsult(task) {
-            await new Promise(resolve => setTimeout(resolve, 800));
-            
-            return {
-                response: `Quick consultation complete for: "${task}"\n\n✅ System Status: All AIs operational\n✅ Task Assessment: Feasible with current resources\n✅ Estimated Cost: $0.15 - $0.50\n✅ Recommended Approach: Multi-AI orchestration\n\nReady to proceed when you are!`,
-                cost: 0.05
-            };
-        }
-
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', function() {
-            showNotification('🎭 HexMind Orchestra initialized! Connecting to secure server...', 'success');
-            
-            // Test server connection
-            testServerConnection();
-            
-            // Simulate real-time status updates
-            setInterval(() => {
-                const successRate = Math.max(85, 100 - (apiCalls * 2));
-                document.getElementById('successRate').textContent = successRate + '%';
-            }, 5000);
-        });
-
-        // Test server connection on startup
-        async function testServerConnection() {
-            try {
-                const response = await fetch(`${HEXMIND_API}/health`);
                 if (response.ok) {
                     const data = await response.json();
-                    showNotification('✅ Secure server connected!', 'success');
-                    console.log('Server health:', data);
-                    
-                    // Check available services
-                    const servicesResponse = await fetch(`${HEXMIND_API}/services`);
-                    if (servicesResponse.ok) {
-                        const servicesData = await servicesResponse.json();
-                        console.log('Available services:', servicesData);
-                        
-                        // Update service cards based on actual availability
-                        Object.entries(servicesData.services).forEach(([service, available]) => {
-                            const serviceCard = document.querySelector(`[data-ai="${service}"]`);
-                            if (serviceCard) {
-                                const statusElement = serviceCard.querySelector('.ai-status');
-                                if (available) {
-                                    statusElement.textContent = 'READY';
-                                    statusElement.className = 'ai-status status-active';
-                                } else {
-                                    statusElement.textContent = 'NO KEY';
-                                    statusElement.className = 'ai-status status-offline';
-                                }
-                            }
-                        });
-                        
-                        document.getElementById('activeCount').textContent = servicesData.available;
-                    }
+                    alert('✅ Individual API test successful!\nResponse: ' + data.response.substring(0, 100) + '...');
                 } else {
-                    throw new Error(`Server responded with ${response.status}`);
+                    throw new Error(`HTTP ${response.status}`);
                 }
             } catch (error) {
-                showNotification('❌ Secure server not connected. Start server at localhost:3001', 'error');
-                console.error('Server connection failed:', error);
-                
-                // Show helpful error message
-                document.getElementById('responseContent').textContent = `🚨 SECURE SERVER NOT CONNECTED
-
-Your HexMind secure server is not running!
-
-To start your server:
-1. Open PowerShell in your server directory
-2. Run: node secure-hexmind-server.js
-3. Look for "Ready to orchestrate securely!" message
-4. Refresh this page
-
-Server should be at: http://localhost:3001
-
-Current error: ${error.message}`;
+                alert('❌ Individual API test failed: ' + error.message);
             }
         }
 
-        // Add some CSS animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
+        // Auto-check server health every 30 seconds
+        setInterval(checkServerHealth, 30000);
+
+        console.log('🎭 HexMind Orchestra frontend loaded successfully!');
+        console.log('🔑 Master Void Key integration active');
     </script>
 </body>
 </html>
