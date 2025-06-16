@@ -757,7 +757,566 @@ function displayOrchestrationResults(data, successRate) {
 
     resultsDiv.innerHTML = html;
 }
+// 🎭 Meta-Prompt Generator - Add to your fix-this-car.com HTML
+// Insert this after the displayOrchestrationResults function
 
+// Global variable to store last orchestration results
+let lastOrchestrationResults = null;
+
+// Enhanced results display with Meta-Prompt generation
+function displayOrchestrationResults(data, successRate) {
+    // Store results globally for meta-prompt generation
+    lastOrchestrationResults = data;
+    
+    const resultsDiv = document.getElementById('orchestrationResults');
+    
+    // Calculate metrics
+    const totalAIs = Object.keys(data.results).length;
+    const successfulAIs = Object.values(data.results).filter(r => !r.error).length;
+    const failedAIs = totalAIs - successfulAIs;
+    
+    // Determine success level and message
+    let statusClass = 'orchestration-success';
+    let statusIcon = '🎭';
+    let statusMessage = 'HexMind Orchestra Results';
+    
+    if (successRate === 100) {
+        statusIcon = '🏆';
+        statusMessage = 'Perfect Orchestration - All AIs Responded!';
+    } else if (successRate >= 60) {
+        statusIcon = '✅';
+        statusMessage = 'VICTORY! Majority AIs Responded - 3/5 Perfect Win!';
+    } else if (successRate >= 20) {
+        statusIcon = '⚠️';
+        statusMessage = 'Partial Orchestration - Some AIs Responded';
+        statusClass = 'orchestration-partial';
+    } else {
+        statusIcon = '❌';
+        statusMessage = 'Limited Orchestration - Few AIs Responded';
+        statusClass = 'orchestration-limited';
+    }
+    
+    let html = `
+        <div class="${statusClass}">
+            <h3>${statusIcon} ${statusMessage}</h3>
+            <div class="metrics">
+                <span class="metric">🎯 Success Rate: ${successRate.toFixed(0)}% (${successfulAIs}/${totalAIs})</span>
+                <span class="metric">💰 Total Cost: $${data.totalCost?.toFixed(4) || '0.0000'}</span>
+                <span class="metric">📊 Daily Cost: $${data.dailyCost?.toFixed(4) || '0.0000'}</span>
+                <span class="metric">⏱️ Generated: ${new Date(data.timestamp).toLocaleTimeString()}</span>
+            </div>
+        </div>
+    `;
+
+    // ENHANCED: Add Meta-Prompt Generator section
+    if (successfulAIs > 0) {
+        html += `
+            <div class="meta-prompt-section">
+                <h3>🔬 Prompt-Optimization-Optimizer-inator</h3>
+                <p>Transform your orchestration results into a super-prompt for any commercial AI!</p>
+                <div class="meta-prompt-controls">
+                    <button onclick="generateMetaPrompt('detailed')" class="meta-btn detailed">
+                        📋 Generate Detailed Meta-Prompt
+                    </button>
+                    <button onclick="generateMetaPrompt('executive')" class="meta-btn executive">
+                        🎯 Generate Executive Summary
+                    </button>
+                    <button onclick="generateMetaPrompt('implementation')" class="meta-btn implementation">
+                        🚀 Generate Implementation Plan
+                    </button>
+                    <button onclick="generateMetaPrompt('creative')" class="meta-btn creative">
+                        ⚡ Generate Creative Brief
+                    </button>
+                </div>
+                <div id="metaPromptOutput" class="meta-prompt-output"></div>
+            </div>
+        `;
+    }
+
+    // Add action buttons
+    html += `
+        <div class="action-buttons">
+            <button onclick="expandAllResponses()" class="action-btn">📖 Expand All</button>
+            <button onclick="collapseAllResponses()" class="action-btn">📄 Collapse All</button>
+            <button onclick="copyAllResponses()" class="action-btn">📋 Copy All</button>
+            <button onclick="downloadResponses()" class="action-btn">💾 Download</button>
+        </div>
+    `;
+
+    // Show victory notice for successful orchestration
+    if (successRate >= 60 && failedAIs > 0) {
+        html += `
+            <div class="victory-notice">
+                <h4>🏆 VICTORY ACHIEVED!</h4>
+                <p>✅ <strong>${successfulAIs}/5 AIs responded successfully</strong> - This is a perfect win!</p>
+                <p>💡 ${successfulAIs} Dread Gods under your control is more than enough for strategic dominance.</p>
+                <p>⚡ Use the Meta-Prompt Generator to create super-prompts for Claude, ChatGPT, Gemini, or Perplexity!</p>
+            </div>
+        `;
+    }
+
+    // Display individual AI responses (existing code continues...)
+    if (data.results) {
+        const serviceIcons = {
+            'openai': '🤖',
+            'claude': '🧠', 
+            'perplexity': '🔍',
+            'grok': '⚡',
+            'gemini': '💎'
+        };
+
+        const sortedResults = Object.entries(data.results).sort(([,a], [,b]) => {
+            if (a.error && !b.error) return 1;
+            if (!a.error && b.error) return -1;
+            return 0;
+        });
+
+        sortedResults.forEach(([service, result], index) => {
+            const status = result.error ? '❌' : '✅';
+            const serviceIcon = serviceIcons[service] || '🎭';
+            const responseId = `response-${service}-${index}`;
+            
+            const fullResponse = result.response || '';
+            const truncatedResponse = fullResponse.length > 300 ? 
+                fullResponse.substring(0, 300) + '...' : fullResponse;
+            const needsExpansion = fullResponse.length > 300;
+
+            html += `
+                <div class="ai-response ${result.error ? 'error' : 'success'}" data-service="${service}">
+                    <div class="response-header" ${needsExpansion ? `onclick="toggleResponse('${responseId}')"` : ''}>
+                        <h4>${status} ${serviceIcon} ${service.toUpperCase()} ${result.error ? 'UNAVAILABLE' : 'SUCCESS'}</h4>
+                        ${needsExpansion ? '<span class="expand-indicator">▼ Click to expand</span>' : ''}
+                    </div>
+                    <div class="response-meta">
+                        <span>💰 Cost: $${result.cost?.toFixed(4) || '0.0000'}</span>
+                        <span>🎯 Tokens: ${result.tokens || 'N/A'}</span>
+                        <span>📏 Length: ${fullResponse.length} chars</span>
+                        <span>⚡ Status: ${result.error ? 'Temporarily Offline' : 'Operational'}</span>
+                    </div>
+                    <div class="response-content" id="${responseId}">
+                        ${result.error ? 
+                            `<p class="error-text">🔧 ${result.response}</p>
+                             <p><em>This AI will be available once API configuration is optimized.</em></p>` :
+                            `<div class="response-text ${needsExpansion ? 'truncated' : 'full'}">
+                                <div class="truncated-content">${truncatedResponse}</div>
+                                ${needsExpansion ? `<div class="full-content" style="display: none;">${fullResponse}</div>` : ''}
+                             </div>`
+                        }
+                    </div>
+                    <div class="response-actions">
+                        <button onclick="copyResponse('${responseId}')" class="mini-btn">📋 Copy</button>
+                        ${!result.error && needsExpansion ? `<button onclick="toggleResponse('${responseId}')" class="mini-btn expand-btn">📖 Expand</button>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    resultsDiv.innerHTML = html;
+}
+
+// META-PROMPT GENERATOR FUNCTION
+function generateMetaPrompt(type = 'detailed') {
+    if (!lastOrchestrationResults) {
+        alert('❌ No orchestration results available. Run an orchestration first!');
+        return;
+    }
+
+    const outputDiv = document.getElementById('metaPromptOutput');
+    outputDiv.innerHTML = '<div class="loading">🔬 Generating Meta-Prompt...</div>';
+
+    // Get successful responses
+    const successfulResponses = Object.entries(lastOrchestrationResults.results)
+        .filter(([_, result]) => !result.error);
+
+    if (successfulResponses.length === 0) {
+        outputDiv.innerHTML = '<div class="error-text">❌ No successful responses to generate meta-prompt from.</div>';
+        return;
+    }
+
+    // Generate meta-prompt based on type
+    let metaPrompt = '';
+    const timestamp = new Date().toLocaleString();
+    const originalTask = document.getElementById('taskInput').value.trim();
+
+    switch (type) {
+        case 'detailed':
+            metaPrompt = generateDetailedMetaPrompt(successfulResponses, originalTask, timestamp);
+            break;
+        case 'executive':
+            metaPrompt = generateExecutiveMetaPrompt(successfulResponses, originalTask, timestamp);
+            break;
+        case 'implementation':
+            metaPrompt = generateImplementationMetaPrompt(successfulResponses, originalTask, timestamp);
+            break;
+        case 'creative':
+            metaPrompt = generateCreativeMetaPrompt(successfulResponses, originalTask, timestamp);
+            break;
+    }
+
+    // Display the meta-prompt
+    outputDiv.innerHTML = `
+        <div class="meta-prompt-result">
+            <div class="meta-prompt-header">
+                <h4>🔬 ${type.toUpperCase()} Meta-Prompt Generated!</h4>
+                <p>Ready to paste into Claude Projects, ChatGPT, Gemini Pro, or Perplexity Pro</p>
+            </div>
+            <div class="meta-prompt-content">
+                <textarea id="generatedMetaPrompt" readonly>${metaPrompt}</textarea>
+            </div>
+            <div class="meta-prompt-actions">
+                <button onclick="copyMetaPrompt()" class="meta-action-btn">📋 Copy Meta-Prompt</button>
+                <button onclick="downloadMetaPrompt('${type}')" class="meta-action-btn">💾 Download</button>
+                <button onclick="openInClaude()" class="meta-action-btn">🧠 Open in Claude</button>
+                <button onclick="openInChatGPT()" class="meta-action-btn">🤖 Open in ChatGPT</button>
+            </div>
+        </div>
+    `;
+}
+
+// DETAILED META-PROMPT GENERATOR
+function generateDetailedMetaPrompt(responses, originalTask, timestamp) {
+    let prompt = `# 🎭 HexMind Orchestra Meta-Prompt\n`;
+    prompt += `*Generated: ${timestamp} | Source: Master Void Key Orchestration*\n\n`;
+    
+    prompt += `## 🎯 EXECUTIVE BRIEF\n`;
+    prompt += `You are receiving a comprehensive analysis generated by ${responses.length} AI systems working in concert. `;
+    prompt += `Your task is to synthesize these perspectives and create actionable implementation plans.\n\n`;
+    
+    prompt += `## 📋 ORIGINAL CHALLENGE\n`;
+    prompt += `"${originalTask}"\n\n`;
+    
+    prompt += `## 🧠 MULTI-AI STRATEGIC ANALYSIS\n`;
+    prompt += `*The following insights represent the collective intelligence of multiple AI systems:*\n\n`;
+    
+    responses.forEach(([service, result], index) => {
+        const serviceName = service.toUpperCase();
+        const serviceEmoji = {
+            'openai': '🤖',
+            'claude': '🧠',
+            'perplexity': '🔍',
+            'grok': '⚡',
+            'gemini': '💎'
+        }[service] || '🎭';
+        
+        prompt += `### ${serviceEmoji} ${serviceName} Analysis\n`;
+        prompt += `${result.response}\n\n`;
+        prompt += `---\n\n`;
+    });
+    
+    prompt += `## 🚀 IMPLEMENTATION REQUEST\n`;
+    prompt += `Based on the comprehensive multi-AI analysis above, please provide:\n\n`;
+    prompt += `1. **SYNTHESIS & STRATEGY**\n`;
+    prompt += `   - Key insights from the combined analysis\n`;
+    prompt += `   - Strategic recommendations prioritized by impact\n`;
+    prompt += `   - Potential conflicts or contradictions to resolve\n\n`;
+    
+    prompt += `2. **IMMEDIATE ACTION PLAN (Next 2 weeks)**\n`;
+    prompt += `   - Specific tasks with deadlines\n`;
+    prompt += `   - Required resources and team members\n`;
+    prompt += `   - Success metrics for each action\n\n`;
+    
+    prompt += `3. **IMPLEMENTATION ROADMAP (3-6 months)**\n`;
+    prompt += `   - Phase-by-phase execution plan\n`;
+    prompt += `   - Dependencies and critical path items\n`;
+    prompt += `   - Budget and resource allocation\n\n`;
+    
+    prompt += `4. **RISK ASSESSMENT & MITIGATION**\n`;
+    prompt += `   - Potential challenges and obstacles\n`;
+    prompt += `   - Contingency plans and alternatives\n`;
+    prompt += `   - Early warning indicators\n\n`;
+    
+    prompt += `## 📊 DELIVERABLE FORMAT\n`;
+    prompt += `Structure your response as:\n`;
+    prompt += `- **Executive Summary** (3-4 key takeaways)\n`;
+    prompt += `- **Priority Matrix** (High/Medium/Low impact actions)\n`;
+    prompt += `- **Timeline** (Gantt-style with milestones)\n`;
+    prompt += `- **Resource Plan** (Team, tools, budget requirements)\n`;
+    prompt += `- **Success Metrics** (KPIs and measurement methods)\n\n`;
+    
+    prompt += `## 🎯 SUCCESS CRITERIA\n`;
+    prompt += `Your implementation plan should be:\n`;
+    prompt += `- Immediately actionable with clear next steps\n`;
+    prompt += `- Based on the collective wisdom of multiple AI perspectives\n`;
+    prompt += `- Realistic about timelines and resource constraints\n`;
+    prompt += `- Measurable with specific outcomes and ROI projections\n\n`;
+    
+    prompt += `*This meta-prompt synthesizes ${responses.length} AI perspectives and is optimized for execution by any commercial AI platform.*`;
+    
+    return prompt;
+}
+
+// EXECUTIVE META-PROMPT GENERATOR
+function generateExecutiveMetaPrompt(responses, originalTask, timestamp) {
+    let prompt = `# 📊 Executive Strategy Brief\n`;
+    prompt += `*Multi-AI Analysis | Generated: ${timestamp}*\n\n`;
+    
+    prompt += `## Challenge\n"${originalTask}"\n\n`;
+    
+    prompt += `## Key Insights\n`;
+    responses.forEach(([service, result], index) => {
+        const firstSentence = result.response.split('.')[0] + '.';
+        prompt += `• **${service.toUpperCase()}**: ${firstSentence}\n`;
+    });
+    
+    prompt += `\n## Full Analysis\n`;
+    responses.forEach(([service, result]) => {
+        prompt += `**${service.toUpperCase()}**: ${result.response}\n\n`;
+    });
+    
+    prompt += `## Request\nProvide executive-level strategic recommendations with:\n`;
+    prompt += `1. Top 3 priority actions\n2. Resource requirements\n3. Timeline & milestones\n4. Success metrics\n5. Risk mitigation\n\n`;
+    prompt += `Format: Executive summary suitable for C-level presentation.`;
+    
+    return prompt;
+}
+
+// IMPLEMENTATION META-PROMPT GENERATOR
+function generateImplementationMetaPrompt(responses, originalTask, timestamp) {
+    let prompt = `# 🚀 Implementation Playbook\n`;
+    prompt += `*Tactical Execution Plan | Generated: ${timestamp}*\n\n`;
+    
+    prompt += `## Mission\n"${originalTask}"\n\n`;
+    
+    prompt += `## Strategic Intelligence\n`;
+    responses.forEach(([service, result]) => {
+        prompt += `### ${service.toUpperCase()} Recommendations\n${result.response}\n\n`;
+    });
+    
+    prompt += `## Implementation Request\nCreate a detailed execution plan with:\n\n`;
+    prompt += `**Week 1-2 Actions:**\n- [ ] Specific task 1\n- [ ] Specific task 2\n- [ ] Specific task 3\n\n`;
+    prompt += `**Month 1 Milestones:**\n- Target completion dates\n- Success criteria\n- Team assignments\n\n`;
+    prompt += `**Quarter 1 Objectives:**\n- Major deliverables\n- Budget allocation\n- Performance metrics\n\n`;
+    prompt += `Format: Project management checklist with deadlines and owners.`;
+    
+    return prompt;
+}
+
+// CREATIVE META-PROMPT GENERATOR
+function generateCreativeMetaPrompt(responses, originalTask, timestamp) {
+    let prompt = `# ⚡ Creative Innovation Brief\n`;
+    prompt += `*Breakthrough Thinking | Generated: ${timestamp}*\n\n`;
+    
+    prompt += `## Creative Challenge\n"${originalTask}"\n\n`;
+    
+    prompt += `## Inspiration Sources\n`;
+    responses.forEach(([service, result]) => {
+        const creativeParts = result.response.split(/[.!?]/).filter(s => 
+            s.includes('innovative') || s.includes('creative') || s.includes('unique') || 
+            s.includes('breakthrough') || s.includes('original') || s.length > 50
+        ).slice(0, 2);
+        
+        if (creativeParts.length > 0) {
+            prompt += `**${service.toUpperCase()}**: ${creativeParts.join('. ')}.\n`;
+        }
+    });
+    
+    prompt += `\n## Full Creative Analysis\n`;
+    responses.forEach(([service, result]) => {
+        prompt += `**${service}**: ${result.response}\n\n`;
+    });
+    
+    prompt += `## Creative Request\nGenerate breakthrough solutions that are:\n`;
+    prompt += `1. Unconventional and surprising\n2. Practically implementable\n3. Market-differentiating\n4. Resource-efficient\n5. Scalable\n\n`;
+    prompt += `Think outside conventional approaches. What would a visionary do?`;
+    
+    return prompt;
+}
+
+// META-PROMPT UTILITY FUNCTIONS
+function copyMetaPrompt() {
+    const textarea = document.getElementById('generatedMetaPrompt');
+    textarea.select();
+    navigator.clipboard.writeText(textarea.value).then(() => {
+        // Visual feedback
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => {
+            btn.textContent = originalText;
+        }, 2000);
+    });
+}
+
+function downloadMetaPrompt(type) {
+    const content = document.getElementById('generatedMetaPrompt').value;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `meta-prompt-${type}-${timestamp}.md`;
+    
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function openInClaude() {
+    const content = encodeURIComponent(document.getElementById('generatedMetaPrompt').value);
+    window.open(`https://claude.ai/chat?content=${content}`, '_blank');
+}
+
+function openInChatGPT() {
+    const content = encodeURIComponent(document.getElementById('generatedMetaPrompt').value);
+    window.open(`https://chat.openai.com/?q=${content}`, '_blank');
+}
+
+// Enhanced CSS for Meta-Prompt Generator
+const metaPromptCSS = `
+.meta-prompt-section {
+    background: linear-gradient(135deg, #e3f2fd, #ffffff);
+    border: 2px solid #2196f3;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2);
+}
+
+.meta-prompt-section h3 {
+    color: #1565c0;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+}
+
+.meta-prompt-controls {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.meta-btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.meta-btn.detailed {
+    background: linear-gradient(45deg, #4caf50, #388e3c);
+    color: white;
+}
+
+.meta-btn.executive {
+    background: linear-gradient(45deg, #ff9800, #f57c00);
+    color: white;
+}
+
+.meta-btn.implementation {
+    background: linear-gradient(45deg, #2196f3, #1976d2);
+    color: white;
+}
+
+.meta-btn.creative {
+    background: linear-gradient(45deg, #9c27b0, #7b1fa2);
+    color: white;
+}
+
+.meta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.meta-prompt-output {
+    margin-top: 20px;
+}
+
+.meta-prompt-result {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.meta-prompt-header {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    padding: 15px;
+}
+
+.meta-prompt-header h4 {
+    margin: 0 0 5px 0;
+}
+
+.meta-prompt-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+.meta-prompt-content {
+    padding: 20px;
+}
+
+.meta-prompt-content textarea {
+    width: 100%;
+    height: 400px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    resize: vertical;
+    background: #f8f9fa;
+}
+
+.meta-prompt-actions {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.meta-action-btn {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.meta-action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .meta-prompt-controls {
+        flex-direction: column;
+    }
+    
+    .meta-prompt-actions {
+        flex-direction: column;
+    }
+    
+    .meta-prompt-content textarea {
+        height: 300px;
+        font-size: 11px;
+    }
+}
+`;
+
+// Add the meta-prompt CSS
+if (!document.getElementById('meta-prompt-css')) {
+    const style = document.createElement('style');
+    style.id = 'meta-prompt-css';
+    style.textContent = metaPromptCSS;
+    document.head.appendChild(style);
+}
+
+console.log('🔬 Prompt-Optimization-Optimizer-inator loaded!');
+console.log('🎭 Dr. Doofenshmirtz would be proud!');
 // Add CSS for partial success states
 const partialSuccessCSS = `
 .orchestration-partial {
