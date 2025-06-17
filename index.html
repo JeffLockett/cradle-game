@@ -48,6 +48,55 @@
             100% { background-position: 0% 50%; }
         }
 
+        .connection-panel {
+            background: rgba(245, 87, 108, 0.1);
+            border: 2px solid rgba(245, 87, 108, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .connection-panel.connected {
+            background: rgba(79, 172, 254, 0.1);
+            border-color: rgba(79, 172, 254, 0.3);
+        }
+
+        .connection-status {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .server-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .connect-button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .connect-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
         .status-bar {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -76,6 +125,11 @@
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 30px;
+            display: none;
+        }
+
+        .orchestration-panel.active {
+            display: block;
         }
 
         .task-input {
@@ -298,6 +352,15 @@
             margin-left: 10px;
         }
 
+        .instructions {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             h1 { font-size: 2em; }
             .container { padding: 10px; }
@@ -313,7 +376,29 @@
             <p style="color: #888; font-size: 1.2em;">AI Command Center - Orchestrating Intelligence</p>
         </header>
 
-        <div class="status-bar">
+        <div class="instructions">
+            <h3>🚀 Setup Instructions:</h3>
+            <p>1. Make sure your HexMind server is running locally</p>
+            <p>2. Enter your server URL below (default: http://localhost:3001)</p>
+            <p>3. Click Connect to start orchestrating!</p>
+        </div>
+
+        <div class="connection-panel" id="connectionPanel">
+            <div class="connection-status" id="connectionStatus">
+                🔴 Not Connected to Server
+            </div>
+            <input type="text" 
+                   class="server-input" 
+                   id="serverUrl" 
+                   placeholder="Enter server URL (e.g., http://localhost:3001)"
+                   value="http://localhost:3001">
+            <br>
+            <button class="connect-button" id="connectBtn" onclick="connectToServer()">
+                🔌 Connect to HexMind Server
+            </button>
+        </div>
+
+        <div class="status-bar" id="statusBar" style="display: none;">
             <div class="status-item">
                 <div class="status-value" id="serverStatus">🔴 Offline</div>
                 <div>Server Status</div>
@@ -332,7 +417,7 @@
             </div>
         </div>
 
-        <div class="orchestration-panel">
+        <div class="orchestration-panel" id="orchestrationPanel">
             <h2 style="margin-bottom: 20px;">🚀 Orchestrate AI Swarm</h2>
             
             <input type="text" 
@@ -375,22 +460,63 @@
 
     <script>
         // Configuration
-        const API_URL = 'http://192.168.1.128:3001';
+        let API_URL = '';
+        let isConnected = false;
         
         // State
         let selectedServices = ['openai', 'claude', 'perplexity', 'xai', 'gemini'];
         let totalRequests = 0;
         let availableServices = [];
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            checkServerStatus();
-            loadServices();
-            setInterval(checkServerStatus, 5000);
-        });
+        // Connect to server
+        async function connectToServer() {
+            const serverUrl = document.getElementById('serverUrl').value.trim();
+            if (!serverUrl) {
+                alert('Please enter a server URL!');
+                return;
+            }
+            
+            // Remove trailing slash if present
+            API_URL = serverUrl.replace(/\/$/, '');
+            
+            try {
+                const response = await fetch(`${API_URL}/api/health`);
+                if (response.ok) {
+                    const data = await response.json();
+                    isConnected = true;
+                    
+                    // Update UI
+                    document.getElementById('connectionStatus').innerHTML = '🟢 Connected to HexMind Server';
+                    document.getElementById('connectionPanel').classList.add('connected');
+                    document.getElementById('connectBtn').textContent = '✅ Connected';
+                    document.getElementById('connectBtn').disabled = true;
+                    
+                    // Show main interface
+                    document.getElementById('statusBar').style.display = 'flex';
+                    document.getElementById('orchestrationPanel').classList.add('active');
+                    
+                    // Update status
+                    document.getElementById('serverStatus').textContent = '🟢 Online';
+                    document.getElementById('dailyCost').textContent = `$${data.dailyCost}`;
+                    
+                    // Load services
+                    loadServices();
+                    
+                    // Start status polling
+                    setInterval(checkServerStatus, 5000);
+                    
+                } else {
+                    throw new Error('Server not responding');
+                }
+            } catch (error) {
+                alert(`Failed to connect: ${error.message}\n\nMake sure your HexMind server is running at ${API_URL}`);
+            }
+        }
 
         // Check server status
         async function checkServerStatus() {
+            if (!isConnected) return;
+            
             try {
                 const response = await fetch(`${API_URL}/api/health`);
                 const data = await response.json();
@@ -452,6 +578,11 @@
 
         // Orchestrate function
         async function orchestrate() {
+            if (!isConnected) {
+                alert('Please connect to the server first!');
+                return;
+            }
+            
             const task = document.getElementById('taskInput').value.trim();
             if (!task) {
                 alert('Please enter a task!');
@@ -768,9 +899,20 @@ Use this meta-prompt with any AI to generate production-ready code!`;
 
         // Keyboard shortcut
         document.getElementById('taskInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+            if (e.key === 'Enter' && !e.shiftKey && isConnected) {
                 e.preventDefault();
                 orchestrate();
+            }
+        });
+
+        // Auto-connect if localhost
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const autoConnect = urlParams.get('connect');
+            
+            if (autoConnect === 'auto' || window.location.hostname === 'localhost') {
+                document.getElementById('serverUrl').value = 'http://localhost:3001';
+                setTimeout(connectToServer, 500);
             }
         });
     </script>
