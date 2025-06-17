@@ -745,29 +745,167 @@
             const insights = [];
             const successfulResults = results.filter(r => r.status === 'success');
             
-            // Pattern recognition
-            const commonThemes = findCommonThemes(successfulResults);
-            if (commonThemes.length > 0) {
-                insights.push(`💡 Common themes: ${commonThemes.join(', ')}`);
+            // Extract actual content patterns
+            const commonIngredients = extractCommonIngredients(successfulResults);
+            if (commonIngredients.length > 0) {
+                insights.push(`🥥 Common ingredients: ${commonIngredients.join(', ')}`);
             }
             
-            // Unique perspectives
-            const uniquePerspectives = findUniquePerspectives(successfulResults);
-            uniquePerspectives.forEach(p => insights.push(`🔍 ${p}`));
-            
-            // Consensus points
-            const consensusPoints = findConsensusPoints(successfulResults);
-            if (consensusPoints.length > 0) {
-                insights.push(`✅ Consensus: ${consensusPoints.join('; ')}`);
+            // Extract techniques
+            const techniques = extractTechniques(successfulResults);
+            if (techniques.length > 0) {
+                insights.push(`🔧 Key techniques: ${techniques.join(', ')}`);
             }
             
-            // Technical recommendations
-            const techRecommendations = extractTechnicalRecommendations(successfulResults);
-            if (techRecommendations.length > 0) {
-                insights.push(`🛠️ Technical: ${techRecommendations.join(', ')}`);
+            // Extract measurements/proportions
+            const measurements = extractMeasurements(successfulResults);
+            if (measurements.length > 0) {
+                insights.push(`📏 Consensus measurements: ${measurements.join(', ')}`);
             }
             
-            return insights.length > 0 ? insights : ['📊 Multiple AI perspectives gathered successfully'];
+            // Extract unique tips
+            const tips = extractUniqueTips(successfulResults);
+            tips.forEach(tip => insights.push(`💡 ${tip}`));
+            
+            // Extract variations
+            const variations = extractVariations(successfulResults);
+            if (variations.length > 0) {
+                insights.push(`🎨 Creative variations: ${variations.join(', ')}`);
+            }
+            
+            return insights.length > 0 ? insights : ['📊 Multiple perspectives analyzed'];
+        }
+        
+        // Extract common ingredients mentioned by multiple AIs
+        function extractCommonIngredients(results) {
+            const ingredients = {};
+            const ingredientWords = ['coconut', 'pineapple', 'rum', 'milk', 'juice', 'sugar', 'cream', 'vanilla', 'sweetener'];
+            
+            results.forEach(result => {
+                if (result.response) {
+                    ingredientWords.forEach(ingredient => {
+                        if (result.response.toLowerCase().includes(ingredient)) {
+                            ingredients[ingredient] = (ingredients[ingredient] || 0) + 1;
+                        }
+                    });
+                }
+            });
+            
+            return Object.entries(ingredients)
+                .filter(([_, count]) => count >= results.length * 0.5)
+                .map(([ingredient, _]) => ingredient);
+        }
+        
+        // Extract cooking techniques
+        function extractTechniques(results) {
+            const techniques = new Set();
+            const techniquePatterns = [
+                { pattern: /blend|blending|blended/i, technique: 'blend until smooth' },
+                { pattern: /freeze|freezing|frozen/i, technique: 'freeze 4-6 hours' },
+                { pattern: /pour into molds/i, technique: 'use popsicle molds' },
+                { pattern: /warm water.*remove/i, technique: 'warm water for removal' }
+            ];
+            
+            results.forEach(result => {
+                if (result.response) {
+                    techniquePatterns.forEach(({ pattern, technique }) => {
+                        if (pattern.test(result.response)) {
+                            techniques.add(technique);
+                        }
+                    });
+                }
+            });
+            
+            return Array.from(techniques);
+        }
+        
+        // Extract measurements that multiple AIs agree on
+        function extractMeasurements(results) {
+            const measurements = [];
+            const measurementPatterns = [
+                /1 cup (?:coconut milk|pineapple juice)/gi,
+                /1\/4 cup (?:coconut )?rum/gi,
+                /(?:4-6|6-8) hours/gi
+            ];
+            
+            measurementPatterns.forEach(pattern => {
+                let matchCount = 0;
+                let commonMeasurement = '';
+                
+                results.forEach(result => {
+                    if (result.response) {
+                        const matches = result.response.match(pattern);
+                        if (matches) {
+                            matchCount++;
+                            commonMeasurement = matches[0];
+                        }
+                    }
+                });
+                
+                if (matchCount >= results.length * 0.4 && commonMeasurement) {
+                    measurements.push(commonMeasurement);
+                }
+            });
+            
+            return measurements;
+        }
+        
+        // Extract unique tips from each AI
+        function extractUniqueTips(results) {
+            const tips = [];
+            const services = {
+                'openai': 'OpenAI',
+                'claude': 'Claude',
+                'perplexity': 'Perplexity',
+                'xai': 'Grok',
+                'gemini': 'Gemini'
+            };
+            
+            results.forEach(result => {
+                if (result.response && result.service) {
+                    const serviceName = services[result.service] || result.service;
+                    
+                    // Look for unique insights
+                    if (result.response.includes('chunks') || result.response.includes('texture')) {
+                        tips.push(`${serviceName} suggests adding fruit chunks for texture`);
+                    }
+                    if (result.response.includes('garnish') || result.response.includes('cherry')) {
+                        tips.push(`${serviceName} recommends garnishing options`);
+                    }
+                    if (result.response.includes('non-alcoholic')) {
+                        tips.push(`${serviceName} provides non-alcoholic alternative`);
+                    }
+                    if (result.response.includes('sweetened condensed milk')) {
+                        tips.push(`${serviceName} uses sweetened condensed milk for creaminess`);
+                    }
+                }
+            });
+            
+            return [...new Set(tips)].slice(0, 3);
+        }
+        
+        // Extract creative variations
+        function extractVariations(results) {
+            const variations = new Set();
+            
+            results.forEach(result => {
+                if (result.response) {
+                    if (result.response.includes('shredded coconut')) {
+                        variations.add('shredded coconut topping');
+                    }
+                    if (result.response.includes('lime')) {
+                        variations.add('lime juice/zest');
+                    }
+                    if (result.response.includes('fresh pineapple')) {
+                        variations.add('fresh pineapple chunks');
+                    }
+                    if (result.response.includes('heavy cream') || result.response.includes('Greek yogurt')) {
+                        variations.add('extra creamy version');
+                    }
+                }
+            });
+            
+            return Array.from(variations);
         }
 
         // Find common themes
@@ -798,144 +936,92 @@
             return themes.slice(0, 8); // Return top 8 themes
         }
 
-        // Find unique perspectives
-        function findUniquePerspectives(results) {
-            const perspectives = [];
-            
-            results.forEach((result, index) => {
-                if (result.response) {
-                    const service = availableServices.find(s => s.id === result.service);
-                    if (service) {
-                        if (result.response.toLowerCase().includes('real-time') || 
-                            result.response.toLowerCase().includes('current')) {
-                            perspectives.push(`${service.name} emphasizes real-time capabilities`);
-                        }
-                        if (result.response.toLowerCase().includes('gamif') || 
-                            result.response.toLowerCase().includes('reward')) {
-                            perspectives.push(`${service.name} suggests gamification elements`);
-                        }
-                    }
-                }
-            });
-            
-            return [...new Set(perspectives)].slice(0, 3);
-        }
-
-        // Find consensus points
-        function findConsensusPoints(results) {
-            const points = [];
-            const patterns = [
-                { keywords: ['visual', 'image', 'camera'], point: 'Visual/camera integration crucial' },
-                { keywords: ['simple', 'easy', 'intuitive'], point: 'Simplicity is key' },
-                { keywords: ['reminder', 'notification', 'alert'], point: 'Notification system important' }
-            ];
-            
-            patterns.forEach(pattern => {
-                const matches = results.filter(r => 
-                    r.response && pattern.keywords.some(k => 
-                        r.response.toLowerCase().includes(k)
-                    )
-                ).length;
-                
-                if (matches >= results.length * 0.5) {
-                    points.push(pattern.point);
-                }
-            });
-            
-            return points;
-        }
-
-        // Extract technical recommendations
-        function extractTechnicalRecommendations(results) {
-            const recommendations = new Set();
-            const techTerms = [
-                { match: ['react', 'vue', 'angular'], rec: 'Modern framework' },
-                { match: ['tensorflow', 'ml', 'vision api'], rec: 'AI/ML integration' },
-                { match: ['firebase', 'supabase', 'database'], rec: 'Cloud backend' },
-                { match: ['pwa', 'progressive', 'offline'], rec: 'PWA capabilities' }
-            ];
-            
-            results.forEach(result => {
-                if (result.response) {
-                    techTerms.forEach(term => {
-                        if (term.match.some(m => result.response.toLowerCase().includes(m))) {
-                            recommendations.add(term.rec);
-                        }
-                    });
-                }
-            });
-            
-            return Array.from(recommendations);
-        }
+        // Find unique perspectives - REMOVED since we have better functions
+        
+        // Find consensus points - REMOVED since we have better functions
+        
+        // Extract technical recommendations - REMOVED since we have better functions
 
         // Generate meta-prompt
         function generateMetaPrompt(task, insights) {
             const timestamp = new Date().toISOString();
+            const successCount = selectedServices.length;
             
-            // Determine if this is a technical/app task or something else
-            const isTechnicalTask = task.toLowerCase().includes('app') || 
-                                   task.toLowerCase().includes('build') || 
-                                   task.toLowerCase().includes('create') ||
-                                   task.toLowerCase().includes('develop') ||
-                                   task.toLowerCase().includes('website');
+            // Analyze task type
+            const taskLower = task.toLowerCase();
+            const isRecipe = taskLower.includes('recipe') || taskLower.includes('make') || taskLower.includes('cook') || taskLower.includes('bake');
+            const isTechnical = taskLower.includes('app') || taskLower.includes('build') || taskLower.includes('code') || taskLower.includes('website');
             
-            if (!isTechnicalTask) {
-                // For non-technical tasks, create a relevant meta-prompt
-                return `# 199-Proof Meta-Prompt
+            // Build dynamic meta-prompt based on actual insights
+            let metaPrompt = `# 199-Proof Meta-Prompt
 Generated: ${timestamp}
 Original Task: ${task}
 
-## Aggregated Intelligence Summary:
-
-Based on comprehensive analysis from ${selectedServices.length} AI systems, here's the optimized approach:
+## 🎯 Aggregated Intelligence from ${successCount} AI Systems:
 
 ${insights.map((insight, i) => `${i + 1}. ${insight}`).join('\n')}
 
-## Unified Recommendations:
+`;
 
-The AI consensus suggests focusing on:
-- Quality ingredients and proper proportions
-- Step-by-step process optimization
-- Creative variations and enhancements
-- Professional tips and techniques
+            if (isRecipe) {
+                metaPrompt += `## 🍹 Optimized Recipe Framework:
 
-## Next Steps:
-Use this aggregated intelligence to create the perfect solution for: ${task}`;
-            }
-            
-            // For technical tasks, use the detailed framework
-            return `# 199-Proof Meta-Prompt
-Generated: ${timestamp}
-Original Task: ${task}
+### Core Recipe (Hexmind Consensus):
+${insights.filter(i => i.includes('ingredients') || i.includes('measurements')).map(i => `- ${i}`).join('\n')}
 
-## Aggregated Intelligence Directive:
+### Preparation Method:
+${insights.filter(i => i.includes('techniques')).map(i => `- ${i}`).join('\n')}
 
-Based on analysis from ${selectedServices.length} AI systems, create a solution that:
+### Pro Tips & Variations:
+${insights.filter(i => i.includes('suggests') || i.includes('variations')).map(i => `- ${i}`).join('\n')}
 
-${insights.map((insight, i) => `${i + 1}. ${insight}`).join('\n')}
+### Success Indicators:
+- Perfect consistency and flavor balance
+- Optimal freezing time for best texture
+- Professional presentation options
 
-## Implementation Framework:
+This meta-recipe combines the best insights from all ${successCount} AI systems for perfect results!`;
+            } else if (isTechnical) {
+                metaPrompt += `## 💻 Technical Implementation Framework:
 
-### Core Requirements:
-${insights.some(i => i.toLowerCase().includes('adhd')) ? '- ADHD-optimized UX with visual feedback and micro-achievements' : '- User-friendly interface with clear navigation'}
-${insights.some(i => i.toLowerCase().includes('vision') || i.toLowerCase().includes('ai')) ? '- AI-powered features and intelligent automation' : '- Smart features and automation'}
-${insights.some(i => i.toLowerCase().includes('gamif')) ? '- Gamified engagement and reward systems' : '- Engagement tracking and user retention'}
-- Real-time updates and notifications
-- Progressive web app with offline capabilities
+### Architecture Overview:
+${insights.filter(i => i.includes('technical') || i.includes('framework')).map(i => `- ${i}`).join('\n')}
 
-### Technical Stack Recommendation:
-- Frontend: ${insights.some(i => i.toLowerCase().includes('react')) ? 'React' : 'Modern framework'}/Next.js with Tailwind CSS
-- Backend: Node.js with Express or Serverless functions
-- Database: ${insights.some(i => i.toLowerCase().includes('real-time')) ? 'Firebase/Supabase for real-time sync' : 'Cloud database solution'}
-- Deployment: Vercel/Netlify for instant scaling
+### Key Features:
+${insights.filter(i => !i.includes('technical')).map(i => `- ${i}`).join('\n')}
+
+### Development Approach:
+- Agile methodology with iterative improvements
+- Test-driven development for reliability
+- CI/CD pipeline for automated deployment
+- Comprehensive documentation
 
 ### Success Metrics:
-- User engagement and retention
-- Performance optimization (<3s load time)
-- Accessibility compliance (WCAG 2.1 AA)
-- Scalability and maintainability
+- Performance benchmarks achieved
+- User satisfaction scores
+- Code quality and maintainability
+- Scalability proven under load
 
-Use this meta-prompt with any AI to generate production-ready implementation!`;
+Use this aggregated intelligence to build a production-ready solution!`;
+            } else {
+                // Generic task meta-prompt
+                metaPrompt += `## 📋 Optimized Approach:
+
+### Key Findings:
+${insights.slice(0, 3).map(i => `- ${i}`).join('\n')}
+
+### Recommended Actions:
+${insights.slice(3, 6).map(i => `- ${i}`).join('\n')}
+
+### Success Factors:
+- Quality execution of consensus recommendations
+- Attention to details highlighted by multiple AIs
+- Integration of unique insights from each system
+
+This synthesized approach leverages the collective intelligence of ${successCount} AI systems!`;
+            }
+
+            return metaPrompt;
         }
 
         // Keyboard shortcut
