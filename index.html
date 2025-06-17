@@ -705,11 +705,11 @@
                             <span>${service.name}</span>
                         </div>
                         <div>
-                            ${result.cost ? `<span class="result-cost">$${result.cost.toFixed(4)}</span>` : ''}
+                            ${result.cost ? `<span class="result-cost">${result.cost.toFixed(4)}</span>` : ''}
                             ${result.tokens ? `<span class="cost-indicator">${result.tokens} tokens</span>` : ''}
                         </div>
                     </div>
-                    <div class="result-content">
+                    <div class="result-content" style="max-height: 400px; overflow-y: auto;">
                         ${result.error ? `Error: ${result.error}` : result.response}
                     </div>
                 `;
@@ -773,19 +773,29 @@
         // Find common themes
         function findCommonThemes(results) {
             const themes = [];
-            const keywords = ['AI', 'vision', 'maintenance', 'ADHD', 'app', 'mobile', 'user', 'interface', 'feature'];
             
-            keywords.forEach(keyword => {
-                const count = results.filter(r => 
-                    r.response && r.response.toLowerCase().includes(keyword.toLowerCase())
-                ).length;
-                
-                if (count >= results.length * 0.6) {
-                    themes.push(keyword);
+            // Extract all words from responses
+            const allWords = results
+                .filter(r => r.response)
+                .map(r => r.response.toLowerCase().split(/\s+/))
+                .flat();
+            
+            // Count word frequency
+            const wordCount = {};
+            allWords.forEach(word => {
+                if (word.length > 4) { // Only count meaningful words
+                    wordCount[word] = (wordCount[word] || 0) + 1;
                 }
             });
             
-            return themes;
+            // Find words that appear in at least 60% of responses
+            Object.entries(wordCount).forEach(([word, count]) => {
+                if (count >= results.length * 0.6 && !['about', 'would', 'could', 'should', 'using'].includes(word)) {
+                    themes.push(word);
+                }
+            });
+            
+            return themes.slice(0, 8); // Return top 8 themes
         }
 
         // Find unique perspectives
@@ -862,6 +872,38 @@
         function generateMetaPrompt(task, insights) {
             const timestamp = new Date().toISOString();
             
+            // Determine if this is a technical/app task or something else
+            const isTechnicalTask = task.toLowerCase().includes('app') || 
+                                   task.toLowerCase().includes('build') || 
+                                   task.toLowerCase().includes('create') ||
+                                   task.toLowerCase().includes('develop') ||
+                                   task.toLowerCase().includes('website');
+            
+            if (!isTechnicalTask) {
+                // For non-technical tasks, create a relevant meta-prompt
+                return `# 199-Proof Meta-Prompt
+Generated: ${timestamp}
+Original Task: ${task}
+
+## Aggregated Intelligence Summary:
+
+Based on comprehensive analysis from ${selectedServices.length} AI systems, here's the optimized approach:
+
+${insights.map((insight, i) => `${i + 1}. ${insight}`).join('\n')}
+
+## Unified Recommendations:
+
+The AI consensus suggests focusing on:
+- Quality ingredients and proper proportions
+- Step-by-step process optimization
+- Creative variations and enhancements
+- Professional tips and techniques
+
+## Next Steps:
+Use this aggregated intelligence to create the perfect solution for: ${task}`;
+            }
+            
+            // For technical tasks, use the detailed framework
             return `# 199-Proof Meta-Prompt
 Generated: ${timestamp}
 Original Task: ${task}
@@ -875,26 +917,25 @@ ${insights.map((insight, i) => `${i + 1}. ${insight}`).join('\n')}
 ## Implementation Framework:
 
 ### Core Requirements:
-- ADHD-optimized UX with visual feedback and micro-achievements
-- AI-powered vision system for vehicle analysis
-- Gamified maintenance tracking with dopamine-driven rewards
-- Real-time notifications and smart reminders
+${insights.some(i => i.toLowerCase().includes('adhd')) ? '- ADHD-optimized UX with visual feedback and micro-achievements' : '- User-friendly interface with clear navigation'}
+${insights.some(i => i.toLowerCase().includes('vision') || i.toLowerCase().includes('ai')) ? '- AI-powered features and intelligent automation' : '- Smart features and automation'}
+${insights.some(i => i.toLowerCase().includes('gamif')) ? '- Gamified engagement and reward systems' : '- Engagement tracking and user retention'}
+- Real-time updates and notifications
 - Progressive web app with offline capabilities
 
 ### Technical Stack Recommendation:
-- Frontend: React/Next.js with Tailwind CSS
+- Frontend: ${insights.some(i => i.toLowerCase().includes('react')) ? 'React' : 'Modern framework'}/Next.js with Tailwind CSS
 - Backend: Node.js with Express or Serverless functions
-- AI/Vision: TensorFlow.js or cloud vision APIs
-- Database: Firebase/Supabase for real-time sync
+- Database: ${insights.some(i => i.toLowerCase().includes('real-time')) ? 'Firebase/Supabase for real-time sync' : 'Cloud database solution'}
 - Deployment: Vercel/Netlify for instant scaling
 
 ### Success Metrics:
-- User engagement: Daily active usage
-- Task completion: 80%+ maintenance tasks completed
-- Performance: <3s load time, offline-capable
-- Accessibility: WCAG 2.1 AA compliant
+- User engagement and retention
+- Performance optimization (<3s load time)
+- Accessibility compliance (WCAG 2.1 AA)
+- Scalability and maintainability
 
-Use this meta-prompt with any AI to generate production-ready code!`;
+Use this meta-prompt with any AI to generate production-ready implementation!`;
         }
 
         // Keyboard shortcut
