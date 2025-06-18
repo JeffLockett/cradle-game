@@ -421,6 +421,52 @@
             color: var(--bg-primary);
             box-shadow: 0 0 10px currentColor;
             animation: blipPulse 2s infinite;
+            z-index: 10;
+        }
+
+        /* AI Interaction Lines */
+        .interaction-line {
+            position: absolute;
+            height: 2px;
+            background: var(--amber);
+            transform-origin: left center;
+            opacity: 0;
+            animation: interactionPulse 2s ease-out;
+            z-index: 5;
+        }
+
+        .interaction-line.agreement {
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+        }
+
+        .interaction-line.conflict {
+            background: var(--red);
+            box-shadow: 0 0 10px var(--red);
+        }
+
+        .interaction-line.expansion {
+            background: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        @keyframes interactionPulse {
+            0% {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+            20% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+            80% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scaleX(0.8);
+            }
         }
 
         /* Pattern Analysis */
@@ -866,8 +912,16 @@
                     addFeedEntry('SYNTHESIS', `Swarm complete: ${data.successCount} AIs responded`, 'var(--green)');
                     break;
                     
-                case 'metrics_update':
-                    updateTokenMetrics(data.tokens, data.burnRate);
+                case 'ai_interaction':
+                    showRadarInteraction(data.from, data.to, data.interactionType);
+                    break;
+                    
+                case 'swarm_phase':
+                    addFeedEntry('PHASE', `Swarm entering ${data.phase.replace('_', ' ')} phase`, 'var(--purple)');
+                    break;
+                    
+                case 'swarm_metrics':
+                    updateSwarmMetrics(data.metrics);
                     break;
             }
         }
@@ -1035,15 +1089,147 @@
             }
         }
 
-        // Radar animation
-        function animateRadar() {
-            const blips = document.querySelectorAll('.ai-blip');
-            blips.forEach(blip => {
-                const scale = 0.8 + Math.random() * 0.4;
-                blip.style.transform = `scale(${scale})`;
-            });
+        // Radar animation with interactions
+        const aiPositions = {
+            openai: { x: 50, y: 20 },
+            claude: { x: 80, y: 40 },
+            perplexity: { x: 70, y: 70 },
+            xai: { x: 20, y: 80 },
+            gemini: { x: 25, y: 30 }
+        };
+
+        function showRadarInteraction(from, to, type) {
+            const radar = document.querySelector('.swarm-radar');
+            const fromPos = aiPositions[from];
+            const toPos = aiPositions[to];
+            
+            if (!fromPos || !toPos) return;
+            
+            // Calculate line position and angle
+            const dx = toPos.x - fromPos.x;
+            const dy = toPos.y - fromPos.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+            
+            // Create interaction line
+            const line = document.createElement('div');
+            line.className = `interaction-line ${type}`;
+            line.style.width = `${distance}%`;
+            line.style.left = `${fromPos.x}%`;
+            line.style.top = `${fromPos.y}%`;
+            line.style.transform = `rotate(${angle}deg)`;
+            
+            radar.appendChild(line);
+            
+            // Remove after animation
+            setTimeout(() => line.remove(), 2000);
+            
+            // Make blips pulse
+            const fromBlip = document.getElementById(`blip-${from}`);
+            const toBlip = document.getElementById(`blip-${to}`);
+            
+            if (fromBlip) {
+                fromBlip.style.animation = 'none';
+                setTimeout(() => fromBlip.style.animation = 'blipPulse 2s infinite', 10);
+            }
+            if (toBlip) {
+                toBlip.style.transform = 'scale(1.5)';
+                setTimeout(() => toBlip.style.transform = 'scale(1)', 300);
+            }
         }
-        setInterval(animateRadar, 1000);
+
+        function updateSwarmMetrics(metrics) {
+            // Update all pattern analysis values
+            document.getElementById('consensus-level').textContent = `${metrics.consensusLevel}%`;
+            document.getElementById('synergy-index').textContent = `${metrics.synergyIndex}/10`;
+            document.getElementById('innovation-rate').textContent = metrics.innovationRate;
+            document.getElementById('echo-chamber').textContent = metrics.echoChamber;
+            document.getElementById('conflict-points').textContent = metrics.conflictPoints;
+            
+            // Color code based on values
+            const consensusEl = document.getElementById('consensus-level');
+            if (metrics.consensusLevel > 80) {
+                consensusEl.style.color = 'var(--green)';
+            } else if (metrics.consensusLevel > 50) {
+                consensusEl.style.color = 'var(--amber)';
+            } else {
+                consensusEl.style.color = 'var(--red)';
+            }
+            
+            const synergyEl = document.getElementById('synergy-index');
+            if (metrics.synergyIndex > 7) {
+                synergyEl.style.color = 'var(--green)';
+            } else if (metrics.synergyIndex > 4) {
+                synergyEl.style.color = 'var(--amber)';
+            } else {
+                synergyEl.style.color = 'var(--red)';
+            }
+        }
+
+        // Enhanced log export with swarm data
+        function exportLogs() {
+            const feed = document.getElementById('synthesissFeed');
+            const logs = Array.from(feed.children).map(entry => {
+                const timestamp = entry.querySelector('.feed-timestamp').textContent;
+                const ai = entry.querySelector('.feed-ai').textContent;
+                const text = entry.querySelector('.feed-text').textContent;
+                return `${timestamp} ${ai} ${text}`;
+            }).join('\n');
+            
+            const state = lastSystemState || {};
+            const markdown = `# HexMind Blackhawk Session Log
+Generated: ${new Date().toISOString()}
+
+## System State
+- Network: ${document.getElementById('current-ip').textContent}
+- Daily Cost: ${document.getElementById('daily-cost').textContent}
+- Total Calls: ${document.getElementById('ai-count').textContent}
+
+## Swarm Intelligence Metrics
+- Consensus Level: ${document.getElementById('consensus-level').textContent}
+- Synergy Index: ${document.getElementById('synergy-index').textContent}
+- Innovation Rate: ${document.getElementById('innovation-rate').textContent}
+- Echo Chamber: ${document.getElementById('echo-chamber').textContent}
+- Conflict Points: ${document.getElementById('conflict-points').textContent}
+
+## Token Usage
+- Input: ${state.tokens?.input || 0}
+- Output: ${state.tokens?.output || 0}
+- Burn Rate: ${state.tokens?.burnRate || 0} tokens/min
+
+## Swarm Communication Log
+\`\`\`
+${logs}
+\`\`\`
+
+## Analysis
+This session demonstrates ${document.getElementById('synergy-index').textContent} synergy with ${document.getElementById('consensus-level').textContent} consensus across the swarm.
+`;
+            
+            // Download file
+            const blob = new Blob([markdown], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `hexmind-swarm-log-${Date.now()}.md`;
+            a.click();
+        }
+
+        // Add export button to header
+        function addExportButton() {
+            const systemStatus = document.querySelector('.system-status');
+            if (systemStatus && !document.getElementById('export-btn')) {
+                const btn = document.createElement('button');
+                btn.id = 'export-btn';
+                btn.onclick = exportLogs;
+                btn.style.cssText = 'padding: 5px 15px; background: var(--amber); color: var(--bg-primary); border: none; border-radius: 5px; font-family: "Orbitron", sans-serif; cursor: pointer; margin-left: 20px;';
+                btn.textContent = 'EXPORT LOGS';
+                systemStatus.appendChild(btn);
+            }
+        }
+
+        // Initialize export button after page loads
+        setTimeout(addExportButton, 1000);
 
         // Clear caution on Escape
         document.addEventListener('keydown', (e) => {
