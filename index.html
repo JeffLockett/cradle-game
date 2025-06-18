@@ -566,7 +566,7 @@
                 </div>
                 <div class="status-item">
                     <div class="status-light" style="background: var(--amber); box-shadow: 0 0 10px var(--amber);"></div>
-                    <span>5/5 AI ONLINE</span>
+                    <span id="ai-count">5/5 AI ONLINE</span>
                 </div>
                 <div class="status-item">
                     <span id="current-time">12:34:56</span>
@@ -588,15 +588,15 @@
                         </div>
                         <div class="network-item">
                             <span>Network</span>
-                            <span class="network-value">HOME-WIFI</span>
+                            <span class="network-value" id="network-name">HOME-WIFI</span>
                         </div>
                         <div class="network-item">
                             <span>Port</span>
-                            <span class="network-value">3001 ✓</span>
+                            <span class="network-value" id="port-status">3001 ✓</span>
                         </div>
                         <div class="network-item">
                             <span>Last Good</span>
-                            <span class="network-value" style="color: var(--amber);">192.168.1.105</span>
+                            <span class="network-value" id="last-good-ip" style="color: var(--amber);">192.168.1.128</span>
                         </div>
                     </div>
                 </div>
@@ -606,18 +606,18 @@
                     <div class="instrument-header">Token Flow</div>
                     <div class="token-gauge">
                         <div class="gauge-bar">
-                            <div class="gauge-fill" style="width: 65%;">
-                                <span class="gauge-label">Input: 6,523/10K</span>
+                            <div class="gauge-fill" id="input-tokens" style="width: 65%;">
+                                <span class="gauge-label">Input: 6,523/100K</span>
                             </div>
                         </div>
                         <div class="gauge-bar">
-                            <div class="gauge-fill" style="width: 45%; background: linear-gradient(90deg, var(--cyan), var(--purple));">
-                                <span class="gauge-label">Output: 4,488/10K</span>
+                            <div class="gauge-fill" id="output-tokens" style="width: 45%; background: linear-gradient(90deg, var(--cyan), var(--purple));">
+                                <span class="gauge-label">Output: 4,488/100K</span>
                             </div>
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 10px;">
-                        <span style="color: var(--amber); font-size: 0.9em;">Burn Rate: 523 tokens/min</span>
+                        <span id="burn-rate" style="color: var(--amber); font-size: 0.9em;">Burn Rate: 0 tokens/min</span>
                     </div>
                 </div>
 
@@ -625,11 +625,11 @@
                 <div class="instrument">
                     <div class="instrument-header">Cost Altitude</div>
                     <div class="altitude-display">
-                        <div class="altitude-value">$2.47</div>
-                        <div class="altitude-rate">↑ $0.73/hour</div>
+                        <div class="altitude-value" id="daily-cost">$0.00</div>
+                        <div class="altitude-rate" id="cost-rate">↑ $0.00/hour</div>
                         <div style="margin-top: 10px;">
                             <div class="gauge-bar" style="height: 10px;">
-                                <div class="gauge-fill" style="width: 25%; background: var(--green);"></div>
+                                <div class="gauge-fill" id="cost-gauge" style="width: 0%; background: var(--green);"></div>
                             </div>
                             <div style="display: flex; justify-content: space-between; font-size: 0.7em; margin-top: 5px;">
                                 <span>$0</span>
@@ -656,50 +656,50 @@
                     <div class="ai-bubble openai" id="bubble-openai">
                         <div class="ai-header">
                             <span>OPENAI</span>
-                            <div class="ai-status" style="background: var(--green);"></div>
+                            <div class="ai-status" id="status-openai" style="background: var(--green);"></div>
                         </div>
                         <div class="ai-thought-text" id="thought-openai">
-                            Analyzing task parameters...
+                            Awaiting connection...
                         </div>
                     </div>
 
                     <div class="ai-bubble claude" id="bubble-claude">
                         <div class="ai-header">
                             <span>CLAUDE</span>
-                            <div class="ai-status" style="background: var(--green);"></div>
+                            <div class="ai-status" id="status-claude" style="background: var(--green);"></div>
                         </div>
                         <div class="ai-thought-text" id="thought-claude">
-                            Considering contextual factors...
+                            Awaiting connection...
                         </div>
                     </div>
 
                     <div class="ai-bubble perplexity" id="bubble-perplexity">
                         <div class="ai-header">
                             <span>PERPLEXITY</span>
-                            <div class="ai-status" style="background: var(--green);"></div>
+                            <div class="ai-status" id="status-perplexity" style="background: var(--green);"></div>
                         </div>
                         <div class="ai-thought-text" id="thought-perplexity">
-                            Searching relevant data...
+                            Awaiting connection...
                         </div>
                     </div>
 
-                    <div class="ai-bubble grok" id="bubble-grok">
+                    <div class="ai-bubble grok" id="bubble-xai">
                         <div class="ai-header">
                             <span>GROK</span>
-                            <div class="ai-status" style="background: var(--amber);"></div>
+                            <div class="ai-status" id="status-xai" style="background: var(--amber);"></div>
                         </div>
-                        <div class="ai-thought-text" id="thought-grok">
-                            Loading creative perspective...
+                        <div class="ai-thought-text" id="thought-xai">
+                            Awaiting connection...
                         </div>
                     </div>
 
                     <div class="ai-bubble gemini" id="bubble-gemini">
                         <div class="ai-header">
                             <span>GEMINI</span>
-                            <div class="ai-status" style="background: var(--green);"></div>
+                            <div class="ai-status" id="status-gemini" style="background: var(--green);"></div>
                         </div>
                         <div class="ai-thought-text" id="thought-gemini">
-                            Synthesizing approaches...
+                            Awaiting connection...
                         </div>
                     </div>
                 </div>
@@ -709,9 +709,9 @@
                     <div class="feed-header">═══ SWARM SYNTHESIS FEED ═══</div>
                     <div class="feed-content" id="synthesissFeed">
                         <div class="feed-entry">
-                            <span class="feed-timestamp">[12:34:15]</span>
+                            <span class="feed-timestamp">[--:--:--]</span>
                             <span class="feed-ai" style="color: var(--amber);">SYSTEM:</span>
-                            <span class="feed-text">HexMind Swarm initialized. Awaiting task input...</span>
+                            <span class="feed-text">HexMind Blackhawk initializing...</span>
                         </div>
                     </div>
                 </div>
@@ -729,11 +729,11 @@
                         <div class="radar-sweep"></div>
                         
                         <!-- AI Blips -->
-                        <div class="ai-blip" style="background: var(--openai); top: 20%; left: 50%;">O</div>
-                        <div class="ai-blip" style="background: var(--claude); top: 40%; right: 20%;">C</div>
-                        <div class="ai-blip" style="background: var(--perplexity); bottom: 30%; right: 30%;">P</div>
-                        <div class="ai-blip" style="background: var(--grok); bottom: 20%; left: 20%;">G</div>
-                        <div class="ai-blip" style="background: var(--gemini); top: 30%; left: 25%;">M</div>
+                        <div class="ai-blip" id="blip-openai" style="background: var(--openai); top: 20%; left: 50%;">O</div>
+                        <div class="ai-blip" id="blip-claude" style="background: var(--claude); top: 40%; right: 20%;">C</div>
+                        <div class="ai-blip" id="blip-perplexity" style="background: var(--perplexity); bottom: 30%; right: 30%;">P</div>
+                        <div class="ai-blip" id="blip-xai" style="background: var(--grok); bottom: 20%; left: 20%;">G</div>
+                        <div class="ai-blip" id="blip-gemini" style="background: var(--gemini); top: 30%; left: 25%;">M</div>
                     </div>
                 </div>
 
@@ -742,23 +742,23 @@
                     <div class="instrument-header">Pattern Analysis</div>
                     <div class="pattern-item">
                         <span class="pattern-label">Consensus Level</span>
-                        <span class="pattern-value" style="color: var(--green);">87%</span>
+                        <span class="pattern-value" id="consensus-level" style="color: var(--green);">0%</span>
                     </div>
                     <div class="pattern-item">
                         <span class="pattern-label">Synergy Index</span>
-                        <span class="pattern-value" style="color: var(--amber);">6.2/10</span>
+                        <span class="pattern-value" id="synergy-index" style="color: var(--amber);">0.0/10</span>
                     </div>
                     <div class="pattern-item">
                         <span class="pattern-label">Innovation Rate</span>
-                        <span class="pattern-value" style="color: var(--green);">High</span>
+                        <span class="pattern-value" id="innovation-rate" style="color: var(--green);">Low</span>
                     </div>
                     <div class="pattern-item">
                         <span class="pattern-label">Echo Chamber</span>
-                        <span class="pattern-value" style="color: var(--green);">Low</span>
+                        <span class="pattern-value" id="echo-chamber" style="color: var(--green);">Low</span>
                     </div>
                     <div class="pattern-item">
                         <span class="pattern-label">Conflict Points</span>
-                        <span class="pattern-value" style="color: var(--amber);">2</span>
+                        <span class="pattern-value" id="conflict-points" style="color: var(--amber);">0</span>
                     </div>
                 </div>
 
@@ -767,12 +767,12 @@
                     <div class="instrument-header">Last Known Good</div>
                     <div style="padding: 10px; background: var(--glass); border-radius: 5px;">
                         <div style="font-size: 0.8em; line-height: 1.6;">
-                            <div><strong>Time:</strong> 22:45:00</div>
-                            <div><strong>Version:</strong> 2.3.0</div>
-                            <div><strong>Network:</strong> 192.168.1.105</div>
-                            <div><strong>Status:</strong> <span style="color: var(--green);">5/5 Active</span></div>
+                            <div><strong>Time:</strong> <span id="lkg-time">--:--:--</span></div>
+                            <div><strong>Version:</strong> <span id="lkg-version">2.3.0</span></div>
+                            <div><strong>Network:</strong> <span id="lkg-network">---.---.-.---</span></div>
+                            <div><strong>Status:</strong> <span id="lkg-status" style="color: var(--green);">Unknown</span></div>
                         </div>
-                        <button style="width: 100%; margin-top: 10px; padding: 8px; background: var(--amber); color: var(--bg-primary); border: none; border-radius: 5px; font-family: 'Orbitron', sans-serif; cursor: pointer;">
+                        <button onclick="revertConfig()" style="width: 100%; margin-top: 10px; padding: 8px; background: var(--amber); color: var(--bg-primary); border: none; border-radius: 5px; font-family: 'Orbitron', sans-serif; cursor: pointer;">
                             REVERT CONFIG
                         </button>
                     </div>
@@ -789,182 +789,251 @@
             document.getElementById('current-time').textContent = time;
         }
         setInterval(updateClock, 1000);
+        updateClock();
 
-        // Simulated swarm activity
-        class SwarmSimulator {
-            constructor() {
-                this.ais = ['openai', 'claude', 'perplexity', 'grok', 'gemini'];
-                this.feed = document.getElementById('synthesissFeed');
-                this.taskActive = false;
-                this.thoughts = {
-                    openai: [
-                        "Analyzing task structure and requirements...",
-                        "Breaking down into component problems...",
-                        "Identifying optimization pathways...",
-                        "Calculating efficiency metrics..."
-                    ],
-                    claude: [
-                        "I see an interesting pattern emerging here...",
-                        "Let me consider the ethical implications...",
-                        "Building on OpenAI's analysis...",
-                        "There's a nuanced approach we could take..."
-                    ],
-                    perplexity: [
-                        "Searching latest research on this topic...",
-                        "Found 47 relevant sources from 2024...",
-                        "Cross-referencing with industry standards...",
-                        "Data suggests a 73% success rate with this approach..."
-                    ],
-                    grok: [
-                        "Okay, but what if we made it WILD?",
-                        "Here's the spicy take nobody's considering...",
-                        "Breaking conventional wisdom here...",
-                        "Vegas style solution incoming..."
-                    ],
-                    gemini: [
-                        "Synthesizing all perspectives...",
-                        "Merging analytical and creative approaches...",
-                        "Optimizing for practical implementation...",
-                        "Final consensus forming..."
-                    ]
-                };
-            }
+        // WebSocket connection to HexMind server
+        let ws = null;
+        let reconnectInterval = null;
+        let lastSystemState = null;
 
-            startTask(taskDescription) {
-                this.taskActive = true;
-                this.addFeedEntry('SYSTEM', `New task received: "${taskDescription}"`, 'var(--amber)');
+        function connectWebSocket() {
+            // Try to connect to the server
+            ws = new WebSocket('ws://localhost:3001');
+            
+            ws.onopen = () => {
+                console.log('🔌 Connected to HexMind Server!');
+                clearInterval(reconnectInterval);
+                addFeedEntry('SYSTEM', 'Connected to HexMind Server', 'var(--green)');
                 
-                // Simulate AI responses
-                let delay = 0;
-                this.ais.forEach(ai => {
-                    setTimeout(() => this.simulateAIThinking(ai), delay);
-                    delay += 1000 + Math.random() * 2000;
+                // Update all AI statuses to green
+                ['openai', 'claude', 'perplexity', 'xai', 'gemini'].forEach(ai => {
+                    document.getElementById(`status-${ai}`).style.background = 'var(--green)';
                 });
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleWebSocketMessage(data);
+            };
+            
+            ws.onclose = () => {
+                console.log('🔌 Disconnected from HexMind Server');
+                addFeedEntry('SYSTEM', 'Disconnected from server - attempting reconnect...', 'var(--red)');
+                
+                // Update all AI statuses to red
+                ['openai', 'claude', 'perplexity', 'xai', 'gemini'].forEach(ai => {
+                    document.getElementById(`status-${ai}`).style.background = 'var(--red)';
+                });
+                
+                // Try to reconnect every 5 seconds
+                if (!reconnectInterval) {
+                    reconnectInterval = setInterval(connectWebSocket, 5000);
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
 
-                // Simulate pattern detection
-                setTimeout(() => {
-                    this.addFeedEntry('PATTERN', 'Consensus building detected between Claude and OpenAI', 'var(--purple)');
-                }, 5000);
-
-                setTimeout(() => {
-                    this.addFeedEntry('SYNTHESIS', 'Swarm reaching 87% consensus on approach', 'var(--green)');
-                }, 8000);
+        function handleWebSocketMessage(data) {
+            switch(data.type) {
+                case 'system_state':
+                    updateSystemState(data.state, data.dailyCost, data.totalCalls);
+                    break;
+                    
+                case 'ai_thought':
+                    updateAIThought(data.service, data.content, data.stage);
+                    break;
+                    
+                case 'cost_update':
+                    updateCost(data.dailyCost, data.totalCalls);
+                    break;
+                    
+                case 'network_change':
+                    handleNetworkChange(data);
+                    break;
+                    
+                case 'pattern_detected':
+                    updatePattern(data);
+                    break;
+                    
+                case 'orchestration_start':
+                    addFeedEntry('SYSTEM', `New task received: "${data.task}"`, 'var(--amber)');
+                    break;
+                    
+                case 'orchestration_complete':
+                    addFeedEntry('SYNTHESIS', `Swarm complete: ${data.successCount} AIs responded`, 'var(--green)');
+                    break;
+                    
+                case 'metrics_update':
+                    updateTokenMetrics(data.tokens, data.burnRate);
+                    break;
             }
+        }
 
-            simulateAIThinking(ai) {
-                const bubble = document.getElementById(`bubble-${ai}`);
-                const thoughtElement = document.getElementById(`thought-${ai}`);
+        function updateSystemState(state, dailyCost, totalCalls) {
+            lastSystemState = state;
+            
+            // Update network info
+            document.getElementById('current-ip').textContent = state.network.currentIP;
+            document.getElementById('network-name').textContent = state.network.networkName;
+            document.getElementById('port-status').textContent = `${state.network.port} ✓`;
+            document.getElementById('last-good-ip').textContent = state.network.lastKnownGoodIP;
+            
+            // Update last known good
+            if (state.network.lastGoodConfig) {
+                document.getElementById('lkg-time').textContent = new Date(state.network.lastGoodConfig.timestamp).toTimeString().split(' ')[0];
+                document.getElementById('lkg-version').textContent = state.network.lastGoodConfig.version;
+                document.getElementById('lkg-network').textContent = state.network.lastGoodConfig.network;
+                document.getElementById('lkg-status').textContent = state.network.lastGoodConfig.status;
+            }
+            
+            // Update cost
+            updateCost(dailyCost, totalCalls);
+            
+            // Update patterns
+            document.getElementById('consensus-level').textContent = `${Math.round(state.patterns.consensusLevel)}%`;
+            document.getElementById('synergy-index').textContent = `${state.patterns.synergyIndex}/10`;
+            document.getElementById('innovation-rate').textContent = state.patterns.innovationRate;
+            document.getElementById('echo-chamber').textContent = state.patterns.echoChamber;
+            document.getElementById('conflict-points').textContent = state.patterns.conflictPoints;
+        }
+
+        function updateAIThought(service, content, stage) {
+            const thoughtEl = document.getElementById(`thought-${service}`);
+            const bubbleEl = document.getElementById(`bubble-${service}`);
+            const statusEl = document.getElementById(`status-${service}`);
+            
+            if (thoughtEl && bubbleEl) {
+                // Update thought text
+                thoughtEl.textContent = content;
                 
-                bubble.classList.add('active');
-                
-                // Update thought
-                const thoughts = this.thoughts[ai];
-                const thought = thoughts[Math.floor(Math.random() * thoughts.length)];
-                thoughtElement.textContent = thought;
+                // Add thinking animation
+                if (stage === 'thinking') {
+                    bubbleEl.classList.add('active');
+                    statusEl.style.background = 'var(--amber)';
+                } else if (stage === 'complete') {
+                    bubbleEl.classList.remove('active');
+                    statusEl.style.background = 'var(--green)';
+                } else if (stage === 'error') {
+                    bubbleEl.classList.remove('active');
+                    statusEl.style.background = 'var(--red)';
+                }
                 
                 // Add to feed
-                this.addFeedEntry(ai.toUpperCase(), thought, `var(--${ai})`);
+                const aiColors = {
+                    openai: 'var(--openai)',
+                    claude: 'var(--claude)',
+                    perplexity: 'var(--perplexity)',
+                    xai: 'var(--grok)',
+                    gemini: 'var(--gemini)'
+                };
                 
-                // Simulate typing effect
-                this.typeWriter(thoughtElement, thought, () => {
-                    setTimeout(() => bubble.classList.remove('active'), 1000);
-                });
-            }
-
-            typeWriter(element, text, callback) {
-                element.textContent = '';
-                let i = 0;
-                const speed = 30;
-                
-                function type() {
-                    if (i < text.length) {
-                        element.textContent += text.charAt(i);
-                        i++;
-                        setTimeout(type, speed);
-                    } else if (callback) {
-                        callback();
-                    }
-                }
-                type();
-            }
-
-            addFeedEntry(ai, text, color = 'var(--text-primary)') {
-                const now = new Date();
-                const timestamp = now.toTimeString().split(' ')[0];
-                
-                const entry = document.createElement('div');
-                entry.className = 'feed-entry';
-                entry.innerHTML = `
-                    <span class="feed-timestamp">[${timestamp}]</span>
-                    <span class="feed-ai" style="color: ${color};">${ai}:</span>
-                    <span class="feed-text">${text}</span>
-                `;
-                
-                this.feed.appendChild(entry);
-                this.feed.scrollTop = this.feed.scrollHeight;
-                
-                // Limit feed entries
-                while (this.feed.children.length > 50) {
-                    this.feed.removeChild(this.feed.firstChild);
-                }
+                addFeedEntry(service.toUpperCase(), content, aiColors[service]);
             }
         }
 
-        // Initialize simulator
-        const swarm = new SwarmSimulator();
-
-        // Simulate various events
-        function simulateNetworkChange() {
-            const ipElement = document.getElementById('current-ip');
-            const caution = document.getElementById('masterCaution');
-            const cautionList = document.getElementById('cautionList');
+        function updateCost(dailyCost, totalCalls) {
+            // Update cost display
+            document.getElementById('daily-cost').textContent = `$${dailyCost.toFixed(2)}`;
             
-            ipElement.textContent = '192.168.1.142';
-            ipElement.style.color = 'var(--red)';
-            
-            caution.classList.add('active');
-            cautionList.innerHTML = `
-                <div>• Network change detected!</div>
-                <div>• IP mismatch from last known good</div>
-                <div>• Update server configuration required</div>
-            `;
-            
-            swarm.addFeedEntry('SYSTEM', 'WARNING: Network configuration changed', 'var(--red)');
-        }
-
-        // Token flow animation
-        function animateTokenFlow() {
-            const inputGauge = document.querySelector('.gauge-fill');
-            const currentWidth = parseInt(inputGauge.style.width);
-            const change = Math.random() * 5 - 2.5;
-            const newWidth = Math.max(20, Math.min(90, currentWidth + change));
-            inputGauge.style.width = newWidth + '%';
-            
-            const tokens = Math.floor(newWidth * 100);
-            inputGauge.querySelector('.gauge-label').textContent = `Input: ${tokens.toLocaleString()}/10K`;
-        }
-        setInterval(animateTokenFlow, 2000);
-
-        // Cost accumulation
-        function updateCost() {
-            const costElement = document.querySelector('.altitude-value');
-            const current = parseFloat(costElement.textContent.replace('$', ''));
-            const increment = 0.01 + Math.random() * 0.02;
-            const newCost = (current + increment).toFixed(2);
-            costElement.textContent = '$' + newCost;
-            
-            // Update gauge
-            const gauge = document.querySelector('.altitude-display .gauge-fill');
-            const percentage = (newCost / 10) * 100;
+            // Update cost gauge
+            const percentage = (dailyCost / 10) * 100;
+            const gauge = document.getElementById('cost-gauge');
             gauge.style.width = percentage + '%';
             
             if (percentage > 80) {
                 gauge.style.background = 'var(--red)';
             } else if (percentage > 60) {
                 gauge.style.background = 'var(--amber)';
+            } else {
+                gauge.style.background = 'var(--green)';
+            }
+            
+            // Estimate hourly rate (simple calculation)
+            const now = new Date();
+            const hoursSinceStart = (now.getHours() + (now.getMinutes() / 60));
+            const hourlyRate = hoursSinceStart > 0 ? dailyCost / hoursSinceStart : 0;
+            document.getElementById('cost-rate').textContent = `↑ $${hourlyRate.toFixed(2)}/hour`;
+        }
+
+        function updateTokenMetrics(tokens, burnRate) {
+            // Update input tokens
+            const inputPercentage = (tokens.input / tokens.maxDaily) * 100;
+            const inputGauge = document.getElementById('input-tokens');
+            inputGauge.style.width = `${Math.min(inputPercentage, 100)}%`;
+            inputGauge.querySelector('.gauge-label').textContent = `Input: ${tokens.input.toLocaleString()}/${(tokens.maxDaily/1000).toFixed(0)}K`;
+            
+            // Update output tokens
+            const outputPercentage = (tokens.output / tokens.maxDaily) * 100;
+            const outputGauge = document.getElementById('output-tokens');
+            outputGauge.style.width = `${Math.min(outputPercentage, 100)}%`;
+            outputGauge.querySelector('.gauge-label').textContent = `Output: ${tokens.output.toLocaleString()}/${(tokens.maxDaily/1000).toFixed(0)}K`;
+            
+            // Update burn rate
+            document.getElementById('burn-rate').textContent = `Burn Rate: ${Math.round(burnRate)} tokens/min`;
+        }
+
+        function handleNetworkChange(data) {
+            // Show master caution
+            const caution = document.getElementById('masterCaution');
+            const cautionList = document.getElementById('cautionList');
+            
+            caution.classList.add('active');
+            cautionList.innerHTML = `
+                <div>• Network change detected!</div>
+                <div>• Old IP: ${data.oldIP}</div>
+                <div>• New IP: ${data.newIP}</div>
+                <div>• Update server configuration required</div>
+            `;
+            
+            // Update current IP in red
+            const ipElement = document.getElementById('current-ip');
+            ipElement.textContent = data.newIP;
+            ipElement.style.color = 'var(--red)';
+            
+            // Add to feed
+            addFeedEntry('SYSTEM', `WARNING: ${data.message}`, 'var(--red)');
+        }
+
+        function updatePattern(data) {
+            if (data.pattern === 'consensus') {
+                document.getElementById('consensus-level').textContent = `${Math.round(data.level)}%`;
+                addFeedEntry('PATTERN', `Consensus detected: ${Math.round(data.level)}% agreement`, 'var(--purple)');
             }
         }
-        setInterval(updateCost, 5000);
+
+        function addFeedEntry(source, text, color = 'var(--text-primary)') {
+            const feed = document.getElementById('synthesissFeed');
+            const now = new Date();
+            const timestamp = now.toTimeString().split(' ')[0];
+            
+            const entry = document.createElement('div');
+            entry.className = 'feed-entry';
+            entry.innerHTML = `
+                <span class="feed-timestamp">[${timestamp}]</span>
+                <span class="feed-ai" style="color: ${color};">${source}:</span>
+                <span class="feed-text">${text}</span>
+            `;
+            
+            feed.appendChild(entry);
+            feed.scrollTop = feed.scrollHeight;
+            
+            // Limit feed entries to 100
+            while (feed.children.length > 100) {
+                feed.removeChild(feed.firstChild);
+            }
+        }
+
+        function revertConfig() {
+            if (lastSystemState && lastSystemState.network.lastGoodConfig) {
+                if (confirm('Revert to last known good configuration?')) {
+                    addFeedEntry('SYSTEM', 'Reverting to last known good configuration...', 'var(--amber)');
+                    // In a real implementation, this would send a command to the server
+                }
+            }
+        }
 
         // Radar animation
         function animateRadar() {
@@ -976,38 +1045,18 @@
         }
         setInterval(animateRadar, 1000);
 
-        // Demo tasks
-        const demoTasks = [
-            "Create a viral marketing campaign for Jeff the Magic Mechanic",
-            "Optimize website loading speed for fix-this-car.com",
-            "Design an AI-powered diagnostic system for auto repair",
-            "Generate creative taglines for a Vegas magic show mechanic"
-        ];
-
-        // Start a demo task after 3 seconds
-        setTimeout(() => {
-            swarm.startTask(demoTasks[0]);
-        }, 3000);
-
-        // Simulate network change after 15 seconds
-        setTimeout(simulateNetworkChange, 15000);
-
-        // Keyboard shortcuts
+        // Clear caution on Escape
         document.addEventListener('keydown', (e) => {
-            if (e.key === 't' || e.key === 'T') {
-                // Trigger new task
-                const task = demoTasks[Math.floor(Math.random() * demoTasks.length)];
-                swarm.startTask(task);
-            }
             if (e.key === 'Escape') {
-                // Clear warnings
                 document.getElementById('masterCaution').classList.remove('active');
+                document.getElementById('current-ip').style.color = 'var(--green)';
             }
         });
 
-        console.log('HexMind Blackhawk Swarm Intelligence Active');
-        console.log('Press "T" to trigger a new task');
-        console.log('Press "ESC" to clear warnings');
+        // Initialize connection
+        console.log('🚁 HexMind Blackhawk Dashboard v2.3');
+        console.log('🔌 Connecting to HexMind Server...');
+        connectWebSocket();
     </script>
 </body>
 </html>
