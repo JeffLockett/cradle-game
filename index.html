@@ -317,6 +317,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            min-height: 0; /* Important for flex child */
         }
 
         .feed-header {
@@ -327,12 +328,16 @@
             color: var(--amber);
             margin-bottom: 15px;
             text-align: center;
+            flex-shrink: 0; /* Prevent header from shrinking */
         }
 
         .feed-content {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             padding-right: 10px;
+            min-height: 0; /* Important for flex child scrolling */
+            max-height: 100%; /* Ensure it doesn't exceed parent */
         }
 
         .feed-entry {
