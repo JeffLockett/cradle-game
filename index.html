@@ -422,6 +422,7 @@
             box-shadow: 0 0 10px currentColor;
             animation: blipPulse 2s infinite;
             z-index: 10;
+            transition: none;
         }
 
         /* AI Interaction Lines */
@@ -448,6 +449,85 @@
         .interaction-line.expansion {
             background: var(--cyan);
             box-shadow: 0 0 10px var(--cyan);
+        }
+
+        /* New animations for enhanced radar */
+        .thinking-ripple {
+            position: absolute;
+            border: 2px solid;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            animation: rippleExpand 2s ease-out;
+            z-index: 3;
+        }
+
+        @keyframes rippleExpand {
+            0% {
+                width: 20px;
+                height: 20px;
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                width: 100px;
+                height: 100px;
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(5);
+            }
+        }
+
+        .word-projectile {
+            position: absolute;
+            padding: 2px 6px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 3px;
+            font-size: 0.7em;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 15;
+            text-shadow: 0 0 5px currentColor;
+        }
+
+        .consensus-burst {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .consensus-burst::before,
+        .consensus-burst::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--amber) 0%, transparent 70%);
+            animation: consensusPulse 1s ease-out;
+        }
+
+        .consensus-burst::after {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes consensusPulse {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        .ai-blip.converging {
+            transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes interactionPulse {
@@ -842,6 +922,28 @@
         let reconnectInterval = null;
         let lastSystemState = null;
 
+        // Animation tracking
+        let animationFrame = null;
+        const aiOrbitData = {
+            openai: { radius: 60, speed: 0.002, angle: 0, offset: 0 },
+            claude: { radius: 70, speed: 0.0025, angle: 0, offset: Math.PI * 0.4 },
+            perplexity: { radius: 50, speed: 0.003, angle: 0, offset: Math.PI * 0.8 },
+            xai: { radius: 65, speed: 0.0015, angle: 0, offset: Math.PI * 1.2 },
+            gemini: { radius: 55, speed: 0.0035, angle: 0, offset: Math.PI * 1.6 }
+        };
+        
+        let isConverging = false;
+        let convergenceTarget = { x: 50, y: 50 };
+
+        // AI color map
+        const aiColors = {
+            openai: 'var(--openai)',
+            claude: 'var(--claude)',
+            perplexity: 'var(--perplexity)',
+            xai: 'var(--grok)',
+            gemini: 'var(--gemini)'
+        };
+
         function connectWebSocket() {
             // Try to connect to the server
             ws = new WebSocket('ws://localhost:3001');
@@ -914,6 +1016,7 @@
                     
                 case 'ai_interaction':
                     showRadarInteraction(data.from, data.to, data.interactionType);
+                    showWordProjectile(data.from, data.to, data.interactionType, data.context);
                     break;
                     
                 case 'swarm_phase':
@@ -967,6 +1070,7 @@
                 if (stage === 'thinking') {
                     bubbleEl.classList.add('active');
                     statusEl.style.background = 'var(--amber)';
+                    createThinkingRipples(service);
                 } else if (stage === 'complete') {
                     bubbleEl.classList.remove('active');
                     statusEl.style.background = 'var(--green)';
@@ -1089,6 +1193,128 @@
             }
         }
 
+        // Enhanced radar animations
+        function animateAIBlips() {
+            const radar = document.querySelector('.swarm-radar');
+            const radarRect = radar.getBoundingClientRect();
+            const centerX = radarRect.width / 2;
+            const centerY = radarRect.height / 2;
+            
+            Object.keys(aiOrbitData).forEach(ai => {
+                const blip = document.getElementById(`blip-${ai}`);
+                if (!blip) return;
+                
+                const orbit = aiOrbitData[ai];
+                
+                if (isConverging) {
+                    // Converge to center
+                    blip.style.left = '50%';
+                    blip.style.top = '50%';
+                    blip.style.transform = 'translate(-50%, -50%)';
+                } else {
+                    // Orbital movement
+                    orbit.angle += orbit.speed;
+                    const x = centerX + Math.cos(orbit.angle + orbit.offset) * orbit.radius;
+                    const y = centerY + Math.sin(orbit.angle + orbit.offset) * orbit.radius;
+                    
+                    blip.style.left = `${x}px`;
+                    blip.style.top = `${y}px`;
+                    blip.style.transform = 'translate(-50%, -50%)';
+                }
+            });
+            
+            animationFrame = requestAnimationFrame(animateAIBlips);
+        }
+
+        // Create thinking ripples
+        function createThinkingRipples(service) {
+            const blip = document.getElementById(`blip-${service}`);
+            if (!blip) return;
+            
+            const radar = document.querySelector('.swarm-radar');
+            const blipRect = blip.getBoundingClientRect();
+            const radarRect = radar.getBoundingClientRect();
+            
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const ripple = document.createElement('div');
+                    ripple.className = 'thinking-ripple';
+                    ripple.style.borderColor = aiColors[service];
+                    ripple.style.left = `${blipRect.left - radarRect.left + blipRect.width/2}px`;
+                    ripple.style.top = `${blipRect.top - radarRect.top + blipRect.height/2}px`;
+                    
+                    radar.appendChild(ripple);
+                    
+                    setTimeout(() => ripple.remove(), 2000);
+                }, i * 300);
+            }
+        }
+
+        // Show word projectile
+        function showWordProjectile(from, to, type, context) {
+            const fromBlip = document.getElementById(`blip-${from}`);
+            const toBlip = document.getElementById(`blip-${to}`);
+            if (!fromBlip || !toBlip || !context) return;
+            
+            const radar = document.querySelector('.swarm-radar');
+            const fromRect = fromBlip.getBoundingClientRect();
+            const toRect = toBlip.getBoundingClientRect();
+            const radarRect = radar.getBoundingClientRect();
+            
+            // Extract first 3-4 words
+            const words = context.split(' ').slice(0, 4).join(' ');
+            
+            // Create projectile
+            const projectile = document.createElement('div');
+            projectile.className = 'word-projectile';
+            projectile.textContent = words;
+            projectile.style.color = type === 'agreement' ? 'var(--green)' : 
+                                   type === 'conflict' ? 'var(--red)' : 'var(--cyan)';
+            
+            // Starting position
+            const startX = fromRect.left - radarRect.left + fromRect.width/2;
+            const startY = fromRect.top - radarRect.top + fromRect.height/2;
+            const endX = toRect.left - radarRect.left + toRect.width/2;
+            const endY = toRect.top - radarRect.top + toRect.height/2;
+            
+            projectile.style.left = `${startX}px`;
+            projectile.style.top = `${startY}px`;
+            
+            radar.appendChild(projectile);
+            
+            // Animate to target
+            const duration = 1500;
+            const startTime = Date.now();
+            
+            function animateProjectile() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                
+                const currentX = startX + (endX - startX) * easeProgress;
+                const currentY = startY + (endY - startY) * easeProgress;
+                
+                projectile.style.left = `${currentX}px`;
+                projectile.style.top = `${currentY}px`;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateProjectile);
+                } else {
+                    // Impact effect
+                    toBlip.style.boxShadow = `0 0 20px ${aiColors[to]}`;
+                    setTimeout(() => {
+                        toBlip.style.boxShadow = `0 0 10px ${aiColors[to]}`;
+                    }, 300);
+                    
+                    projectile.remove();
+                }
+            }
+            
+            requestAnimationFrame(animateProjectile);
+        }
+
         // Radar animation with interactions
         const aiPositions = {
             openai: { x: 50, y: 20 },
@@ -1164,6 +1390,50 @@
             } else {
                 synergyEl.style.color = 'var(--red)';
             }
+            
+            // Handle consensus convergence
+            if (metrics.consensusLevel > 70 && !isConverging) {
+                startConsensusConvergence();
+            } else if (metrics.consensusLevel <= 70 && isConverging) {
+                stopConsensusConvergence();
+            }
+        }
+
+        // Consensus convergence animation
+        function startConsensusConvergence() {
+            isConverging = true;
+            
+            // Add converging class to all blips
+            Object.keys(aiOrbitData).forEach(ai => {
+                const blip = document.getElementById(`blip-${ai}`);
+                if (blip) {
+                    blip.classList.add('converging');
+                }
+            });
+            
+            // Create burst effect
+            const radar = document.querySelector('.swarm-radar');
+            const burst = document.createElement('div');
+            burst.className = 'consensus-burst';
+            radar.appendChild(burst);
+            
+            setTimeout(() => burst.remove(), 1300);
+            
+            addFeedEntry('PATTERN', 'High consensus achieved - AIs converging!', 'var(--green)');
+        }
+
+        function stopConsensusConvergence() {
+            isConverging = false;
+            
+            // Remove converging class
+            Object.keys(aiOrbitData).forEach(ai => {
+                const blip = document.getElementById(`blip-${ai}`);
+                if (blip) {
+                    blip.classList.remove('converging');
+                }
+            });
+            
+            addFeedEntry('PATTERN', 'Consensus diverging - AIs resuming independent orbits', 'var(--amber)');
         }
 
         // Enhanced log export with swarm data
@@ -1238,6 +1508,9 @@ This session demonstrates ${document.getElementById('synergy-index').textContent
                 document.getElementById('current-ip').style.color = 'var(--green)';
             }
         });
+
+        // Start AI blip animation
+        animateAIBlips();
 
         // Initialize connection
         console.log('🚁 HexMind Blackhawk Dashboard v2.3');
