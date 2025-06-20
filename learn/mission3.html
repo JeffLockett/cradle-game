@@ -7,7 +7,10 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #1a1a2e; color: white; min-height: 100vh; }
-        .container { display: flex; height: 100vh; }
+        .container {
+    display: flex;
+    min-height: 100vh;  /* <- ALLOWS SCROLLING! */
+}
         .lesson-panel { flex: 1; padding: 2rem; background: #16213e; overflow-y: auto; }
         .code-panel { flex: 1; display: flex; flex-direction: column; background: #0f3460; }
         .editor { flex: 1; padding: 1rem; }
