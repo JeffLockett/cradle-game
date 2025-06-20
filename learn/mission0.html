@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission 0: Welcome to Diagon Alley</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(to bottom, #2c1810 0%, #8b4513 50%, #d2691e 100%);
+            color: white; 
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { 
+            color: #ffd700; 
+            text-align: center; 
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: 2.5rem;
+        }
+        .shop-street {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .shop {
+            background: rgba(0,0,0,0.3);
+            border: 3px solid #8b4513;
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .shop:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+            border-color: #ffd700;
+        }
+        .shop h2 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .shop-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+            text-align: center;
+        }
+        .spell-preview {
+            background: #000;
+            color: #0f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        .learned {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #27ae60;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .wand-shop {
+            background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 100%);
+            border-color: #9c27b0;
+            text-align: center;
+            padding: 3rem;
+            grid-column: span 2;
+        }
+        .wand-shop h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        .final-test {
+            background: rgba(255,215,0,0.1);
+            border: 3px solid #ffd700;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .button {
+            background: linear-gradient(45deg, #8b4513, #d2691e);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255,215,0,0.4);
+        }
+        .tooltip {
+            background: #333;
+            color: #ffd700;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+            pointer-events: none;
+            margin-bottom: 10px;
+        }
+        .shop:hover .tooltip {
+            opacity: 1;
+        }
+        .interactive-demo {
+            background: rgba(0,0,0,0.5);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+        .demo-item {
+            display: inline-block;
+            background: #8b4513;
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .demo-item:hover {
+            background: #d2691e;
+            transform: scale(1.1);
+        }
+        #cauldron {
+            min-height: 100px;
+            background: #1a1a1a;
+            border: 3px solid #4a148c;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            color: #0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Welcome to Diagon Alley - Coder's Shopping Street! ⚡</h1>
+        
+        <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem; color: #ffd700;">
+            "You're a coder, Harry!" - Time to get your magical supplies!
+        </p>
+
+        <div class="shop-street">
+            <!-- HTML Supplies Shop -->
+            <div class="shop" onclick="learnHTML()">
+                <span class="shop-icon">🏛️</span>
+                <h2>Flourish & Blotts</h2>
+                <h3>HTML Spell Components</h3>
+                <p>The building blocks of web magic! Like buying your textbooks.</p>
+                <div class="spell-preview">
+&lt;div&gt; = Magic Container Box
+&lt;button&gt; = Clickable Spell Trigger  
+&lt;input&gt; = Wizard's Writing Quill
+&lt;h1&gt; = Big Important Title
+                </div>
+                <span class="tooltip">Click to learn HTML spells!</span>
+            </div>
+
+            <!-- Variables Shop -->
+            <div class="shop" onclick="learnVariables()">
+                <span class="shop-icon">🏺</span>
+                <h2>Potage's Cauldron Shop</h2>
+                <h3>Variables & Storage</h3>
+                <p>Store your magical ingredients! Every wizard needs containers.</p>
+                <div class="spell-preview">
+let potion = "Felix Felicis";
+let galleons = 100;
+let spells = ["Lumos", "Nox"];
+                </div>
+                <span class="tooltip">Click to learn about variables!</span>
+            </div>
+
+            <!-- Functions Shop -->
+            <div class="shop" onclick="learnFunctions()">
+                <span class="shop-icon">📜</span>
+                <h2>Scribbulus Writing Shop</h2>
+                <h3>Functions (Reusable Spells)</h3>
+                <p>Write a spell once, cast it many times!</p>
+                <div class="spell-preview">
+function castLumos() {
+    // Your spell code here
+    return "✨ Light!";
+}
+                </div>
+                <span class="tooltip">Functions = Named spells!</span>
+            </div>
+
+            <!-- DOM Magic Shop -->
+            <div class="shop" onclick="learnDOM()">
+                <span class="shop-icon">🔮</span>
+                <h2>Magical Menagerie</h2>
+                <h3>DOM Manipulation</h3>
+                <p>Control page elements like magical creatures!</p>
+                <div class="spell-preview">
+getElementById("dragon")
+querySelector(".unicorn")
+innerHTML = "Transform!"
+                </div>
+                <span class="tooltip">Find and control page elements!</span>
+            </div>
+
+            <!-- Wand Selection -->
+            <div class="shop wand-shop">
+                <span class="shop-icon">🪄</span>
+                <h2>Ollivanders: Makers of Fine Wands Since 382 B.C.</h2>
+                <h3>Choose Your Coding Wand!</h3>
+                <p>"The wand chooses the wizard, Mr. Potter."</p>
+                
+                <div class="interactive-demo">
+                    <p>Click ingredients to add to your spell:</p>
+                    <div>
+                        <span class="demo-item" onclick="addToSpell('&lt;div&gt;')">📦 div</span>
+                        <span class="demo-item" onclick="addToSpell('.getElementById()')">🔍 getElementById</span>
+                        <span class="demo-item" onclick="addToSpell('function')">📜 function</span>
+                        <span class="demo-item" onclick="addToSpell('onclick')">👆 onclick</span>
+                        <span class="demo-item" onclick="addToSpell('let spell =')">🏺 variable</span>
+                    </div>
+                    <div id="cauldron">// Your spell will appear here...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="final-test">
+            <h2>🎓 Ready for Hogwarts?</h2>
+            <p>You've gathered your supplies! Now you understand:</p>
+            <ul style="list-style: none; margin: 1rem 0;">
+                <li>✅ HTML = Your spell components (structure)</li>
+                <li>✅ Variables = Your cauldrons (storage)</li>
+                <li>✅ Functions = Your spell books (reusable magic)</li>
+                <li>✅ DOM = Your magical control (finding & changing things)</li>
+            </ul>
+            <a href="mission1.html" class="button">Board the Hogwarts Express! 🚂</a>
+        </div>
+    </div>
+
+    <script>
+        let spellCode = [];
+
+        function learnHTML() {
+            alert("🏛️ HTML Learned!\n\nHTML tags are like containers:\n• <div> = A box\n• <p> = A paragraph\n• <button> = Something clickable\n• <input> = Where users type\n\nThink of them as the NOUNS of coding!");
+        }
+
+        function learnVariables() {
+            alert("🏺 Variables Learned!\n\nVariables store things:\n• let name = 'Harry';\n• let age = 11;\n• let spells = [];\n\nThey're like labeled jars in a potions cabinet!");
+        }
+
+        function learnFunctions() {
+            alert("📜 Functions Learned!\n\nFunctions are reusable spells:\n\nfunction sayHello() {\n    console.log('Hello!');\n}\n\nWrite once, use many times!\nThey're the VERBS of coding!");
+        }
+
+        function learnDOM() {
+            alert("🔮 DOM Magic Learned!\n\nDOM lets you control the page:\n• getElementById('name') = Find element\n• .innerHTML = Change content\n• .style = Change appearance\n\nIt's like having a magic wand for your webpage!");
+        }
+
+        function addToSpell(ingredient) {
+            spellCode.push(ingredient);
+            document.getElementById('cauldron').innerHTML = spellCode.join(' ');
+            
+            // Easter egg - if they create a valid spell structure
+            if (spellCode.join(' ').includes('function') && spellCode.join(' ').includes('getElementById')) {
+                setTimeout(() => {
+                    document.getElementById('cauldron').innerHTML += '\n// ✨ Your wand is glowing! Valid spell detected!';
+                }, 500);
+            }
+        }
+
+        // Fun entrance animation
+        window.onload = function() {
+            const shops = document.querySelectorAll('.shop');
+            shops.forEach((shop, index) => {
+                shop.style.opacity = '0';
+                shop.style.transform = 'translateY(50px)';
+                setTimeout(() => {
+                    shop.style.transition = 'all 0.5s ease';
+                    shop.style.opacity = '1';
+                    shop.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        };
+    </script>
+</body>
+</html>
