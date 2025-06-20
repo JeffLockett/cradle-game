@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission 4: The Marauder's Map</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #1a1a2e; color: white; min-height: 100vh; }
+        .container { display: flex; height: 100vh; }
+        .lesson-panel { flex: 1; padding: 2rem; background: #16213e; overflow-y: auto; }
+        .code-panel { flex: 1; display: flex; flex-direction: column; background: #0f3460; }
+        .editor { flex: 1; padding: 1rem; }
+        .output { height: 300px; background: #1a1a2e; padding: 1rem; overflow-y: auto; border-top: 2px solid #e94560; }
+        h1 { color: #f39c12; margin-bottom: 1rem; }
+        .step { background: rgba(255,255,255,0.1); padding: 1.5rem; margin-bottom: 1rem; border-radius: 10px; border-left: 4px solid #f39c12; }
+        .step h3 { color: #3498db; margin-bottom: 0.5rem; }
+        .code-block { background: #000; color: #0f0; padding: 1rem; border-radius: 5px; margin: 1rem 0; font-family: monospace; }
+        textarea { width: 100%; height: 300px; background: #1a1a2e; color: #0f0; border: none; padding: 1rem; font-family: monospace; font-size: 14px; }
+        .run-button { background: linear-gradient(45deg, #f39c12, #d68910); color: white; border: none; padding: 1rem; font-size: 1.1rem; cursor: pointer; width: 100%; }
+        .map { background: #d4c4b0; color: #3e2723; padding: 20px; border-radius: 10px; position: relative; min-height: 200px; }
+        .footstep { position: absolute; font-size: 20px; transition: all 0.5s ease; }
+        .success { background: #27ae60; padding: 1rem; border-radius: 5px; margin: 1rem 0; animation: glow 2s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lesson-panel">
+            <h1>🗺️ Mission 4: The Marauder's Map</h1>
+            
+            <div class="step">
+                <h3>📜 The Story</h3>
+                <p>"I solemnly swear that I am up to no good!" The Marauder's Map shows everyone at Hogwarts, but it's broken! Help the Weasley twins fix it.</p>
+                <p><strong>Your mission:</strong> Use objects and DOM manipulation to track people on the map!</p>
+            </div>
+            
+            <div class="step">
+                <h3>🪄 Spell: Trackius (Objects)</h3>
+                <p>Objects let us group related information together:</p>
+                <div class="code-block">
+// Creating a person object
+let harry = {
+    name: 'Harry Potter',
+    location: 'Gryffindor Tower',
+    x: 100,
+    y: 50
+};
+
+// Moving someone
+harry.location = 'Great Hall';
+harry.x = 200;
+                </div>
+            </div>
+            
+            <div class="step">
+                <h3>🎯 Your Challenge</h3>
+                <p>Add more people to the map and create a function to move them! Make footprints appear when you click "Reveal Map".</p>
+                <p><strong>Ultimate Challenge:</strong> Make the footprints move randomly every 2 seconds!</p>
+            </div>
+        </div>
+        
+        <div class="code-panel">
+            <div class="editor">
+                <h2>✨ Your Spellbook</h2>
+                <textarea id="userCode">
+<!-- HTML Structure -->
+<h2>The Marauder's Map</h2>
+<button onclick="revealMap()">I solemnly swear I am up to no good</button>
+<button onclick="hideMap()">Mischief Managed</button>
+<div id="map" class="map">
+    <p id="map-text" style="text-align: center; color: #8b6914;">Tap to reveal...</p>
+</div>
+
+<script>
+// People at Hogwarts
+let people = [
+    {
+        name: 'Harry Potter',
+        location: 'Gryffindor Tower',
+        x: 50,
+        y: 30,
+        icon: '👣'
+    },
+    {
+        name: 'Draco Malfoy',
+        location: 'Dungeons',
+        x: 200,
+        y: 100,
+        icon: '👣'
+    }
+    // YOUR CHALLENGE: Add more people!
+    // Add Hermione, Ron, and Snape
+];
+
+function revealMap() {
+    const map = document.getElementById('map');
+    const mapText = document.getElementById('map-text');
+    mapText.style.display = 'none';
+    
+    // Clear existing footsteps
+    map.innerHTML = '';
+    
+    // YOUR CHALLENGE: Show all people on the map
+    people.forEach(person => {
+        const footstep = document.createElement('div');
+        footstep.className = 'footstep';
+        footstep.style.left = person.x + 'px';
+        footstep.style.top = person.y + 'px';
+        footstep.innerHTML = person.icon + '<br><small>' + person.name + '</small>';
+        footstep.title = person.location;
+        
+        map.appendChild(footstep);
+    });
+}
+
+function hideMap() {
+    const map = document.getElementById('map');
+    map.innerHTML = '<p id="map-text" style="text-align: center; color: #8b6914;">Mischief Managed!</p>';
+}
+
+// BONUS CHALLENGE: Make people move!
+function movePeople() {
+    // Add code here to randomly change x and y positions
+    // Then call revealMap() to update
+}
+
+// Uncomment this to make people move every 2 seconds:
+// setInterval(movePeople, 2000);
+</script>
+                </textarea>
+                <button class="run-button" onclick="runCode()">Cast Spell 🪄</button>
+            </div>
+            
+            <div class="output" id="output">
+                <h3>🗺️ Map Display</h3>
+                <div id="spell-output"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function runCode() {
+            const code = document.getElementById('userCode').value;
+            const output = document.getElementById('spell-output');
+            
+            try {
+                output.innerHTML = '';
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '250px';
+                iframe.style.border = 'none';
+                iframe.style.background = 'white';
+                output.appendChild(iframe);
+                
+                const style = `<style>
+                    body { font-family: Arial; padding: 20px; background: #f5f5f5; color: #333; }
+                    button { padding: 10px 15px; background: #8b6914; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+                    button:hover { background: #6d530f; }
+                    .map { background: #d4c4b0; color: #3e2723; padding: 20px; border-radius: 10px; position: relative; min-height: 200px; margin: 20px 0; border: 3px solid #8b6914; }
+                    .footstep { position: absolute; font-size: 16px; text-align: center; cursor: pointer; }
+                    .footstep:hover { transform: scale(1.2); }
+                </style>`;
+                
+                iframe.contentDocument.open();
+                iframe.contentDocument.write(style + code);
+                iframe.contentDocument.close();
+                
+                // Check success
+                setTimeout(() => {
+                    if (code.includes('Hermione') || code.includes('Ron')) {
+                        output.innerHTML += '<div class="success">🎉 The map never lies! Messrs Moony, Wormtail, Padfoot, and Prongs are proud! +200 Points!</div>';
+                    }
+                }, 100);
+            } catch (error) {
+                output.innerHTML = `<div style="color: #e74c3c;">❌ ${error.message}</div>`;
+            }
+        }
+        setTimeout(runCode, 500);
+    </script>
+</body>
+</html>

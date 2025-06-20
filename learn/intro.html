@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Hogwarts School of Coding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(to bottom, #0a0e27 0%, #1a1a3e 50%, #16213e 100%);
+            color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .parchment {
+            background: linear-gradient(to bottom, #f4e8d0 0%, #e8dcc0 100%);
+            color: #2c2416;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            max-width: 800px;
+            position: relative;
+            margin: 2rem;
+        }
+        
+        .parchment::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, #8b6914, #d4af37, #8b6914);
+            z-index: -1;
+            border-radius: 10px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #5d4e37;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .letter {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .signature {
+            text-align: right;
+            font-style: italic;
+            margin-top: 2rem;
+        }
+        
+        .start-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #5d4e37 0%, #8b6914 100%);
+            color: #f4e8d0;
+            padding: 1rem 3rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        
+        .wax-seal {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #8b0000 0%, #5d0000 100%);
+            border-radius: 50%;
+            margin: 2rem auto;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        
+        .wax-seal::after {
+            content: 'H';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #f4e8d0;
+            font-weight: bold;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .sparkle {
+            position: absolute;
+            color: gold;
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="sparkle" style="top: 10%; left: 10%;">✨</div>
+    <div class="sparkle" style="top: 20%; right: 15%; animation-delay: 1s;">⭐</div>
+    <div class="sparkle" style="bottom: 20%; left: 20%; animation-delay: 2s;">✨</div>
+    
+    <div class="parchment">
+        <div class="wax-seal"></div>
+        
+        <h1>HOGWARTS SCHOOL<br>of<br>CODING & WIZARDRY</h1>
+        
+        <div class="letter">
+            <p>Dear Future Wizard,</p>
+            
+            <p>We are pleased to inform you that you have been accepted at Hogwarts School of Coding & Wizardry. Here, you will learn to wield the most powerful magic of all: the ability to create anything you imagine with code.</p>
+            
+            <p>Your first assignment awaits: Professor McGonagall has reported that Neville Longbottom's Remembrall has malfunctioned. It no longer remembers what he's forgotten! We need a talented young wizard to craft a new magical todo system using the ancient arts of HTML, CSS, and JavaScript.</p>
+            
+            <p>Through this quest, you will learn:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li>The <strong>Structurus</strong> spell (HTML)</li>
+                <li>The <strong>Beautificus</strong> charm (CSS)</li>
+                <li>The <strong>Dynamicus</strong> incantation (JavaScript)</li>
+            </ul>
+            
+            <p style="margin-top: 1.5rem;">Are you ready to begin your magical journey?</p>
+        </div>
+        
+        <div class="signature">
+            <p>Yours sincerely,</p>
+            <p><strong>Professor Albus Dumbledore</strong></p>
+            <p style="font-size: 0.9rem;">Headmaster</p>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="mission1.html" class="start-button">Begin Your Journey 🪄</a>
+        </div>
+    </div>
+</body>
+</html>

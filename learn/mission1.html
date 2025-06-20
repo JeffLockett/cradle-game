@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission 1: Neville's Remembrall</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .lesson-panel {
+            flex: 1;
+            padding: 2rem;
+            background: #16213e;
+            overflow-y: auto;
+        }
+        
+        .code-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0f3460;
+        }
+        
+        .editor {
+            flex: 1;
+            padding: 1rem;
+        }
+        
+        .output {
+            height: 300px;
+            background: #1a1a2e;
+            padding: 1rem;
+            overflow-y: auto;
+            border-top: 2px solid #e94560;
+        }
+        
+        h1 {
+            color: #f39c12;
+            margin-bottom: 1rem;
+        }
+        
+        .step {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .step h3 {
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-block {
+            background: #000;
+            color: #0f0;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 300px;
+            background: #1a1a2e;
+            color: #0f0;
+            border: none;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: none;
+        }
+        
+        .run-button {
+            background: linear-gradient(45deg, #f39c12, #e74c3c);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .run-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.4);
+        }
+        
+        .success {
+            background: #27ae60;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(39, 174, 96, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(39, 174, 96, 0.8); }
+        }
+        
+        .remembrall {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 2rem auto;
+            transition: all 0.5s ease;
+            box-shadow: 0 0 30px rgba(255,255,255,0.3);
+        }
+        
+        .remembrall.empty {
+            background: radial-gradient(circle, #666 0%, #333 100%);
+        }
+        
+        .remembrall.active {
+            background: radial-gradient(circle, #ff6b6b 0%, #c0392b 100%);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lesson-panel">
+            <h1>🔮 Mission 1: Neville's Remembrall</h1>
+            
+            <div class="step">
+                <h3>📜 The Story</h3>
+                <p>Neville's grandmother sent him a Remembrall - a magical glass ball that turns red when you've forgotten something. But it's broken! It doesn't tell him WHAT he's forgotten.</p>
+                <p><strong>Your mission:</strong> Use code magic to fix it by creating a todo list system!</p>
+            </div>
+            
+            <div class="step">
+                <h3>🪄 Spell 1: Structurus (HTML)</h3>
+                <p>First, we need to create the structure. In the magical world of code, HTML creates the bones of our spell:</p>
+                <div class="code-block">
+&lt;div id="remembrall" class="remembrall empty"&gt;&lt;/div&gt;
+&lt;input type="text" id="task" placeholder="What must you remember?"&gt;
+&lt;button onclick="addTask()"&gt;Cast Remembrall Charm&lt;/button&gt;
+&lt;ul id="tasks"&gt;&lt;/ul&gt;
+                </div>
+            </div>
+            
+            <div class="step">
+                <h3>⚡ Spell 2: Dynamicus (JavaScript)</h3>
+                <p>Now for the magic! JavaScript brings our Remembrall to life:</p>
+                <div class="code-block">
+let tasks = [];
+
+function addTask() {
+    const taskInput = document.getElementById('task');
+    const task = taskInput.value;
+    
+    if (task) {
+        tasks.push(task);
+        updateRemembrall();
+        taskInput.value = '';
+    }
+}
+
+function updateRemembrall() {
+    const remembrall = document.getElementById('remembrall');
+    const taskList = document.getElementById('tasks');
+    
+    if (tasks.length > 0) {
+        remembrall.className = 'remembrall active';
+        taskList.innerHTML = tasks.map(t => `&lt;li&gt;${t}&lt;/li&gt;`).join('');
+    } else {
+        remembrall.className = 'remembrall empty';
+        taskList.innerHTML = '';
+    }
+}
+                </div>
+            </div>
+            
+            <div class="step">
+                <h3>🎯 Your Turn!</h3>
+                <p>The code is ready, but Neville needs one more feature: the ability to mark tasks as complete!</p>
+                <p><strong>Challenge:</strong> Add a function called <code>completeTask()</code> that removes a task when clicked.</p>
+            </div>
+        </div>
+        
+        <div class="code-panel">
+            <div class="editor">
+                <h2 style="margin-bottom: 1rem;">✨ Your Spellbook (Code Editor)</h2>
+                <textarea id="userCode">
+<!-- HTML Structure -->
+<div id="remembrall" class="remembrall empty"></div>
+<input type="text" id="task" placeholder="What must you remember?">
+<button onclick="addTask()">Cast Remembrall Charm</button>
+<ul id="tasks"></ul>
+
+<script>
+// Your magical JavaScript code
+let tasks = [];
+
+function addTask() {
+    const taskInput = document.getElementById('task');
+    const task = taskInput.value;
+    
+    if (task) {
+        tasks.push(task);
+        updateRemembrall();
+        taskInput.value = '';
+    }
+}
+
+function updateRemembrall() {
+    const remembrall = document.getElementById('remembrall');
+    const taskList = document.getElementById('tasks');
+    
+    if (tasks.length > 0) {
+        remembrall.className = 'remembrall active';
+        // YOUR CHALLENGE: Make tasks clickable to complete them!
+        taskList.innerHTML = tasks.map(t => `<li>${t}</li>`).join('');
+    } else {
+        remembrall.className = 'remembrall empty';
+        taskList.innerHTML = '';
+    }
+}
+
+// Add your completeTask() function here!
+
+</script>
+                </textarea>
+                <button class="run-button" onclick="runCode()">Cast Your Spell 🪄</button>
+            </div>
+            
+            <div class="output" id="output">
+                <h3>🔮 Remembrall Output</h3>
+                <div id="spell-output"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function runCode() {
+            const code = document.getElementById('userCode').value;
+            const output = document.getElementById('spell-output');
+            
+            try {
+                // Clear previous output
+                output.innerHTML = '';
+                
+                // Create isolated environment
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '100%';
+                iframe.style.height = '250px';
+                iframe.style.border = 'none';
+                iframe.style.background = 'white';
+                
+                output.appendChild(iframe);
+                
+                // Add base styles to iframe
+                const style = `
+                    <style>
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            padding: 20px;
+                            background: #f5f5f5;
+                            color: #333;
+                        }
+                        .remembrall {
+                            width: 80px;
+                            height: 80px;
+                            border-radius: 50%;
+                            margin: 0 auto 20px;
+                            transition: all 0.5s ease;
+                        }
+                        .remembrall.empty {
+                            background: radial-gradient(circle, #ccc 0%, #999 100%);
+                        }
+                        .remembrall.active {
+                            background: radial-gradient(circle, #ff6b6b 0%, #c0392b 100%);
+                            box-shadow: 0 0 30px rgba(255,0,0,0.5);
+                        }
+                        input {
+                            padding: 10px;
+                            margin-right: 10px;
+                            border: 2px solid #ddd;
+                            border-radius: 5px;
+                        }
+                        button {
+                            padding: 10px 20px;
+                            background: #3498db;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                        button:hover {
+                            background: #2980b9;
+                        }
+                        ul {
+                            margin-top: 20px;
+                            padding-left: 20px;
+                        }
+                        li {
+                            margin: 10px 0;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        }
+                        li:hover {
+                            color: #3498db;
+                            transform: translateX(5px);
+                        }
+                    </style>
+                `;
+                
+                iframe.contentDocument.open();
+                iframe.contentDocument.write(style + code);
+                iframe.contentDocument.close();
+                
+                // Check for success
+                setTimeout(() => {
+                    const iframeContent = iframe.contentDocument || iframe.contentWindow.document;
+                    if (code.includes('completeTask') && code.includes('onclick')) {
+                        output.innerHTML += '<div class="success">🎉 Excellent work! Neville\'s Remembrall is fixed! You\'ve earned 100 House Points!</div>';
+                    }
+                }, 100);
+                
+            } catch (error) {
+                output.innerHTML = `<div style="color: #e74c3c; padding: 1rem;">❌ Spell backfired! ${error.message}</div>`;
+            }
+        }
+        
+        // Auto-run on load to show initial state
+        setTimeout(runCode, 500);
+    </script>
+</body>
+</html>
