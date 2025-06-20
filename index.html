@@ -3,1524 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HexMind Blackhawk - Swarm Intelligence Command Center</title>
+    <title>Narrative Learning System - Where Stories Become Code</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap');
-        
-        :root {
-            --bg-primary: #000000;
-            --bg-secondary: #0a0a0a;
-            --bg-panel: #050505;
-            --amber: #ffb000;
-            --green: #00ff41;
-            --red: #ff0044;
-            --cyan: #00ffff;
-            --purple: #ff00ff;
-            --text-primary: #ffffff;
-            --text-secondary: #666;
-            --border-color: #222;
-            --glass: rgba(255, 255, 255, 0.03);
-            --openai: #10a37f;
-            --claude: #cc785c;
-            --perplexity: #20808d;
-            --grok: #ff6b6b;
-            --gemini: #4285f4;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Share Tech Mono', monospace;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            position: relative;
-            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
-
-        /* HUD Overlay Effect */
-        body::before {
-            content: "";
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5, #00d2ff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s ease-in-out infinite;
+        }
+        
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        
+        .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #a8dadc;
+        }
+        
+        .demo-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .spell-button {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .spell-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+        
+        .spell-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .email-form {
+            margin-top: 3rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .email-input {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 50px;
+            border: 2px solid #3a7bd5;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            min-width: 300px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .email-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(45deg, #00d2ff 0%, #3a7bd5 100%);
+            border: none;
+            color: white;
+            padding: 1rem 3rem;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.4);
+        }
+        
+        #todo-display {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            min-height: 100px;
+            transition: all 0.5s ease;
+        }
+        
+        .todo-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 25px;
+            display: inline-block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .magic-particles {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(255, 255, 255, 0.01) 2px,
-                    rgba(255, 255, 255, 0.01) 4px
-                ),
-                radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
             pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Main Dashboard Container */
-        .dashboard {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            z-index: 2;
-            padding: 10px;
-            gap: 10px;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            position: relative;
             overflow: hidden;
         }
-
-        .header::after {
-            content: "";
+        
+        .particle {
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 176, 0, 0.1), transparent);
-            animation: sweep 4s linear infinite;
-        }
-
-        .header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5em;
-            font-weight: 900;
-            letter-spacing: 3px;
-            background: linear-gradient(45deg, var(--amber), var(--green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 176, 0, 0.5);
-        }
-
-        .system-status {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 5px 15px;
-            background: var(--glass);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 176, 0, 0.2);
-        }
-
-        .status-light {
-            width: 8px;
-            height: 8px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            animation: float 10s infinite ease-in-out;
         }
-
-        /* Main Content Grid */
-        .main-content {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 10px;
-            min-height: 0;
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) translateX(0) scale(0); }
+            10% { transform: translateY(90vh) translateX(10px) scale(1); }
+            90% { transform: translateY(-10vh) translateX(-10px) scale(1); }
         }
-
-        /* Left Panel - Flight Instruments */
-        .flight-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .instrument {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .instrument-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--amber);
-            margin-bottom: 10px;
-        }
-
-        /* Network Status */
-        .network-status {
-            display: grid;
-            gap: 8px;
-        }
-
-        .network-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 10px;
-            background: var(--glass);
-            border-radius: 5px;
-            font-size: 0.9em;
-        }
-
-        .network-value {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--green);
-        }
-
-        /* Token Flow Gauge */
-        .token-gauge {
-            margin: 10px 0;
-        }
-
-        .gauge-bar {
-            height: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            margin: 5px 0;
-        }
-
-        .gauge-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--green), var(--amber));
-            transition: width 0.3s ease;
-            position: relative;
-        }
-
-        .gauge-label {
-            position: absolute;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-            font-size: 0.8em;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
-        }
-
-        /* Cost Altitude */
-        .altitude-display {
-            background: linear-gradient(180deg, transparent, rgba(255, 176, 0, 0.1));
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .altitude-value {
-            font-size: 2em;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            color: var(--green);
-        }
-
-        .altitude-rate {
-            font-size: 0.9em;
-            color: var(--amber);
-            margin-top: 5px;
-        }
-
-        /* Center Panel - Swarm Communications */
-        .swarm-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        /* AI Thought Bubbles */
-        .ai-thoughts {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            height: 200px;
-        }
-
-        .ai-bubble {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .ai-bubble.active {
-            animation: thinking 1s ease-in-out infinite;
-        }
-
-        .ai-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .ai-status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .ai-thought-text {
-            flex: 1;
-            font-size: 0.8em;
-            line-height: 1.4;
-            overflow-y: auto;
-            padding-right: 5px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        /* Color coding for each AI */
-        .ai-bubble.openai { border-color: var(--openai); }
-        .ai-bubble.openai .ai-header { color: var(--openai); }
-        .ai-bubble.claude { border-color: var(--claude); }
-        .ai-bubble.claude .ai-header { color: var(--claude); }
-        .ai-bubble.perplexity { border-color: var(--perplexity); }
-        .ai-bubble.perplexity .ai-header { color: var(--perplexity); }
-        .ai-bubble.grok { border-color: var(--grok); }
-        .ai-bubble.grok .ai-header { color: var(--grok); }
-        .ai-bubble.gemini { border-color: var(--gemini); }
-        .ai-bubble.gemini .ai-header { color: var(--gemini); }
-
-        /* Swarm Synthesis Feed */
-        .synthesis-feed {
-            flex: 1;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 0; /* Important for flex child */
-        }
-
-        .feed-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--amber);
-            margin-bottom: 15px;
-            text-align: center;
-            flex-shrink: 0; /* Prevent header from shrinking */
-        }
-
-        .feed-content {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding-right: 10px;
-            min-height: 0; /* Important for flex child scrolling */
-            max-height: 100%; /* Ensure it doesn't exceed parent */
-        }
-
-        .feed-entry {
-            margin-bottom: 10px;
-            padding: 8px 12px;
-            background: var(--glass);
-            border-radius: 5px;
-            border-left: 3px solid var(--amber);
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .feed-timestamp {
-            font-size: 0.7em;
-            color: var(--text-secondary);
-            margin-right: 10px;
-        }
-
-        .feed-ai {
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        .feed-text {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9em;
-        }
-
-        /* Pattern indicators */
-        .pattern-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 3px 8px;
-            background: rgba(255, 176, 0, 0.2);
-            border-radius: 12px;
-            font-size: 0.8em;
-            margin-left: 10px;
-        }
-
-        /* Right Panel - Intelligence Analysis */
-        .intel-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        /* Swarm Radar */
-        .swarm-radar {
-            height: 200px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .radar-ring {
-            position: absolute;
-            border: 1px solid rgba(0, 255, 65, 0.2);
-            border-radius: 50%;
-            animation: radarSweep 4s linear infinite;
-        }
-
-        .radar-ring:nth-child(1) { width: 180px; height: 180px; }
-        .radar-ring:nth-child(2) { width: 120px; height: 120px; }
-        .radar-ring:nth-child(3) { width: 60px; height: 60px; }
-
-        .radar-sweep {
-            position: absolute;
-            width: 90px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--green));
-            transform-origin: left center;
-            animation: rotate 4s linear infinite;
-        }
-
-        .ai-blip {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6em;
-            font-weight: bold;
-            color: var(--bg-primary);
-            box-shadow: 0 0 10px currentColor;
-            animation: blipPulse 2s infinite;
-            z-index: 10;
-            transition: none;
-        }
-
-        /* AI Interaction Lines */
-        .interaction-line {
-            position: absolute;
-            height: 2px;
-            background: var(--amber);
-            transform-origin: left center;
-            opacity: 0;
-            animation: interactionPulse 2s ease-out;
-            z-index: 5;
-        }
-
-        .interaction-line.agreement {
-            background: var(--green);
-            box-shadow: 0 0 10px var(--green);
-        }
-
-        .interaction-line.conflict {
-            background: var(--red);
-            box-shadow: 0 0 10px var(--red);
-        }
-
-        .interaction-line.expansion {
-            background: var(--cyan);
-            box-shadow: 0 0 10px var(--cyan);
-        }
-
-        /* New animations for enhanced radar */
-        .thinking-ripple {
-            position: absolute;
-            border: 2px solid;
-            border-radius: 50%;
-            opacity: 0;
-            pointer-events: none;
-            animation: rippleExpand 2s ease-out;
-            z-index: 3;
-        }
-
-        @keyframes rippleExpand {
-            0% {
-                width: 20px;
-                height: 20px;
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-            100% {
-                width: 100px;
-                height: 100px;
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(5);
-            }
-        }
-
-        .word-projectile {
-            position: absolute;
-            padding: 2px 6px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 3px;
-            font-size: 0.7em;
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: 15;
-            text-shadow: 0 0 5px currentColor;
-        }
-
-        .consensus-burst {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 20;
-        }
-
-        .consensus-burst::before,
-        .consensus-burst::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--amber) 0%, transparent 70%);
-            animation: consensusPulse 1s ease-out;
-        }
-
-        .consensus-burst::after {
-            animation-delay: 0.3s;
-        }
-
-        @keyframes consensusPulse {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(3);
-                opacity: 0;
-            }
-        }
-
-        .ai-blip.converging {
-            transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes interactionPulse {
-            0% {
-                opacity: 0;
-                transform: scaleX(0);
-            }
-            20% {
-                opacity: 1;
-                transform: scaleX(1);
-            }
-            80% {
-                opacity: 1;
-                transform: scaleX(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scaleX(0.8);
-            }
-        }
-
-        /* Pattern Analysis */
-        .pattern-analysis {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-        }
-
-        .pattern-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .pattern-label {
-            font-size: 0.9em;
-        }
-
-        .pattern-value {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-        }
-
-        /* Master Caution */
-        .master-caution {
-            background: linear-gradient(135deg, rgba(255, 0, 68, 0.2), rgba(255, 176, 0, 0.2));
-            border: 2px solid var(--red);
-            border-radius: 10px;
-            padding: 15px;
-            position: relative;
-            overflow: hidden;
+        
+        .success-message {
             display: none;
+            color: #00d2ff;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
         }
-
-        .master-caution.active {
-            display: block;
-            animation: cautionFlash 1s infinite;
-        }
-
-        .caution-header {
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            color: var(--red);
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            letter-spacing: 3px;
-        }
-
-        /* Animations */
-        @keyframes sweep {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
+        
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        @keyframes thinking {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        @keyframes slideIn {
-            from { 
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes radarSweep {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
-        }
-
-        @keyframes blipPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        @keyframes cautionFlash {
-            0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--amber);
-            border-radius: 3px;
-        }
-
-        /* Responsive */
-        @media (max-width: 1400px) {
-            .ai-thoughts {
-                grid-template-columns: repeat(3, 1fr);
-                height: auto;
-            }
-        }
-
-        @media (max-width: 1000px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .ai-thoughts {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <!-- Header -->
-        <div class="header">
-            <h1>HEXMIND BLACKHAWK</h1>
-            <div class="system-status">
-                <div class="status-item">
-                    <div class="status-light" style="background: var(--green); box-shadow: 0 0 10px var(--green);"></div>
-                    <span>SWARM ACTIVE</span>
-                </div>
-                <div class="status-item">
-                    <div class="status-light" style="background: var(--amber); box-shadow: 0 0 10px var(--amber);"></div>
-                    <span id="ai-count">5/5 AI ONLINE</span>
-                </div>
-                <div class="status-item">
-                    <span id="current-time">12:34:56</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Left Panel - Flight Instruments -->
-            <div class="flight-panel">
-                <!-- Network Status -->
-                <div class="instrument">
-                    <div class="instrument-header">Network Status</div>
-                    <div class="network-status">
-                        <div class="network-item">
-                            <span>Current IP</span>
-                            <span class="network-value" id="current-ip">192.168.1.128</span>
-                        </div>
-                        <div class="network-item">
-                            <span>Network</span>
-                            <span class="network-value" id="network-name">HOME-WIFI</span>
-                        </div>
-                        <div class="network-item">
-                            <span>Port</span>
-                            <span class="network-value" id="port-status">3001 ✓</span>
-                        </div>
-                        <div class="network-item">
-                            <span>Last Good</span>
-                            <span class="network-value" id="last-good-ip" style="color: var(--amber);">192.168.1.128</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Token Flow -->
-                <div class="instrument">
-                    <div class="instrument-header">Token Flow</div>
-                    <div class="token-gauge">
-                        <div class="gauge-bar">
-                            <div class="gauge-fill" id="input-tokens" style="width: 65%;">
-                                <span class="gauge-label">Input: 6,523/100K</span>
-                            </div>
-                        </div>
-                        <div class="gauge-bar">
-                            <div class="gauge-fill" id="output-tokens" style="width: 45%; background: linear-gradient(90deg, var(--cyan), var(--purple));">
-                                <span class="gauge-label">Output: 4,488/100K</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; margin-top: 10px;">
-                        <span id="burn-rate" style="color: var(--amber); font-size: 0.9em;">Burn Rate: 0 tokens/min</span>
-                    </div>
-                </div>
-
-                <!-- Cost Altitude -->
-                <div class="instrument">
-                    <div class="instrument-header">Cost Altitude</div>
-                    <div class="altitude-display">
-                        <div class="altitude-value" id="daily-cost">$0.00</div>
-                        <div class="altitude-rate" id="cost-rate">↑ $0.00/hour</div>
-                        <div style="margin-top: 10px;">
-                            <div class="gauge-bar" style="height: 10px;">
-                                <div class="gauge-fill" id="cost-gauge" style="width: 0%; background: var(--green);"></div>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 0.7em; margin-top: 5px;">
-                                <span>$0</span>
-                                <span style="color: var(--amber);">$8 WARN</span>
-                                <span style="color: var(--red);">$10 MAX</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Master Caution -->
-                <div class="master-caution" id="masterCaution">
-                    <div class="caution-header">⚠ MASTER CAUTION ⚠</div>
-                    <div id="cautionList" style="font-size: 0.9em;">
-                        <!-- Caution items will be added dynamically -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Center Panel - Swarm Communications -->
-            <div class="swarm-panel">
-                <!-- AI Thought Bubbles -->
-                <div class="ai-thoughts">
-                    <div class="ai-bubble openai" id="bubble-openai">
-                        <div class="ai-header">
-                            <span>OPENAI</span>
-                            <div class="ai-status" id="status-openai" style="background: var(--green);"></div>
-                        </div>
-                        <div class="ai-thought-text" id="thought-openai">
-                            Awaiting connection...
-                        </div>
-                    </div>
-
-                    <div class="ai-bubble claude" id="bubble-claude">
-                        <div class="ai-header">
-                            <span>CLAUDE</span>
-                            <div class="ai-status" id="status-claude" style="background: var(--green);"></div>
-                        </div>
-                        <div class="ai-thought-text" id="thought-claude">
-                            Awaiting connection...
-                        </div>
-                    </div>
-
-                    <div class="ai-bubble perplexity" id="bubble-perplexity">
-                        <div class="ai-header">
-                            <span>PERPLEXITY</span>
-                            <div class="ai-status" id="status-perplexity" style="background: var(--green);"></div>
-                        </div>
-                        <div class="ai-thought-text" id="thought-perplexity">
-                            Awaiting connection...
-                        </div>
-                    </div>
-
-                    <div class="ai-bubble grok" id="bubble-xai">
-                        <div class="ai-header">
-                            <span>GROK</span>
-                            <div class="ai-status" id="status-xai" style="background: var(--amber);"></div>
-                        </div>
-                        <div class="ai-thought-text" id="thought-xai">
-                            Awaiting connection...
-                        </div>
-                    </div>
-
-                    <div class="ai-bubble gemini" id="bubble-gemini">
-                        <div class="ai-header">
-                            <span>GEMINI</span>
-                            <div class="ai-status" id="status-gemini" style="background: var(--green);"></div>
-                        </div>
-                        <div class="ai-thought-text" id="thought-gemini">
-                            Awaiting connection...
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Swarm Synthesis Feed -->
-                <div class="synthesis-feed">
-                    <div class="feed-header">═══ SWARM SYNTHESIS FEED ═══</div>
-                    <div class="feed-content" id="synthesissFeed">
-                        <div class="feed-entry">
-                            <span class="feed-timestamp">[--:--:--]</span>
-                            <span class="feed-ai" style="color: var(--amber);">SYSTEM:</span>
-                            <span class="feed-text">HexMind Blackhawk initializing...</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Panel - Intelligence Analysis -->
-            <div class="intel-panel">
-                <!-- Swarm Radar -->
-                <div class="instrument">
-                    <div class="instrument-header">Swarm Radar</div>
-                    <div class="swarm-radar">
-                        <div class="radar-ring"></div>
-                        <div class="radar-ring"></div>
-                        <div class="radar-ring"></div>
-                        <div class="radar-sweep"></div>
-                        
-                        <!-- AI Blips -->
-                        <div class="ai-blip" id="blip-openai" style="background: var(--openai); top: 20%; left: 50%;">O</div>
-                        <div class="ai-blip" id="blip-claude" style="background: var(--claude); top: 40%; right: 20%;">C</div>
-                        <div class="ai-blip" id="blip-perplexity" style="background: var(--perplexity); bottom: 30%; right: 30%;">P</div>
-                        <div class="ai-blip" id="blip-xai" style="background: var(--grok); bottom: 20%; left: 20%;">G</div>
-                        <div class="ai-blip" id="blip-gemini" style="background: var(--gemini); top: 30%; left: 25%;">M</div>
-                    </div>
-                </div>
-
-                <!-- Pattern Analysis -->
-                <div class="pattern-analysis">
-                    <div class="instrument-header">Pattern Analysis</div>
-                    <div class="pattern-item">
-                        <span class="pattern-label">Consensus Level</span>
-                        <span class="pattern-value" id="consensus-level" style="color: var(--green);">0%</span>
-                    </div>
-                    <div class="pattern-item">
-                        <span class="pattern-label">Synergy Index</span>
-                        <span class="pattern-value" id="synergy-index" style="color: var(--amber);">0.0/10</span>
-                    </div>
-                    <div class="pattern-item">
-                        <span class="pattern-label">Innovation Rate</span>
-                        <span class="pattern-value" id="innovation-rate" style="color: var(--green);">Low</span>
-                    </div>
-                    <div class="pattern-item">
-                        <span class="pattern-label">Echo Chamber</span>
-                        <span class="pattern-value" id="echo-chamber" style="color: var(--green);">Low</span>
-                    </div>
-                    <div class="pattern-item">
-                        <span class="pattern-label">Conflict Points</span>
-                        <span class="pattern-value" id="conflict-points" style="color: var(--amber);">0</span>
-                    </div>
-                </div>
-
-                <!-- Last Known Good -->
-                <div class="instrument">
-                    <div class="instrument-header">Last Known Good</div>
-                    <div style="padding: 10px; background: var(--glass); border-radius: 5px;">
-                        <div style="font-size: 0.8em; line-height: 1.6;">
-                            <div><strong>Time:</strong> <span id="lkg-time">--:--:--</span></div>
-                            <div><strong>Version:</strong> <span id="lkg-version">2.3.0</span></div>
-                            <div><strong>Network:</strong> <span id="lkg-network">---.---.-.---</span></div>
-                            <div><strong>Status:</strong> <span id="lkg-status" style="color: var(--green);">Unknown</span></div>
-                        </div>
-                        <button onclick="revertConfig()" style="width: 100%; margin-top: 10px; padding: 8px; background: var(--amber); color: var(--bg-primary); border: none; border-radius: 5px; font-family: 'Orbitron', sans-serif; cursor: pointer;">
-                            REVERT CONFIG
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Clock update
-        function updateClock() {
-            const now = new Date();
-            const time = now.toTimeString().split(' ')[0];
-            document.getElementById('current-time').textContent = time;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // WebSocket connection to HexMind server
-        let ws = null;
-        let reconnectInterval = null;
-        let lastSystemState = null;
-
-        // Animation tracking
-        let animationFrame = null;
-        const aiOrbitData = {
-            openai: { radius: 60, speed: 0.002, angle: 0, offset: 0 },
-            claude: { radius: 70, speed: 0.0025, angle: 0, offset: Math.PI * 0.4 },
-            perplexity: { radius: 50, speed: 0.003, angle: 0, offset: Math.PI * 0.8 },
-            xai: { radius: 65, speed: 0.0015, angle: 0, offset: Math.PI * 1.2 },
-            gemini: { radius: 55, speed: 0.0035, angle: 0, offset: Math.PI * 1.6 }
-        };
+    <div class="magic-particles" id="particles"></div>
+    
+    <div class="container">
+        <h1>✨ Learn to Code Through Magic ✨</h1>
+        <p class="tagline">Where Harry Potter Meets JavaScript</p>
         
-        let isConverging = false;
-        let convergenceTarget = { x: 50, y: 50 };
-
-        // AI color map
-        const aiColors = {
-            openai: 'var(--openai)',
-            claude: 'var(--claude)',
-            perplexity: 'var(--perplexity)',
-            xai: 'var(--grok)',
-            gemini: 'var(--gemini)'
-        };
-
-        function connectWebSocket() {
-            // Try to connect to the server
-            ws = new WebSocket('ws://localhost:3001');
+        <div class="demo-box">
+            <h2>Try a Spell! 🪄</h2>
+            <p>Click the spells below to add magical todos:</p>
+            <div style="margin: 1rem 0;">
+                <button class="spell-button" onclick="castSpell('lumos')">🔆 Lumos!</button>
+                <button class="spell-button" onclick="castSpell('accio')">📚 Accio Task!</button>
+                <button class="spell-button" onclick="castSpell('evanesco')">💨 Evanesco!</button>
+            </div>
+            <div id="todo-display"></div>
+        </div>
+        
+        <form class="email-form" onsubmit="joinWaitlist(event)">
+            <input type="email" class="email-input" placeholder="your@email.com" required>
+            <button type="submit" class="submit-btn">Join the Magic ⚡</button>
+        </form>
+        
+        <p class="success-message" id="success">🎉 Welcome to Hogwarts! Check your email for magic.</p>
+    </div>
+    
+    <script>
+        // Magical todo system
+        let todos = [];
+        
+        function castSpell(spell) {
+            const display = document.getElementById('todo-display');
             
-            ws.onopen = () => {
-                console.log('🔌 Connected to HexMind Server!');
-                clearInterval(reconnectInterval);
-                addFeedEntry('SYSTEM', 'Connected to HexMind Server', 'var(--green)');
-                
-                // Update all AI statuses to green
-                ['openai', 'claude', 'perplexity', 'xai', 'gemini'].forEach(ai => {
-                    document.getElementById(`status-${ai}`).style.background = 'var(--green)';
-                });
-            };
-            
-            ws.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                handleWebSocketMessage(data);
-            };
-            
-            ws.onclose = () => {
-                console.log('🔌 Disconnected from HexMind Server');
-                addFeedEntry('SYSTEM', 'Disconnected from server - attempting reconnect...', 'var(--red)');
-                
-                // Update all AI statuses to red
-                ['openai', 'claude', 'perplexity', 'xai', 'gemini'].forEach(ai => {
-                    document.getElementById(`status-${ai}`).style.background = 'var(--red)';
-                });
-                
-                // Try to reconnect every 5 seconds
-                if (!reconnectInterval) {
-                    reconnectInterval = setInterval(connectWebSocket, 5000);
-                }
-            };
-            
-            ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-        }
-
-        function handleWebSocketMessage(data) {
-            switch(data.type) {
-                case 'system_state':
-                    updateSystemState(data.state, data.dailyCost, data.totalCalls);
+            switch(spell) {
+                case 'lumos':
+                    display.style.background = 'rgba(255, 215, 0, 0.2)';
+                    display.innerHTML = '<div class="todo-item">✨ Practice Lumos charm</div>';
+                    createParticles(5, 'gold');
                     break;
                     
-                case 'ai_thought':
-                    updateAIThought(data.service, data.content, data.stage);
+                case 'accio':
+                    const tasks = ['Study Transfiguration', 'Practice Quidditch', 'Visit Hagrid', 'Finish Potions essay'];
+                    const randomTask = tasks[Math.floor(Math.random() * tasks.length)];
+                    todos.push(randomTask);
+                    display.innerHTML = todos.map(t => `<div class="todo-item">📜 ${t}</div>`).join('');
+                    createParticles(8, 'cyan');
                     break;
                     
-                case 'cost_update':
-                    updateCost(data.dailyCost, data.totalCalls);
-                    break;
-                    
-                case 'network_change':
-                    handleNetworkChange(data);
-                    break;
-                    
-                case 'pattern_detected':
-                    updatePattern(data);
-                    break;
-                    
-                case 'orchestration_start':
-                    addFeedEntry('SYSTEM', `New task received: "${data.task}"`, 'var(--amber)');
-                    break;
-                    
-                case 'orchestration_complete':
-                    addFeedEntry('SYNTHESIS', `Swarm complete: ${data.successCount} AIs responded`, 'var(--green)');
-                    break;
-                    
-                case 'ai_interaction':
-                    showRadarInteraction(data.from, data.to, data.interactionType);
-                    showWordProjectile(data.from, data.to, data.interactionType, data.context);
-                    break;
-                    
-                case 'swarm_phase':
-                    addFeedEntry('PHASE', `Swarm entering ${data.phase.replace('_', ' ')} phase`, 'var(--purple)');
-                    break;
-                    
-                case 'swarm_metrics':
-                    updateSwarmMetrics(data.metrics);
+                case 'evanesco':
+                    todos = [];
+                    display.innerHTML = '<div class="todo-item">💫 All tasks vanished!</div>';
+                    display.style.background = 'rgba(138, 43, 226, 0.2)';
+                    createParticles(10, 'purple');
                     break;
             }
         }
-
-        function updateSystemState(state, dailyCost, totalCalls) {
-            lastSystemState = state;
-            
-            // Update network info
-            document.getElementById('current-ip').textContent = state.network.currentIP;
-            document.getElementById('network-name').textContent = state.network.networkName;
-            document.getElementById('port-status').textContent = `${state.network.port} ✓`;
-            document.getElementById('last-good-ip').textContent = state.network.lastKnownGoodIP;
-            
-            // Update last known good
-            if (state.network.lastGoodConfig) {
-                document.getElementById('lkg-time').textContent = new Date(state.network.lastGoodConfig.timestamp).toTimeString().split(' ')[0];
-                document.getElementById('lkg-version').textContent = state.network.lastGoodConfig.version;
-                document.getElementById('lkg-network').textContent = state.network.lastGoodConfig.network;
-                document.getElementById('lkg-status').textContent = state.network.lastGoodConfig.status;
-            }
-            
-            // Update cost
-            updateCost(dailyCost, totalCalls);
-            
-            // Update patterns
-            document.getElementById('consensus-level').textContent = `${Math.round(state.patterns.consensusLevel)}%`;
-            document.getElementById('synergy-index').textContent = `${state.patterns.synergyIndex}/10`;
-            document.getElementById('innovation-rate').textContent = state.patterns.innovationRate;
-            document.getElementById('echo-chamber').textContent = state.patterns.echoChamber;
-            document.getElementById('conflict-points').textContent = state.patterns.conflictPoints;
-        }
-
-        function updateAIThought(service, content, stage) {
-            const thoughtEl = document.getElementById(`thought-${service}`);
-            const bubbleEl = document.getElementById(`bubble-${service}`);
-            const statusEl = document.getElementById(`status-${service}`);
-            
-            if (thoughtEl && bubbleEl) {
-                // Update thought text
-                thoughtEl.textContent = content;
+        
+        function createParticles(count, color) {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 10 + 5 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
+                container.appendChild(particle);
                 
-                // Add thinking animation
-                if (stage === 'thinking') {
-                    bubbleEl.classList.add('active');
-                    statusEl.style.background = 'var(--amber)';
-                    createThinkingRipples(service);
-                } else if (stage === 'complete') {
-                    bubbleEl.classList.remove('active');
-                    statusEl.style.background = 'var(--green)';
-                } else if (stage === 'error') {
-                    bubbleEl.classList.remove('active');
-                    statusEl.style.background = 'var(--red)';
-                }
-                
-                // Add to feed
-                const aiColors = {
-                    openai: 'var(--openai)',
-                    claude: 'var(--claude)',
-                    perplexity: 'var(--perplexity)',
-                    xai: 'var(--grok)',
-                    gemini: 'var(--gemini)'
-                };
-                
-                addFeedEntry(service.toUpperCase(), content, aiColors[service]);
+                setTimeout(() => particle.remove(), 10000);
             }
         }
-
-        function updateCost(dailyCost, totalCalls) {
-            // Update cost display
-            document.getElementById('daily-cost').textContent = `$${dailyCost.toFixed(2)}`;
+        
+        function joinWaitlist(e) {
+            e.preventDefault();
+            const email = e.target[0].value;
             
-            // Update cost gauge
-            const percentage = (dailyCost / 10) * 100;
-            const gauge = document.getElementById('cost-gauge');
-            gauge.style.width = percentage + '%';
+            // Here you'd normally send to your backend
+            console.log('New wizard enrolled:', email);
             
-            if (percentage > 80) {
-                gauge.style.background = 'var(--red)';
-            } else if (percentage > 60) {
-                gauge.style.background = 'var(--amber)';
-            } else {
-                gauge.style.background = 'var(--green)';
-            }
+            // Show success
+            document.getElementById('success').style.display = 'block';
+            e.target[0].value = '';
             
-            // Estimate hourly rate (simple calculation)
-            const now = new Date();
-            const hoursSinceStart = (now.getHours() + (now.getMinutes() / 60));
-            const hourlyRate = hoursSinceStart > 0 ? dailyCost / hoursSinceStart : 0;
-            document.getElementById('cost-rate').textContent = `↑ $${hourlyRate.toFixed(2)}/hour`;
+            // Create celebration particles
+            createParticles(20, 'white');
+            
+            // In production, you'd do:
+            // fetch('/api/waitlist', { method: 'POST', body: JSON.stringify({ email }) })
         }
-
-        function updateTokenMetrics(tokens, burnRate) {
-            // Update input tokens
-            const inputPercentage = (tokens.input / tokens.maxDaily) * 100;
-            const inputGauge = document.getElementById('input-tokens');
-            inputGauge.style.width = `${Math.min(inputPercentage, 100)}%`;
-            inputGauge.querySelector('.gauge-label').textContent = `Input: ${tokens.input.toLocaleString()}/${(tokens.maxDaily/1000).toFixed(0)}K`;
-            
-            // Update output tokens
-            const outputPercentage = (tokens.output / tokens.maxDaily) * 100;
-            const outputGauge = document.getElementById('output-tokens');
-            outputGauge.style.width = `${Math.min(outputPercentage, 100)}%`;
-            outputGauge.querySelector('.gauge-label').textContent = `Output: ${tokens.output.toLocaleString()}/${(tokens.maxDaily/1000).toFixed(0)}K`;
-            
-            // Update burn rate
-            document.getElementById('burn-rate').textContent = `Burn Rate: ${Math.round(burnRate)} tokens/min`;
-        }
-
-        function handleNetworkChange(data) {
-            // Show master caution
-            const caution = document.getElementById('masterCaution');
-            const cautionList = document.getElementById('cautionList');
-            
-            caution.classList.add('active');
-            cautionList.innerHTML = `
-                <div>• Network change detected!</div>
-                <div>• Old IP: ${data.oldIP}</div>
-                <div>• New IP: ${data.newIP}</div>
-                <div>• Update server configuration required</div>
-            `;
-            
-            // Update current IP in red
-            const ipElement = document.getElementById('current-ip');
-            ipElement.textContent = data.newIP;
-            ipElement.style.color = 'var(--red)';
-            
-            // Add to feed
-            addFeedEntry('SYSTEM', `WARNING: ${data.message}`, 'var(--red)');
-        }
-
-        function updatePattern(data) {
-            if (data.pattern === 'consensus') {
-                document.getElementById('consensus-level').textContent = `${Math.round(data.level)}%`;
-                addFeedEntry('PATTERN', `Consensus detected: ${Math.round(data.level)}% agreement`, 'var(--purple)');
-            }
-        }
-
-        function addFeedEntry(source, text, color = 'var(--text-primary)') {
-            const feed = document.getElementById('synthesissFeed');
-            const now = new Date();
-            const timestamp = now.toTimeString().split(' ')[0];
-            
-            const entry = document.createElement('div');
-            entry.className = 'feed-entry';
-            entry.innerHTML = `
-                <span class="feed-timestamp">[${timestamp}]</span>
-                <span class="feed-ai" style="color: ${color};">${source}:</span>
-                <span class="feed-text">${text}</span>
-            `;
-            
-            feed.appendChild(entry);
-            feed.scrollTop = feed.scrollHeight;
-            
-            // Limit feed entries to 100
-            while (feed.children.length > 100) {
-                feed.removeChild(feed.firstChild);
-            }
-        }
-
-        function revertConfig() {
-            if (lastSystemState && lastSystemState.network.lastGoodConfig) {
-                if (confirm('Revert to last known good configuration?')) {
-                    addFeedEntry('SYSTEM', 'Reverting to last known good configuration...', 'var(--amber)');
-                    // In a real implementation, this would send a command to the server
-                }
-            }
-        }
-
-        // Enhanced radar animations
-        function animateAIBlips() {
-            const radar = document.querySelector('.swarm-radar');
-            const radarRect = radar.getBoundingClientRect();
-            const centerX = radarRect.width / 2;
-            const centerY = radarRect.height / 2;
-            
-            Object.keys(aiOrbitData).forEach(ai => {
-                const blip = document.getElementById(`blip-${ai}`);
-                if (!blip) return;
-                
-                const orbit = aiOrbitData[ai];
-                
-                if (isConverging) {
-                    // Converge to center
-                    blip.style.left = '50%';
-                    blip.style.top = '50%';
-                    blip.style.transform = 'translate(-50%, -50%)';
-                } else {
-                    // Orbital movement
-                    orbit.angle += orbit.speed;
-                    const x = centerX + Math.cos(orbit.angle + orbit.offset) * orbit.radius;
-                    const y = centerY + Math.sin(orbit.angle + orbit.offset) * orbit.radius;
-                    
-                    blip.style.left = `${x}px`;
-                    blip.style.top = `${y}px`;
-                    blip.style.transform = 'translate(-50%, -50%)';
-                }
-            });
-            
-            animationFrame = requestAnimationFrame(animateAIBlips);
-        }
-
-        // Create thinking ripples
-        function createThinkingRipples(service) {
-            const blip = document.getElementById(`blip-${service}`);
-            if (!blip) return;
-            
-            const radar = document.querySelector('.swarm-radar');
-            const blipRect = blip.getBoundingClientRect();
-            const radarRect = radar.getBoundingClientRect();
-            
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const ripple = document.createElement('div');
-                    ripple.className = 'thinking-ripple';
-                    ripple.style.borderColor = aiColors[service];
-                    ripple.style.left = `${blipRect.left - radarRect.left + blipRect.width/2}px`;
-                    ripple.style.top = `${blipRect.top - radarRect.top + blipRect.height/2}px`;
-                    
-                    radar.appendChild(ripple);
-                    
-                    setTimeout(() => ripple.remove(), 2000);
-                }, i * 300);
-            }
-        }
-
-        // Show word projectile
-        function showWordProjectile(from, to, type, context) {
-            const fromBlip = document.getElementById(`blip-${from}`);
-            const toBlip = document.getElementById(`blip-${to}`);
-            if (!fromBlip || !toBlip || !context) return;
-            
-            const radar = document.querySelector('.swarm-radar');
-            const fromRect = fromBlip.getBoundingClientRect();
-            const toRect = toBlip.getBoundingClientRect();
-            const radarRect = radar.getBoundingClientRect();
-            
-            // Extract first 3-4 words
-            const words = context.split(' ').slice(0, 4).join(' ');
-            
-            // Create projectile
-            const projectile = document.createElement('div');
-            projectile.className = 'word-projectile';
-            projectile.textContent = words;
-            projectile.style.color = type === 'agreement' ? 'var(--green)' : 
-                                   type === 'conflict' ? 'var(--red)' : 'var(--cyan)';
-            
-            // Starting position
-            const startX = fromRect.left - radarRect.left + fromRect.width/2;
-            const startY = fromRect.top - radarRect.top + fromRect.height/2;
-            const endX = toRect.left - radarRect.left + toRect.width/2;
-            const endY = toRect.top - radarRect.top + toRect.height/2;
-            
-            projectile.style.left = `${startX}px`;
-            projectile.style.top = `${startY}px`;
-            
-            radar.appendChild(projectile);
-            
-            // Animate to target
-            const duration = 1500;
-            const startTime = Date.now();
-            
-            function animateProjectile() {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                // Easing function
-                const easeProgress = 1 - Math.pow(1 - progress, 3);
-                
-                const currentX = startX + (endX - startX) * easeProgress;
-                const currentY = startY + (endY - startY) * easeProgress;
-                
-                projectile.style.left = `${currentX}px`;
-                projectile.style.top = `${currentY}px`;
-                
-                if (progress < 1) {
-                    requestAnimationFrame(animateProjectile);
-                } else {
-                    // Impact effect
-                    toBlip.style.boxShadow = `0 0 20px ${aiColors[to]}`;
-                    setTimeout(() => {
-                        toBlip.style.boxShadow = `0 0 10px ${aiColors[to]}`;
-                    }, 300);
-                    
-                    projectile.remove();
-                }
-            }
-            
-            requestAnimationFrame(animateProjectile);
-        }
-
-        // Radar animation with interactions
-        const aiPositions = {
-            openai: { x: 50, y: 20 },
-            claude: { x: 80, y: 40 },
-            perplexity: { x: 70, y: 70 },
-            xai: { x: 20, y: 80 },
-            gemini: { x: 25, y: 30 }
-        };
-
-        function showRadarInteraction(from, to, type) {
-            const radar = document.querySelector('.swarm-radar');
-            const fromPos = aiPositions[from];
-            const toPos = aiPositions[to];
-            
-            if (!fromPos || !toPos) return;
-            
-            // Calculate line position and angle
-            const dx = toPos.x - fromPos.x;
-            const dy = toPos.y - fromPos.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-            
-            // Create interaction line
-            const line = document.createElement('div');
-            line.className = `interaction-line ${type}`;
-            line.style.width = `${distance}%`;
-            line.style.left = `${fromPos.x}%`;
-            line.style.top = `${fromPos.y}%`;
-            line.style.transform = `rotate(${angle}deg)`;
-            
-            radar.appendChild(line);
-            
-            // Remove after animation
-            setTimeout(() => line.remove(), 2000);
-            
-            // Make blips pulse
-            const fromBlip = document.getElementById(`blip-${from}`);
-            const toBlip = document.getElementById(`blip-${to}`);
-            
-            if (fromBlip) {
-                fromBlip.style.animation = 'none';
-                setTimeout(() => fromBlip.style.animation = 'blipPulse 2s infinite', 10);
-            }
-            if (toBlip) {
-                toBlip.style.transform = 'scale(1.5)';
-                setTimeout(() => toBlip.style.transform = 'scale(1)', 300);
-            }
-        }
-
-        function updateSwarmMetrics(metrics) {
-            // Update all pattern analysis values
-            document.getElementById('consensus-level').textContent = `${metrics.consensusLevel}%`;
-            document.getElementById('synergy-index').textContent = `${metrics.synergyIndex}/10`;
-            document.getElementById('innovation-rate').textContent = metrics.innovationRate;
-            document.getElementById('echo-chamber').textContent = metrics.echoChamber;
-            document.getElementById('conflict-points').textContent = metrics.conflictPoints;
-            
-            // Color code based on values
-            const consensusEl = document.getElementById('consensus-level');
-            if (metrics.consensusLevel > 80) {
-                consensusEl.style.color = 'var(--green)';
-            } else if (metrics.consensusLevel > 50) {
-                consensusEl.style.color = 'var(--amber)';
-            } else {
-                consensusEl.style.color = 'var(--red)';
-            }
-            
-            const synergyEl = document.getElementById('synergy-index');
-            if (metrics.synergyIndex > 7) {
-                synergyEl.style.color = 'var(--green)';
-            } else if (metrics.synergyIndex > 4) {
-                synergyEl.style.color = 'var(--amber)';
-            } else {
-                synergyEl.style.color = 'var(--red)';
-            }
-            
-            // Handle consensus convergence
-            if (metrics.consensusLevel > 70 && !isConverging) {
-                startConsensusConvergence();
-            } else if (metrics.consensusLevel <= 70 && isConverging) {
-                stopConsensusConvergence();
-            }
-        }
-
-        // Consensus convergence animation
-        function startConsensusConvergence() {
-            isConverging = true;
-            
-            // Add converging class to all blips
-            Object.keys(aiOrbitData).forEach(ai => {
-                const blip = document.getElementById(`blip-${ai}`);
-                if (blip) {
-                    blip.classList.add('converging');
-                }
-            });
-            
-            // Create burst effect
-            const radar = document.querySelector('.swarm-radar');
-            const burst = document.createElement('div');
-            burst.className = 'consensus-burst';
-            radar.appendChild(burst);
-            
-            setTimeout(() => burst.remove(), 1300);
-            
-            addFeedEntry('PATTERN', 'High consensus achieved - AIs converging!', 'var(--green)');
-        }
-
-        function stopConsensusConvergence() {
-            isConverging = false;
-            
-            // Remove converging class
-            Object.keys(aiOrbitData).forEach(ai => {
-                const blip = document.getElementById(`blip-${ai}`);
-                if (blip) {
-                    blip.classList.remove('converging');
-                }
-            });
-            
-            addFeedEntry('PATTERN', 'Consensus diverging - AIs resuming independent orbits', 'var(--amber)');
-        }
-
-        // Enhanced log export with swarm data
-        function exportLogs() {
-            const feed = document.getElementById('synthesissFeed');
-            const logs = Array.from(feed.children).map(entry => {
-                const timestamp = entry.querySelector('.feed-timestamp').textContent;
-                const ai = entry.querySelector('.feed-ai').textContent;
-                const text = entry.querySelector('.feed-text').textContent;
-                return `${timestamp} ${ai} ${text}`;
-            }).join('\n');
-            
-            const state = lastSystemState || {};
-            const markdown = `# HexMind Blackhawk Session Log
-Generated: ${new Date().toISOString()}
-
-## System State
-- Network: ${document.getElementById('current-ip').textContent}
-- Daily Cost: ${document.getElementById('daily-cost').textContent}
-- Total Calls: ${document.getElementById('ai-count').textContent}
-
-## Swarm Intelligence Metrics
-- Consensus Level: ${document.getElementById('consensus-level').textContent}
-- Synergy Index: ${document.getElementById('synergy-index').textContent}
-- Innovation Rate: ${document.getElementById('innovation-rate').textContent}
-- Echo Chamber: ${document.getElementById('echo-chamber').textContent}
-- Conflict Points: ${document.getElementById('conflict-points').textContent}
-
-## Token Usage
-- Input: ${state.tokens?.input || 0}
-- Output: ${state.tokens?.output || 0}
-- Burn Rate: ${state.tokens?.burnRate || 0} tokens/min
-
-## Swarm Communication Log
-\`\`\`
-${logs}
-\`\`\`
-
-## Analysis
-This session demonstrates ${document.getElementById('synergy-index').textContent} synergy with ${document.getElementById('consensus-level').textContent} consensus across the swarm.
-`;
-            
-            // Download file
-            const blob = new Blob([markdown], { type: 'text/markdown' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `hexmind-swarm-log-${Date.now()}.md`;
-            a.click();
-        }
-
-        // Add export button to header
-        function addExportButton() {
-            const systemStatus = document.querySelector('.system-status');
-            if (systemStatus && !document.getElementById('export-btn')) {
-                const btn = document.createElement('button');
-                btn.id = 'export-btn';
-                btn.onclick = exportLogs;
-                btn.style.cssText = 'padding: 5px 15px; background: var(--amber); color: var(--bg-primary); border: none; border-radius: 5px; font-family: "Orbitron", sans-serif; cursor: pointer; margin-left: 20px;';
-                btn.textContent = 'EXPORT LOGS';
-                systemStatus.appendChild(btn);
-            }
-        }
-
-        // Initialize export button after page loads
-        setTimeout(addExportButton, 1000);
-
-        // Clear caution on Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.getElementById('masterCaution').classList.remove('active');
-                document.getElementById('current-ip').style.color = 'var(--green)';
-            }
-        });
-
-        // Start AI blip animation
-        animateAIBlips();
-
-        // Initialize connection
-        console.log('🚁 HexMind Blackhawk Dashboard v2.3');
-        console.log('🔌 Connecting to HexMind Server...');
-        connectWebSocket();
+        
+        // Initial particles
+        createParticles(15, 'white');
     </script>
 </body>
 </html>
