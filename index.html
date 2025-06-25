@@ -2,302 +2,504 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Narrative Learning System - Where Stories Become Code</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>💬 Quick Chat Recovery</title>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary: #10b981;
+            --accent: #f59e0b;
+            --bg: #0a0a0a;
+            --surface: #1a1a1a;
+            --border: #333;
+            --text: #f0f0f0;
+            --purple: #8b5cf6;
         }
         
         body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow-x: hidden;  /* <- ALLOWS VERTICAL SCROLL! */
-    padding: 2rem 0;     /* <- ADDS SOME BREATHING ROOM */
-}
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
         
-        .container {
-            text-align: center;
-            max-width: 800px;
-            padding: 2rem;
-            position: relative;
-            z-index: 10;
+        header {
+            background: var(--surface);
+            padding: 15px;
+            border-bottom: 2px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #00d2ff, #3a7bd5, #00d2ff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shine 3s ease-in-out infinite;
-        }
-        
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
-        
-        .tagline {
             font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: #a8dadc;
+            text-align: center;
+            color: var(--primary);
         }
         
-        .demo-box {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 2rem 0;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .spell-button {
-            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            color: white;
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 0.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .spell-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
-        }
-        
-        .spell-button:active {
-            transform: translateY(-1px);
-        }
-        
-        .email-form {
-            margin-top: 3rem;
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .email-input {
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            border-radius: 50px;
-            border: 2px solid #3a7bd5;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            min-width: 300px;
-            backdrop-filter: blur(5px);
-        }
-        
-        .email-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .submit-btn {
-            background: linear-gradient(45deg, #00d2ff 0%, #3a7bd5 100%);
-            border: none;
-            color: white;
-            padding: 1rem 3rem;
-            font-size: 1rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-        
-        .submit-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.4);
-        }
-        
-        #todo-display {
-            margin-top: 2rem;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            min-height: 100px;
-            transition: all 0.5s ease;
-        }
-        
-        .todo-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.5rem 1rem;
-            margin: 0.5rem 0;
-            border-radius: 25px;
-            display: inline-block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .magic-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .container {
+            flex: 1;
+            padding: 15px;
+            max-width: 600px;
             width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
+            margin: 0 auto;
         }
         
-        .particle {
-            position: absolute;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float 10s infinite ease-in-out;
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(100vh) translateX(0) scale(0); }
-            10% { transform: translateY(90vh) translateX(10px) scale(1); }
-            90% { transform: translateY(-10vh) translateX(-10px) scale(1); }
+        .stat {
+            background: var(--surface);
+            padding: 15px 10px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border);
         }
         
-        .success-message {
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .panel {
+            background: var(--surface);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text);
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical;
+            -webkit-appearance: none;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 16px;
+            margin: 15px 0;
+            -webkit-appearance: none;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        button {
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        button.secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--primary);
+        }
+        
+        button.full {
+            grid-column: 1 / -1;
+        }
+        
+        button.accent {
+            background: var(--accent);
+        }
+        
+        /* Output Section */
+        #outputSection {
             display: none;
-            color: #00d2ff;
-            margin-top: 1rem;
-            font-size: 1.2rem;
-            animation: pulse 2s infinite;
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        .output-stats {
+            background: var(--bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--primary);
+        }
+        
+        .success-msg {
+            color: var(--primary);
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        #outputArea {
+            width: 100%;
+            min-height: 300px;
+            background: var(--bg);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text);
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* iOS fixes */
+        @supports (-webkit-touch-callout: none) {
+            textarea, input {
+                font-size: 16px !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="magic-particles" id="particles"></div>
+    <header>
+        <h1>💬 Quick Chat Recovery</h1>
+    </header>
     
     <div class="container">
-        <h1>✨ Learn to Code Through Magic ✨</h1>
-        <p class="tagline">Where Harry Potter Meets JavaScript</p>
-        
-        <div class="demo-box">
-            <h2>Try a Spell! 🪄</h2>
-            <p>Click the spells below to add magical todos:</p>
-            <div style="margin: 1rem 0;">
-                <button class="spell-button" onclick="castSpell('lumos')">🔆 Lumos!</button>
-                <button class="spell-button" onclick="castSpell('accio')">📚 Accio Task!</button>
-                <button class="spell-button" onclick="castSpell('evanesco')">💨 Evanesco!</button>
+        <div class="quick-stats">
+            <div class="stat">
+                <div class="stat-value" id="charCount">0</div>
+                <div class="stat-label">Characters</div>
             </div>
-            <div id="todo-display"></div>
+            <div class="stat">
+                <div class="stat-value" id="msgCount">0</div>
+                <div class="stat-label">Messages</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="sizeKb">0</div>
+                <div class="stat-label">KB</div>
+            </div>
         </div>
-        <!-- ADD THIS NEW SECTION -->
-<div style="margin: 3rem 0;">
-    <h2 style="color: #00d2ff; margin-bottom: 1rem;">🎓 Ready to Learn Real Magic?</h2>
-    <a href="/learn/" style="
-        display: inline-block;
-        background: linear-gradient(45deg, #ff6b6b, #f39c12);
-        color: white;
-        padding: 1.2rem 3rem;
-        font-size: 1.3rem;
-        text-decoration: none;
-        border-radius: 50px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
-    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-        Start Learning Now (Beta) ⚡
-    </a>
-    <p style="margin-top: 1rem; color: #a8dadc;">4 Interactive Missions Available!</p>
-</div>
-<!-- END NEW SECTION -->
-
-<form class="email-form" onsubmit="joinWaitlist(event)">
-        <form class="email-form" onsubmit="joinWaitlist(event)">
-            <input type="email" class="email-input" placeholder="your@email.com" required>
-            <button type="submit" class="submit-btn">Join the Magic ⚡</button>
-        </form>
         
-        <p class="success-message" id="success">🎉 Welcome to Hogwarts! Check your email for magic.</p>
+        <!-- Input Section -->
+        <div class="panel" id="inputSection">
+            <h2 style="margin-bottom: 15px;">📥 Input</h2>
+            <textarea id="chatInput" placeholder="Paste your chat here..."></textarea>
+            
+            <input type="text" id="chatTitle" placeholder="Title (optional)">
+            
+            <div class="button-grid">
+                <button class="secondary" onclick="clearInput()">🗑️ Clear</button>
+                <button class="secondary" onclick="pasteChat()">📋 Paste</button>
+                <button class="full" onclick="processChat()">
+                    🔮 Process Chat
+                </button>
+            </div>
+            
+            <div class="spinner" id="spinner"></div>
+        </div>
+        
+        <!-- Output Section -->
+        <div class="panel" id="outputSection">
+            <h2 style="margin-bottom: 15px;">📤 Output</h2>
+            
+            <div class="output-stats">
+                <div class="success-msg">✅ Chat Processed Successfully!</div>
+                <div style="display: flex; justify-content: space-around; text-align: center;">
+                    <div>
+                        <div style="font-size: 1.2rem; font-weight: bold;" id="outMessages">0</div>
+                        <div style="font-size: 0.8rem; color: #888;">Messages</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 1.2rem; font-weight: bold;" id="outSize">0</div>
+                        <div style="font-size: 0.8rem; color: #888;">KB</div>
+                    </div>
+                </div>
+            </div>
+            
+            <textarea id="outputArea" readonly placeholder="Processed output will appear here..."></textarea>
+            
+            <div class="button-grid" style="margin-top: 15px;">
+                <button onclick="copyOutput()">📋 Copy All</button>
+                <button class="secondary" onclick="backToInput()">⬅️ Back</button>
+                <button class="full accent" onclick="downloadHTML()">
+                    💾 Download HTML (Optional)
+                </button>
+            </div>
+        </div>
     </div>
     
     <script>
-        // Magical todo system
-        let todos = [];
+        // Update stats in real-time
+        document.getElementById('chatInput').addEventListener('input', updateStats);
         
-        function castSpell(spell) {
-            const display = document.getElementById('todo-display');
+        function updateStats() {
+            const input = document.getElementById('chatInput').value;
+            const chars = input.length;
+            const kb = (chars / 1024).toFixed(1);
             
-            switch(spell) {
-                case 'lumos':
-                    display.style.background = 'rgba(255, 215, 0, 0.2)';
-                    display.innerHTML = '<div class="todo-item">✨ Practice Lumos charm</div>';
-                    createParticles(5, 'gold');
-                    break;
-                    
-                case 'accio':
-                    const tasks = ['Study Transfiguration', 'Practice Quidditch', 'Visit Hagrid', 'Finish Potions essay'];
-                    const randomTask = tasks[Math.floor(Math.random() * tasks.length)];
-                    todos.push(randomTask);
-                    display.innerHTML = todos.map(t => `<div class="todo-item">📜 ${t}</div>`).join('');
-                    createParticles(8, 'cyan');
-                    break;
-                    
-                case 'evanesco':
-                    todos = [];
-                    display.innerHTML = '<div class="todo-item">💫 All tasks vanished!</div>';
-                    display.style.background = 'rgba(138, 43, 226, 0.2)';
-                    createParticles(10, 'purple');
-                    break;
+            let messages = 0;
+            const patterns = [/Human:/gi, /Assistant:/gi, /You:/gi, /ChatGPT:/gi];
+            patterns.forEach(p => {
+                const matches = input.match(p);
+                if (matches) messages += matches.length;
+            });
+            
+            document.getElementById('charCount').textContent = chars > 999 ? (chars/1000).toFixed(1) + 'k' : chars;
+            document.getElementById('msgCount').textContent = messages || '?';
+            document.getElementById('sizeKb').textContent = kb;
+        }
+        
+        function clearInput() {
+            if (confirm('Clear all input?')) {
+                document.getElementById('chatInput').value = '';
+                document.getElementById('chatTitle').value = '';
+                updateStats();
             }
         }
         
-        function createParticles(count, color) {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < count; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.width = Math.random() * 10 + 5 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 2 + 's';
-                particle.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
-                container.appendChild(particle);
+        async function pasteChat() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('chatInput').value = text;
+                updateStats();
+            } catch (err) {
+                alert('Please paste manually');
+            }
+        }
+        
+        function processChat() {
+            const input = document.getElementById('chatInput').value;
+            
+            if (!input.trim()) {
+                alert('Please paste your chat first!');
+                return;
+            }
+            
+            document.getElementById('spinner').style.display = 'block';
+            
+            setTimeout(() => {
+                try {
+                    const messages = parseMessages(input);
+                    const title = document.getElementById('chatTitle').value || 'Chat Recovery';
+                    const output = generateOutput(title, messages);
+                    
+                    // Show output section
+                    document.getElementById('inputSection').style.display = 'none';
+                    document.getElementById('outputSection').style.display = 'block';
+                    document.getElementById('outputArea').value = output;
+                    
+                    // Update output stats
+                    document.getElementById('outMessages').textContent = messages.length;
+                    document.getElementById('outSize').textContent = (output.length / 1024).toFixed(1);
+                    
+                    // Store for download
+                    window.currentOutput = output;
+                    window.currentTitle = title;
+                    
+                } catch (error) {
+                    alert('Error processing chat');
+                } finally {
+                    document.getElementById('spinner').style.display = 'none';
+                }
+            }, 100);
+        }
+        
+        function parseMessages(text) {
+            const messages = [];
+            const lines = text.split('\n');
+            let currentMsg = null;
+            
+            for (const line of lines) {
+                if (line.match(/^(Human:|You:|User:)/i)) {
+                    if (currentMsg) messages.push(currentMsg);
+                    currentMsg = {
+                        role: 'human',
+                        content: line.replace(/^(Human:|You:|User:)\s*/i, '')
+                    };
+                } else if (line.match(/^(Assistant:|ChatGPT:|AI:)/i)) {
+                    if (currentMsg) messages.push(currentMsg);
+                    currentMsg = {
+                        role: 'assistant',
+                        content: line.replace(/^(Assistant:|ChatGPT:|AI:)\s*/i, '')
+                    };
+                } else if (currentMsg) {
+                    currentMsg.content += '\n' + line;
+                }
+            }
+            
+            if (currentMsg) messages.push(currentMsg);
+            
+            if (messages.length === 0) {
+                const paragraphs = text.split(/\n\n+/);
+                paragraphs.forEach((p, i) => {
+                    if (p.trim()) {
+                        messages.push({
+                            role: i % 2 === 0 ? 'human' : 'assistant',
+                            content: p.trim()
+                        });
+                    }
+                });
+            }
+            
+            return messages;
+        }
+        
+        function generateOutput(title, messages) {
+            let output = `CHAT RECOVERY: ${title}\n`;
+            output += `Date: ${new Date().toLocaleString()}\n`;
+            output += `Messages: ${messages.length}\n`;
+            output += '='.repeat(50) + '\n\n';
+            
+            messages.forEach((msg, i) => {
+                const role = msg.role === 'human' ? '[HUMAN]' : '[AI]';
+                output += `${role} Message ${i + 1}:\n`;
+                output += msg.content + '\n';
+                output += '-'.repeat(40) + '\n\n';
+            });
+            
+            return output;
+        }
+        
+        async function copyOutput() {
+            const output = document.getElementById('outputArea');
+            output.select();
+            output.setSelectionRange(0, 999999); // For mobile
+            
+            try {
+                await navigator.clipboard.writeText(output.value);
                 
-                setTimeout(() => particle.remove(), 10000);
+                // Visual feedback
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.background = 'var(--primary)';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            } catch (err) {
+                // Fallback
+                document.execCommand('copy');
+                alert('Copied to clipboard!');
             }
         }
         
-        function joinWaitlist(e) {
-            e.preventDefault();
-            const email = e.target[0].value;
-            
-            // Here you'd normally send to your backend
-            console.log('New wizard enrolled:', email);
-            
-            // Show success
-            document.getElementById('success').style.display = 'block';
-            e.target[0].value = '';
-            
-            // Create celebration particles
-            createParticles(20, 'white');
-            
-            // In production, you'd do:
-            // fetch('/api/waitlist', { method: 'POST', body: JSON.stringify({ email }) })
+        function backToInput() {
+            document.getElementById('outputSection').style.display = 'none';
+            document.getElementById('inputSection').style.display = 'block';
         }
         
-        // Initial particles
-        createParticles(15, 'white');
+        function downloadHTML() {
+            if (!window.currentOutput) return;
+            
+            const html = createFullHTML(window.currentTitle, window.currentOutput);
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = window.currentTitle.replace(/[^a-z0-9]/gi, '_') + '.html';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function createFullHTML(title, content) {
+            return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<style>
+body { 
+    font-family: monospace; 
+    background: #0a0a0a; 
+    color: #f0f0f0; 
+    padding: 20px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+.container { 
+    max-width: 800px; 
+    margin: 0 auto;
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 10px;
+}
+</style>
+</head>
+<body>
+<div class="container">${content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+</body>
+</html>`;
+        }
+        
+        // Prevent zoom on double tap
+        let lastTap = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - lastTap <= 300) {
+                e.preventDefault();
+            }
+            lastTap = now;
+        }, false);
     </script>
 </body>
 </html>
