@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>💬 Quick Chat Recovery</title>
+    <title>🚀 Flow State Recovery</title>
     <style>
         * {
             box-sizing: border-box;
@@ -15,92 +15,121 @@
         
         :root {
             --primary: #10b981;
-            --accent: #f59e0b;
+            --danger: #ef4444;
+            --warning: #f59e0b;
             --bg: #0a0a0a;
             --surface: #1a1a1a;
             --border: #333;
             --text: #f0f0f0;
-            --purple: #8b5cf6;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, system-ui, sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
         
         header {
             background: var(--surface);
-            padding: 15px;
-            border-bottom: 2px solid var(--primary);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            padding: 12px;
+            border-bottom: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
         h1 {
-            font-size: 1.5rem;
-            text-align: center;
+            font-size: 1.3rem;
             color: var(--primary);
         }
         
+        .mode-indicator {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            background: var(--primary);
+            color: var(--bg);
+            border-radius: 15px;
+            font-weight: bold;
+        }
+        
         .container {
-            flex: 1;
             padding: 15px;
             max-width: 600px;
-            width: 100%;
             margin: 0 auto;
         }
         
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+        /* Quick Stats Bar */
+        .stats-bar {
+            background: var(--surface);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.9rem;
         }
         
         .stat {
-            background: var(--surface);
-            padding: 15px 10px;
-            border-radius: 10px;
             text-align: center;
-            border: 1px solid var(--border);
         }
         
         .stat-value {
-            font-size: 1.5rem;
             font-weight: bold;
-            color: var(--accent);
+            color: var(--primary);
         }
         
-        .stat-label {
-            font-size: 0.8rem;
-            color: #888;
-            margin-top: 5px;
+        /* Compression Mode Selector */
+        .mode-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
         }
         
+        .mode-btn {
+            padding: 12px 8px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mode-btn.active {
+            background: var(--primary);
+            color: var(--bg);
+            border-color: var(--primary);
+        }
+        
+        .mode-btn .percent {
+            display: block;
+            font-size: 0.7rem;
+            margin-top: 2px;
+            opacity: 0.8;
+        }
+        
+        /* Input/Output Areas */
         .panel {
             background: var(--surface);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
         
         textarea {
             width: 100%;
-            min-height: 200px;
             background: var(--bg);
             border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 8px;
+            padding: 12px;
             color: var(--text);
             font-family: monospace;
-            font-size: 14px;
-            resize: vertical;
+            font-size: 13px;
+            resize: none;
             -webkit-appearance: none;
         }
         
@@ -109,98 +138,106 @@
             border-color: var(--primary);
         }
         
-        input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            font-size: 16px;
-            margin: 15px 0;
-            -webkit-appearance: none;
+        #inputArea {
+            min-height: 200px;
         }
         
-        .button-grid {
+        #outputArea {
+            min-height: 250px;
+            border-color: var(--primary);
+        }
+        
+        /* Action Buttons */
+        .action-bar {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
         }
         
         button {
-            background: var(--primary);
-            color: var(--bg);
+            padding: 14px;
             border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 8px;
             font-weight: bold;
+            font-size: 0.9rem;
             cursor: pointer;
             -webkit-appearance: none;
+            transition: all 0.2s;
         }
         
         button:active {
-            transform: scale(0.98);
+            transform: scale(0.95);
         }
         
-        button.secondary {
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg);
+        }
+        
+        .btn-secondary {
             background: var(--surface);
             color: var(--text);
             border: 2px solid var(--primary);
         }
         
-        button.full {
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-full {
             grid-column: 1 / -1;
         }
         
-        button.accent {
-            background: var(--accent);
-        }
-        
-        /* Output Section */
-        #outputSection {
-            display: none;
-        }
-        
-        .output-stats {
-            background: var(--bg);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border: 1px solid var(--primary);
-        }
-        
-        .success-msg {
-            color: var(--primary);
+        /* Status Messages */
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
             text-align: center;
             font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        #outputArea {
-            width: 100%;
-            min-height: 300px;
-            background: var(--bg);
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            padding: 15px;
-            color: var(--text);
-            font-family: monospace;
-            font-size: 12px;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        
-        .spinner {
             display: none;
+        }
+        
+        .status.success {
+            background: var(--primary);
+            color: var(--bg);
+        }
+        
+        .status.error {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* Context Helper */
+        .context-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .context-box strong {
+            color: var(--warning);
+        }
+        
+        /* Loading */
+        .processing {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        
+        .processing .spinner {
             width: 40px;
             height: 40px;
-            margin: 20px auto;
             border: 4px solid var(--border);
             border-top: 4px solid var(--primary);
             border-radius: 50%;
+            margin: 0 auto 10px;
             animation: spin 1s linear infinite;
         }
         
@@ -208,9 +245,9 @@
             to { transform: rotate(360deg); }
         }
         
-        /* iOS fixes */
+        /* iOS Optimizations */
         @supports (-webkit-touch-callout: none) {
-            textarea, input {
+            textarea, button {
                 font-size: 16px !important;
             }
         }
@@ -218,181 +255,241 @@
 </head>
 <body>
     <header>
-        <h1>💬 Quick Chat Recovery</h1>
+        <h1>🚀 Flow State Recovery</h1>
+        <div class="mode-indicator" id="modeIndicator">SMART</div>
     </header>
     
     <div class="container">
-        <div class="quick-stats">
+        <!-- Compression Mode Selector -->
+        <div class="mode-selector">
+            <button class="mode-btn" onclick="setMode('full')">
+                FULL
+                <span class="percent">100%</span>
+            </button>
+            <button class="mode-btn active" onclick="setMode('smart')">
+                SMART
+                <span class="percent">70%</span>
+            </button>
+            <button class="mode-btn" onclick="setMode('tight')">
+                TIGHT
+                <span class="percent">40%</span>
+            </button>
+            <button class="mode-btn" onclick="setMode('ultra')">
+                ULTRA
+                <span class="percent">20%</span>
+            </button>
+        </div>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar">
             <div class="stat">
-                <div class="stat-value" id="charCount">0</div>
-                <div class="stat-label">Characters</div>
+                <div class="stat-value" id="inputSize">0KB</div>
+                <div>Input</div>
             </div>
             <div class="stat">
-                <div class="stat-value" id="msgCount">0</div>
-                <div class="stat-label">Messages</div>
+                <div class="stat-value" id="outputSize">0KB</div>
+                <div>Output</div>
             </div>
             <div class="stat">
-                <div class="stat-value" id="sizeKb">0</div>
-                <div class="stat-label">KB</div>
+                <div class="stat-value" id="savedPercent">0%</div>
+                <div>Saved</div>
             </div>
         </div>
         
-        <!-- Input Section -->
-        <div class="panel" id="inputSection">
-            <h2 style="margin-bottom: 15px;">📥 Input</h2>
-            <textarea id="chatInput" placeholder="Paste your chat here..."></textarea>
-            
-            <input type="text" id="chatTitle" placeholder="Title (optional)">
-            
-            <div class="button-grid">
-                <button class="secondary" onclick="clearInput()">🗑️ Clear</button>
-                <button class="secondary" onclick="pasteChat()">📋 Paste</button>
-                <button class="full" onclick="processChat()">
-                    🔮 Process Chat
-                </button>
+        <!-- Status Messages -->
+        <div class="status" id="status"></div>
+        
+        <!-- Input Panel -->
+        <div class="panel">
+            <textarea id="inputArea" placeholder="Paste crashed chat here..."></textarea>
+            <div class="action-bar">
+                <button class="btn-secondary" onclick="pasteInput()">📋 Paste</button>
+                <button class="btn-danger" onclick="clearAll()">🗑️ Clear</button>
+                <button class="btn-primary" onclick="recoverFlow()">⚡ Recover</button>
             </div>
-            
-            <div class="spinner" id="spinner"></div>
         </div>
         
-        <!-- Output Section -->
-        <div class="panel" id="outputSection">
-            <h2 style="margin-bottom: 15px;">📤 Output</h2>
-            
-            <div class="output-stats">
-                <div class="success-msg">✅ Chat Processed Successfully!</div>
-                <div style="display: flex; justify-content: space-around; text-align: center;">
-                    <div>
-                        <div style="font-size: 1.2rem; font-weight: bold;" id="outMessages">0</div>
-                        <div style="font-size: 0.8rem; color: #888;">Messages</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 1.2rem; font-weight: bold;" id="outSize">0</div>
-                        <div style="font-size: 0.8rem; color: #888;">KB</div>
-                    </div>
-                </div>
-            </div>
-            
-            <textarea id="outputArea" readonly placeholder="Processed output will appear here..."></textarea>
-            
-            <div class="button-grid" style="margin-top: 15px;">
-                <button onclick="copyOutput()">📋 Copy All</button>
-                <button class="secondary" onclick="backToInput()">⬅️ Back</button>
-                <button class="full accent" onclick="downloadHTML()">
-                    💾 Download HTML (Optional)
+        <!-- Processing Indicator -->
+        <div class="processing" id="processing">
+            <div class="spinner"></div>
+            <div>Compressing for continuity...</div>
+        </div>
+        
+        <!-- Context Helper -->
+        <div class="context-box" id="contextBox" style="display: none;">
+            <strong>✨ Ready to Continue!</strong><br>
+            Copy the compressed output below and paste into a new chat to resume your flow state.
+        </div>
+        
+        <!-- Output Panel -->
+        <div class="panel" id="outputPanel" style="display: none;">
+            <textarea id="outputArea" readonly placeholder="Compressed output..."></textarea>
+            <div class="action-bar">
+                <button class="btn-primary btn-full" onclick="copyAndContinue()">
+                    📋 Copy & Continue Work
                 </button>
             </div>
         </div>
     </div>
     
     <script>
-        // Update stats in real-time
-        document.getElementById('chatInput').addEventListener('input', updateStats);
+        let currentMode = 'smart';
+        let lastInput = '';
         
-        function updateStats() {
-            const input = document.getElementById('chatInput').value;
-            const chars = input.length;
-            const kb = (chars / 1024).toFixed(1);
-            
-            let messages = 0;
-            const patterns = [/Human:/gi, /Assistant:/gi, /You:/gi, /ChatGPT:/gi];
-            patterns.forEach(p => {
-                const matches = input.match(p);
-                if (matches) messages += matches.length;
-            });
-            
-            document.getElementById('charCount').textContent = chars > 999 ? (chars/1000).toFixed(1) + 'k' : chars;
-            document.getElementById('msgCount').textContent = messages || '?';
-            document.getElementById('sizeKb').textContent = kb;
-        }
+        // Compression configurations
+        const compressionModes = {
+            full: { name: 'FULL', ratio: 1.0, preserve: true },
+            smart: { name: 'SMART', ratio: 0.7, preserve: true },
+            tight: { name: 'TIGHT', ratio: 0.4, preserve: false },
+            ultra: { name: 'ULTRA', ratio: 0.2, preserve: false }
+        };
         
-        function clearInput() {
-            if (confirm('Clear all input?')) {
-                document.getElementById('chatInput').value = '';
-                document.getElementById('chatTitle').value = '';
-                updateStats();
+        // Set compression mode
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('modeIndicator').textContent = compressionModes[mode].name;
+            
+            // Re-process if we have input
+            if (lastInput) {
+                recoverFlow();
             }
         }
         
-        async function pasteChat() {
+        // Update stats
+        function updateStats() {
+            const input = document.getElementById('inputArea').value;
+            const output = document.getElementById('outputArea').value;
+            
+            const inputKb = (input.length / 1024).toFixed(1);
+            const outputKb = (output.length / 1024).toFixed(1);
+            const saved = input.length > 0 ? Math.round((1 - output.length / input.length) * 100) : 0;
+            
+            document.getElementById('inputSize').textContent = inputKb + 'KB';
+            document.getElementById('outputSize').textContent = outputKb + 'KB';
+            document.getElementById('savedPercent').textContent = saved + '%';
+        }
+        
+        // Paste from clipboard
+        async function pasteInput() {
             try {
                 const text = await navigator.clipboard.readText();
-                document.getElementById('chatInput').value = text;
+                document.getElementById('inputArea').value = text;
                 updateStats();
             } catch (err) {
-                alert('Please paste manually');
+                document.getElementById('inputArea').focus();
+                alert('Paste manually (Cmd+V)');
             }
         }
         
-        function processChat() {
-            const input = document.getElementById('chatInput').value;
-            
+        // Clear all
+        function clearAll() {
+            document.getElementById('inputArea').value = '';
+            document.getElementById('outputArea').value = '';
+            document.getElementById('outputPanel').style.display = 'none';
+            document.getElementById('contextBox').style.display = 'none';
+            lastInput = '';
+            updateStats();
+        }
+        
+        // Main recovery function
+        function recoverFlow() {
+            const input = document.getElementById('inputArea').value;
             if (!input.trim()) {
-                alert('Please paste your chat first!');
+                showStatus('Paste your crashed chat first!', 'error');
                 return;
             }
             
-            document.getElementById('spinner').style.display = 'block';
+            lastInput = input;
+            document.getElementById('processing').style.display = 'block';
             
             setTimeout(() => {
                 try {
-                    const messages = parseMessages(input);
-                    const title = document.getElementById('chatTitle').value || 'Chat Recovery';
-                    const output = generateOutput(title, messages);
+                    const compressed = compressChat(input, currentMode);
                     
-                    // Show output section
-                    document.getElementById('inputSection').style.display = 'none';
-                    document.getElementById('outputSection').style.display = 'block';
-                    document.getElementById('outputArea').value = output;
+                    // Show output
+                    document.getElementById('outputArea').value = compressed;
+                    document.getElementById('outputPanel').style.display = 'block';
+                    document.getElementById('contextBox').style.display = 'block';
+                    document.getElementById('processing').style.display = 'none';
                     
-                    // Update output stats
-                    document.getElementById('outMessages').textContent = messages.length;
-                    document.getElementById('outSize').textContent = (output.length / 1024).toFixed(1);
+                    updateStats();
+                    showStatus('✅ Compressed! Ready to continue your work.', 'success');
                     
-                    // Store for download
-                    window.currentOutput = output;
-                    window.currentTitle = title;
+                    // Auto-focus output for quick copy
+                    document.getElementById('outputArea').focus();
                     
                 } catch (error) {
-                    alert('Error processing chat');
-                } finally {
-                    document.getElementById('spinner').style.display = 'none';
+                    document.getElementById('processing').style.display = 'none';
+                    showStatus('Error compressing chat', 'error');
                 }
-            }, 100);
+            }, 300);
         }
         
+        // Compression engine
+        function compressChat(input, mode) {
+            const config = compressionModes[mode];
+            const messages = parseMessages(input);
+            
+            if (mode === 'full') {
+                // Full format - just clean up
+                return formatFull(messages);
+            } else if (mode === 'smart') {
+                // Smart compression - preserve context
+                return formatSmart(messages);
+            } else if (mode === 'tight') {
+                // Tight - aggressive but readable
+                return formatTight(messages);
+            } else {
+                // Ultra - maximum compression
+                return formatUltra(messages);
+            }
+        }
+        
+        // Parse messages
         function parseMessages(text) {
             const messages = [];
             const lines = text.split('\n');
-            let currentMsg = null;
+            let current = null;
+            let inCode = false;
             
             for (const line of lines) {
-                if (line.match(/^(Human:|You:|User:)/i)) {
-                    if (currentMsg) messages.push(currentMsg);
-                    currentMsg = {
-                        role: 'human',
-                        content: line.replace(/^(Human:|You:|User:)\s*/i, '')
+                if (line.includes('```')) inCode = !inCode;
+                
+                if (!inCode && line.match(/^(Human:|You:|User:)/i)) {
+                    if (current) messages.push(current);
+                    current = {
+                        role: 'H',
+                        content: line.replace(/^(Human:|You:|User:)\s*/i, ''),
+                        hasCode: false
                     };
-                } else if (line.match(/^(Assistant:|ChatGPT:|AI:)/i)) {
-                    if (currentMsg) messages.push(currentMsg);
-                    currentMsg = {
-                        role: 'assistant',
-                        content: line.replace(/^(Assistant:|ChatGPT:|AI:)\s*/i, '')
+                } else if (!inCode && line.match(/^(Assistant:|ChatGPT:|AI:)/i)) {
+                    if (current) messages.push(current);
+                    current = {
+                        role: 'A',
+                        content: line.replace(/^(Assistant:|ChatGPT:|AI:)\s*/i, ''),
+                        hasCode: false
                     };
-                } else if (currentMsg) {
-                    currentMsg.content += '\n' + line;
+                } else if (current) {
+                    current.content += '\n' + line;
+                    if (line.includes('```') || line.includes('const ') || line.includes('function ')) {
+                        current.hasCode = true;
+                    }
                 }
             }
             
-            if (currentMsg) messages.push(currentMsg);
+            if (current) messages.push(current);
             
+            // Fallback parsing
             if (messages.length === 0) {
-                const paragraphs = text.split(/\n\n+/);
-                paragraphs.forEach((p, i) => {
-                    if (p.trim()) {
+                const chunks = text.split(/\n\n+/);
+                chunks.forEach((chunk, i) => {
+                    if (chunk.trim()) {
                         messages.push({
-                            role: i % 2 === 0 ? 'human' : 'assistant',
-                            content: p.trim()
+                            role: i % 2 === 0 ? 'H' : 'A',
+                            content: chunk.trim(),
+                            hasCode: chunk.includes('```') || chunk.includes('const ')
                         });
                     }
                 });
@@ -401,105 +498,123 @@
             return messages;
         }
         
-        function generateOutput(title, messages) {
-            let output = `CHAT RECOVERY: ${title}\n`;
-            output += `Date: ${new Date().toLocaleString()}\n`;
-            output += `Messages: ${messages.length}\n`;
-            output += '='.repeat(50) + '\n\n';
+        // Format: Full (clean but complete)
+        function formatFull(messages) {
+            let output = '=== RECOVERED CHAT ===\n\n';
+            messages.forEach((msg, i) => {
+                output += `${msg.role === 'H' ? 'Human' : 'Assistant'}: ${msg.content}\n\n`;
+            });
+            return output;
+        }
+        
+        // Format: Smart (preserve code and context)
+        function formatSmart(messages) {
+            let output = '=== CONTEXT RECOVERY ===\n';
+            let lastRole = '';
             
             messages.forEach((msg, i) => {
-                const role = msg.role === 'human' ? '[HUMAN]' : '[AI]';
-                output += `${role} Message ${i + 1}:\n`;
-                output += msg.content + '\n';
-                output += '-'.repeat(40) + '\n\n';
+                // Detect section changes
+                if (msg.hasCode && lastRole !== 'code') {
+                    output += '\n[CODE SECTION]\n';
+                    lastRole = 'code';
+                } else if (!msg.hasCode && lastRole === 'code') {
+                    output += '\n[DISCUSSION]\n';
+                    lastRole = 'discussion';
+                }
+                
+                // Compress content smartly
+                const content = msg.hasCode ? 
+                    msg.content : // Preserve code exactly
+                    msg.content
+                        .replace(/\n\n+/g, '\n') // Remove extra lines
+                        .replace(/\s+/g, ' ') // Normalize spaces
+                        .trim();
+                
+                output += `${msg.role}: ${content}\n`;
             });
             
             return output;
         }
         
-        async function copyOutput() {
+        // Format: Tight (aggressive compression)
+        function formatTight(messages) {
+            let output = 'RECOVERY:\n';
+            
+            messages.forEach((msg, i) => {
+                let content = msg.content
+                    .replace(/\n+/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .substring(0, 200); // Limit length
+                
+                if (msg.content.length > 200) content += '...';
+                
+                output += `${msg.role}:${content}\n`;
+            });
+            
+            return output;
+        }
+        
+        // Format: Ultra (maximum compression)
+        function formatUltra(messages) {
+            // Extract only the most important parts
+            const key = messages.map((msg, i) => {
+                const words = msg.content.split(/\s+/);
+                const important = words.filter(w => 
+                    w.length > 4 || 
+                    w.includes('error') || 
+                    w.includes('fix') ||
+                    w.includes('const') ||
+                    /^[A-Z]/.test(w)
+                ).slice(0, 10).join(' ');
+                
+                return `${msg.role}:${important}`;
+            }).join('|');
+            
+            return `ULTRA:${key}\nMSGS:${messages.length}`;
+        }
+        
+        // Copy and continue
+        async function copyAndContinue() {
             const output = document.getElementById('outputArea');
             output.select();
-            output.setSelectionRange(0, 999999); // For mobile
+            output.setSelectionRange(0, 999999);
             
             try {
                 await navigator.clipboard.writeText(output.value);
                 
                 // Visual feedback
                 const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = '✅ Copied!';
+                btn.textContent = '✅ Copied! Continue your work!';
                 btn.style.background = 'var(--primary)';
                 
                 setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '';
-                }, 2000);
+                    btn.textContent = '📋 Copy & Continue Work';
+                }, 3000);
+                
             } catch (err) {
-                // Fallback
                 document.execCommand('copy');
-                alert('Copied to clipboard!');
+                alert('Copied! Paste into new chat to continue.');
             }
         }
         
-        function backToInput() {
-            document.getElementById('outputSection').style.display = 'none';
-            document.getElementById('inputSection').style.display = 'block';
-        }
-        
-        function downloadHTML() {
-            if (!window.currentOutput) return;
+        // Show status message
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = 'status ' + type;
+            status.style.display = 'block';
             
-            const html = createFullHTML(window.currentTitle, window.currentOutput);
-            const blob = new Blob([html], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = window.currentTitle.replace(/[^a-z0-9]/gi, '_') + '.html';
-            a.click();
-            URL.revokeObjectURL(url);
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
         }
         
-        function createFullHTML(title, content) {
-            return `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${title}</title>
-<style>
-body { 
-    font-family: monospace; 
-    background: #0a0a0a; 
-    color: #f0f0f0; 
-    padding: 20px;
-    white-space: pre-wrap;
-    line-height: 1.6;
-}
-.container { 
-    max-width: 800px; 
-    margin: 0 auto;
-    background: #1a1a1a;
-    padding: 30px;
-    border-radius: 10px;
-}
-</style>
-</head>
-<body>
-<div class="container">${content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-</body>
-</html>`;
-        }
-        
-        // Prevent zoom on double tap
-        let lastTap = 0;
-        document.addEventListener('touchend', function(e) {
-            const now = Date.now();
-            if (now - lastTap <= 300) {
-                e.preventDefault();
-            }
-            lastTap = now;
-        }, false);
+        // Auto-update stats on input
+        document.getElementById('inputArea').addEventListener('input', () => {
+            const input = document.getElementById('inputArea').value;
+            const inputKb = (input.length / 1024).toFixed(1);
+            document.getElementById('inputSize').textContent = inputKb + 'KB';
+        });
     </script>
 </body>
 </html>
