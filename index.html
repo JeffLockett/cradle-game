@@ -38,13 +38,25 @@
         background: #00ff88;
         color: #000;
         border: none;
-        padding: 15px 30px;
-        font-size: 18px;
+        padding: 20px 40px;
+        font-size: 20px;
         font-weight: bold;
         border-radius: 5px;
         margin-top: 10px;
         display: inline-block;
         text-decoration: none;
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        min-height: 50px;
+        width: 80%;
+    }
+    
+    .btn:active {
+        background: #00cc66;
+        transform: scale(0.95);
     }
     
     .details {
@@ -212,7 +224,40 @@ Start Engine
         debug('Window loaded successfully');
         debug('Touch events: ' + ('ontouchstart' in window));
         debug('User agent: ' + navigator.userAgent.substring(0, 50) + '...');
+        
+        // Add touch handlers to ALL buttons
+        const buttons = document.querySelectorAll('.btn');
+        debug('Found ' + buttons.length + ' buttons');
+        
+        buttons.forEach((btn, index) => {
+            debug('Adding touch handler to button ' + index);
+            
+            // Add multiple event types to ensure one works
+            btn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                debug('Touchstart on button ' + index);
+                this.click();
+            }, {passive: false});
+            
+            btn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                debug('Touchend on button ' + index);
+            }, {passive: false});
+            
+            btn.addEventListener('click', function(e) {
+                debug('Click on button ' + index);
+            }, {passive: false});
+        });
+        
+        // Make toggle and debug functions global
+        window.toggle = toggle;
+        window.debug = debug;
     };
+    
+    // Also add a direct touch test
+    document.addEventListener('touchstart', function(e) {
+        debug('Document touched at: ' + e.touches[0].clientX + ',' + e.touches[0].clientY);
+    }, {passive: false});
 </script>
 ```
 
