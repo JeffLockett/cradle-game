@@ -9,87 +9,315 @@
         body {
             background: #0a0a0a;
             color: #00ff88;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, Arial, sans-serif;
             margin: 0;
             padding: 20px;
+            line-height: 1.6;
         }
 
 ```
     .header {
         text-align: center;
         margin-bottom: 30px;
+        padding: 20px;
+        background: rgba(0, 255, 136, 0.1);
+        border-radius: 10px;
+    }
+    
+    .header h1 {
+        margin: 0 0 10px 0;
+        font-size: 32px;
+    }
+    
+    .progress-overview {
+        background: #1a1a1a;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .progress-bar-container {
+        background: #333;
+        height: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        margin: 10px 0;
+    }
+    
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #00ff88, #00cc66);
+        width: 0%;
+        transition: width 0.5s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000;
+        font-weight: bold;
     }
     
     .vehicle {
-        background: rgba(0, 255, 136, 0.1);
+        background: rgba(0, 255, 136, 0.08);
         border: 2px solid #00ff88;
         border-radius: 10px;
         padding: 20px;
         margin-bottom: 20px;
-        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .vehicle:hover {
+        background: rgba(0, 255, 136, 0.12);
+        transform: translateY(-2px);
+    }
+    
+    .vehicle-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
     }
     
     .vehicle-icon {
         font-size: 48px;
-        margin-bottom: 10px;
+    }
+    
+    .vehicle-info h2 {
+        margin: 0;
+        font-size: 24px;
+        color: #00ff88;
+    }
+    
+    .vehicle-info p {
+        margin: 5px 0;
+        color: #0088ff;
     }
     
     .btn {
         background: #00ff88;
         color: #000;
         border: none;
-        padding: 20px 40px;
-        font-size: 20px;
+        padding: 15px 30px;
+        font-size: 18px;
         font-weight: bold;
         border-radius: 5px;
-        margin-top: 10px;
-        display: inline-block;
-        text-decoration: none;
         cursor: pointer;
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-        min-height: 50px;
-        width: 80%;
+        -webkit-appearance: none;
+        width: 100%;
+        margin-top: 15px;
     }
     
     .btn:active {
         background: #00cc66;
-        transform: scale(0.95);
+        transform: scale(0.98);
     }
     
-    .details {
+    .btn-secondary {
+        background: #0088ff;
+        color: #fff;
+    }
+    
+    .btn-secondary:active {
+        background: #0066cc;
+    }
+    
+    .learning-content {
         display: none;
-        background: #1a1a1a;
-        padding: 20px;
         margin-top: 20px;
+        padding: 20px;
+        background: #1a1a1a;
         border-radius: 10px;
     }
     
-    .details.show {
+    .learning-content.active {
         display: block;
     }
     
-    .code {
-        background: #000;
-        padding: 10px;
-        border: 1px solid #00ff88;
-        font-family: monospace;
-        white-space: pre-wrap;
+    .concept-box {
+        background: rgba(0, 136, 255, 0.1);
+        border: 1px solid #0088ff;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 15px 0;
     }
     
-    #debug {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: #ff0066;
-        color: white;
-        padding: 10px;
-        font-size: 12px;
-        max-height: 100px;
-        overflow-y: auto;
+    .concept-box h4 {
+        color: #0088ff;
+        margin: 0 0 10px 0;
+        font-size: 18px;
+    }
+    
+    .concept-box p {
+        margin: 5px 0;
+    }
+    
+    .code-example {
+        background: #000;
+        border: 2px solid #00ff88;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        font-family: 'Courier New', monospace;
+        overflow-x: auto;
+        position: relative;
+    }
+    
+    .code-example h5 {
+        color: #00ff88;
+        margin: 0 0 15px 0;
+        font-size: 16px;
+    }
+    
+    .code {
+        white-space: pre;
+        color: #fff;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .exercise {
+        background: rgba(255, 0, 102, 0.1);
+        border: 2px solid #ff0066;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+    
+    .exercise h5 {
+        color: #ff0066;
+        margin: 0 0 10px 0;
+        font-size: 18px;
+    }
+    
+    .exercise-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .exercise-list li {
+        padding: 10px 0;
+        border-bottom: 1px solid #333;
+    }
+    
+    .exercise-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .exercise-list li:before {
+        content: "🔧 ";
+        color: #00ff88;
+    }
+    
+    .checkpoint {
+        background: rgba(255, 215, 0, 0.1);
+        border: 2px solid gold;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: center;
+    }
+    
+    .checkpoint h5 {
+        color: gold;
+        margin: 0 0 10px 0;
+    }
+    
+    .achievement {
+        display: inline-block;
+        background: #1a1a1a;
+        border: 2px solid #00ff88;
+        border-radius: 50px;
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 14px;
+    }
+    
+    .achievement.unlocked {
+        background: rgba(0, 255, 136, 0.2);
+        animation: pulse 2s ease-in-out;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .tab {
+        background: #333;
+        color: #aaa;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .tab.active {
+        background: #00ff88;
+        color: #000;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #333;
+    }
+    
+    .comparison-table th {
+        background: rgba(0, 255, 136, 0.1);
+        color: #00ff88;
+    }
+    
+    .comparison-table tr:hover {
+        background: rgba(0, 136, 255, 0.05);
+    }
+    
+    .tip {
+        background: rgba(255, 215, 0, 0.1);
+        border-left: 4px solid gold;
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .tip strong {
+        color: gold;
+    }
+    
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 24px;
+        }
+        
+        .tabs {
+            flex-direction: column;
+        }
+        
+        .tab {
+            width: 100%;
+            text-align: center;
+        }
     }
 </style>
 ```
@@ -97,167 +325,1302 @@
 </head>
 <body>
     <div class="header">
-        <h1>🏎️ Automotive Coding Academy</h1>
-        <p>Debug Version - Tap buttons to test</p>
+        <h1>🏎️ Virtual Automotive Coding Academy</h1>
+        <p>Master Programming Through Your Automotive Expertise</p>
     </div>
 
 ```
-<!-- Debug Panel -->
-<div id="debug">Debug: Page loaded</div>
+<div class="progress-overview">
+    <h3>Your Learning Journey</h3>
+    <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="overall-progress">0%</div>
+    </div>
+    <p id="level-status">Current Level: Apprentice Mechanic</p>
+    <div id="achievements"></div>
+</div>
 
-<!-- HTML Vehicle -->
-<div class="vehicle">
-    <div class="vehicle-icon">🚙</div>
-    <h2>HTML Foundation SUV</h2>
-    <p>Structure & Framework</p>
-    <button class="btn" onclick="debug('HTML button clicked'); toggle('html')">
-        Learn HTML
-    </button>
-    <div id="html" class="details">
-        <h3>🔧 Automotive → Code Mapping</h3>
-        <p><strong>Engine (DOCTYPE):</strong> Starts your vehicle/document</p>
-        <p><strong>Chassis (Body):</strong> Main structure</p>
-        <div class="code">&lt;!DOCTYPE html&gt;
+<!-- HTML SUV -->
+<div class="vehicle" id="vehicle-html">
+    <div class="vehicle-header">
+        <div class="vehicle-icon">🚙</div>
+        <div class="vehicle-info">
+            <h2>HTML Foundation - SUV</h2>
+            <p>Build the Structure & Framework</p>
+        </div>
+    </div>
+    <button class="btn" onclick="toggleLesson('html')">Start Learning HTML</button>
+    
+    <div id="lesson-html" class="learning-content">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('html', 'basics')">Basics</div>
+            <div class="tab" onclick="showTab('html', 'mapping')">Auto → Code</div>
+            <div class="tab" onclick="showTab('html', 'practice')">Practice</div>
+            <div class="tab" onclick="showTab('html', 'build')">Build</div>
+        </div>
+        
+        <div id="html-basics" class="tab-content active">
+            <h3>HTML: The Vehicle Frame</h3>
+            <p>Think of HTML as building a car from the ground up. Every vehicle needs a solid frame, and HTML provides that structure for websites.</p>
+            
+            <div class="concept-box">
+                <h4>🔧 Key Concept: HTML is Structure</h4>
+                <p>Just like an SUV's frame determines where everything goes - seats, engine, wheels - HTML determines where content goes on a webpage.</p>
+            </div>
+            
+            <div class="code-example">
+                <h5>Your First HTML "Vehicle"</h5>
+                <pre class="code">&lt;!DOCTYPE html&gt;  &lt;!-- Vehicle Registration --&gt;
+```
+
+<html>           <!– The Complete Vehicle –>
+<head>         <!– Dashboard & Controls –>
+<title>My SUV</title>
+</head>
+<body>         <!– Passenger Compartment –>
+<h1>Welcome to my SUV!</h1>
+<p>Room for the whole family.</p>
+</body>
+</html></pre>
+</div>
+
+```
+            <div class="tip">
+                <strong>💡 Pro Tip:</strong> The &lt;head&gt; is like your dashboard - it contains important information and controls that aren't always visible but control how everything works.
+            </div>
+        </div>
+        
+        <div id="html-mapping" class="tab-content">
+            <h3>Automotive → HTML Mapping</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>🚗 Automotive Part</th>
+                    <th>💻 HTML Equivalent</th>
+                    <th>🎯 Purpose</th>
+                </tr>
+                <tr>
+                    <td>Vehicle Registration</td>
+                    <td>&lt;!DOCTYPE html&gt;</td>
+                    <td>Tells browser what type of document</td>
+                </tr>
+                <tr>
+                    <td>Frame/Chassis</td>
+                    <td>&lt;body&gt;</td>
+                    <td>Main structure holding everything</td>
+                </tr>
+                <tr>
+                    <td>Dashboard</td>
+                    <td>&lt;head&gt;</td>
+                    <td>Controls and information</td>
+                </tr>
+                <tr>
+                    <td>Seats</td>
+                    <td>&lt;div&gt;</td>
+                    <td>Containers for content</td>
+                </tr>
+                <tr>
+                    <td>Windows</td>
+                    <td>&lt;img&gt;</td>
+                    <td>View to visual content</td>
+                </tr>
+                <tr>
+                    <td>Doors</td>
+                    <td>&lt;a&gt; (links)</td>
+                    <td>Entry/exit to other pages</td>
+                </tr>
+                <tr>
+                    <td>Engine Badge</td>
+                    <td>&lt;h1&gt;-&lt;h6&gt;</td>
+                    <td>Important labels/titles</td>
+                </tr>
+                <tr>
+                    <td>Owner's Manual</td>
+                    <td>&lt;p&gt;</td>
+                    <td>Regular text content</td>
+                </tr>
+            </table>
+            
+            <div class="concept-box">
+                <h4>🏗️ Building Blocks</h4>
+                <p>Just like how an SUV is built in sections (front end, cabin, rear), HTML uses nested elements:</p>
+            </div>
+            
+            <div class="code-example">
+                <h5>SUV Interior Layout</h5>
+                <pre class="code">&lt;div class="suv-interior"&gt;  &lt;!-- The Cabin --&gt;
+```
+
+<div class=“front-row”>     <!– Front Seats –>
+<div class=“driver-seat”>Driver</div>
+<div class=“passenger-seat”>Passenger</div>
+</div>
+<div class=“back-row”>      <!– Back Seats –>
+<div class=“seat”>Kid 1</div>
+<div class=“seat”>Kid 2</div>
+<div class=“seat”>Kid 3</div>
+</div>
+<div class=“cargo”>         <!– Trunk Space –>
+<p>Groceries and sports equipment</p>
+</div>
+</div></pre>
+</div>
+</div>
+
+```
+        <div id="html-practice" class="tab-content">
+            <h3>Practice Exercises</h3>
+            
+            <div class="exercise">
+                <h5>Exercise 1: Build Your Vehicle Frame</h5>
+                <ul class="exercise-list">
+                    <li>Create a basic HTML page structure (like a vehicle frame)</li>
+                    <li>Add a title in the head (vehicle model name)</li>
+                    <li>Create divs for front seats, back seats, and cargo</li>
+                    <li>Add headings for each section</li>
+                    <li>Include paragraphs describing what goes in each area</li>
+                </ul>
+            </div>
+            
+            <div class="exercise">
+                <h5>Exercise 2: Add Vehicle Features</h5>
+                <ul class="exercise-list">
+                    <li>Add an image tag (windshield view)</li>
+                    <li>Create links to other "vehicles" (pages)</li>
+                    <li>Make a list of vehicle features (like options list)</li>
+                    <li>Build a navigation menu (like dashboard controls)</li>
+                </ul>
+            </div>
+            
+            <div class="code-example">
+                <h5>Challenge: Build a Complete SUV Page</h5>
+                <pre class="code">&lt;!-- Build this structure yourself! --&gt;
+```
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>??? - Your SUV Model</title>
+</head>
+<body>
+<header>  <!– Hood/Front –>
+???
+</header>
+
+```
+&lt;nav&gt;     &lt;!-- Dashboard --&gt;
+  ???
+&lt;/nav&gt;
+
+&lt;main&gt;    &lt;!-- Cabin --&gt;
+  ???
+&lt;/main&gt;
+
+&lt;footer&gt;  &lt;!-- Rear/Bumper --&gt;
+  ???
+&lt;/footer&gt;
+```
+
+</body>
+</html></pre>
+</div>
+</div>
+
+```
+        <div id="html-build" class="tab-content">
+            <h3>Build a Real Project</h3>
+            
+            <div class="concept-box">
+                <h4>🏁 Project: SUV Dealership Page</h4>
+                <p>Let's build a complete SUV dealership webpage using everything you've learned!</p>
+            </div>
+            
+            <div class="code-example">
+                <h5>Complete SUV Dealership Template</h5>
+                <pre class="code">&lt;!DOCTYPE html&gt;
 ```
 
 <html>
+<head>
+<title>AutoCode SUV Dealership</title>
+</head>
 <body>
-<h1>Engine Start!</h1>
+<header>
+<h1>🚙 AutoCode SUV Dealership</h1>
+<p>Where Structure Meets Style</p>
+</header>
+
+```
+&lt;nav&gt;
+  &lt;a href="#models"&gt;Our Models&lt;/a&gt; |
+  &lt;a href="#features"&gt;Features&lt;/a&gt; |
+  &lt;a href="#contact"&gt;Contact&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;main&gt;
+  &lt;section id="models"&gt;
+    &lt;h2&gt;Available Models&lt;/h2&gt;
+    
+    &lt;div class="suv-model"&gt;
+      &lt;h3&gt;Explorer XL&lt;/h3&gt;
+      &lt;img src="explorer.jpg" alt="Explorer XL"&gt;
+      &lt;ul&gt;
+        &lt;li&gt;7 Seats (7 &lt;div&gt; containers)&lt;/li&gt;
+        &lt;li&gt;Panoramic View (full &lt;img&gt; support)&lt;/li&gt;
+        &lt;li&gt;Smart Navigation (&lt;nav&gt; enhanced)&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+  
+  &lt;section id="features"&gt;
+    &lt;h2&gt;Why Choose HTML SUVs?&lt;/h2&gt;
+    &lt;ol&gt;
+      &lt;li&gt;Solid Structure (Semantic HTML)&lt;/li&gt;
+      &lt;li&gt;Easy Maintenance (Clean Code)&lt;/li&gt;
+      &lt;li&gt;Universal Compatibility (Cross-browser)&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/section&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+  &lt;p&gt;&amp;copy; 2024 AutoCode Dealership&lt;/p&gt;
+&lt;/footer&gt;
+```
+
 </body>
-</html></div>
-<button class="btn" onclick="debug('Start HTML clicked'); alert('Starting HTML Engine! 🚙')">
-Start Engine
-</button>
+</html></pre>
+</div>
+
+```
+            <div class="checkpoint">
+                <h5>🏆 Checkpoint: HTML Mastery</h5>
+                <p>Complete all exercises to unlock:</p>
+                <div class="achievement">🚙 SUV Frame Builder</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript Sports Car -->
+<div class="vehicle" id="vehicle-javascript">
+    <div class="vehicle-header">
+        <div class="vehicle-icon">🏎️</div>
+        <div class="vehicle-info">
+            <h2>JavaScript Engine - Sports Car</h2>
+            <p>Add Performance & Dynamic Behavior</p>
+        </div>
+    </div>
+    <button class="btn" onclick="toggleLesson('javascript')">Start Learning JavaScript</button>
+    
+    <div id="lesson-javascript" class="learning-content">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('javascript', 'basics')">Basics</div>
+            <div class="tab" onclick="showTab('javascript', 'mapping')">Auto → Code</div>
+            <div class="tab" onclick="showTab('javascript', 'practice')">Practice</div>
+            <div class="tab" onclick="showTab('javascript', 'build')">Build</div>
+        </div>
+        
+        <div id="javascript-basics" class="tab-content active">
+            <h3>JavaScript: The High-Performance Engine</h3>
+            <p>If HTML is the frame, JavaScript is the engine that makes everything move. It's what turns a static vehicle into a dynamic driving machine!</p>
+            
+            <div class="concept-box">
+                <h4>⚡ Key Concept: JavaScript is Action</h4>
+                <p>Like a sports car engine responds to your accelerator, JavaScript responds to user actions and makes things happen.</p>
+            </div>
+            
+            <div class="code-example">
+                <h5>Starting Your Engine</h5>
+                <pre class="code">// Engine Variables (storing power)
+```
+
+let rpm = 0;           // Revolutions per minute
+let speed = 0;         // Current speed
+let gear = 1;          // Current gear
+const redline = 8000;  // Maximum safe RPM
+
+// Engine Function (making it run)
+function startEngine() {
+console.log(“🏎️ Engine started!”);
+rpm = 1000;  // Idle RPM
+}
+
+// Accelerator Function
+function accelerate() {
+rpm += 500;
+speed += 10;
+
+```
+if (rpm > redline) {
+    console.log("⚠️ SHIFT UP! Redline!");
+    shiftGear();
+}
+
+console.log(`RPM: ${rpm} | Speed: ${speed} mph`);
+```
+
+}
+
+// Gear Shift Function
+function shiftGear() {
+if (gear < 6) {
+gear++;
+rpm = rpm * 0.7;  // RPM drops on shift
+console.log(`Shifted to gear ${gear}`);
+}
+}</pre>
+</div>
+
+```
+            <div class="tip">
+                <strong>💡 Turbo Tip:</strong> Variables are like gauges on your dashboard - they store and display current values. Functions are like controls - they make things happen when activated.
+            </div>
+        </div>
+        
+        <div id="javascript-mapping" class="tab-content">
+            <h3>Automotive → JavaScript Mapping</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>🏎️ Car Component</th>
+                    <th>💻 JavaScript Equivalent</th>
+                    <th>🎯 Purpose</th>
+                </tr>
+                <tr>
+                    <td>Engine</td>
+                    <td>Functions</td>
+                    <td>Make things happen</td>
+                </tr>
+                <tr>
+                    <td>Fuel Tank</td>
+                    <td>Variables</td>
+                    <td>Store values/data</td>
+                </tr>
+                <tr>
+                    <td>Gauges</td>
+                    <td>Console.log</td>
+                    <td>Display information</td>
+                </tr>
+                <tr>
+                    <td>ECU (Computer)</td>
+                    <td>If/Else Statements</td>
+                    <td>Make decisions</td>
+                </tr>
+                <tr>
+                    <td>Transmission</td>
+                    <td>Event Listeners</td>
+                    <td>Connect actions to responses</td>
+                </tr>
+                <tr>
+                    <td>Turbocharger</td>
+                    <td>Async/Await</td>
+                    <td>Handle multiple operations</td>
+                </tr>
+                <tr>
+                    <td>Nitrous System</td>
+                    <td>Loops</td>
+                    <td>Repeat actions rapidly</td>
+                </tr>
+                <tr>
+                    <td>GPS Navigation</td>
+                    <td>APIs</td>
+                    <td>Get external information</td>
+                </tr>
+            </table>
+            
+            <div class="code-example">
+                <h5>Complete Engine Control System</h5>
+                <pre class="code">// Engine Control Unit (ECU)
+```
+
+class SportsCarEngine {
+constructor() {
+this.rpm = 0;
+this.temperature = 70;
+this.fuel = 100;
+this.boost = 0;
+}
+
+```
+// Start sequence
+start() {
+    console.log("🔑 Ignition...");
+    this.rpm = 1000;
+    this.monitor();  // Start monitoring systems
+}
+
+// Monitor all systems
+monitor() {
+    setInterval(() => {
+        this.temperature += this.rpm / 1000;
+        this.fuel -= 0.1;
+        
+        // ECU decisions
+        if (this.temperature > 220) {
+            this.coolDown();
+        }
+        
+        if (this.fuel < 10) {
+            console.log("⚠️ Low fuel warning!");
+        }
+    }, 1000);
+}
+
+// Turbo boost!
+engageBoost() {
+    this.boost = 15;  // PSI
+    this.rpm *= 1.3;
+    console.log("💨 BOOST ENGAGED!");
+    
+    // Boost duration
+    setTimeout(() => {
+        this.boost = 0;
+        console.log("Boost cooling down...");
+    }, 3000);
+}
+```
+
+}</pre>
 </div>
 </div>
 
 ```
-<!-- JavaScript Vehicle -->
-<div class="vehicle">
-    <div class="vehicle-icon">🏎️</div>
-    <h2>JavaScript Sports Car</h2>
-    <p>Performance & Dynamics</p>
-    <button class="btn" onclick="debug('JS button clicked'); toggle('js')">
-        Learn JavaScript
-    </button>
-    <div id="js" class="details">
-        <h3>🔧 Automotive → Code Mapping</h3>
-        <p><strong>Engine (Functions):</strong> Makes things happen</p>
-        <p><strong>Turbo (Async):</strong> Handles multiple operations</p>
-        <div class="code">function startEngine() {
+        <div id="javascript-practice" class="tab-content">
+            <h3>Practice Exercises</h3>
+            
+            <div class="exercise">
+                <h5>Exercise 1: Build Your Dashboard</h5>
+                <ul class="exercise-list">
+                    <li>Create variables for speed, fuel, and temperature</li>
+                    <li>Write functions to increase/decrease each value</li>
+                    <li>Add console.log statements to display values</li>
+                    <li>Create an updateDashboard() function</li>
+                </ul>
+            </div>
+            
+            <div class="exercise">
+                <h5>Exercise 2: Transmission System</h5>
+                <ul class="exercise-list">
+                    <li>Create event listeners for accelerate/brake</li>
+                    <li>Build automatic gear shifting logic</li>
+                    <li>Add rev matching for downshifts</li>
+                    <li>Implement launch control</li>
+                </ul>
+            </div>
+            
+            <div class="code-example">
+                <h5>Interactive Challenge: Racing Game Logic</h5>
+                <pre class="code">// Build a simple racing game engine!
 ```
 
-let rpm = 0;
-console.log(“Vroom! 🏎️”);
-}</div>
-<button class="btn" onclick="debug('Start JS clicked'); alert('Starting JavaScript Engine! 🏎️')">
-Start Engine
-</button>
+let player = {
+speed: 0,
+position: 0,
+gear: 1,
+nitrous: 100
+};
+
+// Your code here:
+// 1. Create accelerate() function
+// 2. Create brake() function  
+// 3. Create useNitrous() function
+// 4. Create race() function that:
+//    - Moves the car based on speed
+//    - Checks if you’ve won (position >= 1000)
+//    - Updates the display
+
+function accelerate() {
+// Your code here
+}
+
+function brake() {
+// Your code here
+}
+
+function useNitrous() {
+// Your code here
+}
+
+function race() {
+// Your code here
+}
+
+// Bonus: Add opponent AI!</pre>
 </div>
 </div>
 
 ```
-<!-- CSS Vehicle -->
-<div class="vehicle">
-    <div class="vehicle-icon">🚗</div>
-    <h2>CSS Luxury Sedan</h2>
-    <p>Style & Elegance</p>
-    <button class="btn" onclick="debug('CSS button clicked'); toggle('css')">
-        Learn CSS
-    </button>
-    <div id="css" class="details">
-        <h3>🔧 Automotive → Code Mapping</h3>
-        <p><strong>Paint (Colors):</strong> Vehicle appearance</p>
-        <p><strong>Interior (Padding):</strong> Comfort spacing</p>
-        <div class="code">.luxury-sedan {
+        <div id="javascript-build" class="tab-content">
+            <h3>Build a Real Project</h3>
+            
+            <div class="concept-box">
+                <h4>🏁 Project: Interactive Sports Car Dashboard</h4>
+                <p>Build a working dashboard with real-time updates!</p>
+            </div>
+            
+            <div class="code-example">
+                <h5>Complete Dashboard System</h5>
+                <pre class="code">// Sports Car Dashboard Controller
 ```
 
-background: gold;
-padding: 30px;
-border-radius: 15px;
-}</div>
-<button class="btn" onclick="debug('Start CSS clicked'); alert('Starting CSS Engine! 🚗')">
-Start Engine
-</button>
+const dashboard = {
+// State
+metrics: {
+speed: 0,
+rpm: 0,
+gear: 1,
+fuel: 100,
+temperature: 180,
+boost: 0,
+miles: 0
+},
+
+```
+// Initialize
+init() {
+    this.createDisplay();
+    this.attachControls();
+    this.startEngine();
+},
+
+// Create dashboard display
+createDisplay() {
+    document.body.innerHTML = `
+        &lt;div id="dashboard"&gt;
+            &lt;h2&gt;🏎️ Sports Car Dashboard&lt;/h2&gt;
+            &lt;div id="gauges"&gt;
+                &lt;div&gt;Speed: &lt;span id="speed"&gt;0&lt;/span&gt; mph&lt;/div&gt;
+                &lt;div&gt;RPM: &lt;span id="rpm"&gt;0&lt;/span&gt;&lt;/div&gt;
+                &lt;div&gt;Gear: &lt;span id="gear"&gt;1&lt;/span&gt;&lt;/div&gt;
+                &lt;div&gt;Fuel: &lt;span id="fuel"&gt;100&lt;/span&gt;%&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;button onclick="dashboard.accelerate()"&gt;🏁 Accelerate&lt;/button&gt;
+            &lt;button onclick="dashboard.brake()"&gt;🛑 Brake&lt;/button&gt;
+            &lt;button onclick="dashboard.nitrous()"&gt;💨 Nitrous&lt;/button&gt;
+        &lt;/div&gt;
+    `;
+},
+
+// Control methods
+accelerate() {
+    if (this.metrics.fuel > 0) {
+        this.metrics.speed += 5;
+        this.metrics.rpm += 500;
+        this.metrics.fuel -= 0.5;
+        
+        // Auto shift
+        if (this.metrics.rpm > 7000) {
+            this.shiftUp();
+        }
+        
+        this.update();
+    }
+},
+
+brake() {
+    this.metrics.speed = Math.max(0, this.metrics.speed - 10);
+    this.metrics.rpm = Math.max(1000, this.metrics.rpm - 800);
+    this.update();
+},
+
+nitrous() {
+    if (this.metrics.boost > 0) {
+        this.metrics.speed += 20;
+        this.metrics.boost -= 10;
+        console.log("💨 NITROUS BOOST!");
+        this.update();
+    }
+},
+
+shiftUp() {
+    if (this.metrics.gear < 6) {
+        this.metrics.gear++;
+        this.metrics.rpm *= 0.7;
+        console.log(`Shifted to gear ${this.metrics.gear}`);
+    }
+},
+
+update() {
+    // Update display
+    Object.keys(this.metrics).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+            element.textContent = Math.round(this.metrics[key]);
+        }
+    });
+    
+    // Check warnings
+    if (this.metrics.fuel < 20) {
+        console.warn("⚠️ Low fuel!");
+    }
+    
+    if (this.metrics.rpm > 7500) {
+        console.warn("⚠️ Over-revving!");
+    }
+},
+
+startEngine() {
+    console.log("🔑 Engine started!");
+    this.metrics.rpm = 1000;
+    
+    // Simulate engine running
+    setInterval(() => {
+        // Idle consumption
+        this.metrics.fuel = Math.max(0, this.metrics.fuel - 0.1);
+        
+        // Speed affects distance
+        this.metrics.miles += this.metrics.speed / 3600;
+        
+        this.update();
+    }, 1000);
+}
+```
+
+};
+
+// Start when ready
+dashboard.init();</pre>
+</div>
+
+```
+            <div class="checkpoint">
+                <h5>🏆 Checkpoint: JavaScript Mastery</h5>
+                <p>Complete all exercises to unlock:</p>
+                <div class="achievement">🏎️ Engine Tuner</div>
+                <div class="achievement">⚡ Speed Demon</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS Luxury Sedan -->
+<div class="vehicle" id="vehicle-css">
+    <div class="vehicle-header">
+        <div class="vehicle-icon">🚗</div>
+        <div class="vehicle-info">
+            <h2>CSS Styling - Luxury Sedan</h2>
+            <p>Add Style, Comfort & Visual Appeal</p>
+        </div>
+    </div>
+    <button class="btn" onclick="toggleLesson('css')">Start Learning CSS</button>
+    
+    <div id="lesson-css" class="learning-content">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('css', 'basics')">Basics</div>
+            <div class="tab" onclick="showTab('css', 'mapping')">Auto → Code</div>
+            <div class="tab" onclick="showTab('css', 'practice')">Practice</div>
+            <div class="tab" onclick="showTab('css', 'build')">Build</div>
+        </div>
+        
+        <div id="css-basics" class="tab-content active">
+            <h3>CSS: The Luxury Interior</h3>
+            <p>CSS is what transforms a basic vehicle into a luxury experience. It's all about style, comfort, and making everything look and feel premium.</p>
+            
+            <div class="concept-box">
+                <h4>✨ Key Concept: CSS is Style</h4>
+                <p>Like how a luxury sedan's interior makes you feel special, CSS makes websites visually appealing and comfortable to use.</p>
+            </div>
+            
+            <div class="code-example">
+                <h5>Basic Luxury Styling</h5>
+                <pre class="code">/* Luxury Sedan Base Style */
+```
+
+.luxury-sedan {
+/* Exterior Paint Job */
+background: linear-gradient(135deg, #1a1a1a, #3a3a3a);
+color: #ffffff;
+
+```
+/* Comfortable Interior Spacing */
+padding: 30px;        /* Interior room */
+margin: 20px auto;    /* Parking space */
+
+/* Smooth Curves */
+border-radius: 15px;  /* Aerodynamic design */
+
+/* Premium Shadow Effect */
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+/* Smooth Transitions */
+transition: all 0.3s ease;  /* Smooth ride */
+```
+
+}
+
+/* Hover Effect - Like proximity sensors */
+.luxury-sedan:hover {
+transform: translateY(-5px);  /* Lift */
+box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+}</pre>
 </div>
 </div>
 
 ```
-<!-- Test Button -->
-<div style="text-align: center; margin-top: 40px;">
-    <button class="btn" onclick="debug('Test button clicked'); alert('Buttons ARE working!')">
-        🔧 TEST BUTTON - TAP ME
-    </button>
+        <div id="css-mapping" class="tab-content">
+            <h3>Automotive → CSS Mapping</h3>
+            <table class="comparison-table">
+                <tr>
+                    <th>🚗 Luxury Feature</th>
+                    <th>💻 CSS Property</th>
+                    <th>🎯 Purpose</th>
+                </tr>
+                <tr>
+                    <td>Paint Job</td>
+                    <td>background-color</td>
+                    <td>Base color/appearance</td>
+                </tr>
+                <tr>
+                    <td>Metallic Paint</td>
+                    <td>linear-gradient</td>
+                    <td>Premium color effects</td>
+                </tr>
+                <tr>
+                    <td>Interior Space</td>
+                    <td>padding</td>
+                    <td>Comfort room inside</td>
+                </tr>
+                <tr>
+                    <td>Parking Space</td>
+                    <td>margin</td>
+                    <td>Space around vehicle</td>
+                </tr>
+                <tr>
+                    <td>Chrome Trim</td>
+                    <td>border</td>
+                    <td>Decorative edges</td>
+                </tr>
+                <tr>
+                    <td>Ambient Lighting</td>
+                    <td>box-shadow</td>
+                    <td>Glow effects</td>
+                </tr>
+                <tr>
+                    <td>Leather Seats</td>
+                    <td>texture/patterns</td>
+                    <td>Visual textures</td>
+                </tr>
+                <tr>
+                    <td>Sound System</td>
+                    <td>animations</td>
+                    <td>Dynamic effects</td>
+                </tr>
+            </table>
+            
+            <div class="code-example">
+                <h5>Complete Luxury Interior</h5>
+                <pre class="code">/* Luxury Sedan Interior Design System */
+```
+
+/* Base Vehicle Style */
+.sedan {
+/* Premium Paint */
+background: linear-gradient(
+135deg,
+#2c3e50 0%,    /* Midnight Blue */
+#34495e 50%,   /* Wet Asphalt */
+#2c3e50 100%   /* Midnight Blue */
+);
+
+```
+/* Spacious Interior */
+padding: 40px;
+min-height: 200px;
+
+/* Aerodynamic Curves */
+border-radius: 20px;
+
+/* Premium Materials */
+border: 2px solid gold;
+```
+
+}
+
+/* Dashboard Display */
+.dashboard {
+/* Glass Effect */
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+
+```
+/* Sleek Design */
+border-radius: 10px;
+padding: 20px;
+
+/* Ambient Glow */
+box-shadow: 
+    inset 0 0 20px rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(0, 255, 255, 0.5);
+```
+
+}
+
+/* Leather Seats */
+.seat {
+/* Leather Texture */
+background:
+repeating-linear-gradient(
+90deg,
+#8b4513,
+#8b4513 10px,
+#a0522d 10px,
+#a0522d 20px
+);
+
+```
+/* Comfortable Padding */
+padding: 30px 20px;
+
+/* Stitching Effect */
+border: 2px dashed #d2691e;
+border-radius: 5px;
+
+/* Soft Feel */
+box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+```
+
+}
+
+/* Ambient Lighting System */
+.ambient-light {
+/* Color-changing effect */
+animation: ambientGlow 4s infinite alternate;
+}
+
+@keyframes ambientGlow {
+0% {
+box-shadow: 0 0 30px #ff00ff;
+border-color: #ff00ff;
+}
+50% {
+box-shadow: 0 0 30px #00ffff;
+border-color: #00ffff;
+}
+100% {
+box-shadow: 0 0 30px #ffff00;
+border-color: #ffff00;
+}
+}
+
+/* Responsive Comfort - Like adjustable seats */
+@media (max-width: 768px) {
+.sedan {
+padding: 20px;  /* Compact mode */
+border-radius: 10px;
+}
+}</pre>
+</div>
+</div>
+
+```
+        <div id="css-practice" class="tab-content">
+            <h3>Practice Exercises</h3>
+            
+            <div class="exercise">
+                <h5>Exercise 1: Paint & Finish</h5>
+                <ul class="exercise-list">
+                    <li>Create 3 different paint jobs using gradients</li>
+                    <li>Add metallic shine with box-shadow</li>
+                    <li>Design a two-tone paint scheme</li>
+                    <li>Create a "chrome" effect for trim</li>
+                </ul>
+            </div>
+            
+            <div class="exercise">
+                <h5>Exercise 2: Interior Design</h5>
+                <ul class="exercise-list">
+                    <li>Style comfortable seats with padding</li>
+                    <li>Create ambient lighting effects</li>
+                    <li>Design a premium dashboard</li>
+                    <li>Add smooth animations for interactions</li>
+                </ul>
+            </div>
+            
+            <div class="code-example">
+                <h5>Challenge: Style Your Dream Car</h5>
+                <pre class="code">/* Design your luxury sedan! */
+```
+
+.my-luxury-sedan {
+/* Paint Job */
+background: ???;
+
+```
+/* Interior Comfort */
+padding: ???;
+
+/* Premium Features */
+border: ???;
+border-radius: ???;
+box-shadow: ???;
+
+/* Special Effects */
+transition: ???;
+```
+
+}
+
+/* Add these luxury features: */
+/* 1. Heated seats (hover effect) */
+/* 2. Ambient lighting (glow) */
+/* 3. Panoramic roof (gradient) */
+/* 4. Chrome details (borders) */
+/* 5. Sound system (animations) */</pre>
+</div>
+</div>
+
+```
+        <div id="css-build" class="tab-content">
+            <h3>Build a Real Project</h3>
+            
+            <div class="concept-box">
+                <h4>🏁 Project: Luxury Car Configurator</h4>
+                <p>Build an interactive car customization interface!</p>
+            </div>
+            
+            <div class="code-example">
+                <h5>Complete Luxury Configurator</h5>
+                <pre class="code">/* Luxury Car Configurator Styles */
+```
+
+/* Main Showroom */
+.showroom {
+background: radial-gradient(
+ellipse at center,
+#2a2a2a 0%,
+#0a0a0a 100%
+);
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+/* Car Display Platform */
+.car-platform {
+width: 600px;
+height: 400px;
+position: relative;
+
+```
+/* Rotating platform effect */
+background: conic-gradient(
+    from 0deg,
+    #333 0deg,
+    #555 90deg,
+    #333 180deg,
+    #555 270deg,
+    #333 360deg
+);
+border-radius: 50%;
+
+/* Platform lighting */
+box-shadow: 
+    0 0 100px rgba(255, 255, 255, 0.2),
+    inset 0 0 50px rgba(0, 0, 0, 0.5);
+```
+
+}
+
+/* The Luxury Sedan */
+.configurator-car {
+width: 400px;
+height: 200px;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+
+```
+/* Base paint - changes with selection */
+background: var(--car-color, #1a1a1a);
+
+/* Car shape */
+border-radius: 40px 40px 20px 20px;
+
+/* Premium finish */
+box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    inset 0 -5px 10px rgba(255, 255, 255, 0.1);
+
+transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+```
+
+}
+
+/* Windows */
+.configurator-car::before {
+content: ‘’;
+position: absolute;
+top: 20px;
+left: 50px;
+right: 50px;
+height: 60px;
+background: linear-gradient(
+135deg,
+rgba(100, 150, 200, 0.3),
+rgba(50, 100, 150, 0.5)
+);
+border-radius: 20px 20px 0 0;
+}
+
+/* Color Options */
+.color-selector {
+display: flex;
+gap: 20px;
+margin-top: 50px;
+justify-content: center;
+}
+
+.color-option {
+width: 60px;
+height: 60px;
+border-radius: 50%;
+cursor: pointer;
+transition: all 0.3s;
+border: 3px solid transparent;
+}
+
+.color-option:hover {
+transform: scale(1.1);
+border-color: white;
+}
+
+/* Paint Colors */
+.color-midnight {
+background: linear-gradient(135deg, #1a1a2e, #16213e);
+}
+.color-racing-red {
+background: linear-gradient(135deg, #cc0000, #ff0000);
+}
+.color-ocean-blue {
+background: linear-gradient(135deg, #006ba6, #0496ff);
+}
+.color-champagne {
+background: linear-gradient(135deg, #d4af37, #ffd700);
+}
+
+/* Feature Additions */
+.features {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 20px;
+margin-top: 30px;
+}
+
+.feature-option {
+background: rgba(255, 255, 255, 0.05);
+border: 2px solid #444;
+border-radius: 10px;
+padding: 20px;
+text-align: center;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.feature-option:hover {
+border-color: gold;
+background: rgba(255, 215, 0, 0.1);
+}
+
+.feature-option.selected {
+border-color: #00ff00;
+background: rgba(0, 255, 0, 0.1);
+}
+
+/* Animated Headlights */
+.headlights-on .configurator-car::after {
+content: ‘’;
+position: absolute;
+bottom: 40px;
+left: -100px;
+width: 100px;
+height: 60px;
+background: linear-gradient(
+90deg,
+transparent,
+rgba(255, 255, 200, 0.6)
+);
+animation: headlightBeam 2s infinite;
+}
+
+@keyframes headlightBeam {
+0%, 100% { opacity: 0.3; }
+50% { opacity: 0.8; }
+}
+
+/* Price Display */
+.price-display {
+font-size: 36px;
+text-align: center;
+margin-top: 30px;
+font-family: ‘Georgia’, serif;
+
+```
+/* Gold effect */
+background: linear-gradient(
+    135deg,
+    #d4af37,
+    #ffd700,
+    #d4af37
+);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+```
+
+}</pre>
+</div>
+
+```
+            <div class="checkpoint">
+                <h5>🏆 Checkpoint: CSS Mastery</h5>
+                <p>Complete all exercises to unlock:</p>
+                <div class="achievement">🚗 Interior Designer</div>
+                <div class="achievement">✨ Style Master</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- More vehicles would follow the same pattern... -->
+
+<!-- Quick Reference Guide -->
+<div style="margin-top: 50px; padding: 20px; background: #1a1a1a; border-radius: 10px;">
+    <h3>🔧 Quick Reference: Your Automotive Coding Toolkit</h3>
+    <p>Keep this handy as you build:</p>
+    <ul style="list-style: none; padding: 0;">
+        <li>🚙 <strong>HTML</strong> = Vehicle Frame (Structure)</li>
+        <li>🏎️ <strong>JavaScript</strong> = Engine (Makes it run)</li>
+        <li>🚗 <strong>CSS</strong> = Paint & Interior (Style)</li>
+        <li>🛻 <strong>Python</strong> = Pickup Truck (Heavy lifting)</li>
+        <li>🏁 <strong>React</strong> = Formula Car (Component performance)</li>
+        <li>🚛 <strong>SQL</strong> = Semi Truck (Data transport)</li>
+    </ul>
 </div>
 
 <script>
-    // Debug function
-    function debug(msg) {
-        const d = document.getElementById('debug');
-        d.innerHTML += '<br>' + new Date().toTimeString().split(' ')[0] + ': ' + msg;
-        d.scrollTop = d.scrollHeight;
-    }
-    
-    // Toggle function
-    function toggle(id) {
-        debug('Toggle called for: ' + id);
-        try {
-            const el = document.getElementById(id);
-            if (el) {
-                if (el.classList.contains('show')) {
-                    el.classList.remove('show');
-                    debug(id + ' hidden');
-                } else {
-                    el.classList.add('show');
-                    debug(id + ' shown');
-                }
-            } else {
-                debug('ERROR: Element ' + id + ' not found');
+    // Learning Management System
+    const learningSystem = {
+        progress: {
+            html: 0,
+            javascript: 0,
+            css: 0,
+            python: 0,
+            react: 0,
+            sql: 0
+        },
+        
+        achievements: [],
+        
+        init() {
+            this.loadProgress();
+            this.updateDisplay();
+        },
+        
+        loadProgress() {
+            const saved = localStorage.getItem('automotiveCodingProgress');
+            if (saved) {
+                this.progress = JSON.parse(saved);
             }
-        } catch (e) {
-            debug('ERROR: ' + e.message);
+        },
+        
+        saveProgress() {
+            localStorage.setItem('automotiveCodingProgress', JSON.stringify(this.progress));
+        },
+        
+        updateDisplay() {
+            // Update overall progress
+            const total = Object.values(this.progress).reduce((a, b) => a + b, 0);
+            const average = total / 6;
+            
+            document.getElementById('overall-progress').style.width = average + '%';
+            document.getElementById('overall-progress').textContent = Math.round(average) + '%';
+            
+            // Update level
+            let level = 'Apprentice Mechanic';
+            if (average >= 80) level = '🏆 Master Mechanic';
+            else if (average >= 60) level = '⭐ Expert Technician';
+            else if (average >= 40) level = '🔧 Certified Mechanic';
+            else if (average >= 20) level = '📖 Junior Mechanic';
+            
+            document.getElementById('level-status').textContent = 'Current Level: ' + level;
+            
+            // Update achievements
+            this.checkAchievements();
+        },
+        
+        checkAchievements() {
+            const achievementContainer = document.getElementById('achievements');
+            let achievementHTML = '';
+            
+            if (this.progress.html >= 100) {
+                achievementHTML += '<div class="achievement unlocked">🚙 SUV Frame Builder</div>';
+            }
+            if (this.progress.javascript >= 100) {
+                achievementHTML += '<div class="achievement unlocked">🏎️ Engine Tuner</div>';
+            }
+            if (this.progress.css >= 100) {
+                achievementHTML += '<div class="achievement unlocked">🚗 Style Master</div>';
+            }
+            
+            achievementContainer.innerHTML = achievementHTML;
+        },
+        
+        completeLesson(language, points = 25) {
+            this.progress[language] = Math.min(100, this.progress[language] + points);
+            this.saveProgress();
+            this.updateDisplay();
+            
+            if (this.progress[language] >= 100) {
+                alert(`🎉 Congratulations! You've mastered ${language.toUpperCase()}!`);
+            }
+        }
+    };
+    
+    // Toggle lesson content
+    function toggleLesson(language) {
+        const lesson = document.getElementById(`lesson-${language}`);
+        const allLessons = document.querySelectorAll('.learning-content');
+        
+        // Close all other lessons
+        allLessons.forEach(l => {
+            if (l.id !== `lesson-${language}`) {
+                l.classList.remove('active');
+            }
+        });
+        
+        // Toggle current lesson
+        lesson.classList.toggle('active');
+        
+        // Mark as started
+        if (lesson.classList.contains('active')) {
+            learningSystem.completeLesson(language, 5); // 5 points for starting
         }
     }
     
-    // Test on load
-    window.onload = function() {
-        debug('Window loaded successfully');
-        debug('Touch events: ' + ('ontouchstart' in window));
-        debug('User agent: ' + navigator.userAgent.substring(0, 50) + '...');
+    // Tab switching
+    function showTab(language, tab) {
+        // Update active tab
+        const tabs = document.querySelectorAll(`#lesson-${language} .tab`);
+        tabs.forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
         
-        // Add touch handlers to ALL buttons
-        const buttons = document.querySelectorAll('.btn');
-        debug('Found ' + buttons.length + ' buttons');
+        // Update content
+        const contents = document.querySelectorAll(`#lesson-${language} .tab-content`);
+        contents.forEach(c => c.classList.remove('active'));
+        document.getElementById(`${language}-${tab}`).classList.add('active');
         
-        buttons.forEach((btn, index) => {
-            debug('Adding touch handler to button ' + index);
-            
-            // Add multiple event types to ensure one works
-            btn.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                debug('Touchstart on button ' + index);
-                this.click();
-            }, {passive: false});
-            
-            btn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                debug('Touchend on button ' + index);
-            }, {passive: false});
-            
-            btn.addEventListener('click', function(e) {
-                debug('Click on button ' + index);
-            }, {passive: false});
-        });
-        
-        // Make toggle and debug functions global
-        window.toggle = toggle;
-        window.debug = debug;
-    };
+        // Award progress for viewing tabs
+        if (tab === 'practice') {
+            learningSystem.completeLesson(language, 10);
+        } else if (tab === 'build') {
+            learningSystem.completeLesson(language, 15);
+        }
+    }
     
-    // Also add a direct touch test
-    document.addEventListener('touchstart', function(e) {
-        debug('Document touched at: ' + e.touches[0].clientX + ',' + e.touches[0].clientY);
-    }, {passive: false});
+    // Initialize on load
+    window.onload = function() {
+        learningSystem.init();
+    };
 </script>
 ```
 
