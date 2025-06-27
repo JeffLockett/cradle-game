@@ -5,347 +5,473 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Virtual Automotive Coding Academy - Mobile</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>🏎️ Virtual Automotive Coding Academy</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+        .central-hub:active {
+            transform: translate(-50%, -50%) scale(0.95);
         }
 
 ```
+    .close-panel:active {
+        transform: scale(0.95);
+        background: #cc0055;
+    }
+    
     body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
         background: #0a0a0a;
-        color: #fff;
+        color: #00ff88;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         overflow-x: hidden;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         min-height: 100vh;
-        position: relative;
-        touch-action: pan-y;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
-
-    .container {
-        width: 100%;
-        padding: 20px 10px;
-        position: relative;
-    }
-
-    h1 {
-        text-align: center;
-        font-size: 1.8em;
-        margin-bottom: 10px;
-        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .subtitle {
-        text-align: center;
-        font-size: 0.9em;
-        color: #888;
-        margin-bottom: 30px;
-    }
-
-    /* Mobile Grid Layout */
-    .academy-grid {
-        position: relative;
-        width: 100%;
-        max-width: 380px;
-        height: 500px;
-        margin: 0 auto;
-        transform: scale(0.9);
-    }
-
-    .vehicle-node {
-        position: absolute;
-        width: 80px;
-        height: 80px;
-        cursor: pointer;
-        -webkit-tap-highlight-color: rgba(255,255,255,0.1);
-    }
-
-    /* Mobile Symmetrical Positioning */
-    /* Top Row */
-    .vehicle-node:nth-child(1) { /* JavaScript */
-        left: 20%;
-        top: 10px;
-    }
-
-    .vehicle-node:nth-child(2) { /* React */
-        right: 20%;
-        top: 10px;
-    }
-
-    /* Middle Row */
-    .vehicle-node:nth-child(3) { /* HTML */
-        left: 5%;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    .vehicle-node:nth-child(4) { /* Hub */
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .vehicle-node:nth-child(5) { /* CSS */
-        right: 5%;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    /* Bottom Row */
-    .vehicle-node:nth-child(6) { /* Python */
-        left: 20%;
-        bottom: 10px;
-    }
-
-    .vehicle-node:nth-child(7) { /* SQL */
-        right: 20%;
-        bottom: 10px;
-    }
-
-    .vehicle-card {
+    
+    /* Simplified Neural Network Background */
+    #neural-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.08);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-        transition: all 0.3s ease;
-        position: relative;
+        z-index: 1;
+        opacity: 0.2;
     }
-
-    .vehicle-icon {
-        font-size: 2em;
-        margin-bottom: 5px;
-    }
-
-    .vehicle-name {
-        font-size: 0.7em;
-        font-weight: bold;
-        text-align: center;
-        display: none;
-    }
-
-    .language-name {
-        font-size: 0.8em;
-        color: #aaa;
-    }
-
-    /* Center Hub */
-    .center-hub {
-        background: radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, rgba(255, 255, 255, 0.08) 100%);
-        border-color: #8a2be2;
-    }
-
-    /* Touch/Hover Effects */
-    .vehicle-node:active .vehicle-card {
-        transform: scale(0.95);
-        background: rgba(255, 255, 255, 0.15);
-    }
-
-    /* Color Coding */
-    .javascript { color: #f7df1e; }
-    .react { color: #61dafb; }
-    .html { color: #e34c26; }
-    .css { color: #1572b6; }
-    .python { color: #3776ab; }
-    .sql { color: #4479a1; }
-
-    /* Simple Connection Lines */
-    .connections {
+    
+    /* SVG Layer for Connections */
+    #connection-svg {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
+        z-index: 15;
         pointer-events: none;
-        opacity: 0.2;
     }
-
-    /* Mobile Detail Panel */
-    .detail-panel {
-        position: fixed;
-        bottom: -100%;
-        left: 0;
-        right: 0;
-        height: 70vh;
-        background: rgba(0, 0, 0, 0.95);
-        border-top: 2px solid rgba(255, 255, 255, 0.2);
-        border-radius: 20px 20px 0 0;
-        padding: 20px;
-        transition: bottom 0.3s ease;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        z-index: 100;
+    
+    .connection-path {
+        fill: none;
+        stroke: #00ff88;
+        stroke-width: 2;
+        opacity: 0.4;
     }
-
-    .detail-panel.active {
-        bottom: 0;
-    }
-
-    .detail-handle {
-        width: 50px;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 2px;
-        margin: 0 auto 20px;
-    }
-
-    .detail-title {
-        font-size: 1.5em;
-        margin-bottom: 15px;
-    }
-
-    .concept-mapping {
-        margin: 20px 0;
-    }
-
-    .mapping-item {
-        display: flex;
-        align-items: center;
-        margin: 10px 0;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 10px;
-        font-size: 0.9em;
-    }
-
-    .mapping-automotive {
-        flex: 1;
-        text-align: right;
-        padding-right: 10px;
-        color: #ff6b6b;
-    }
-
-    .mapping-arrow {
-        padding: 0 10px;
-        color: #4ecdc4;
-    }
-
-    .mapping-code {
-        flex: 1;
-        text-align: left;
-        padding-left: 10px;
-        color: #45b7d1;
-    }
-
-    .code-example {
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        padding: 15px;
-        margin: 20px 0;
-        font-family: 'Courier New', monospace;
-        font-size: 0.8em;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .close-btn {
-        position: absolute;
-        top: 25px;
-        right: 20px;
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 1.5em;
-        cursor: pointer;
-        padding: 10px;
-    }
-
-    /* Progress Bar */
-    .progress-tracker {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.9);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        padding: 10px 20px;
-        display: flex;
-        gap: 10px;
-        z-index: 50;
-    }
-
-    .progress-item {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8em;
-        transition: all 0.3s ease;
-    }
-
-    .progress-item.completed {
-        background: #4ecdc4;
-    }
-
-    /* Practice Button */
-    .practice-btn {
-        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-        border: none;
-        color: white;
-        padding: 15px 24px;
-        border-radius: 25px;
-        font-size: 1em;
-        cursor: pointer;
-        margin-top: 20px;
-        width: 100%;
-        -webkit-appearance: none;
-    }
-
-    /* Concept Bubbles for Mobile */
-    .concept-bubble {
-        display: none; /* Hide on mobile for performance */
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 380px) {
-        .academy-grid {
-            transform: scale(0.8);
+    
+    /* Disable animations on mobile for performance */
+    @media (max-width: 768px) {
+        .connection-path {
+            animation: none !important;
         }
     }
-
+    
+    /* Main Container */
+    .container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 1400px;
+        padding: 20px;
+    }
+    
+    /* Header */
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .header h1 {
+        font-size: clamp(28px, 6vw, 48px);
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+    
+    .header p {
+        font-size: clamp(16px, 3vw, 20px);
+        color: #0088ff;
+    }
+    
+    /* Grid Layout - Responsive */
+    .academy-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        padding: 20px;
+    }
+    
+    @media (min-width: 768px) {
+        .academy-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 60px;
+            padding: 40px;
+        }
+    }
+    
+    /* Central Hub - Simplified for mobile */
+    .central-hub {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, 
+            rgba(0, 255, 136, 0.3) 0%, 
+            transparent 70%);
+        border: 2px solid #00ff88;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 25;
+        cursor: pointer;
+    }
+    
+    @media (min-width: 768px) {
+        .central-hub {
+            width: 200px;
+            height: 200px;
+            border-width: 3px;
+        }
+    }
+    
+    .hub-icon {
+        font-size: 48px;
+        margin-bottom: 5px;
+    }
+    
+    .hub-text {
+        font-size: 14px;
+        text-align: center;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+    
+    /* Vehicle Cards - Mobile Optimized */
+    .vehicle-node {
+        width: 100%;
+        min-height: 250px;
+        background: rgba(0, 255, 136, 0.08);
+        border: 2px solid #00ff88;
+        border-radius: 15px;
+        padding: 20px;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        z-index: 10;
+    }
+    
     @media (min-width: 768px) {
         .vehicle-node {
-            width: 120px;
-            height: 120px;
+            height: 300px;
+        }
+    }
+    
+    .vehicle-node:active {
+        transform: scale(0.98);
+    }
+    
+    @media (hover: hover) {
+        .vehicle-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+    }
+    
+    .vehicle-icon {
+        font-size: 48px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .vehicle-title {
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+    
+    .vehicle-subtitle {
+        font-size: 14px;
+        color: #0088ff;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .vehicle-details {
+        font-size: 12px;
+        color: #aaa;
+        line-height: 1.6;
+    }
+    
+    .vehicle-details strong {
+        color: #00ff88;
+    }
+    
+    /* Concept Orbits - Hidden on mobile */
+    .concept-orbit {
+        display: none;
+    }
+    
+    @media (min-width: 1024px) {
+        .concept-orbit {
+            display: flex;
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 136, 255, 0.1);
+            border: 2px solid #0088ff;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 22;
+            padding: 10px;
         }
         
-        .vehicle-name {
-            display: block;
+        .concept-orbit:hover {
+            transform: scale(1.1);
         }
         
+        .concept-variables { left: 10%; top: 25%; }
+        .concept-functions { right: 10%; top: 25%; }
+        .concept-loops { left: 10%; bottom: 25%; }
+        .concept-events { right: 10%; bottom: 25%; }
+        .concept-logic { left: 50%; top: 5%; transform: translateX(-50%); }
+        .concept-data { left: 50%; bottom: 5%; transform: translateX(-50%); }
+    }
+    
+    /* Detail Panel - Mobile Optimized */
+    .detail-panel {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        border-left: none;
+        padding: 20px;
+        overflow-y: auto;
+        transition: right 0.3s ease;
+        z-index: 100;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    @media (min-width: 768px) {
         .detail-panel {
-            width: 400px;
-            height: 80vh;
-            right: -400px;
-            left: auto;
-            bottom: auto;
-            top: 50%;
-            transform: translateY(-50%);
-            border-radius: 10px 0 0 10px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            width: 450px;
+            padding: 30px;
+            border-left: 2px solid #00ff88;
         }
-        
-        .detail-panel.active {
-            right: 0;
-            bottom: auto;
+    }
+    
+    .detail-panel.active {
+        right: 0;
+    }
+    
+    .detail-panel h2 {
+        color: #00ff88;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+    
+    .detail-panel h3 {
+        color: #0088ff;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        font-size: 18px;
+    }
+    
+    .code-example {
+        background: #001122;
+        border: 1px solid #00ff88;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        overflow-x: auto;
+        font-size: 14px;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .close-panel {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #ff0066;
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 16px;
+        touch-action: manipulation;
+        min-width: 80px;
+        min-height: 44px;
+        z-index: 101;
+    }
+    
+    /* Level Indicator - Mobile Adjusted */
+    .level-indicator {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 255, 136, 0.1);
+        border: 2px solid #00ff88;
+        padding: 10px 15px;
+        border-radius: 10px;
+        z-index: 50;
+        font-size: 14px;
+    }
+    
+    @media (min-width: 768px) {
+        .level-indicator {
+            top: 20px;
+            right: 20px;
+            padding: 20px 30px;
+        }
+    }
+    
+    .level-indicator h4 {
+        color: #0088ff;
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .level-indicator .level {
+        font-size: 20px;
+        font-weight: bold;
+    }
+    
+    /* Legend - Hidden on mobile */
+    .legend {
+        display: none;
+    }
+    
+    @media (min-width: 1024px) {
+        .legend {
+            display: block;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ff88;
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 50;
+        }
+    }
+    
+    .legend h3 {
+        margin-bottom: 15px;
+        color: #00ff88;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin: 8px 0;
+        font-size: 14px;
+    }
+    
+    .legend-icon {
+        width: 25px;
+        height: 25px;
+        margin-right: 15px;
+        border-radius: 50%;
+    }
+    
+    /* Skill Progress Ring - Simplified */
+    .skill-ring {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .skill-ring circle {
+        fill: none;
+        stroke-width: 3;
+    }
+    
+    .skill-ring .bg {
+        stroke: #333;
+    }
+    
+    .skill-ring .progress {
+        stroke: #00ff88;
+        stroke-dasharray: 126;
+        stroke-dashoffset: 126;
+        transform: rotate(-90deg);
+        transform-origin: center;
+        transition: stroke-dashoffset 0.5s;
+    }
+    
+    /* Button - Touch Optimized */
+    .start-engine-btn {
+        display: block;
+        margin: 30px auto;
+        background: #00ff88;
+        color: #000;
+        border: none;
+        padding: 20px 40px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        touch-action: manipulation;
+        -webkit-appearance: none;
+        min-height: 50px;
+        width: 90%;
+        max-width: 300px;
+    }
+    
+    .start-engine-btn:active {
+        transform: scale(0.95);
+    }
+    
+    /* Performance optimizations */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+    
+    /* iOS specific fixes */
+    @supports (-webkit-touch-callout: none) {
+        .vehicle-node {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
     }
 </style>
@@ -353,336 +479,677 @@
 
 </head>
 <body>
-    <div class="container">
-        <h1>Automotive Coding Academy</h1>
-        <p class="subtitle">Learn Programming Through Cars</p>
+    <canvas id="neural-canvas"></canvas>
 
 ```
+<!-- SVG Layer for Connections -->
+<svg id="connection-svg">
+    <defs>
+        <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#00ff88;stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:#0088ff;stop-opacity:0.6" />
+        </linearGradient>
+    </defs>
+</svg>
+
+<div class="container">
+    <div class="header">
+        <h1>🏎️ Virtual Automotive Coding Academy</h1>
+        <p>Master Programming Through Automotive Excellence</p>
+    </div>
+    
     <div class="academy-grid">
-        <!-- Simple Connection Lines -->
-        <svg class="connections" viewBox="0 0 380 500">
-            <!-- Symmetrical connections -->
-            <line x1="76" y1="50" x2="190" y2="250" stroke="white" />
-            <line x1="304" y1="50" x2="190" y2="250" stroke="white" />
-            <line x1="40" y1="250" x2="190" y2="250" stroke="white" />
-            <line x1="340" y1="250" x2="190" y2="250" stroke="white" />
-            <line x1="76" y1="450" x2="190" y2="250" stroke="white" />
-            <line x1="304" y1="450" x2="190" y2="250" stroke="white" />
-        </svg>
-
-        <!-- Vehicle Nodes -->
-        <div class="vehicle-node" data-type="javascript">
-            <div class="vehicle-card javascript">
-                <span class="vehicle-icon">🏎️</span>
-                <span class="vehicle-name">Sports Car</span>
-                <span class="language-name">JavaScript</span>
+        <!-- Vehicles -->
+        <div class="vehicle-node" id="suv-html">
+            <svg class="skill-ring">
+                <circle class="bg" cx="20" cy="20" r="18"></circle>
+                <circle class="progress" cx="20" cy="20" r="18" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🚙</div>
+            <div class="vehicle-title">HTML Foundation</div>
+            <div class="vehicle-subtitle">SUV - Structure & Framework</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> DOM Framework<br>
+                <strong>Chassis:</strong> Semantic Structure<br>
+                <strong>Complexity:</strong> Beginner<br>
+                <strong>Power:</strong> Foundation Building
             </div>
         </div>
-
-        <div class="vehicle-node" data-type="react">
-            <div class="vehicle-card react">
-                <span class="vehicle-icon">🏁</span>
-                <span class="vehicle-name">F1 Racing</span>
-                <span class="language-name">React</span>
+        
+        <div class="vehicle-node" id="sports-js">
+            <svg class="skill-ring">
+                <circle class="bg" cx="20" cy="20" r="18"></circle>
+                <circle class="progress" cx="20" cy="20" r="18" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🏎️</div>
+            <div class="vehicle-title">JavaScript Sports</div>
+            <div class="vehicle-subtitle">Car - Performance & Dynamics</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> V8 Turbo Dynamic<br>
+                <strong>Transmission:</strong> Event-Driven<br>
+                <strong>Complexity:</strong> Intermediate<br>
+                <strong>Power:</strong> Interactive Behavior
             </div>
         </div>
-
-        <div class="vehicle-node" data-type="html">
-            <div class="vehicle-card html">
-                <span class="vehicle-icon">🚙</span>
-                <span class="vehicle-name">SUV</span>
-                <span class="language-name">HTML</span>
+        
+        <div class="vehicle-node" id="sedan-css">
+            <svg class="skill-ring">
+                <circle class="bg" cx="20" cy="20" r="18"></circle>
+                <circle class="progress" cx="20" cy="20" r="18" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🚗</div>
+            <div class="vehicle-title">CSS Luxury</div>
+            <div class="vehicle-subtitle">Sedan - Style & Elegance</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> Cascade V6<br>
+                <strong>Interior:</strong> Responsive Design<br>
+                <strong>Complexity:</strong> Beginner<br>
+                <strong>Power:</strong> Visual Aesthetics
             </div>
         </div>
-
-        <div class="vehicle-node" data-type="hub">
-            <div class="vehicle-card center-hub">
-                <span class="vehicle-icon">🔧</span>
-                <span class="language-name">Hub</span>
+        
+        <div class="vehicle-node" id="pickup-python">
+            <svg class="skill-ring">
+                <circle class="bg" cx="20" cy="20" r="18"></circle>
+                <circle class="progress" cx="20" cy="20" r="18" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🛻</div>
+            <div class="vehicle-title">Python Pickup</div>
+            <div class="vehicle-subtitle">Truck - Heavy Lifting & Utility</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> Multi-Purpose V8<br>
+                <strong>Payload:</strong> Data Processing<br>
+                <strong>Complexity:</strong> Beginner-Friendly<br>
+                <strong>Power:</strong> Versatile Workhorse
             </div>
         </div>
-
-        <div class="vehicle-node" data-type="css">
-            <div class="vehicle-card css">
-                <span class="vehicle-icon">🚗</span>
-                <span class="vehicle-name">Luxury</span>
-                <span class="language-name">CSS</span>
+        
+        <div class="vehicle-node" id="racing-react">
+            <svg class="skill-ring">
+                <circle class="bg" cx="20" cy="20" r="18"></circle>
+                <circle class="progress" cx="20" cy="20" r="18" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🏁</div>
+            <div class="vehicle-title">React Racing</div>
+            <div class="vehicle-subtitle">Formula - Component Performance</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> Virtual DOM Hybrid<br>
+                <strong>Aerodynamics:</strong> Component-Based<br>
+                <strong>Complexity:</strong> Advanced<br>
+                <strong>Power:</strong> UI Engineering
             </div>
         </div>
-
-        <div class="vehicle-node" data-type="python">
-            <div class="vehicle-card python">
-                <span class="vehicle-icon">🛻</span>
-                <span class="vehicle-name">Pickup</span>
-                <span class="language-name">Python</span>
+        
+        <div class="vehicle-node" id="semi-sql">
+            <svg class="skill-ring">
+                <circle class="bg" cx="20" cy="20" r="18"></circle>
+                <circle class="progress" cx="20" cy="20" r="18" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🚛</div>
+            <div class="vehicle-title">SQL Database</div>
+            <div class="vehicle-subtitle">Semi - Data Transportation</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> Relational Diesel<br>
+                <strong>Cargo:</strong> Structured Data<br>
+                <strong>Complexity:</strong> Intermediate<br>
+                <strong>Power:</strong> Data Management
             </div>
         </div>
-
-        <div class="vehicle-node" data-type="sql">
-            <div class="vehicle-card sql">
-                <span class="vehicle-icon">🚛</span>
-                <span class="vehicle-name">Semi</span>
-                <span class="language-name">SQL</span>
-            </div>
+        
+        <!-- Central Hub -->
+        <div class="central-hub" id="central-hub">
+            <div class="hub-icon">🔧</div>
+            <div class="hub-text">MASTER<br>MECHANIC</div>
+        </div>
+        
+        <!-- Concept Orbits - Only on desktop -->
+        <div class="concept-orbit concept-variables">
+            <div>Variables<br>🔧</div>
+        </div>
+        <div class="concept-orbit concept-functions">
+            <div>Functions<br>⚙️</div>
+        </div>
+        <div class="concept-orbit concept-loops">
+            <div>Loops<br>🔄</div>
+        </div>
+        <div class="concept-orbit concept-events">
+            <div>Events<br>⚡</div>
+        </div>
+        <div class="concept-orbit concept-logic">
+            <div>Logic<br>🧠</div>
+        </div>
+        <div class="concept-orbit concept-data">
+            <div>Data<br>📊</div>
+        </div>
+    </div>
+    
+    <!-- Level Indicator -->
+    <div class="level-indicator">
+        <h4>Level</h4>
+        <div class="level">Apprentice</div>
+    </div>
+    
+    <!-- Legend - Desktop only -->
+    <div class="legend">
+        <h3>🗺️ Academy Map</h3>
+        <div class="legend-item">
+            <div class="legend-icon" style="background: #00ff88;"></div>
+            <span>Vehicle Types = Languages</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-icon" style="background: #0088ff;"></div>
+            <span>Concepts = Programming Ideas</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-icon" style="background: linear-gradient(90deg, #00ff88, #0088ff);"></div>
+            <span>Connections = Relationships</span>
         </div>
     </div>
 </div>
 
-<!-- Mobile Detail Panel -->
-<div class="detail-panel" id="detailPanel">
-    <div class="detail-handle"></div>
-    <button class="close-btn" onclick="closeDetail()">×</button>
-    <div id="detailContent"></div>
-</div>
-
-<!-- Progress Tracker -->
-<div class="progress-tracker">
-    <div class="progress-item" id="progress-html">🚙</div>
-    <div class="progress-item" id="progress-css">🚗</div>
-    <div class="progress-item" id="progress-javascript">🏎️</div>
-    <div class="progress-item" id="progress-python">🛻</div>
-    <div class="progress-item" id="progress-react">🏁</div>
-    <div class="progress-item" id="progress-sql">🚛</div>
+<!-- Detail Panel -->
+<div class="detail-panel" id="detail-panel">
+    <button class="close-panel" id="close-panel-btn">✕ Close</button>
+    <div id="panel-content"></div>
 </div>
 
 <script>
-    // Vehicle data
+    // Check if mobile device
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    
+    // Performance settings
+    const performanceMode = isMobile ? 'low' : 'high';
+    
+    // Neural Network Background - Simplified for mobile
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Reduce nodes on mobile
+    const nodes = [];
+    const gridSize = isMobile ? 5 : 8;
+    const spacing = Math.min(canvas.width, canvas.height) / gridSize;
+    
+    // Only create nodes on desktop or powerful devices
+    if (!isMobile || window.devicePixelRatio <= 2) {
+        for (let i = 0; i < gridSize; i++) {
+            for (let j = 0; j < gridSize; j++) {
+                nodes.push({
+                    x: (i + 0.5) * spacing + (canvas.width - gridSize * spacing) / 2,
+                    y: (j + 0.5) * spacing + (canvas.height - gridSize * spacing) / 2,
+                    vx: (Math.random() - 0.5) * 0.1,
+                    vy: (Math.random() - 0.5) * 0.1,
+                    radius: Math.random() * 2 + 1
+                });
+            }
+        }
+    }
+    
+    let animationId;
+    function drawNeuralNetwork() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        if (nodes.length > 0) {
+            // Draw nodes
+            nodes.forEach(node => {
+                node.x += node.vx;
+                node.y += node.vy;
+                
+                // Bounce
+                if (node.x < 50 || node.x > canvas.width - 50) node.vx *= -1;
+                if (node.y < 50 || node.y > canvas.height - 50) node.vy *= -1;
+                
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
+                ctx.fill();
+            });
+            
+            // Draw connections - simplified for mobile
+            if (!isMobile) {
+                nodes.forEach((node1, i) => {
+                    nodes.slice(i + 1, i + 3).forEach(node2 => {
+                        const distance = Math.sqrt((node1.x - node2.x) ** 2 + (node1.y - node2.y) ** 2);
+                        if (distance < 150) {
+                            ctx.beginPath();
+                            ctx.moveTo(node1.x, node1.y);
+                            ctx.lineTo(node2.x, node2.y);
+                            ctx.strokeStyle = `rgba(0, 255, 136, ${0.1 * (1 - distance / 150)})`;
+                            ctx.stroke();
+                        }
+                    });
+                });
+            }
+        }
+        
+        animationId = requestAnimationFrame(drawNeuralNetwork);
+    }
+    
+    // Simplified connection drawing for mobile
+    function drawConnections() {
+        if (window.innerWidth < 768) return; // Skip on mobile
+        
+        const svg = document.getElementById('connection-svg');
+        const hub = document.getElementById('central-hub');
+        const vehicles = document.querySelectorAll('.vehicle-node');
+        const container = document.querySelector('.academy-grid');
+        
+        if (!hub || !container) return;
+        
+        const hubRect = hub.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const hubCenterX = hubRect.left + hubRect.width / 2 - containerRect.left;
+        const hubCenterY = hubRect.top + hubRect.height / 2 - containerRect.top;
+        
+        // Clear existing paths
+        svg.innerHTML = svg.innerHTML.substring(0, svg.innerHTML.indexOf('</defs>') + 7);
+        
+        vehicles.forEach((vehicle, index) => {
+            const vehicleRect = vehicle.getBoundingClientRect();
+            const vehicleCenterX = vehicleRect.left + vehicleRect.width / 2 - containerRect.left;
+            const vehicleCenterY = vehicleRect.top + vehicleRect.height / 2 - containerRect.top;
+            
+            // Simple straight lines for mobile
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', `M ${hubCenterX} ${hubCenterY} L ${vehicleCenterX} ${vehicleCenterY}`);
+            path.setAttribute('class', 'connection-path');
+            
+            svg.appendChild(path);
+        });
+        
+        // Update viewBox
+        svg.setAttribute('viewBox', `0 0 ${container.offsetWidth} ${container.offsetHeight}`);
+        svg.style.width = container.offsetWidth + 'px';
+        svg.style.height = container.offsetHeight + 'px';
+    }
+    
+    // Vehicle Data
     const vehicleData = {
-        html: {
-            title: "🚙 SUV - HTML",
-            description: "Like an SUV provides structure, HTML provides the foundation for web content.",
-            mappings: [
-                { auto: "Chassis", code: "Body Tag" },
-                { auto: "Frame", code: "Div Elements" },
-                { auto: "Doors", code: "Links" },
-                { auto: "Windows", code: "Images" },
-                { auto: "Seats", code: "Sections" }
-            ],
-            example: `<body class="suv">
+        'suv-html': {
+            title: '🚙 HTML Foundation SUV',
+            language: 'HTML',
+            description: 'Like an SUV provides structure and safety, HTML provides the foundation framework for all web applications.',
+            concepts: {
+                'Engine (DOCTYPE)': 'Just like an engine starts your vehicle, DOCTYPE declares your HTML version',
+                'Chassis (Body)': 'The body tag is your vehicle frame - everything else attaches to it',
+                'Seats (Divs)': 'Div elements are like seats - they hold and organize your content',
+                'Windows (Images)': 'Image tags are your windows to visual content',
+                'Dashboard (Head)': 'The head section contains all your controls and metadata'
+            },
+            example: `<!DOCTYPE html>
 ```
 
-  <header>Dashboard</header>
-  <main>Cargo Area</main>
-  <footer>Bumper</footer>
-</body>`
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="chassis">
+        <h1>Engine Block</h1>
+        <p>Content rides here!</p>
+    </div>
+</body>
+</html>`,
+                exercises: [
+                    'Build a basic vehicle frame (HTML structure)',
+                    'Add seats (divs) for passengers (content)',
+                    'Install windows (images) and doors (links)'
+                ]
             },
-            css: {
-                title: "🚗 Luxury Sedan - CSS",
-                description: "Like a luxury car's styling, CSS makes everything beautiful.",
-                mappings: [
-                    { auto: "Paint Job", code: "Colors" },
-                    { auto: "Interior", code: "Backgrounds" },
-                    { auto: "Chrome", code: "Borders" },
-                    { auto: "Lighting", code: "Shadows" },
-                    { auto: "Sound System", code: "Animations" }
-                ],
-                example: `.luxury-sedan {
-  color: gold;
-  background: leather;
-  border: 2px chrome;
-  box-shadow: ambient;
-  transition: smooth;
-}`
-            },
-            javascript: {
-                title: "🏎️ Sports Car - JavaScript",
-                description: "High performance and dynamic behavior, just like a sports car.",
-                mappings: [
-                    { auto: "Engine", code: "Functions" },
-                    { auto: "Turbo", code: "Async/Await" },
-                    { auto: "Transmission", code: "Events" },
-                    { auto: "ECU", code: "Variables" },
-                    { auto: "Fuel System", code: "APIs" }
-                ],
-                example: `// Sports Car Engine
-function accelerate() {
-  this.speed += turboBoost;
-  return new Promise(resolve => {
-    resolve(this.speed);
-  });
-}`
-            },
-            python: {
-                title: "🛻 Pickup Truck - Python",
-                description: "Heavy lifting and utility work, Python handles the tough jobs.",
-                mappings: [
-                    { auto: "Truck Bed", code: "Lists" },
-                    { auto: "Towing", code: "Libraries" },
-                    { auto: "4WD", code: "Threading" },
-                    { auto: "Toolbox", code: "Functions" },
-                    { auto: "Payload", code: "Data" }
-                ],
-                example: `# Pickup Truck Mode
-def load_cargo(items):
-    truck_bed = []
-    for item in items:
-        truck_bed.append(item)
-    return truck_bed`
-            },
-            react: {
-                title: "🏁 Formula 1 - React",
-                description: "Component-based racing technology for peak performance.",
-                mappings: [
-                    { auto: "Parts", code: "Components" },
-                    { auto: "Telemetry", code: "State" },
-                    { auto: "Pit Crew", code: "Hooks" },
-                    { auto: "Aero", code: "Virtual DOM" },
-                    { auto: "Strategy", code: "Props" }
-                ],
-                example: `// F1 Component
-const RaceCar = () => {
-  const [speed, setSpeed] = useState(0);
+            'sports-js': {
+                title: '🏎️ JavaScript Sports Car',
+                language: 'JavaScript',
+                description: 'Like a sports car delivers performance and responsiveness, JavaScript brings dynamic behavior and interactivity.',
+                concepts: {
+                    'Engine (Functions)': 'Functions are your engine - they make things happen',
+                    'Turbo (Async/Await)': 'Asynchronous code is like turbo - handling multiple operations efficiently',
+                    'Transmission (Events)': 'Event handlers are your transmission - connecting user actions to responses',
+                    'ECU (Variables)': 'Variables store your engine parameters and state',
+                    'Nitrous (Loops)': 'Loops give you that extra boost for repetitive tasks'
+                },
+                example: `// Start your engine!
+function startEngine() {
+    let rpm = 0;
+    const redline = 8000;
+
+```
+const accelerate = setInterval(() => {
+    rpm += 500;
+    console.log(\`RPM: \${rpm}\`);
+    
+    if (rpm >= redline) {
+        console.log('⚡ REDLINE!');
+        clearInterval(accelerate);
+    }
+}, 100);
+```
+
+}
+
+document.addEventListener(‘click’, startEngine);`, exercises: [ 'Build an RPM gauge that responds to acceleration', 'Create a gear shift system with events', 'Implement turbo boost with async functions' ] }, 'sedan-css': { title: '🚗 CSS Luxury Sedan', language: 'CSS', description: 'Like a luxury sedan focuses on comfort and aesthetics, CSS provides style, elegance, and visual appeal.', concepts: { 'Paint Job (Colors)': 'Colors and backgrounds are your vehicle\'s finish', 'Interior (Padding/Margin)': 'Spacing creates comfortable interiors', 'Chrome (Borders)': 'Borders add those finishing touches', 'Leather (Textures)': 'Gradients and patterns create rich textures', 'Sound System (Animations)': 'Animations bring life to your interface' }, example: `.luxury-sedan {
+/* Premium Paint */
+background: linear-gradient(
+135deg, #1a1a2e, #16213e
+);
+
+```
+/* Comfortable Interior */
+padding: 30px;
+margin: 20px auto;
+
+/* Chrome Accents */
+border: 2px solid gold;
+border-radius: 15px;
+
+/* Smooth Ride */
+transition: all 0.3s ease;
+```
+
+}`, exercises: [ 'Design a luxury interior with padding and margins', 'Create ambient lighting effects with shadows', 'Add smooth animations for premium feel' ] }, 'pickup-python': { title: '🛻 Python Pickup Truck', language: 'Python', description: 'Like a pickup truck handles heavy loads with ease, Python excels at data processing and practical tasks.', concepts: { 'Truck Bed (Lists)': 'Lists carry your data cargo', 'Towing (Functions)': 'Functions pull heavy computational loads', 'Tool Box (Libraries)': 'Import powerful tools for any job', '4WD (Loops)': 'Navigate through data terrain efficiently', 'Winch (Exception Handling)': 'Pull yourself out of errors' }, example: `# Load the truck bed
+cargo = [‘lumber’, ‘tools’, ‘equipment’]
+
+def haul_cargo(items):
+total_weight = 0
+for item in items:
+print(f”Loading {item}…”)
+total_weight += len(item)
+
+```
+return f"Hauling {total_weight} units!"
+```
+
+try:
+result = haul_cargo(cargo)
+print(result)
+except Exception as e:
+print(f”Engage winch: {e}”)`, exercises: [ 'Load data into your truck bed (lists)', 'Process heavy loads with functions', 'Navigate rough terrain with error handling' ] }, 'racing-react': { title: '🏁 React Formula Racing', language: 'React', description: 'Like Formula 1 cars are built from specialized components, React builds UIs from reusable component parts.', concepts: { 'Chassis (Components)': 'Components are your modular car parts', 'Aerodynamics (Props)': 'Props flow data through your components', 'Telemetry (State)': 'State tracks your real-time performance', 'Pit Crew (Hooks)': 'Hooks provide quick modifications', 'DRS (Context)': 'Context provides drag reduction through prop drilling' }, example: `function RaceCar({ driver, team }) {
+const [speed, setSpeed] = useState(0);
+
+```
+const accelerate = () => {
+    setSpeed(prev => 
+        Math.min(prev + 10, 350)
+    );
+};
 
 return (
-<div className="f1-car">
-<Engine speed={speed} />
-</div>
+    <div className="race-car">
+        <h2>{team} Racing</h2>
+        <p>Driver: {driver}</p>
+        <p>Speed: {speed} km/h</p>
+        <button onClick={accelerate}>
+            🏁 Push to Overtake!
+        </button>
+    </div>
 );
-};`}, sql: { title: "🚛 Semi Truck - SQL", description: "Transport and organize massive data loads efficiently.", mappings: [ { auto: "Trailer", code: "Tables" }, { auto: "Loading", code: "INSERT" }, { auto: "Manifest", code: "SELECT" }, { auto: "Route", code: "JOIN" }, { auto: "Organize", code: "ORDER BY" } ], example:`– Load the truck
-INSERT INTO cargo (item, weight)
-VALUES (‘Electronics’, 500);
+```
+
+}`, exercises: [ 'Build modular racing components', 'Manage telemetry with state', 'Optimize aerodynamics with props' ] }, 'semi-sql': { title: '🚛 SQL Database Semi', language: 'SQL', description: 'Like a semi truck transports goods efficiently, SQL moves and manages data across your applications.', concepts: { 'Trailer (Tables)': 'Tables are your cargo containers', 'Loading Dock (INSERT)': 'INSERT loads data into your trailer', 'Manifest (SELECT)': 'SELECT queries your cargo manifest', 'Weigh Station (WHERE)': 'WHERE filters your load', 'Distribution (JOIN)': 'JOIN combines shipments efficiently' }, example: `– Create cargo trailer
+CREATE TABLE cargo_manifest (
+id INTEGER PRIMARY KEY,
+item_name VARCHAR(100),
+weight_kg DECIMAL(10,2),
+destination VARCHAR(50)
+);
+
+– Load the truck
+INSERT INTO cargo_manifest
+VALUES (‘Engine Parts’, 500.00, ‘Detroit’);
 
 – Check manifest
-SELECT * FROM cargo
-ORDER BY weight DESC;`
+SELECT * FROM cargo_manifest
+WHERE destination = ‘Detroit’;`,
+exercises: [
+‘Create cargo tables for your shipments’,
+‘Load data with INSERT operations’,
+‘Query manifests with complex SELECTs’
+]
 }
 };
 
 ```
-    const visitedVehicles = new Set();
-    let touchStartY = 0;
-
-    // Touch event handlers for mobile
+    // Touch-optimized event handlers
     function addTouchHandlers() {
-        const detailPanel = document.getElementById('detailPanel');
-        const handle = detailPanel.querySelector('.detail-handle');
+        console.log('Adding touch handlers...');
         
-        handle.addEventListener('touchstart', (e) => {
-            touchStartY = e.touches[0].clientY;
-        });
-        
-        handle.addEventListener('touchmove', (e) => {
-            const touchY = e.touches[0].clientY;
-            const deltaY = touchY - touchStartY;
+        // Vehicle node handlers
+        document.querySelectorAll('.vehicle-node').forEach(vehicle => {
+            // Remove any existing listeners
+            vehicle.style.cursor = 'pointer';
             
-            if (deltaY > 50) {
-                closeDetail();
-            }
+            // Use both click and touch events
+            const handleVehicleClick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('Vehicle clicked:', this.id);
+                const vehicleId = this.id;
+                const data = vehicleData[vehicleId];
+                
+                if (data) {
+                    showDetailPanel(data);
+                    updateSkillProgress(this);
+                }
+            };
+            
+            vehicle.addEventListener('click', handleVehicleClick);
+            vehicle.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                handleVehicleClick.call(this, e);
+            });
         });
-    }
-
-    // Vehicle click/touch handler
-    function handleVehicleClick(e) {
-        e.preventDefault();
-        const vehicleNode = e.currentTarget;
-        const type = vehicleNode.dataset.type;
         
-        if (type === 'hub') {
-            showHubInfo();
-            return;
+        // Central hub handler
+        const hub = document.getElementById('central-hub');
+        const handleHubClick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            alert('🔧 Master Mechanic Hub\n\nComplete all vehicle courses to unlock Master Mechanic status!\n\nCurrent Progress: 0/6 Vehicles Mastered');
+        };
+        
+        hub.addEventListener('click', handleHubClick);
+        hub.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            handleHubClick.call(this, e);
+        });
+        
+        // Close button handler
+        const closeBtn = document.getElementById('close-panel-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.closePanel();
+            });
+            closeBtn.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                window.closePanel();
+            });
         }
         
-        const data = vehicleData[type];
-        if (!data) return;
+        // Concept orbit handlers (desktop only)
+        if (!isMobile) {
+            document.querySelectorAll('.concept-orbit').forEach(orbit => {
+                orbit.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const concept = this.textContent.trim().split('\n')[0];
+                    alert(`💡 Core Concept: ${concept}\n\nThis programming concept appears across multiple vehicle types!\n\nMaster this to advance faster in all languages.`);
+                });
+            });
+        }
+    }
+    
+    // Initialize after DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    
+    function init() {
+        // Initialize handlers
+        addTouchHandlers();
         
-        visitedVehicles.add(type);
-        updateProgress(type);
+        // Initialize connections after delay
+        setTimeout(() => {
+            if (!isMobile) {
+                drawConnections();
+            }
+        }, 100);
         
-        const detailContent = document.getElementById('detailContent');
-        detailContent.innerHTML = `
-            <h2 class="detail-title ${type}">${data.title}</h2>
-            <p>${data.description}</p>
+        // Start animation only if not low-end device
+        if (!isMobile || window.devicePixelRatio <= 2) {
+            drawNeuralNetwork();
+        }
+    }
+    
+    // Update skill progress
+    function updateSkillProgress(vehicleNode) {
+        const progressCircle = vehicleNode.querySelector('.progress');
+        const currentProgress = parseInt(progressCircle.getAttribute('data-progress') || 0);
+        const newProgress = Math.min(currentProgress + 20, 100);
+        
+        progressCircle.setAttribute('data-progress', newProgress);
+        progressCircle.style.strokeDashoffset = 126 - (126 * newProgress / 100);
+    }
+    
+    // Show detail panel
+    function showDetailPanel(data) {
+        const panel = document.getElementById('detail-panel');
+        const content = document.getElementById('panel-content');
+        
+        content.innerHTML = `
+            <h2>${data.title}</h2>
+            <p style="color: #bbb; line-height: 1.6;">${data.description}</p>
             
-            <div class="concept-mapping">
-                <h3>Car → Code Mappings</h3>
-                ${data.mappings.map(m => `
-                    <div class="mapping-item">
-                        <span class="mapping-automotive">${m.auto}</span>
-                        <span class="mapping-arrow">→</span>
-                        <span class="mapping-code">${m.code}</span>
-                    </div>
-                `).join('')}
-            </div>
+            <h3>🔧 Automotive → Code Mappings</h3>
+            ${Object.entries(data.concepts).map(([auto, code]) => `
+                <div style="margin: 15px 0; padding: 10px; background: rgba(0, 255, 136, 0.05); border-radius: 5px;">
+                    <strong style="color: #00ff88;">${auto}:</strong><br>
+                    <span style="color: #aaa; line-height: 1.5;">${code}</span>
+                </div>
+            `).join('')}
             
+            <h3>📝 Example Code</h3>
             <div class="code-example">
-                <pre>${data.example}</pre>
+                <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">${data.example}</pre>
             </div>
             
-            <button class="practice-btn" onclick="practiceMode('${type}')">
-                🏁 Start Practice
+            <h3>🏁 Practice Exercises</h3>
+            <ol style="color: #aaa; margin-left: 20px; line-height: 1.8;">
+                ${data.exercises.map(ex => `<li style="margin: 8px 0;">${ex}</li>`).join('')}
+            </ol>
+            
+            <button class="start-engine-btn" id="start-engine-btn">
+                🔥 Start ${data.language} Engine
             </button>
         `;
         
-        document.getElementById('detailPanel').classList.add('active');
-    }
-
-    function showHubInfo() {
-        const detailContent = document.getElementById('detailContent');
-        detailContent.innerHTML = `
-            <h2 class="detail-title" style="color: #8a2be2;">
-                🔧 Garage Hub
-            </h2>
-            <p>Your central learning workspace!</p>
+        // Add event listener to the button after it's created
+        setTimeout(() => {
+            const startBtn = document.getElementById('start-engine-btn');
+            if (startBtn) {
+                startBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.startLearning(data.language);
+                });
+                startBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    window.startLearning(data.language);
+                });
+            }
             
-            <div style="text-align: center; padding: 20px;">
-                <div style="font-size: 3em; margin-bottom: 20px;">
-                    ${visitedVehicles.size} / 6
-                </div>
-                <p>Vehicles Mastered</p>
-            </div>
+            // Re-attach close button handler
+            const closeBtn = document.getElementById('close-panel-btn');
+            if (closeBtn) {
+                closeBtn.onclick = null; // Clear any existing
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.closePanel();
+                });
+                closeBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    window.closePanel();
+                });
+            }
+        }, 100);
+        
+        panel.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scroll on mobile
+    }
+    
+    // Close panel - Make it global for onclick
+    window.closePanel = function() {
+        document.getElementById('detail-panel').classList.remove('active');
+        document.body.style.overflow = ''; // Restore scroll
+    }
+    
+    // Start learning function - Make it global for onclick
+    window.startLearning = function(language) {
+        alert(`🏁 Starting your ${language} engine!\n\nTime to code and level up!`);
+    }
+    
+    // Optimize window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
             
-            ${visitedVehicles.size === 6 ? `
-                <div style="
-                    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-                    padding: 20px;
-                    border-radius: 10px;
-                    text-align: center;
-                    margin-top: 20px;
-                ">
-                    <h3>🏆 MASTER MECHANIC!</h3>
-                    <p>You've mastered all languages!</p>
-                </div>
-            ` : ''}
-        `;
-        
-        document.getElementById('detailPanel').classList.add('active');
-    }
-
-    function updateProgress(type) {
-        const progressIcon = document.getElementById(`progress-${type}`);
-        if (progressIcon) {
-            progressIcon.classList.add('completed');
-        }
-    }
-
-    function closeDetail() {
-        document.getElementById('detailPanel').classList.remove('active');
-    }
-
-    function practiceMode(type) {
-        alert(`🏁 Practice Mode for ${type.toUpperCase()}!\n\nComing soon:\n• Interactive challenges\n• Car diagnostic scenarios\n• Points & achievements`);
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-        // Add touch/click handlers
-        document.querySelectorAll('.vehicle-node').forEach(node => {
-            node.addEventListener('click', handleVehicleClick);
-            node.addEventListener('touchend', handleVehicleClick);
-        });
-        
-        addTouchHandlers();
+            if (!isMobile) {
+                drawConnections();
+            }
+        }, 250);
     });
-
-    // Prevent zoom on double tap
-    let lastTouchEnd = 0;
-    document.addEventListener('touchend', (e) => {
-        const now = Date.now();
-        if (now - lastTouchEnd <= 300) {
+    
+    // Prevent iOS bounce scroll
+    if (isIOS) {
+        document.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.detail-panel') || e.target.closest('.code-example')) {
+                return; // Allow scrolling in detail panel
+            }
             e.preventDefault();
+        }, { passive: false });
+    }
+    
+    // Performance monitoring
+    if (window.performance && isMobile) {
+        window.addEventListener('load', () => {
+            const perfData = window.performance.timing;
+            const loadTime = perfData.loadEventEnd - perfData.navigationStart;
+            console.log('Page load time:', loadTime + 'ms');
+            
+            // Disable animations if load is slow
+            if (loadTime > 3000) {
+                cancelAnimationFrame(animationId);
+                console.log('Animations disabled for performance');
+            }
+        });
+    }
+    
+    // Initialize everything after DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            addTouchHandlers();
+            if (!isMobile) {
+                drawConnections();
+            }
+            if (!isMobile || window.devicePixelRatio <= 2) {
+                drawNeuralNetwork();
+            }
+        });
+    } else {
+        addTouchHandlers();
+        if (!isMobile) {
+            drawConnections();
         }
-        lastTouchEnd = now;
-    }, false);
+        if (!isMobile || window.devicePixelRatio <= 2) {
+            drawNeuralNetwork();
+        }
+    }
 </script>
 ```
 
