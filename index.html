@@ -3,75 +3,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏎️ Automotive Coding Academy</title>
     <style>
-        * {
+        body {
+            background: #0a0a0a;
+            color: #00ff88;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            padding: 20px;
         }
 
 ```
-    body {
-        background: #0a0a0a;
-        color: #00ff88;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        overflow-x: hidden;
-        min-height: 100vh;
-        -webkit-font-smoothing: antialiased;
-        padding-bottom: 50px;
-    }
-    
-    .container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-    
-    /* Header */
     .header {
         text-align: center;
         margin-bottom: 30px;
     }
     
-    .header h1 {
-        font-size: 28px;
-        color: #00ff88;
-        margin-bottom: 10px;
-    }
-    
-    .header p {
-        font-size: 16px;
-        color: #0088ff;
-    }
-    
-    /* Simple Grid */
-    .vehicle-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-    
-    /* Vehicle Cards - Simple and Touch-Friendly */
-    .vehicle-card {
+    .vehicle {
         background: rgba(0, 255, 136, 0.1);
         border: 2px solid #00ff88;
-        border-radius: 15px;
+        border-radius: 10px;
         padding: 20px;
+        margin-bottom: 20px;
         text-align: center;
-        position: relative;
-        min-height: 200px;
-        cursor: pointer;
-    }
-    
-    .vehicle-card:active {
-        background: rgba(0, 255, 136, 0.2);
-        transform: scale(0.98);
     }
     
     .vehicle-icon {
@@ -79,616 +34,185 @@
         margin-bottom: 10px;
     }
     
-    .vehicle-title {
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: #00ff88;
-    }
-    
-    .vehicle-subtitle {
-        font-size: 14px;
-        color: #0088ff;
-        margin-bottom: 10px;
-    }
-    
-    .vehicle-info {
-        font-size: 12px;
-        color: #aaa;
-        text-align: left;
-        line-height: 1.5;
-    }
-    
-    /* Progress Bar */
-    .progress-bar {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: #333;
-        border-radius: 0 0 13px 13px;
-        overflow: hidden;
-    }
-    
-    .progress-fill {
-        height: 100%;
-        background: #00ff88;
-        width: 0%;
-        transition: width 0.3s ease;
-    }
-    
-    /* Modal - Full Screen on Mobile */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 1000;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .modal-content {
-        background: #1a1a1a;
-        max-width: 600px;
-        margin: 20px auto;
-        padding: 20px;
-        border-radius: 15px;
-        border: 2px solid #00ff88;
-    }
-    
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-    
-    .modal h2 {
-        color: #00ff88;
-        font-size: 24px;
-    }
-    
-    .close-btn {
-        background: #ff0066;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    
-    .close-btn:active {
-        background: #cc0055;
-    }
-    
-    /* Modal Content Sections */
-    .section {
-        margin-bottom: 25px;
-    }
-    
-    .section h3 {
-        color: #0088ff;
-        margin-bottom: 10px;
-        font-size: 18px;
-    }
-    
-    .concept-item {
-        background: rgba(0, 255, 136, 0.05);
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-    }
-    
-    .concept-item strong {
-        color: #00ff88;
-    }
-    
-    .code-block {
-        background: #001122;
-        border: 1px solid #00ff88;
-        border-radius: 5px;
-        padding: 15px;
-        overflow-x: auto;
-        font-family: monospace;
-        font-size: 14px;
-        white-space: pre-wrap;
-    }
-    
-    .exercise-list {
-        list-style: none;
-        padding-left: 0;
-    }
-    
-    .exercise-list li {
-        padding: 8px 0;
-        color: #aaa;
-    }
-    
-    .exercise-list li:before {
-        content: "🏁 ";
-        color: #00ff88;
-    }
-    
-    /* Big Action Button */
-    .action-btn {
-        display: block;
-        width: 90%;
-        max-width: 300px;
-        margin: 20px auto;
+    .btn {
         background: #00ff88;
         color: #000;
         border: none;
         padding: 15px 30px;
         font-size: 18px;
         font-weight: bold;
+        border-radius: 5px;
+        margin-top: 10px;
+        display: inline-block;
+        text-decoration: none;
+    }
+    
+    .details {
+        display: none;
+        background: #1a1a1a;
+        padding: 20px;
+        margin-top: 20px;
         border-radius: 10px;
-        text-transform: uppercase;
-        cursor: pointer;
     }
     
-    .action-btn:active {
-        background: #00cc66;
-        transform: scale(0.98);
+    .details.show {
+        display: block;
     }
     
-    /* Level Display */
-    .level-display {
+    .code {
+        background: #000;
+        padding: 10px;
+        border: 1px solid #00ff88;
+        font-family: monospace;
+        white-space: pre-wrap;
+    }
+    
+    #debug {
         position: fixed;
-        top: 10px;
-        right: 10px;
-        background: rgba(0, 255, 136, 0.1);
-        border: 2px solid #00ff88;
-        padding: 10px 15px;
-        border-radius: 10px;
-        font-size: 14px;
-    }
-    
-    .level-display strong {
-        color: #00ff88;
-    }
-    
-    /* Central Hub */
-    .central-hub {
-        background: radial-gradient(circle, rgba(0, 255, 136, 0.3), transparent);
-        border: 3px solid #00ff88;
-        border-radius: 50%;
-        width: 150px;
-        height: 150px;
-        margin: 30px auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-    
-    .central-hub:active {
-        transform: scale(0.95);
-    }
-    
-    .hub-icon {
-        font-size: 48px;
-        margin-bottom: 5px;
-    }
-    
-    .hub-text {
-        font-size: 14px;
-        font-weight: bold;
-        text-align: center;
-    }
-    
-    /* Simple responsive */
-    @media (max-width: 768px) {
-        .vehicle-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .header h1 {
-            font-size: 24px;
-        }
-        
-        .modal-content {
-            margin: 0;
-            height: 100%;
-            border-radius: 0;
-        }
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #ff0066;
+        color: white;
+        padding: 10px;
+        font-size: 12px;
+        max-height: 100px;
+        overflow-y: auto;
     }
 </style>
 ```
 
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🏎️ Virtual Automotive Coding Academy</h1>
-            <p>Master Programming Through Cars!</p>
-        </div>
+    <div class="header">
+        <h1>🏎️ Automotive Coding Academy</h1>
+        <p>Debug Version - Tap buttons to test</p>
+    </div>
 
 ```
-    <div class="vehicle-grid">
-        <!-- HTML SUV -->
-        <div class="vehicle-card" onclick="openModal('html')">
-            <div class="vehicle-icon">🚙</div>
-            <div class="vehicle-title">HTML Foundation</div>
-            <div class="vehicle-subtitle">SUV - Structure</div>
-            <div class="vehicle-info">
-                Engine: DOM Framework<br>
-                Level: Beginner
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-html"></div>
-            </div>
-        </div>
-        
-        <!-- JavaScript Sports Car -->
-        <div class="vehicle-card" onclick="openModal('javascript')">
-            <div class="vehicle-icon">🏎️</div>
-            <div class="vehicle-title">JavaScript Sports</div>
-            <div class="vehicle-subtitle">Car - Performance</div>
-            <div class="vehicle-info">
-                Engine: V8 Turbo<br>
-                Level: Intermediate
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-javascript"></div>
-            </div>
-        </div>
-        
-        <!-- CSS Sedan -->
-        <div class="vehicle-card" onclick="openModal('css')">
-            <div class="vehicle-icon">🚗</div>
-            <div class="vehicle-title">CSS Luxury</div>
-            <div class="vehicle-subtitle">Sedan - Style</div>
-            <div class="vehicle-info">
-                Engine: Cascade V6<br>
-                Level: Beginner
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-css"></div>
-            </div>
-        </div>
-        
-        <!-- Python Pickup -->
-        <div class="vehicle-card" onclick="openModal('python')">
-            <div class="vehicle-icon">🛻</div>
-            <div class="vehicle-title">Python Pickup</div>
-            <div class="vehicle-subtitle">Truck - Utility</div>
-            <div class="vehicle-info">
-                Engine: Multi-Purpose<br>
-                Level: Beginner
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-python"></div>
-            </div>
-        </div>
-        
-        <!-- React Racing -->
-        <div class="vehicle-card" onclick="openModal('react')">
-            <div class="vehicle-icon">🏁</div>
-            <div class="vehicle-title">React Racing</div>
-            <div class="vehicle-subtitle">Formula - Components</div>
-            <div class="vehicle-info">
-                Engine: Virtual DOM<br>
-                Level: Advanced
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-react"></div>
-            </div>
-        </div>
-        
-        <!-- SQL Semi -->
-        <div class="vehicle-card" onclick="openModal('sql')">
-            <div class="vehicle-icon">🚛</div>
-            <div class="vehicle-title">SQL Database</div>
-            <div class="vehicle-subtitle">Semi - Data</div>
-            <div class="vehicle-info">
-                Engine: Relational<br>
-                Level: Intermediate
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-sql"></div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Central Hub -->
-    <div class="central-hub" onclick="showHub()">
-        <div class="hub-icon">🔧</div>
-        <div class="hub-text">MASTER<br>MECHANIC</div>
-    </div>
-</div>
+<!-- Debug Panel -->
+<div id="debug">Debug: Page loaded</div>
 
-<!-- Level Display -->
-<div class="level-display">
-    <strong>Level:</strong> <span id="user-level">Apprentice</span>
-</div>
-
-<!-- Modal -->
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 id="modal-title">Title</h2>
-            <button class="close-btn" onclick="closeModal()">Close ✕</button>
-        </div>
-        <div id="modal-body">
-            <!-- Content will be inserted here -->
-        </div>
-    </div>
-</div>
-
-<script>
-    // Vehicle data
-    const vehicles = {
-        html: {
-            title: '🚙 HTML Foundation SUV',
-            description: 'Like an SUV provides structure and safety, HTML provides the foundation framework for all web applications.',
-            concepts: [
-                { name: 'Engine (DOCTYPE)', desc: 'Just like an engine starts your vehicle, DOCTYPE declares your HTML version' },
-                { name: 'Chassis (Body)', desc: 'The body tag is your vehicle frame - everything else attaches to it' },
-                { name: 'Seats (Divs)', desc: 'Div elements are like seats - they hold and organize your content' }
-            ],
-            code: `<!DOCTYPE html>
+<!-- HTML Vehicle -->
+<div class="vehicle">
+    <div class="vehicle-icon">🚙</div>
+    <h2>HTML Foundation SUV</h2>
+    <p>Structure & Framework</p>
+    <button class="btn" onclick="debug('HTML button clicked'); toggle('html')">
+        Learn HTML
+    </button>
+    <div id="html" class="details">
+        <h3>🔧 Automotive → Code Mapping</h3>
+        <p><strong>Engine (DOCTYPE):</strong> Starts your vehicle/document</p>
+        <p><strong>Chassis (Body):</strong> Main structure</p>
+        <div class="code">&lt;!DOCTYPE html&gt;
 ```
 
 <html>
-<head>
-    <title>Dashboard</title>
-</head>
 <body>
-    <div class="chassis">
-        <h1>Engine Block</h1>
-        <p>Content rides here!</p>
-    </div>
+<h1>Engine Start!</h1>
 </body>
-</html>`,
-                exercises: [
-                    'Build a basic vehicle frame (HTML structure)',
-                    'Add seats (divs) for passengers (content)',
-                    'Install windows (images) and doors (links)'
-                ]
-            },
-            javascript: {
-                title: '🏎️ JavaScript Sports Car',
-                description: 'Like a sports car delivers performance and responsiveness, JavaScript brings dynamic behavior and interactivity.',
-                concepts: [
-                    { name: 'Engine (Functions)', desc: 'Functions are your engine - they make things happen' },
-                    { name: 'Turbo (Async/Await)', desc: 'Asynchronous code is like turbo - handling multiple operations efficiently' },
-                    { name: 'Transmission (Events)', desc: 'Event handlers connect user actions to responses' }
-                ],
-                code: `// Start your engine!
-function startEngine() {
-    let rpm = 0;
-    const redline = 8000;
+</html></div>
+<button class="btn" onclick="debug('Start HTML clicked'); alert('Starting HTML Engine! 🚙')">
+Start Engine
+</button>
+</div>
+</div>
 
 ```
-const accelerate = setInterval(() => {
-    rpm += 500;
-    console.log(\`RPM: \${rpm}\`);
-    
-    if (rpm >= redline) {
-        console.log('⚡ REDLINE!');
-        clearInterval(accelerate);
-    }
-}, 100);
+<!-- JavaScript Vehicle -->
+<div class="vehicle">
+    <div class="vehicle-icon">🏎️</div>
+    <h2>JavaScript Sports Car</h2>
+    <p>Performance & Dynamics</p>
+    <button class="btn" onclick="debug('JS button clicked'); toggle('js')">
+        Learn JavaScript
+    </button>
+    <div id="js" class="details">
+        <h3>🔧 Automotive → Code Mapping</h3>
+        <p><strong>Engine (Functions):</strong> Makes things happen</p>
+        <p><strong>Turbo (Async):</strong> Handles multiple operations</p>
+        <div class="code">function startEngine() {
 ```
 
-}`, exercises: [ 'Build an RPM gauge that responds to acceleration', 'Create a gear shift system with events', 'Implement turbo boost with async functions' ] }, css: { title: '🚗 CSS Luxury Sedan', description: 'Like a luxury sedan focuses on comfort and aesthetics, CSS provides style, elegance, and visual appeal.', concepts: [ { name: 'Paint Job (Colors)', desc: 'Colors and backgrounds are your vehicle\'s finish' }, { name: 'Interior (Padding)', desc: 'Spacing creates comfortable interiors' }, { name: 'Chrome (Borders)', desc: 'Borders add those finishing touches' } ], code: `.luxury-sedan {
-/* Premium Paint */
-background: linear-gradient(
-135deg, #1a1a2e, #16213e
-);
+let rpm = 0;
+console.log(“Vroom! 🏎️”);
+}</div>
+<button class="btn" onclick="debug('Start JS clicked'); alert('Starting JavaScript Engine! 🏎️')">
+Start Engine
+</button>
+</div>
+</div>
 
 ```
-/* Comfortable Interior */
+<!-- CSS Vehicle -->
+<div class="vehicle">
+    <div class="vehicle-icon">🚗</div>
+    <h2>CSS Luxury Sedan</h2>
+    <p>Style & Elegance</p>
+    <button class="btn" onclick="debug('CSS button clicked'); toggle('css')">
+        Learn CSS
+    </button>
+    <div id="css" class="details">
+        <h3>🔧 Automotive → Code Mapping</h3>
+        <p><strong>Paint (Colors):</strong> Vehicle appearance</p>
+        <p><strong>Interior (Padding):</strong> Comfort spacing</p>
+        <div class="code">.luxury-sedan {
+```
+
+background: gold;
 padding: 30px;
-margin: 20px auto;
-
-/* Chrome Accents */
-border: 2px solid gold;
 border-radius: 15px;
-```
-
-}`, exercises: [ 'Design a luxury interior with padding', 'Create ambient lighting with shadows', 'Add smooth animations for premium feel' ] }, python: { title: '🛻 Python Pickup Truck', description: 'Like a pickup truck handles heavy loads with ease, Python excels at data processing and practical tasks.', concepts: [ { name: 'Truck Bed (Lists)', desc: 'Lists carry your data cargo' }, { name: 'Towing (Functions)', desc: 'Functions pull heavy computational loads' }, { name: 'Tool Box (Libraries)', desc: 'Import powerful tools for any job' } ], code: `# Load the truck bed
-cargo = [‘lumber’, ‘tools’, ‘equipment’]
-
-def haul_cargo(items):
-total = 0
-for item in items:
-print(f”Loading {item}…”)
-total += len(item)
-return f”Hauling {total} units!”
-
-print(haul_cargo(cargo))`, exercises: [ 'Load data into your truck bed (lists)', 'Process heavy loads with functions', 'Navigate rough terrain with error handling' ] }, react: { title: '🏁 React Formula Racing', description: 'Like Formula 1 cars are built from specialized components, React builds UIs from reusable component parts.', concepts: [ { name: 'Chassis (Components)', desc: 'Components are your modular car parts' }, { name: 'Aerodynamics (Props)', desc: 'Props flow data through components' }, { name: 'Telemetry (State)', desc: 'State tracks real-time performance' } ], code: `function RaceCar({ driver, team }) {
-const [speed, setSpeed] = useState(0);
+}</div>
+<button class="btn" onclick="debug('Start CSS clicked'); alert('Starting CSS Engine! 🚗')">
+Start Engine
+</button>
+</div>
+</div>
 
 ```
-const accelerate = () => {
-    setSpeed(prev => 
-        Math.min(prev + 10, 350)
-    );
-};
+<!-- Test Button -->
+<div style="text-align: center; margin-top: 40px;">
+    <button class="btn" onclick="debug('Test button clicked'); alert('Buttons ARE working!')">
+        🔧 TEST BUTTON - TAP ME
+    </button>
+</div>
 
-return (
-    <div>
-        <h2>{team} Racing</h2>
-        <p>Speed: {speed} km/h</p>
-        <button onClick={accelerate}>
-            🏁 Push!
-        </button>
-    </div>
-);
-```
-
-}`, exercises: [ 'Build modular racing components', 'Manage telemetry with state', 'Optimize aerodynamics with props' ] }, sql: { title: '🚛 SQL Database Semi', description: 'Like a semi truck transports goods efficiently, SQL moves and manages data across your applications.', concepts: [ { name: 'Trailer (Tables)', desc: 'Tables are your cargo containers' }, { name: 'Loading Dock (INSERT)', desc: 'INSERT loads data into your trailer' }, { name: 'Manifest (SELECT)', desc: 'SELECT queries your cargo manifest' } ], code: `– Create cargo trailer
-CREATE TABLE cargo (
-id INTEGER PRIMARY KEY,
-item VARCHAR(100),
-weight DECIMAL(10,2)
-);
-
-– Load the truck
-INSERT INTO cargo
-VALUES (1, ‘Engine Parts’, 500.00);
-
-– Check manifest
-SELECT * FROM cargo;`,
-exercises: [
-‘Create cargo tables for shipments’,
-‘Load data with INSERT operations’,
-‘Query manifests with SELECTs’
-]
-}
-};
-
-```
-    // Progress tracking
-    let progress = {
-        html: 0,
-        javascript: 0,
-        css: 0,
-        python: 0,
-        react: 0,
-        sql: 0
-    };
-    
-    // Load progress from localStorage
-    try {
-        const saved = localStorage.getItem('automotive-progress');
-        if (saved) {
-            progress = JSON.parse(saved);
-            updateAllProgress();
-        }
-    } catch (e) {
-        console.log('Could not load progress');
+<script>
+    // Debug function
+    function debug(msg) {
+        const d = document.getElementById('debug');
+        d.innerHTML += '<br>' + new Date().toTimeString().split(' ')[0] + ': ' + msg;
+        d.scrollTop = d.scrollHeight;
     }
     
-    // Open modal
-    function openModal(vehicle) {
-        const modal = document.getElementById('modal');
-        const data = vehicles[vehicle];
-        
-        if (!data) return;
-        
-        document.getElementById('modal-title').textContent = data.title;
-        
-        const body = document.getElementById('modal-body');
-        body.innerHTML = `
-            <div class="section">
-                <p>${data.description}</p>
-            </div>
-            
-            <div class="section">
-                <h3>🔧 Automotive → Code Mappings</h3>
-                ${data.concepts.map(c => `
-                    <div class="concept-item">
-                        <strong>${c.name}:</strong><br>
-                        ${c.desc}
-                    </div>
-                `).join('')}
-            </div>
-            
-            <div class="section">
-                <h3>📝 Example Code</h3>
-                <div class="code-block">${data.code}</div>
-            </div>
-            
-            <div class="section">
-                <h3>🏁 Practice Exercises</h3>
-                <ul class="exercise-list">
-                    ${data.exercises.map(e => `<li>${e}</li>`).join('')}
-                </ul>
-            </div>
-            
-            <button class="action-btn" onclick="startLearning('${vehicle}')">
-                🔥 Start ${vehicle.toUpperCase()} Engine
-            </button>
-        `;
-        
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-    
-    // Close modal
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-    
-    // Start learning
-    function startLearning(vehicle) {
-        progress[vehicle] = Math.min(progress[vehicle] + 20, 100);
-        updateProgress(vehicle);
-        saveProgress();
-        
-        alert(`🏁 ${vehicle.toUpperCase()} engine started!\n\nProgress: ${progress[vehicle]}%`);
-        
-        if (progress[vehicle] >= 100) {
-            alert(`🎉 Congratulations! You've mastered ${vehicle.toUpperCase()}!`);
-        }
-        
-        updateLevel();
-        closeModal();
-    }
-    
-    // Update progress bar
-    function updateProgress(vehicle) {
-        const bar = document.getElementById(`progress-${vehicle}`);
-        if (bar) {
-            bar.style.width = progress[vehicle] + '%';
-        }
-    }
-    
-    // Update all progress bars
-    function updateAllProgress() {
-        Object.keys(progress).forEach(v => updateProgress(v));
-        updateLevel();
-    }
-    
-    // Save progress
-    function saveProgress() {
+    // Toggle function
+    function toggle(id) {
+        debug('Toggle called for: ' + id);
         try {
-            localStorage.setItem('automotive-progress', JSON.stringify(progress));
+            const el = document.getElementById(id);
+            if (el) {
+                if (el.classList.contains('show')) {
+                    el.classList.remove('show');
+                    debug(id + ' hidden');
+                } else {
+                    el.classList.add('show');
+                    debug(id + ' shown');
+                }
+            } else {
+                debug('ERROR: Element ' + id + ' not found');
+            }
         } catch (e) {
-            console.log('Could not save progress');
+            debug('ERROR: ' + e.message);
         }
     }
     
-    // Update level
-    function updateLevel() {
-        const total = Object.values(progress).reduce((a, b) => a + b, 0);
-        const avg = total / 6;
-        
-        let level = 'Apprentice';
-        if (avg >= 80) level = 'Master Mechanic';
-        else if (avg >= 60) level = 'Expert';
-        else if (avg >= 40) level = 'Journeyman';
-        else if (avg >= 20) level = 'Novice';
-        
-        document.getElementById('user-level').textContent = level;
-    }
-    
-    // Show hub info
-    function showHub() {
-        const total = Object.values(progress).reduce((a, b) => a + b, 0);
-        const completed = Object.values(progress).filter(p => p >= 100).length;
-        
-        alert(`🔧 Master Mechanic Hub\n\nProgress: ${completed}/6 Vehicles Mastered\nTotal Progress: ${Math.round(total/6)}%\n\nComplete all vehicles to become a Master Mechanic!`);
-    }
-    
-    // Close modal on background click
-    window.onclick = function(event) {
-        const modal = document.getElementById('modal');
-        if (event.target === modal) {
-            closeModal();
-        }
-    }
+    // Test on load
+    window.onload = function() {
+        debug('Window loaded successfully');
+        debug('Touch events: ' + ('ontouchstart' in window));
+        debug('User agent: ' + navigator.userAgent.substring(0, 50) + '...');
+    };
 </script>
 ```
 
