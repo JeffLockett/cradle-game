@@ -1,620 +1,1129 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>🚀 Flow State Recovery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏎️ Virtual Automotive Coding Academy</title>
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
-        
-        :root {
-            --primary: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --bg: #0a0a0a;
-            --surface: #1a1a1a;
-            --border: #333;
-            --text: #f0f0f0;
+
+```
+    body {
+        background: #0a0a0a;
+        color: #00ff88;
+        font-family: 'Consolas', monospace;
+        overflow-x: hidden;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+    
+    /* Neural Network Background */
+    #neural-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        opacity: 0.3;
+    }
+    
+    /* SVG Layer for Curved Connections */
+    #connection-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 15;
+        pointer-events: none;
+    }
+    
+    .connection-path {
+        fill: none;
+        stroke: url(#connectionGradient);
+        stroke-width: 2;
+        opacity: 0.6;
+        animation: pulseFlow 3s infinite;
+    }
+    
+    @keyframes pulseFlow {
+        0%, 100% { 
+            opacity: 0.3;
+            stroke-width: 2;
         }
-        
-        body {
-            font-family: -apple-system, system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-        
-        header {
-            background: var(--surface);
-            padding: 12px;
-            border-bottom: 3px solid var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        h1 {
-            font-size: 1.3rem;
-            color: var(--primary);
-        }
-        
-        .mode-indicator {
-            font-size: 0.8rem;
-            padding: 5px 10px;
-            background: var(--primary);
-            color: var(--bg);
-            border-radius: 15px;
-            font-weight: bold;
-        }
-        
-        .container {
-            padding: 15px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        /* Quick Stats Bar */
-        .stats-bar {
-            background: var(--surface);
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 0.9rem;
-        }
-        
-        .stat {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        /* Compression Mode Selector */
-        .mode-selector {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .mode-btn {
-            padding: 12px 8px;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .mode-btn.active {
-            background: var(--primary);
-            color: var(--bg);
-            border-color: var(--primary);
-        }
-        
-        .mode-btn .percent {
-            display: block;
-            font-size: 0.7rem;
-            margin-top: 2px;
+        50% { 
             opacity: 0.8;
+            stroke-width: 3;
         }
-        
-        /* Input/Output Areas */
-        .panel {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
+    }
+    
+    /* Main Container */
+    .container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 1400px;
+        padding: 20px;
+    }
+    
+    /* Header */
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeIn 1s;
+    }
+    
+    .header h1 {
+        font-size: 48px;
+        text-shadow: 0 0 30px #00ff88;
+        margin-bottom: 10px;
+        letter-spacing: 2px;
+    }
+    
+    .header p {
+        font-size: 20px;
+        color: #0088ff;
+    }
+    
+    /* Perfect Grid Layout - 3x2 */
+    .academy-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 60px;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        padding: 40px;
+    }
+    
+    /* Central Hub - Perfectly Centered */
+    .central-hub {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, 
+            rgba(0, 255, 136, 0.4) 0%, 
+            rgba(0, 136, 255, 0.2) 40%, 
+            transparent 70%);
+        border: 3px solid #00ff88;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 25;
+        cursor: pointer;
+        box-shadow: 
+            0 0 50px rgba(0, 255, 136, 0.5),
+            inset 0 0 30px rgba(0, 136, 255, 0.3);
+        animation: centralPulse 3s infinite;
+    }
+    
+    @keyframes centralPulse {
+        0%, 100% { 
+            transform: translate(-50%, -50%) scale(1);
+            box-shadow: 
+                0 0 50px rgba(0, 255, 136, 0.5),
+                inset 0 0 30px rgba(0, 136, 255, 0.3);
         }
-        
-        textarea {
-            width: 100%;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            color: var(--text);
-            font-family: monospace;
-            font-size: 13px;
-            resize: none;
-            -webkit-appearance: none;
+        50% { 
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 
+                0 0 80px rgba(0, 255, 136, 0.7),
+                inset 0 0 40px rgba(0, 136, 255, 0.5);
         }
-        
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
+    }
+    
+    .hub-icon {
+        font-size: 60px;
+        margin-bottom: 10px;
+        filter: drop-shadow(0 0 10px #00ff88);
+    }
+    
+    .hub-text {
+        font-size: 16px;
+        text-align: center;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px currentColor;
+    }
+    
+    /* Vehicle Cards - Perfectly Uniform */
+    .vehicle-node {
+        width: 100%;
+        height: 300px;
+        background: linear-gradient(135deg, 
+            rgba(0, 255, 136, 0.1) 0%, 
+            rgba(0, 136, 255, 0.05) 100%);
+        border: 2px solid #00ff88;
+        border-radius: 20px;
+        padding: 25px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .vehicle-node::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, 
+            transparent 30%, 
+            rgba(0, 255, 136, 0.1) 70%);
+        transform: rotate(45deg);
+        transition: all 0.5s;
+        opacity: 0;
+    }
+    
+    .vehicle-node:hover::before {
+        opacity: 1;
+        transform: rotate(45deg) scale(1.2);
+    }
+    
+    .vehicle-node:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 
+            0 20px 40px rgba(0, 255, 136, 0.3),
+            0 0 60px rgba(0, 136, 255, 0.2);
+        border-color: #00ffaa;
+        z-index: 30;
+    }
+    
+    .vehicle-icon {
+        font-size: 60px;
+        text-align: center;
+        margin-bottom: 15px;
+        filter: drop-shadow(0 0 20px currentColor);
+    }
+    
+    .vehicle-title {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 5px;
+        text-shadow: 0 0 10px currentColor;
+    }
+    
+    .vehicle-subtitle {
+        font-size: 14px;
+        color: #0088ff;
+        text-align: center;
+        margin-bottom: 20px;
+        opacity: 0.9;
+    }
+    
+    .vehicle-details {
+        font-size: 13px;
+        color: #aaa;
+        line-height: 1.8;
+        text-align: left;
+    }
+    
+    .vehicle-details strong {
+        color: #00ff88;
+    }
+    
+    /* Concept Orbits - Symmetrically Positioned */
+    .concept-orbit {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, 
+            rgba(0, 136, 255, 0.2) 0%, 
+            rgba(0, 136, 255, 0.05) 100%);
+        border: 2px solid #0088ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        z-index: 22;
+        padding: 10px;
+    }
+    
+    .concept-orbit:hover {
+        transform: scale(1.2);
+        background: radial-gradient(circle, 
+            rgba(0, 136, 255, 0.4) 0%, 
+            rgba(0, 136, 255, 0.1) 100%);
+        box-shadow: 0 0 30px rgba(0, 136, 255, 0.8);
+        z-index: 35;
+    }
+    
+    /* Perfect Symmetrical Positioning for Concepts */
+    .concept-variables { left: 10%; top: 25%; }
+    .concept-functions { right: 10%; top: 25%; }
+    .concept-loops { left: 10%; bottom: 25%; }
+    .concept-events { right: 10%; bottom: 25%; }
+    .concept-logic { left: 50%; top: 5%; transform: translateX(-50%); }
+    .concept-data { left: 50%; bottom: 5%; transform: translateX(-50%); }
+    
+    /* Detail Panel */
+    .detail-panel {
+        position: fixed;
+        right: -450px;
+        top: 0;
+        width: 450px;
+        height: 100vh;
+        background: linear-gradient(180deg, 
+            rgba(0, 0, 0, 0.98) 0%, 
+            rgba(10, 10, 10, 0.98) 100%);
+        border-left: 2px solid #00ff88;
+        padding: 30px;
+        overflow-y: auto;
+        transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 100;
+    }
+    
+    .detail-panel.active {
+        right: 0;
+        box-shadow: -20px 0 40px rgba(0, 0, 0, 0.5);
+    }
+    
+    .detail-panel h2 {
+        color: #00ff88;
+        margin-bottom: 20px;
+        text-shadow: 0 0 20px currentColor;
+    }
+    
+    .detail-panel h3 {
+        color: #0088ff;
+        margin-top: 25px;
+        margin-bottom: 15px;
+    }
+    
+    .code-example {
+        background: #001122;
+        border: 1px solid #00ff88;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 15px 0;
+        font-family: monospace;
+        overflow-x: auto;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .close-panel {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #ff0066;
+        color: #fff;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+    
+    .close-panel:hover {
+        background: #ff3388;
+        transform: scale(1.1);
+    }
+    
+    /* Level Indicator */
+    .level-indicator {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, 
+            rgba(0, 255, 136, 0.15) 0%, 
+            rgba(0, 136, 255, 0.1) 100%);
+        border: 2px solid #00ff88;
+        padding: 20px 30px;
+        border-radius: 15px;
+        z-index: 50;
+        box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+    }
+    
+    .level-indicator h4 {
+        color: #0088ff;
+        font-size: 14px;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .level-indicator .level {
+        font-size: 28px;
+        font-weight: bold;
+        text-shadow: 0 0 20px currentColor;
+    }
+    
+    /* Legend */
+    .legend {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, 
+            rgba(0, 0, 0, 0.95) 0%, 
+            rgba(10, 10, 10, 0.95) 100%);
+        border: 2px solid #00ff88;
+        padding: 20px;
+        border-radius: 15px;
+        z-index: 50;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    .legend h3 {
+        margin-bottom: 15px;
+        color: #00ff88;
+        text-shadow: 0 0 10px currentColor;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin: 8px 0;
+        font-size: 14px;
+    }
+    
+    .legend-icon {
+        width: 25px;
+        height: 25px;
+        margin-right: 15px;
+        border-radius: 50%;
+        box-shadow: 0 0 10px currentColor;
+    }
+    
+    /* Skill Progress Ring */
+    .skill-ring {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+    }
+    
+    .skill-ring circle {
+        fill: none;
+        stroke-width: 3;
+        filter: drop-shadow(0 0 5px currentColor);
+    }
+    
+    .skill-ring .bg {
+        stroke: #333;
+    }
+    
+    .skill-ring .progress {
+        stroke: #00ff88;
+        stroke-dasharray: 157;
+        stroke-dashoffset: 157;
+        transform: rotate(-90deg);
+        transform-origin: center;
+        transition: stroke-dashoffset 0.5s;
+    }
+    
+    /* Enhanced Button */
+    .start-engine-btn {
+        display: block;
+        margin: 30px auto;
+        background: linear-gradient(135deg, #00ff88 0%, #00cc70 100%);
+        color: #000;
+        border: none;
+        padding: 15px 40px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+    }
+    
+    .start-engine-btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 30px rgba(0, 255, 136, 0.6);
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(30px); 
         }
-        
-        #inputArea {
-            min-height: 200px;
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
         }
-        
-        #outputArea {
-            min-height: 250px;
-            border-color: var(--primary);
-        }
-        
-        /* Action Buttons */
-        .action-bar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 12px;
-        }
-        
-        button {
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            -webkit-appearance: none;
-            transition: all 0.2s;
-        }
-        
-        button:active {
-            transform: scale(0.95);
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: var(--bg);
-        }
-        
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--text);
-            border: 2px solid var(--primary);
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
-        .btn-full {
-            grid-column: 1 / -1;
-        }
-        
-        /* Status Messages */
-        .status {
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            text-align: center;
-            font-weight: bold;
-            display: none;
-        }
-        
-        .status.success {
-            background: var(--primary);
-            color: var(--bg);
-        }
-        
-        .status.error {
-            background: var(--danger);
-            color: white;
-        }
-        
-        /* Context Helper */
-        .context-box {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid var(--warning);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-        }
-        
-        .context-box strong {
-            color: var(--warning);
-        }
-        
-        /* Loading */
-        .processing {
-            text-align: center;
-            padding: 20px;
-            display: none;
-        }
-        
-        .processing .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* iOS Optimizations */
-        @supports (-webkit-touch-callout: none) {
-            textarea, button {
-                font-size: 16px !important;
-            }
-        }
-    </style>
+    }
+    
+    @keyframes floatOrbit {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+</style>
+```
+
 </head>
 <body>
-    <header>
-        <h1>🚀 Flow State Recovery</h1>
-        <div class="mode-indicator" id="modeIndicator">SMART</div>
-    </header>
+    <canvas id="neural-canvas"></canvas>
+
+```
+<!-- SVG Layer for Curved Connections -->
+<svg id="connection-svg">
+    <defs>
+        <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#00ff88;stop-opacity:0.8" />
+            <stop offset="50%" style="stop-color:#0088ff;stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:#00ff88;stop-opacity:0.8" />
+        </linearGradient>
+    </defs>
+</svg>
+
+<div class="container">
+    <div class="header">
+        <h1>🏎️ Virtual Automotive Coding Academy</h1>
+        <p>Master Programming Through Automotive Excellence</p>
+        <p style="font-size: 16px; color: #666; margin-top: 10px;">Each Vehicle Teaches a Different Programming Language - Choose Your Ride!</p>
+    </div>
     
-    <div class="container">
-        <!-- Compression Mode Selector -->
-        <div class="mode-selector">
-            <button class="mode-btn" onclick="setMode('full')">
-                FULL
-                <span class="percent">100%</span>
-            </button>
-            <button class="mode-btn active" onclick="setMode('smart')">
-                SMART
-                <span class="percent">70%</span>
-            </button>
-            <button class="mode-btn" onclick="setMode('tight')">
-                TIGHT
-                <span class="percent">40%</span>
-            </button>
-            <button class="mode-btn" onclick="setMode('ultra')">
-                ULTRA
-                <span class="percent">20%</span>
-            </button>
-        </div>
-        
-        <!-- Stats Bar -->
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-value" id="inputSize">0KB</div>
-                <div>Input</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="outputSize">0KB</div>
-                <div>Output</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="savedPercent">0%</div>
-                <div>Saved</div>
+    <div class="academy-grid">
+        <!-- Top Row - Perfect Alignment -->
+        <div class="vehicle-node" id="suv-html">
+            <svg class="skill-ring">
+                <circle class="bg" cx="25" cy="25" r="22"></circle>
+                <circle class="progress" cx="25" cy="25" r="22" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🚙</div>
+            <div class="vehicle-title">HTML Foundation</div>
+            <div class="vehicle-subtitle">SUV - Structure & Framework</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> DOM Framework<br>
+                <strong>Chassis:</strong> Semantic Structure<br>
+                <strong>Complexity:</strong> Beginner<br>
+                <strong>Power:</strong> Foundation Building
             </div>
         </div>
         
-        <!-- Status Messages -->
-        <div class="status" id="status"></div>
-        
-        <!-- Input Panel -->
-        <div class="panel">
-            <textarea id="inputArea" placeholder="Paste crashed chat here..."></textarea>
-            <div class="action-bar">
-                <button class="btn-secondary" onclick="pasteInput()">📋 Paste</button>
-                <button class="btn-danger" onclick="clearAll()">🗑️ Clear</button>
-                <button class="btn-primary" onclick="recoverFlow()">⚡ Recover</button>
+        <div class="vehicle-node" id="sports-js">
+            <svg class="skill-ring">
+                <circle class="bg" cx="25" cy="25" r="22"></circle>
+                <circle class="progress" cx="25" cy="25" r="22" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🏎️</div>
+            <div class="vehicle-title">JavaScript Sports</div>
+            <div class="vehicle-subtitle">Car - Performance & Dynamics</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> V8 Turbo Dynamic<br>
+                <strong>Transmission:</strong> Event-Driven<br>
+                <strong>Complexity:</strong> Intermediate<br>
+                <strong>Power:</strong> Interactive Behavior
             </div>
         </div>
         
-        <!-- Processing Indicator -->
-        <div class="processing" id="processing">
-            <div class="spinner"></div>
-            <div>Compressing for continuity...</div>
-        </div>
-        
-        <!-- Context Helper -->
-        <div class="context-box" id="contextBox" style="display: none;">
-            <strong>✨ Ready to Continue!</strong><br>
-            Copy the compressed output below and paste into a new chat to resume your flow state.
-        </div>
-        
-        <!-- Output Panel -->
-        <div class="panel" id="outputPanel" style="display: none;">
-            <textarea id="outputArea" readonly placeholder="Compressed output..."></textarea>
-            <div class="action-bar">
-                <button class="btn-primary btn-full" onclick="copyAndContinue()">
-                    📋 Copy & Continue Work
-                </button>
+        <div class="vehicle-node" id="sedan-css">
+            <svg class="skill-ring">
+                <circle class="bg" cx="25" cy="25" r="22"></circle>
+                <circle class="progress" cx="25" cy="25" r="22" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🚗</div>
+            <div class="vehicle-title">CSS Luxury</div>
+            <div class="vehicle-subtitle">Sedan - Style & Elegance</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> Cascade V6<br>
+                <strong>Interior:</strong> Responsive Design<br>
+                <strong>Complexity:</strong> Beginner<br>
+                <strong>Power:</strong> Visual Aesthetics
             </div>
+        </div>
+        
+        <!-- Bottom Row - Perfect Alignment -->
+        <div class="vehicle-node" id="pickup-python">
+            <svg class="skill-ring">
+                <circle class="bg" cx="25" cy="25" r="22"></circle>
+                <circle class="progress" cx="25" cy="25" r="22" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🛻</div>
+            <div class="vehicle-title">Python Pickup</div>
+            <div class="vehicle-subtitle">Truck - Heavy Lifting & Utility</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> Multi-Purpose V8<br>
+                <strong>Payload:</strong> Data Processing<br>
+                <strong>Complexity:</strong> Beginner-Friendly<br>
+                <strong>Power:</strong> Versatile Workhorse
+            </div>
+        </div>
+        
+        <div class="vehicle-node" id="racing-react">
+            <svg class="skill-ring">
+                <circle class="bg" cx="25" cy="25" r="22"></circle>
+                <circle class="progress" cx="25" cy="25" r="22" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🏁</div>
+            <div class="vehicle-title">React Racing</div>
+            <div class="vehicle-subtitle">Formula - Component Performance</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> Virtual DOM Hybrid<br>
+                <strong>Aerodynamics:</strong> Component-Based<br>
+                <strong>Complexity:</strong> Advanced<br>
+                <strong>Power:</strong> UI Engineering
+            </div>
+        </div>
+        
+        <div class="vehicle-node" id="semi-sql">
+            <svg class="skill-ring">
+                <circle class="bg" cx="25" cy="25" r="22"></circle>
+                <circle class="progress" cx="25" cy="25" r="22" data-progress="0"></circle>
+            </svg>
+            <div class="vehicle-icon">🚛</div>
+            <div class="vehicle-title">SQL Database</div>
+            <div class="vehicle-subtitle">Semi - Data Transportation</div>
+            <div class="vehicle-details">
+                <strong>Engine:</strong> Relational Diesel<br>
+                <strong>Cargo:</strong> Structured Data<br>
+                <strong>Complexity:</strong> Intermediate<br>
+                <strong>Power:</strong> Data Management
+            </div>
+        </div>
+        
+        <!-- Central Hub -->
+        <div class="central-hub" id="central-hub">
+            <div class="hub-icon">🔧</div>
+            <div class="hub-text">MASTER<br>MECHANIC</div>
+        </div>
+        
+        <!-- Concept Orbits - Perfect Symmetry -->
+        <div class="concept-orbit concept-variables">
+            <div>Variables<br>🔧</div>
+        </div>
+        <div class="concept-orbit concept-functions">
+            <div>Functions<br>⚙️</div>
+        </div>
+        <div class="concept-orbit concept-loops">
+            <div>Loops<br>🔄</div>
+        </div>
+        <div class="concept-orbit concept-events">
+            <div>Events<br>⚡</div>
+        </div>
+        <div class="concept-orbit concept-logic">
+            <div>Logic<br>🧠</div>
+        </div>
+        <div class="concept-orbit concept-data">
+            <div>Data<br>📊</div>
         </div>
     </div>
     
-    <script>
-        let currentMode = 'smart';
-        let lastInput = '';
-        
-        // Compression configurations
-        const compressionModes = {
-            full: { name: 'FULL', ratio: 1.0, preserve: true },
-            smart: { name: 'SMART', ratio: 0.7, preserve: true },
-            tight: { name: 'TIGHT', ratio: 0.4, preserve: false },
-            ultra: { name: 'ULTRA', ratio: 0.2, preserve: false }
-        };
-        
-        // Set compression mode
-        function setMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('modeIndicator').textContent = compressionModes[mode].name;
-            
-            // Re-process if we have input
-            if (lastInput) {
-                recoverFlow();
-            }
-        }
-        
-        // Update stats
-        function updateStats() {
-            const input = document.getElementById('inputArea').value;
-            const output = document.getElementById('outputArea').value;
-            
-            const inputKb = (input.length / 1024).toFixed(1);
-            const outputKb = (output.length / 1024).toFixed(1);
-            const saved = input.length > 0 ? Math.round((1 - output.length / input.length) * 100) : 0;
-            
-            document.getElementById('inputSize').textContent = inputKb + 'KB';
-            document.getElementById('outputSize').textContent = outputKb + 'KB';
-            document.getElementById('savedPercent').textContent = saved + '%';
-        }
-        
-        // Paste from clipboard
-        async function pasteInput() {
-            try {
-                const text = await navigator.clipboard.readText();
-                document.getElementById('inputArea').value = text;
-                updateStats();
-            } catch (err) {
-                document.getElementById('inputArea').focus();
-                alert('Paste manually (Cmd+V)');
-            }
-        }
-        
-        // Clear all
-        function clearAll() {
-            document.getElementById('inputArea').value = '';
-            document.getElementById('outputArea').value = '';
-            document.getElementById('outputPanel').style.display = 'none';
-            document.getElementById('contextBox').style.display = 'none';
-            lastInput = '';
-            updateStats();
-        }
-        
-        // Main recovery function
-        function recoverFlow() {
-            const input = document.getElementById('inputArea').value;
-            if (!input.trim()) {
-                showStatus('Paste your crashed chat first!', 'error');
-                return;
-            }
-            
-            lastInput = input;
-            document.getElementById('processing').style.display = 'block';
-            
-            setTimeout(() => {
-                try {
-                    const compressed = compressChat(input, currentMode);
-                    
-                    // Show output
-                    document.getElementById('outputArea').value = compressed;
-                    document.getElementById('outputPanel').style.display = 'block';
-                    document.getElementById('contextBox').style.display = 'block';
-                    document.getElementById('processing').style.display = 'none';
-                    
-                    updateStats();
-                    showStatus('✅ Compressed! Ready to continue your work.', 'success');
-                    
-                    // Auto-focus output for quick copy
-                    document.getElementById('outputArea').focus();
-                    
-                } catch (error) {
-                    document.getElementById('processing').style.display = 'none';
-                    showStatus('Error compressing chat', 'error');
-                }
-            }, 300);
-        }
-        
-        // Compression engine
-        function compressChat(input, mode) {
-            const config = compressionModes[mode];
-            const messages = parseMessages(input);
-            
-            if (mode === 'full') {
-                // Full format - just clean up
-                return formatFull(messages);
-            } else if (mode === 'smart') {
-                // Smart compression - preserve context
-                return formatSmart(messages);
-            } else if (mode === 'tight') {
-                // Tight - aggressive but readable
-                return formatTight(messages);
-            } else {
-                // Ultra - maximum compression
-                return formatUltra(messages);
-            }
-        }
-        
-        // Parse messages
-        function parseMessages(text) {
-            const messages = [];
-            const lines = text.split('\n');
-            let current = null;
-            let inCode = false;
-            
-            for (const line of lines) {
-                if (line.includes('```')) inCode = !inCode;
-                
-                if (!inCode && line.match(/^(Human:|You:|User:)/i)) {
-                    if (current) messages.push(current);
-                    current = {
-                        role: 'H',
-                        content: line.replace(/^(Human:|You:|User:)\s*/i, ''),
-                        hasCode: false
-                    };
-                } else if (!inCode && line.match(/^(Assistant:|ChatGPT:|AI:)/i)) {
-                    if (current) messages.push(current);
-                    current = {
-                        role: 'A',
-                        content: line.replace(/^(Assistant:|ChatGPT:|AI:)\s*/i, ''),
-                        hasCode: false
-                    };
-                } else if (current) {
-                    current.content += '\n' + line;
-                    if (line.includes('```') || line.includes('const ') || line.includes('function ')) {
-                        current.hasCode = true;
-                    }
-                }
-            }
-            
-            if (current) messages.push(current);
-            
-            // Fallback parsing
-            if (messages.length === 0) {
-                const chunks = text.split(/\n\n+/);
-                chunks.forEach((chunk, i) => {
-                    if (chunk.trim()) {
-                        messages.push({
-                            role: i % 2 === 0 ? 'H' : 'A',
-                            content: chunk.trim(),
-                            hasCode: chunk.includes('```') || chunk.includes('const ')
-                        });
-                    }
-                });
-            }
-            
-            return messages;
-        }
-        
-        // Format: Full (clean but complete)
-        function formatFull(messages) {
-            let output = '=== RECOVERED CHAT ===\n\n';
-            messages.forEach((msg, i) => {
-                output += `${msg.role === 'H' ? 'Human' : 'Assistant'}: ${msg.content}\n\n`;
+    <!-- Level Indicator -->
+    <div class="level-indicator">
+        <h4>Mechanic Level</h4>
+        <div class="level">Apprentice</div>
+    </div>
+    
+    <!-- Legend -->
+    <div class="legend">
+        <h3>🗺️ Academy Map</h3>
+        <div class="legend-item">
+            <div class="legend-icon" style="background: #00ff88;"></div>
+            <span>Vehicle Types = Languages</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-icon" style="background: #0088ff;"></div>
+            <span>Concepts = Programming Ideas</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-icon" style="background: linear-gradient(90deg, #00ff88, #0088ff);"></div>
+            <span>Connections = Relationships</span>
+        </div>
+    </div>
+</div>
+
+<!-- Detail Panel -->
+<div class="detail-panel" id="detail-panel">
+    <button class="close-panel" onclick="closePanel()">✕</button>
+    <div id="panel-content"></div>
+</div>
+
+<script>
+    // Neural Network Background Animation
+    const canvas = document.getElementById('neural-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Create a perfect grid of nodes
+    const nodes = [];
+    const gridSize = 10;
+    const spacing = Math.min(canvas.width, canvas.height) / gridSize;
+    
+    for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+            nodes.push({
+                x: (i + 0.5) * spacing + (canvas.width - gridSize * spacing) / 2,
+                y: (j + 0.5) * spacing + (canvas.height - gridSize * spacing) / 2,
+                vx: (Math.random() - 0.5) * 0.2,
+                vy: (Math.random() - 0.5) * 0.2,
+                radius: Math.random() * 2 + 1,
+                pulse: Math.random() * Math.PI * 2
             });
-            return output;
         }
+    }
+    
+    function drawNeuralNetwork() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Format: Smart (preserve code and context)
-        function formatSmart(messages) {
-            let output = '=== CONTEXT RECOVERY ===\n';
-            let lastRole = '';
+        // Update and draw nodes
+        nodes.forEach(node => {
+            node.x += node.vx;
+            node.y += node.vy;
+            node.pulse += 0.02;
             
-            messages.forEach((msg, i) => {
-                // Detect section changes
-                if (msg.hasCode && lastRole !== 'code') {
-                    output += '\n[CODE SECTION]\n';
-                    lastRole = 'code';
-                } else if (!msg.hasCode && lastRole === 'code') {
-                    output += '\n[DISCUSSION]\n';
-                    lastRole = 'discussion';
-                }
-                
-                // Compress content smartly
-                const content = msg.hasCode ? 
-                    msg.content : // Preserve code exactly
-                    msg.content
-                        .replace(/\n\n+/g, '\n') // Remove extra lines
-                        .replace(/\s+/g, ' ') // Normalize spaces
-                        .trim();
-                
-                output += `${msg.role}: ${content}\n`;
-            });
+            // Bounce off edges
+            if (node.x < 50 || node.x > canvas.width - 50) node.vx *= -1;
+            if (node.y < 50 || node.y > canvas.height - 50) node.vy *= -1;
             
-            return output;
-        }
-        
-        // Format: Tight (aggressive compression)
-        function formatTight(messages) {
-            let output = 'RECOVERY:\n';
-            
-            messages.forEach((msg, i) => {
-                let content = msg.content
-                    .replace(/\n+/g, ' ')
-                    .replace(/\s+/g, ' ')
-                    .substring(0, 200); // Limit length
-                
-                if (msg.content.length > 200) content += '...';
-                
-                output += `${msg.role}:${content}\n`;
-            });
-            
-            return output;
-        }
-        
-        // Format: Ultra (maximum compression)
-        function formatUltra(messages) {
-            // Extract only the most important parts
-            const key = messages.map((msg, i) => {
-                const words = msg.content.split(/\s+/);
-                const important = words.filter(w => 
-                    w.length > 4 || 
-                    w.includes('error') || 
-                    w.includes('fix') ||
-                    w.includes('const') ||
-                    /^[A-Z]/.test(w)
-                ).slice(0, 10).join(' ');
-                
-                return `${msg.role}:${important}`;
-            }).join('|');
-            
-            return `ULTRA:${key}\nMSGS:${messages.length}`;
-        }
-        
-        // Copy and continue
-        async function copyAndContinue() {
-            const output = document.getElementById('outputArea');
-            output.select();
-            output.setSelectionRange(0, 999999);
-            
-            try {
-                await navigator.clipboard.writeText(output.value);
-                
-                // Visual feedback
-                const btn = event.target;
-                btn.textContent = '✅ Copied! Continue your work!';
-                btn.style.background = 'var(--primary)';
-                
-                setTimeout(() => {
-                    btn.textContent = '📋 Copy & Continue Work';
-                }, 3000);
-                
-            } catch (err) {
-                document.execCommand('copy');
-                alert('Copied! Paste into new chat to continue.');
-            }
-        }
-        
-        // Show status message
-        function showStatus(message, type) {
-            const status = document.getElementById('status');
-            status.textContent = message;
-            status.className = 'status ' + type;
-            status.style.display = 'block';
-            
-            setTimeout(() => {
-                status.style.display = 'none';
-            }, 3000);
-        }
-        
-        // Auto-update stats on input
-        document.getElementById('inputArea').addEventListener('input', () => {
-            const input = document.getElementById('inputArea').value;
-            const inputKb = (input.length / 1024).toFixed(1);
-            document.getElementById('inputSize').textContent = inputKb + 'KB';
+            // Draw node with pulsing effect
+            const pulseSize = Math.sin(node.pulse) * 0.3 + 1;
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, node.radius * pulseSize, 0, Math.PI * 2);
+            ctx.fillStyle = '#00ff8844';
+            ctx.fill();
         });
-    </script>
+        
+        // Draw connections
+        nodes.forEach((node1, i) => {
+            nodes.slice(i + 1).forEach(node2 => {
+                const distance = Math.sqrt((node1.x - node2.x) ** 2 + (node1.y - node2.y) ** 2);
+                if (distance < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(node1.x, node1.y);
+                    ctx.lineTo(node2.x, node2.y);
+                    ctx.strokeStyle = `rgba(0, 255, 136, ${0.15 * (1 - distance / 120)})`;
+                    ctx.stroke();
+                }
+            });
+        });
+        
+        requestAnimationFrame(drawNeuralNetwork);
+    }
+    
+    drawNeuralNetwork();
+    
+    // Fuzzy Logic Connection Drawing with Curved Paths
+    function drawFuzzyConnections() {
+        const svg = document.getElementById('connection-svg');
+        const hub = document.getElementById('central-hub');
+        const vehicles = document.querySelectorAll('.vehicle-node');
+        const container = document.querySelector('.academy-grid');
+        
+        const hubRect = hub.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const hubCenterX = hubRect.left + hubRect.width / 2 - containerRect.left;
+        const hubCenterY = hubRect.top + hubRect.height / 2 - containerRect.top;
+        
+        // Clear existing paths
+        svg.innerHTML = svg.innerHTML.replace(/<path[^>]*>/g, '');
+        
+        vehicles.forEach((vehicle, index) => {
+            const vehicleRect = vehicle.getBoundingClientRect();
+            const vehicleCenterX = vehicleRect.left + vehicleRect.width / 2 - containerRect.left;
+            const vehicleCenterY = vehicleRect.top + vehicleRect.height / 2 - containerRect.top;
+            
+            // Calculate angle for hub edge connection
+            const angle = Math.atan2(vehicleCenterY - hubCenterY, vehicleCenterX - hubCenterX);
+            const hubRadius = 100; // Half of hub width
+            const startX = hubCenterX + Math.cos(angle) * hubRadius;
+            const startY = hubCenterY + Math.sin(angle) * hubRadius;
+            
+            // Calculate vehicle edge connection
+            const vehicleAngle = angle + Math.PI;
+            const endX = vehicleCenterX + Math.cos(vehicleAngle) * 30;
+            const endY = vehicleCenterY + Math.sin(vehicleAngle) * 30;
+            
+            // Fuzzy logic for control points
+            const distance = Math.sqrt((endX - startX) ** 2 + (endY - startY) ** 2);
+            const curveIntensity = distance * 0.3;
+            
+            // Calculate perpendicular offset for curve
+            const perpAngle = angle + Math.PI / 2;
+            const fuzzyOffset = (Math.random() - 0.5) * curveIntensity * 0.5;
+            
+            // Control points with fuzzy logic adjustment
+            const cp1X = startX + Math.cos(angle) * distance * 0.3 + Math.cos(perpAngle) * fuzzyOffset;
+            const cp1Y = startY + Math.sin(angle) * distance * 0.3 + Math.sin(perpAngle) * fuzzyOffset;
+            const cp2X = endX - Math.cos(angle) * distance * 0.3 - Math.cos(perpAngle) * fuzzyOffset;
+            const cp2Y = endY - Math.sin(angle) * distance * 0.3 - Math.sin(perpAngle) * fuzzyOffset;
+            
+            // Create curved path
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', `M ${startX} ${startY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${endX} ${endY}`);
+            path.setAttribute('class', 'connection-path');
+            path.style.animationDelay = `${index * 0.2}s`;
+            
+            svg.appendChild(path);
+        });
+        
+        // Update SVG viewBox to match container
+        svg.setAttribute('viewBox', `0 0 ${container.offsetWidth} ${container.offsetHeight}`);
+        svg.style.width = container.offsetWidth + 'px';
+        svg.style.height = container.offsetHeight + 'px';
+    }
+    
+    // Initialize connections after page load
+    setTimeout(() => {
+        drawFuzzyConnections();
+        
+        // Animate concept orbits
+        document.querySelectorAll('.concept-orbit').forEach((orbit, index) => {
+            orbit.style.animation = `floatOrbit 4s infinite ${index * 0.5}s ease-in-out`;
+        });
+    }, 100);
+    
+    // Vehicle Data
+    const vehicleData = {
+        'suv-html': {
+            title: '🚙 HTML Foundation SUV',
+            language: 'HTML',
+            description: 'Like an SUV provides structure and safety, HTML provides the foundation framework for all web applications.',
+            concepts: {
+                'Engine (DOCTYPE)': 'Just like an engine starts your vehicle, DOCTYPE declares your HTML version',
+                'Chassis (Body)': 'The body tag is your vehicle frame - everything else attaches to it',
+                'Seats (Divs)': 'Div elements are like seats - they hold and organize your content',
+                'Windows (Images)': 'Image tags are your windows to visual content',
+                'Dashboard (Head)': 'The head section contains all your controls and metadata'
+            },
+            example: `<!DOCTYPE html>
+```
+
+<html>
+<head>
+    <title>Your Vehicle Dashboard</title>
+</head>
+<body>
+    <div class="chassis">
+        <h1>Main Engine Block</h1>
+        <p>Your content rides here!</p>
+    </div>
+</body>
+</html>`,
+                exercises: [
+                    'Build a basic vehicle frame (HTML structure)',
+                    'Add seats (divs) for passengers (content)',
+                    'Install windows (images) and doors (links)'
+                ]
+            },
+            'sports-js': {
+                title: '🏎️ JavaScript Sports Car',
+                language: 'JavaScript',
+                description: 'Like a sports car delivers performance and responsiveness, JavaScript brings dynamic behavior and interactivity.',
+                concepts: {
+                    'Engine (Functions)': 'Functions are your engine - they make things happen',
+                    'Turbo (Async/Await)': 'Asynchronous code is like turbo - handling multiple operations efficiently',
+                    'Transmission (Events)': 'Event handlers are your transmission - connecting user actions to responses',
+                    'ECU (Variables)': 'Variables store your engine parameters and state',
+                    'Nitrous (Loops)': 'Loops give you that extra boost for repetitive tasks'
+                },
+                example: `// Start your engine!
+function startEngine() {
+    let rpm = 0;
+    const redline = 8000;
+
+```
+// Rev it up!
+const accelerate = setInterval(() => {
+    rpm += 500;
+    console.log(\`RPM: \${rpm}\`);
+    
+    if (rpm >= redline) {
+        console.log('⚡ REDLINE!');
+        clearInterval(accelerate);
+    }
+}, 100);
+```
+
+}
+
+// Engage the clutch (event listener)
+document.addEventListener(‘click’, startEngine);`, exercises: [ 'Build an RPM gauge that responds to acceleration', 'Create a gear shift system with events', 'Implement turbo boost with async functions' ] }, 'sedan-css': { title: '🚗 CSS Luxury Sedan', language: 'CSS', description: 'Like a luxury sedan focuses on comfort and aesthetics, CSS provides style, elegance, and visual appeal.', concepts: { 'Paint Job (Colors)': 'Colors and backgrounds are your vehicle\'s finish', 'Interior (Padding/Margin)': 'Spacing creates comfortable interiors', 'Chrome (Borders)': 'Borders add those finishing touches', 'Leather (Textures)': 'Gradients and patterns create rich textures', 'Sound System (Animations)': 'Animations bring life to your interface' }, example: `/* Luxury Vehicle Styling */
+.luxury-sedan {
+/* Premium Paint Job */
+background: linear-gradient(135deg, #1a1a2e, #16213e);
+
+```
+/* Comfortable Interior */
+padding: 30px;
+margin: 20px auto;
+
+/* Chrome Accents */
+border: 2px solid gold;
+border-radius: 15px;
+
+/* Smooth Ride */
+transition: all 0.3s ease;
+```
+
+}
+
+.luxury-sedan:hover {
+/* Ambient Lighting */
+box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+transform: scale(1.02);
+}`, exercises: [ 'Design a luxury interior with padding and margins', 'Create ambient lighting effects with shadows', 'Add smooth animations for premium feel' ] }, 'pickup-python': { title: '🛻 Python Pickup Truck', language: 'Python', description: 'Like a pickup truck handles heavy loads with ease, Python excels at data processing and practical tasks.', concepts: { 'Truck Bed (Lists)': 'Lists carry your data cargo', 'Towing (Functions)': 'Functions pull heavy computational loads', 'Tool Box (Libraries)': 'Import powerful tools for any job', '4WD (Loops)': 'Navigate through data terrain efficiently', 'Winch (Exception Handling)': 'Pull yourself out of errors' }, example: `# Load up the truck bed
+cargo = [‘lumber’, ‘tools’, ‘equipment’]
+
+# Heavy lifting function
+
+def haul_cargo(items):
+total_weight = 0
+for item in items:
+print(f”Loading {item}…”)
+total_weight += len(item)  # Simple weight calc
+
+```
+return f"Hauling {total_weight} units of cargo!"
+```
+
+# Engage 4WD for tough terrain
+
+try:
+result = haul_cargo(cargo)
+print(result)
+except Exception as e:
+print(f”Need to engage the winch: {e}”)`, exercises: [ 'Load data into your truck bed (lists)', 'Process heavy loads with functions', 'Navigate rough terrain with error handling' ] }, 'racing-react': { title: '🏁 React Formula Racing', language: 'React', description: 'Like Formula 1 cars are built from specialized components, React builds UIs from reusable component parts.', concepts: { 'Chassis (Components)': 'Components are your modular car parts', 'Aerodynamics (Props)': 'Props flow data through your components', 'Telemetry (State)': 'State tracks your real-time performance', 'Pit Crew (Hooks)': 'Hooks provide quick modifications', 'DRS (Context)': 'Context provides drag reduction through prop drilling' }, example: `// Formula Racing Component
+function RaceCar({ driver, team }) {
+const [speed, setSpeed] = useState(0);
+const [lapTime, setLapTime] = useState(0);
+
+```
+const accelerate = () => {
+    setSpeed(prev => Math.min(prev + 10, 350));
+};
+
+return (
+    <div className="race-car">
+        <h2>{team} Racing</h2>
+        <p>Driver: {driver}</p>
+        <p>Speed: {speed} km/h</p>
+        <button onClick={accelerate}>
+            🏁 Push to Overtake!
+        </button>
+    </div>
+);
+```
+
+}`, exercises: [ 'Build modular racing components', 'Manage telemetry with state', 'Optimize aerodynamics with props' ] }, 'semi-sql': { title: '🚛 SQL Database Semi', language: 'SQL', description: 'Like a semi truck transports goods efficiently, SQL moves and manages data across your applications.', concepts: { 'Trailer (Tables)': 'Tables are your cargo containers', 'Loading Dock (INSERT)': 'INSERT loads data into your trailer', 'Manifest (SELECT)': 'SELECT queries your cargo manifest', 'Weigh Station (WHERE)': 'WHERE filters your load', 'Distribution (JOIN)': 'JOIN combines shipments efficiently' }, example: `– Loading cargo into the trailer
+CREATE TABLE cargo_manifest (
+id INTEGER PRIMARY KEY,
+item_name VARCHAR(100),
+weight_kg DECIMAL(10,2),
+destination VARCHAR(50)
+);
+
+– Load up the truck
+INSERT INTO cargo_manifest (item_name, weight_kg, destination)
+VALUES (‘Engine Parts’, 500.00, ‘Detroit’),
+(‘Transmissions’, 750.00, ‘Chicago’);
+
+– Check the manifest
+SELECT item_name, weight_kg
+FROM cargo_manifest
+WHERE destination = ‘Detroit’
+ORDER BY weight_kg DESC;`,
+exercises: [
+‘Create cargo tables for your shipments’,
+‘Load data with INSERT operations’,
+‘Query manifests with complex SELECTs’
+]
+}
+};
+
+```
+    // Vehicle click handlers
+    document.querySelectorAll('.vehicle-node').forEach(vehicle => {
+        vehicle.addEventListener('click', function() {
+            const vehicleId = this.id;
+            const data = vehicleData[vehicleId];
+            
+            if (data) {
+                showDetailPanel(data);
+                
+                // Update active state
+                document.querySelectorAll('.vehicle-node').forEach(v => v.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update skill progress
+                updateSkillProgress(this);
+            }
+        });
+    });
+    
+    // Central hub click handler
+    document.getElementById('central-hub').addEventListener('click', function() {
+        alert('🔧 Master Mechanic Hub\n\nComplete all vehicle courses to unlock Master Mechanic status!\n\nCurrent Progress: 0/6 Vehicles Mastered');
+    });
+    
+    // Update skill progress
+    function updateSkillProgress(vehicleNode) {
+        const progressCircle = vehicleNode.querySelector('.progress');
+        const currentProgress = parseInt(progressCircle.getAttribute('data-progress') || 0);
+        const newProgress = Math.min(currentProgress + 20, 100);
+        
+        progressCircle.setAttribute('data-progress', newProgress);
+        progressCircle.style.strokeDashoffset = 157 - (157 * newProgress / 100);
+    }
+    
+    // Show detail panel
+    function showDetailPanel(data) {
+        const panel = document.getElementById('detail-panel');
+        const content = document.getElementById('panel-content');
+        
+        content.innerHTML = `
+            <h2>${data.title}</h2>
+            <p style="color: #bbb; line-height: 1.6;">${data.description}</p>
+            
+            <h3>🔧 Automotive → Code Mappings</h3>
+            ${Object.entries(data.concepts).map(([auto, code]) => `
+                <div style="margin: 15px 0; padding: 10px; background: rgba(0, 255, 136, 0.05); border-radius: 5px;">
+                    <strong style="color: #00ff88;">${auto}:</strong><br>
+                    <span style="color: #aaa; line-height: 1.5;">${code}</span>
+                </div>
+            `).join('')}
+            
+            <h3>📝 Example Code</h3>
+            <div class="code-example">
+                <pre style="margin: 0;">${data.example}</pre>
+            </div>
+            
+            <h3>🏁 Practice Exercises</h3>
+            <ol style="color: #aaa; margin-left: 20px; line-height: 1.8;">
+                ${data.exercises.map(ex => `<li style="margin: 8px 0;">${ex}</li>`).join('')}
+            </ol>
+            
+            <button class="start-engine-btn" onclick="startLearning('${data.language}')">
+                🔥 Start ${data.language} Engine
+            </button>
+        `;
+        
+        panel.classList.add('active');
+    }
+    
+    // Close panel
+    function closePanel() {
+        document.getElementById('detail-panel').classList.remove('active');
+        document.querySelectorAll('.vehicle-node').forEach(v => v.classList.remove('active'));
+    }
+    
+    // Start learning function
+    function startLearning(language) {
+        alert(`🏁 Starting your ${language} engine!\n\nTime to code and level up your ${language} skills!`);
+        // Here you could launch specific coding exercises or tutorials
+    }
+    
+    // Concept bubble interactions
+    document.querySelectorAll('.concept-orbit').forEach(bubble => {
+        bubble.addEventListener('click', function() {
+            const concept = this.textContent.trim().split('\n')[0];
+            alert(`💡 Core Concept: ${concept}\n\nThis programming concept appears across multiple vehicle types!\n\nMaster this to advance faster in all languages.`);
+        });
+    });
+    
+    // Window resize handler
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Redraw connections
+        drawFuzzyConnections();
+    });
+    
+    // Add keyboard navigation
+    let selectedIndex = -1;
+    const vehicles = Array.from(document.querySelectorAll('.vehicle-node'));
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closePanel();
+        }
+        
+        // Grid navigation with arrow keys
+        if (e.key.startsWith('Arrow')) {
+            e.preventDefault();
+            
+            if (selectedIndex === -1) {
+                selectedIndex = 0;
+            } else {
+                switch(e.key) {
+                    case 'ArrowRight':
+                        selectedIndex = (selectedIndex + 1) % vehicles.length;
+                        break;
+                    case 'ArrowLeft':
+                        selectedIndex = (selectedIndex - 1 + vehicles.length) % vehicles.length;
+                        break;
+                    case 'ArrowDown':
+                        selectedIndex = (selectedIndex + 3) % vehicles.length;
+                        break;
+                    case 'ArrowUp':
+                        selectedIndex = (selectedIndex - 3 + vehicles.length) % vehicles.length;
+                        break;
+                }
+            }
+            
+            // Update visual selection
+            vehicles.forEach((v, i) => {
+                if (i === selectedIndex) {
+                    v.style.transform = 'scale(1.05)';
+                    v.style.boxShadow = '0 0 50px #00ff88';
+                    v.style.zIndex = '35';
+                } else {
+                    v.style.transform = '';
+                    v.style.boxShadow = '';
+                    v.style.zIndex = '';
+                }
+            });
+        }
+        
+        // Enter to select
+        if (e.key === 'Enter' && selectedIndex !== -1) {
+            vehicles[selectedIndex].click();
+        }
+    });
+    
+    // Add hover effect for connections
+    document.querySelectorAll('.vehicle-node').forEach((vehicle, index) => {
+        vehicle.addEventListener('mouseenter', () => {
+            const paths = document.querySelectorAll('.connection-path');
+            if (paths[index]) {
+                paths[index].style.opacity = '1';
+                paths[index].style.strokeWidth = '4';
+            }
+        });
+        
+        vehicle.addEventListener('mouseleave', () => {
+            const paths = document.querySelectorAll('.connection-path');
+            if (paths[index]) {
+                paths[index].style.opacity = '0.6';
+                paths[index].style.strokeWidth = '2';
+            }
+        });
+    });
+</script>
+```
+
 </body>
 </html>
