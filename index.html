@@ -1,865 +1,455 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏎️ Interactive Automotive Coding Academy</title>
+    <title>BrowserShard Matrix - Real Protection</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: #0a0a0a;
-            color: #00ff88;
-            font-family: -apple-system, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: rgba(0, 255, 136, 0.1);
-            border-radius: 10px;
-        }
-        
-        .header h1 {
-            margin: 0 0 10px 0;
-            font-size: 32px;
-        }
-        
-        .progress-overview {
-            background: #1a1a1a;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .progress-bar-container {
-            background: #333;
-            height: 30px;
-            border-radius: 15px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-        
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00ff88, #00cc66);
-            width: 0%;
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #000;
-            font-weight: bold;
-        }
-        
-        .vehicle {
-            background: rgba(0, 255, 136, 0.08);
-            border: 2px solid #00ff88;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .vehicle:hover {
-            background: rgba(0, 255, 136, 0.12);
-            transform: translateY(-2px);
-        }
-        
-        .vehicle-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .vehicle-icon {
-            font-size: 48px;
-        }
-        
-        .vehicle-info h2 {
-            margin: 0;
-            font-size: 24px;
-            color: #00ff88;
-        }
-        
-        .vehicle-info p {
-            margin: 5px 0;
-            color: #0088ff;
-        }
-        
-        .btn {
-            background: #00ff88;
-            color: #000;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            -webkit-appearance: none;
-            width: 100%;
-            margin-top: 15px;
-        }
-        
-        .btn:active {
-            background: #00cc66;
-            transform: scale(0.98);
-        }
-        
-        .learning-content {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            background: #1a1a1a;
-            border-radius: 10px;
-        }
-        
-        .learning-content.active {
-            display: block;
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .tab {
-            background: #333;
-            color: #aaa;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .tab.active {
-            background: #00ff88;
-            color: #000;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-
-        /* INTERACTIVE EXERCISE STYLES */
-        .exercise-interactive {
-            background: rgba(255, 0, 102, 0.1);
-            border: 2px solid #ff0066;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            overflow: hidden; /* Prevent page scrolling */
+            height: 100vh;
             position: relative;
         }
         
-        .exercise-interactive h5 {
-            color: #ff0066;
-            margin: 0 0 15px 0;
-            font-size: 18px;
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
         
-        .code-fill {
-            background: #000;
-            border: 2px solid #00ff88;
-            border-radius: 8px;
+        #main-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
             padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            line-height: 1.8;
-            color: #fff;
-            white-space: pre-wrap;
+            height: calc(100vh - 60px); /* Account for status bar */
+            position: relative;
         }
         
-        .code-input {
-            background: #333;
-            border: 2px solid #00ff88;
-            color: #00ff88;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            min-width: 60px;
-            text-align: center;
-        }
-        
-        .code-input:focus {
-            background: #444;
-            border-color: #00ccff;
-            outline: none;
-        }
-        
-        .code-input.correct {
-            background: #004400;
-            border-color: #00ff00;
-            color: #00ff00;
-        }
-        
-        .code-input.incorrect {
-            background: #440000;
-            border-color: #ff0000;
-            color: #ff0000;
-            animation: shake 0.5s;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        .check-btn {
-            background: #ff0066;
-            color: #fff;
-            border: none;
-            padding: 12px 25px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s;
-        }
-        
-        .check-btn:hover {
-            background: #cc0052;
-        }
-        
-        .check-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .feedback {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            display: none;
-        }
-        
-        .feedback.success {
-            background: rgba(0, 255, 0, 0.2);
+        .terminal {
+            background: rgba(0, 0, 0, 0.8);
             border: 1px solid #00ff00;
-            color: #00ff00;
-            display: block;
-        }
-        
-        .feedback.error {
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid #ff0000;
-            color: #ff0000;
-            display: block;
-        }
-        
-        .score-display {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: #333;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 14px;
-            color: #00ff88;
-        }
-        
-        .hint-btn {
-            background: #333;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 3px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        
-        .hint {
-            background: rgba(255, 215, 0, 0.1);
-            border-left: 4px solid gold;
             padding: 10px;
-            margin: 10px 0;
-            color: #ffd700;
-            font-size: 14px;
-            display: none;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden; /* Important: prevent terminal expansion */
         }
         
-        .concept-box {
-            background: rgba(0, 136, 255, 0.1);
-            border: 1px solid #0088ff;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        
-        .concept-box h4 {
-            color: #0088ff;
+        .terminal h3 {
             margin: 0 0 10px 0;
-            font-size: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00ff00;
+            flex-shrink: 0; /* Header doesn't shrink */
         }
         
+        .terminal-content {
+            flex: 1;
+            overflow-y: auto; /* Scrollable content */
+            overflow-x: hidden;
+            min-height: 0; /* Critical for Firefox */
+        }
+        
+        /* Custom scrollbar for Matrix feel */
+        .terminal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .terminal-content::-webkit-scrollbar-track {
+            background: rgba(0, 255, 0, 0.1);
+        }
+        
+        .terminal-content::-webkit-scrollbar-thumb {
+            background: #00ff00;
+            border-radius: 4px;
+        }
+        
+        .terminal-content::-webkit-scrollbar-thumb:hover {
+            background: #00cc00;
+        }
+        
+        #system-stats {
+            padding: 10px 0;
+            border-bottom: 1px solid #00ff00;
+            margin-bottom: 10px;
+        }
+        
+        #activity-log, #network-display {
+            padding-right: 5px; /* Space for scrollbar */
+        }
+        
+        .log-entry, .network-entry {
+            padding: 2px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .threat {
+            color: #ff0000;
+            animation: pulse 0.5s infinite;
+        }
+        
+        @keyframes pulse {
+            50% { opacity: 0.5; }
+        }
+        
+        #status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid #00ff00;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-led {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .status-led.danger {
+            background: #ff0000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        
+        #alert-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff0000;
+            padding: 20px;
+            font-size: 24px;
+            color: #ff0000;
+            display: none;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+        
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 24px;
+            #main-display {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+                padding: 10px;
             }
             
-            .tabs {
-                flex-direction: column;
-            }
-            
-            .tab {
-                width: 100%;
-                text-align: center;
-            }
-            
-            .code-fill {
-                font-size: 14px;
-            }
-            
-            .code-input {
-                font-size: 14px;
-                min-width: 50px;
+            .terminal {
+                font-size: 11px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🏎️ Interactive Automotive Coding Academy</h1>
-        <p>Master Programming Through Your Automotive Expertise</p>
-    </div>
-
-    <div class="progress-overview">
-        <h3>Your Learning Journey</h3>
-        <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="overall-progress">0%</div>
-        </div>
-        <p id="level-status">Current Level: Apprentice Mechanic</p>
-        <div id="achievements"></div>
-    </div>
-
-    <!-- HTML SUV -->
-    <div class="vehicle" id="vehicle-html">
-        <div class="vehicle-header">
-            <div class="vehicle-icon">🚙</div>
-            <div class="vehicle-info">
-                <h2>HTML Foundation - SUV</h2>
-                <p>Build the Structure & Framework</p>
+    <canvas id="matrix-canvas"></canvas>
+    
+    <div id="main-display">
+        <!-- System Monitor -->
+        <div class="terminal">
+            <h3>⚡ SYSTEM MONITOR</h3>
+            <div id="system-stats">
+                <div>CPU: <span id="cpu">SCANNING...</span></div>
+                <div>MEMORY: <span id="memory">SCANNING...</span></div>
+                <div>THREATS: <span id="threats">0</span></div>
+                <div>STATUS: <span id="status">PROTECTED</span></div>
+            </div>
+            <div class="terminal-content">
+                <div id="activity-log"></div>
             </div>
         </div>
-        <button class="btn" onclick="toggleLesson('html')">Start Learning HTML</button>
         
-        <div id="lesson-html" class="learning-content">
-            <div class="tabs">
-                <div class="tab active" onclick="showTab('html', 'basics')">Basics</div>
-                <div class="tab" onclick="showTab('html', 'practice')">Interactive Practice</div>
-                <div class="tab" onclick="showTab('html', 'build')">Build</div>
-            </div>
-            
-            <div id="html-basics" class="tab-content active">
-                <h3>HTML: The Vehicle Frame</h3>
-                <p>Think of HTML as building a car from the ground up. Every vehicle needs a solid frame, and HTML provides that structure for websites.</p>
-                
-                <div class="concept-box">
-                    <h4>🔧 Key Concept: HTML is Structure</h4>
-                    <p>Just like an SUV's frame determines where everything goes - seats, engine, wheels - HTML determines where content goes on a webpage.</p>
-                </div>
-            </div>
-            
-            <div id="html-practice" class="tab-content">
-                <h3>🔧 Interactive Practice Garage</h3>
-                
-                <div class="exercise-interactive">
-                    <div class="score-display">Score: <span id="html-ex1-score">0/4</span></div>
-                    <h5>Exercise 1: Build Your SUV Frame</h5>
-                    <p>Complete the basic HTML structure (like building an SUV frame):</p>
-                    
-                    <div class="code-fill">&lt;!DOCTYPE <input class="code-input" data-answer="html" placeholder="___" maxlength="4">&gt;
-&lt;<input class="code-input" data-answer="html" placeholder="___" maxlength="4">&gt;
-  &lt;<input class="code-input" data-answer="head" placeholder="___" maxlength="4">&gt;
-    &lt;title&gt;My SUV&lt;/title&gt;
-  &lt;/<input class="code-input" data-answer="head" placeholder="___" maxlength="4">&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Welcome to My SUV!&lt;/h1&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</div>
-                    
-                    <button class="check-btn" onclick="checkAnswers('html-ex1')">🔧 Check Engine</button>
-                    <button class="hint-btn" onclick="toggleHint('html-ex1-hint')">💡 Hint</button>
-                    
-                    <div id="html-ex1-hint" class="hint">
-                        💡 Think: What type of document is this? What's the main container? What holds the dashboard info?
-                    </div>
-                    
-                    <div id="html-ex1-feedback" class="feedback"></div>
-                </div>
-
-                <div class="exercise-interactive">
-                    <div class="score-display">Score: <span id="html-ex2-score">0/6</span></div>
-                    <h5>Exercise 2: SUV Interior Layout</h5>
-                    <p>Create the seating arrangement (div containers):</p>
-                    
-                    <div class="code-fill">&lt;div class="<input class="code-input" data-answer="suv-interior" placeholder="___________">"&gt;
-  &lt;<input class="code-input" data-answer="div" placeholder="___" maxlength="3"> class="front-row"&gt;
-    &lt;div class="driver-seat"&gt;Driver&lt;/div&gt;
-    &lt;<input class="code-input" data-answer="div" placeholder="___" maxlength="3"> class="passenger-seat"&gt;Passenger&lt;/div&gt;
-  &lt;/<input class="code-input" data-answer="div" placeholder="___" maxlength="3">&gt;
-  &lt;div class="<input class="code-input" data-answer="back-row" placeholder="________">"&gt;
-    &lt;div class="seat"&gt;Kid 1&lt;/div&gt;
-    &lt;div class="seat"&gt;Kid 2&lt;/div&gt;
-  &lt;/<input class="code-input" data-answer="div" placeholder="___" maxlength="3">&gt;
-&lt;/div&gt;</div>
-                    
-                    <button class="check-btn" onclick="checkAnswers('html-ex2')">🔧 Check Engine</button>
-                    <button class="hint-btn" onclick="toggleHint('html-ex2-hint')">💡 Hint</button>
-                    
-                    <div id="html-ex2-hint" class="hint">
-                        💡 SUV Interior = container class name. Seats are organized in rows using div elements.
-                    </div>
-                    
-                    <div id="html-ex2-feedback" class="feedback"></div>
-                </div>
-
-                <div class="exercise-interactive">
-                    <div class="score-display">Score: <span id="html-ex3-score">0/5</span></div>
-                    <h5>Exercise 3: Vehicle Features & Navigation</h5>
-                    <p>Add windows (images) and doors (links):</p>
-                    
-                    <div class="code-fill">&lt;nav&gt;
-  &lt;<input class="code-input" data-answer="a" placeholder="_" maxlength="1"> href="#models"&gt;Our Models&lt;/a&gt; |
-  &lt;a <input class="code-input" data-answer="href" placeholder="____" maxlength="4">="#features"&gt;Features&lt;/a&gt;
-&lt;/nav&gt;
-
-&lt;main&gt;
-  &lt;<input class="code-input" data-answer="img" placeholder="___" maxlength="3"> <input class="code-input" data-answer="src" placeholder="___" maxlength="3">="windshield-view.jpg" <input class="code-input" data-answer="alt" placeholder="___" maxlength="3">="View"&gt;
-  &lt;p&gt;Perfect visibility from the driver's seat!&lt;/p&gt;
-&lt;/main&gt;</div>
-                    
-                    <button class="check-btn" onclick="checkAnswers('html-ex3')">🔧 Check Engine</button>
-                    <button class="hint-btn" onclick="toggleHint('html-ex3-hint')">💡 Hint</button>
-                    
-                    <div id="html-ex3-hint" class="hint">
-                        💡 Links need "a" tags and "href" attributes. Images need "img" tags with "src" and "alt" attributes.
-                    </div>
-                    
-                    <div id="html-ex3-feedback" class="feedback"></div>
-                </div>
-            </div>
-            
-            <div id="html-build" class="tab-content">
-                <h3>Build a Real Project</h3>
-                
-                <div class="concept-box">
-                    <h4>🏁 Project: SUV Dealership Page</h4>
-                    <p>Apply everything you've learned to build a complete SUV dealership webpage!</p>
-                </div>
+        <!-- Network Monitor -->
+        <div class="terminal">
+            <h3>🌐 NETWORK MONITOR</h3>
+            <div class="terminal-content">
+                <div id="network-display"></div>
             </div>
         </div>
     </div>
-
-    <!-- JavaScript Sports Car -->
-    <div class="vehicle" id="vehicle-javascript">
-        <div class="vehicle-header">
-            <div class="vehicle-icon">🏎️</div>
-            <div class="vehicle-info">
-                <h2>JavaScript Engine - Sports Car</h2>
-                <p>Add Performance & Dynamic Behavior</p>
-            </div>
+    
+    <div id="status-bar">
+        <div class="status-item">
+            <div class="status-led" id="protection-led"></div>
+            <span>PROTECTION: ACTIVE</span>
         </div>
-        <button class="btn" onclick="toggleLesson('javascript')">Start Learning JavaScript</button>
-        
-        <div id="lesson-javascript" class="learning-content">
-            <div class="tabs">
-                <div class="tab active" onclick="showTab('javascript', 'basics')">Basics</div>
-                <div class="tab" onclick="showTab('javascript', 'practice')">Interactive Practice</div>
-                <div class="tab" onclick="showTab('javascript', 'build')">Build</div>
-            </div>
-            
-            <div id="javascript-basics" class="tab-content active">
-                <h3>JavaScript: The High-Performance Engine</h3>
-                <p>If HTML is the frame, JavaScript is the engine that makes everything move. It's what turns a static vehicle into a dynamic driving machine!</p>
-                
-                <div class="concept-box">
-                    <h4>⚡ Key Concept: JavaScript is Action</h4>
-                    <p>Like a sports car engine responds to your accelerator, JavaScript responds to user actions and makes things happen.</p>
-                </div>
-            </div>
-            
-            <div id="javascript-practice" class="tab-content">
-                <h3>⚡ Interactive Engine Tuning</h3>
-                
-                <div class="exercise-interactive">
-                    <div class="score-display">Score: <span id="js-ex1-score">0/5</span></div>
-                    <h5>Exercise 1: Engine Variables (Fuel System)</h5>
-                    <p>Create variables to store engine data:</p>
-                    
-                    <div class="code-fill"><input class="code-input" data-answer="let" placeholder="___" maxlength="3"> rpm = 0;           // Revolutions per minute
-<input class="code-input" data-answer="let" placeholder="___" maxlength="3"> speed = 0;         // Current speed
-<input class="code-input" data-answer="let" placeholder="___" maxlength="3"> gear = 1;          // Current gear
-<input class="code-input" data-answer="const" placeholder="_____" maxlength="5"> redline = 8000;  // Maximum safe RPM
-
-console.<input class="code-input" data-answer="log" placeholder="___" maxlength="3">("🏎️ Engine initialized!");</div>
-                    
-                    <button class="check-btn" onclick="checkAnswers('js-ex1')">⚡ Start Engine</button>
-                    <button class="hint-btn" onclick="toggleHint('js-ex1-hint')">💡 Hint</button>
-                    
-                    <div id="js-ex1-hint" class="hint">
-                        💡 Use "let" for values that change, "const" for values that don't. Console.log displays information like gauges!
-                    </div>
-                    
-                    <div id="js-ex1-feedback" class="feedback"></div>
-                </div>
-
-                <div class="exercise-interactive">
-                    <div class="score-display">Score: <span id="js-ex2-score">0/6</span></div>
-                    <h5>Exercise 2: Engine Functions (Performance Controls)</h5>
-                    <p>Create functions to control the engine:</p>
-                    
-                    <div class="code-fill"><input class="code-input" data-answer="function" placeholder="________" maxlength="8"> accelerate() {
-  rpm <input class="code-input" data-answer="+=" placeholder="__" maxlength="2"> 500;
-  speed += 10;
-  
-  <input class="code-input" data-answer="if" placeholder="__" maxlength="2"> (rpm > redline) {
-    console.log("⚠️ SHIFT UP! Redline!");
-    <input class="code-input" data-answer="shiftGear" placeholder="_________" maxlength="9">();
-  }
-  
-  console.log(`RPM: <input class="code-input" data-answer="${rpm}" placeholder="______" maxlength="6"> | Speed: <input class="code-input" data-answer="${speed}" placeholder="________" maxlength="8"> mph`);
-}</div>
-                    
-                    <button class="check-btn" onclick="checkAnswers('js-ex2')">⚡ Rev Engine</button>
-                    <button class="hint-btn" onclick="toggleHint('js-ex2-hint')">💡 Hint</button>
-                    
-                    <div id="js-ex2-hint" class="hint">
-                        💡 Functions start with "function". Use += to increase values. Template literals use ${variable} syntax.
-                    </div>
-                    
-                    <div id="js-ex2-feedback" class="feedback"></div>
-                </div>
-
-                <div class="exercise-interactive">
-                    <div class="score-display">Score: <span id="js-ex3-score">0/4</span></div>
-                    <h5>Exercise 3: Event Handling (Transmission System)</h5>
-                    <p>Connect user actions to engine responses:</p>
-                    
-                    <div class="code-fill">document.<input class="code-input" data-answer="getElementById" placeholder="_____________" maxlength="13">("accelerator")
-  .<input class="code-input" data-answer="addEventListener" placeholder="_______________" maxlength="15">("<input class="code-input" data-answer="click" placeholder="_____" maxlength="5">", <input class="code-input" data-answer="accelerate" placeholder="_________" maxlength="9">);
-
-document.getElementById("brake")
-  .addEventListener("click", function() {
-    speed -= 15;
-    console.log("🛑 Braking!");
-  });</div>
-                    
-                    <button class="check-btn" onclick="checkAnswers('js-ex3')">⚡ Test Controls</button>
-                    <button class="hint-btn" onclick="toggleHint('js-ex3-hint')">💡 Hint</button>
-                    
-                    <div id="js-ex3-hint" class="hint">
-                        💡 getElementById finds elements. addEventListener connects events to functions. "click" is the most common event.
-                    </div>
-                    
-                    <div id="js-ex3-feedback" class="feedback"></div>
-                </div>
-            </div>
-            
-            <div id="javascript-build" class="tab-content">
-                <h3>Build a Real Project</h3>
-                
-                <div class="concept-box">
-                    <h4>🏁 Project: Interactive Sports Car Dashboard</h4>
-                    <p>Build a working dashboard with real-time updates!</p>
-                </div>
-            </div>
+        <div class="status-item">
+            <div class="status-led" id="threat-led"></div>
+            <span>THREATS: <span id="threat-count">0</span></span>
+        </div>
+        <div class="status-item">
+            <div class="status-led" id="ai-led"></div>
+            <span>AI: MONITORING</span>
         </div>
     </div>
-
-    <!-- CSS Luxury Sedan -->
-    <div class="vehicle" id="vehicle-css">
-        <div class="vehicle-header">
-            <div class="vehicle-icon">🚗</div>
-            <div class="vehicle-info">
-                <h2>CSS Styling - Luxury Sedan</h2>
-                <p>Add Style, Comfort & Visual Appeal</p>
-            </div>
-        </div>
-        <button class="btn" onclick="toggleLesson('css')">Start Learning CSS</button>
-        
-        <div id="lesson-css" class="learning-content">
-            <div class="tabs">
-                <div class="tab active" onclick="showTab('css', 'basics')">Basics</div>
-                <div class="tab" onclick="showTab('css', 'practice')">Interactive Practice</div>
-                <div class="tab" onclick="showTab('css', 'build')">Build</div>
-            </div>
-            
-            <div id="css-basics" class="tab-content active">
-                <h3>CSS: The Luxury Interior</h3>
-                <p>CSS is what transforms a basic vehicle into a luxury experience. It's all about style, comfort, and making everything look and feel premium.</p>
-                
-                <div class="concept-box">
-                    <h4>✨ Key Concept: CSS is Style</h4>
-                    <p>Like how a luxury sedan's interior makes you feel special, CSS makes websites visually appealing and comfortable to use.</p>
-                </div>
-            </div>
-            
-            <div id="css-practice" class="tab-content">
-                <h3>✨ Interactive Style Workshop</h3>
-                
-                <div class="exercise-interactive">
-                    <div class="score-display">Score: <span id="css-ex1-score">0/5</span></div>
-                    <h5>Exercise 1: Paint Job (Colors & Backgrounds)</h5>
-                    <p>Style your luxury sedan with premium paint:</p>
-                    
-                    <div class="code-fill">.luxury-sedan {
-  <input class="code-input" data-answer="background" placeholder="__________" maxlength="10">: <input class="code-input" data-answer="linear-gradient" placeholder="_____________" maxlength="13">(135deg, #1a1a1a, #3a3a3a);
-  <input class="code-input" data-answer="color" placeholder="_____" maxlength="5">: #ffffff;
-  <input class="code-input" data-answer="padding" placeholder="_______" maxlength="7">: 30px;
-  <input class="code-input" data-answer="border-radius" placeholder="_____________" maxlength="13">: 15px;
-}</div>
-                    
-                    <button class="check-btn" onclick="checkAnswers('css-ex1')">✨ Apply Paint</button>
-                    <button class="hint-btn" onclick="toggleHint('css-ex1-hint')">💡 Hint</button>
-                    
-                    <div id="css-ex1-hint" class="hint">
-                        💡 Background creates the paint, color sets text color, padding adds interior space, border-radius creates curves.
-                    </div>
-                    
-                    <div id="css-ex1-feedback" class="feedback"></div>
-                </div>
-
-                <div class="exercise-interactive">
-                    <div class="score-display">Score: <span id="css-ex2-score">0/4</span></div>
-                    <h5>Exercise 2: Ambient Lighting (Box Shadow)</h5>
-                    <p>Add premium lighting effects:</p>
-                    
-                    <div class="code-fill">.luxury-sedan {
-  <input class="code-input" data-answer="box-shadow" placeholder="__________" maxlength="10">: 0 10px 30px <input class="code-input" data-answer="rgba" placeholder="____" maxlength="4">(0, 0, 0, 0.5);
-  <input class="code-input" data-answer="transition" placeholder="__________" maxlength="10">: all 0.3s <input class="code-input" data-answer="ease" placeholder="____" maxlength="4">;
-}
-
-.luxury-sedan:hover {
-  transform: translateY(-5px);
-}</div>
-                    
-                    <button class="check-btn" onclick="checkAnswers('css-ex2')">✨ Turn On Lights</button>
-                    <button class="hint-btn" onclick="toggleHint('css-ex2-hint')">💡 Hint</button>
-                    
-                    <div id="css-ex2-hint" class="hint">
-                        💡 Box-shadow creates the glow effect. Transition makes changes smooth. RGBA allows transparency.
-                    </div>
-                    
-                    <div id="css-ex2-feedback" class="feedback"></div>
-                </div>
-            </div>
-            
-            <div id="css-build" class="tab-content">
-                <h3>Build a Real Project</h3>
-                
-                <div class="concept-box">
-                    <h4>🏁 Project: Luxury Car Configurator</h4>
-                    <p>Build an interactive car customization interface!</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
+    <div id="alert-overlay"></div>
+    
     <script>
-        // Learning Management System
-        const learningSystem = {
-            progress: {
-                html: 0,
-                javascript: 0,
-                css: 0
-            },
+    // Matrix Rain Effect
+    class MatrixRain {
+        constructor(canvasId) {
+            this.canvas = document.getElementById(canvasId);
+            this.ctx = this.canvas.getContext('2d');
+            this.threats = [];
+            this.matrix = [];
             
-            exercises: {
-                'html-ex1': { total: 4, correct: 0 },
-                'html-ex2': { total: 6, correct: 0 },
-                'html-ex3': { total: 5, correct: 0 },
-                'js-ex1': { total: 5, correct: 0 },
-                'js-ex2': { total: 6, correct: 0 },
-                'js-ex3': { total: 4, correct: 0 },
-                'css-ex1': { total: 5, correct: 0 },
-                'css-ex2': { total: 4, correct: 0 }
-            },
+            this.initMatrix();
+            this.animate();
             
-            achievements: [],
-            
-            init() {
-                this.loadProgress();
-                this.updateDisplay();
-            },
-            
-            loadProgress() {
-                const saved = localStorage.getItem('automotiveCodingProgress');
-                if (saved) {
-                    this.progress = JSON.parse(saved);
-                }
-            },
-            
-            saveProgress() {
-                localStorage.setItem('automotiveCodingProgress', JSON.stringify(this.progress));
-            },
-            
-            updateDisplay() {
-                const total = Object.values(this.progress).reduce((a, b) => a + b, 0);
-                const average = total / 3;
-                
-                document.getElementById('overall-progress').style.width = average + '%';
-                document.getElementById('overall-progress').textContent = Math.round(average) + '%';
-                
-                let level = 'Apprentice Mechanic';
-                if (average >= 80) level = '🏆 Master Mechanic';
-                else if (average >= 60) level = '⭐ Expert Technician';
-                else if (average >= 40) level = '🔧 Certified Mechanic';
-                else if (average >= 20) level = '📖 Junior Mechanic';
-                
-                document.getElementById('level-status').textContent = 'Current Level: ' + level;
-                this.checkAchievements();
-            },
-            
-            checkAchievements() {
-                const achievementContainer = document.getElementById('achievements');
-                let achievementHTML = '';
-                
-                if (this.progress.html >= 50) {
-                    achievementHTML += '<div class="achievement unlocked">🚙 SUV Frame Builder</div>';
-                }
-                if (this.progress.javascript >= 50) {
-                    achievementHTML += '<div class="achievement unlocked">🏎️ Engine Tuner</div>';
-                }
-                if (this.progress.css >= 50) {
-                    achievementHTML += '<div class="achievement unlocked">🚗 Style Master</div>';
-                }
-                
-                achievementContainer.innerHTML = achievementHTML;
-            },
-            
-            completeExercise(exerciseId, score) {
-                const exercise = this.exercises[exerciseId];
-                if (exercise) {
-                    exercise.correct = score;
-                    const percentage = (score / exercise.total) * 100;
-                    
-                    // Determine language from exercise ID
-                    let language = 'html';
-                    if (exerciseId.includes('js-')) language = 'javascript';
-                    if (exerciseId.includes('css-')) language = 'css';
-                    
-                    // Award points based on percentage
-                    if (percentage === 100) {
-                        this.progress[language] = Math.min(100, this.progress[language] + 20);
-                    } else if (percentage >= 80) {
-                        this.progress[language] = Math.min(100, this.progress[language] + 15);
-                    } else if (percentage >= 60) {
-                        this.progress[language] = Math.min(100, this.progress[language] + 10);
-                    }
-                    
-                    this.saveProgress();
-                    this.updateDisplay();
-                }
-            }
-        };
+            // Handle resize
+            window.addEventListener('resize', () => {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.initMatrix();
+            });
+        }
         
-        // Check answers function
-        function checkAnswers(exerciseId) {
-            const container = document.querySelector(`#${exerciseId}-score`).closest('.exercise-interactive');
-            const inputs = container.querySelectorAll('.code-input');
-            const feedback = container.querySelector(`#${exerciseId}-feedback`);
-            const scoreDisplay = container.querySelector(`#${exerciseId}-score`);
+        initMatrix() {
+            this.columns = Math.floor(this.canvas.width / 20);
+            this.matrix = [];
+            for(let i = 0; i < this.columns; i++) {
+                this.matrix[i] = Math.floor(Math.random() * this.canvas.height);
+            }
+        }
+        
+        animate() {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
             
-            let correct = 0;
-            let total = inputs.length;
+            this.ctx.fillStyle = '#00ff00';
+            this.ctx.font = '15px monospace';
             
-            inputs.forEach(input => {
-                const answer = input.dataset.answer.toLowerCase();
-                const userAnswer = input.value.toLowerCase().trim();
+            for(let i = 0; i < this.columns; i++) {
+                const text = Math.random() > 0.5 ? '1' : '0';
+                this.ctx.fillText(text, i * 20, this.matrix[i]);
                 
-                input.classList.remove('correct', 'incorrect');
-                
-                if (userAnswer === answer) {
-                    input.classList.add('correct');
-                    correct++;
-                } else {
-                    input.classList.add('incorrect');
+                if(this.matrix[i] > this.canvas.height && Math.random() > 0.975) {
+                    this.matrix[i] = 0;
                 }
+                this.matrix[i]++;
+            }
+            
+            this.threats.forEach(threat => {
+                this.ctx.fillStyle = '#ff0000';
+                this.ctx.fillText('⚠', threat.x, threat.y);
+                threat.y += 2;
             });
             
-            // Update score display
-            scoreDisplay.textContent = `${correct}/${total}`;
-            
-            // Show feedback
-            feedback.classList.remove('success', 'error');
-            
-            if (correct === total) {
-                feedback.textContent = `🎉 Perfect! All ${total} parts correct! Engine running smooth!`;
-                feedback.classList.add('success');
-                
-                // Celebration effect
-                container.style.animation = 'pulse 1s ease-in-out';
-                setTimeout(() => {
-                    container.style.animation = '';
-                }, 1000);
-                
-            } else {
-                feedback.textContent = `🔧 ${correct}/${total} correct. Keep tuning! ${total - correct} parts need adjustment.`;
-                feedback.classList.add('error');
+            requestAnimationFrame(() => this.animate());
+        }
+        
+        addThreat(x) {
+            this.threats.push({x: x, y: 0});
+            this.threats = this.threats.filter(t => t.y < this.canvas.height);
+        }
+    }
+    
+    // Initialize Matrix rain
+    const canvas = document.getElementById('matrix-canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const matrix = new MatrixRain('matrix-canvas');
+    
+    // System variables
+    let threatCount = 0;
+    let logEntries = 0;
+    let networkEntries = 0;
+    
+    // Logging function with auto-scroll
+    function log(message, type = 'info') {
+        const logDiv = document.getElementById('activity-log');
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${type === 'threat' ? 'threat' : ''}`;
+        entry.textContent = `[${new Date().toTimeString().split(' ')[0]}] ${message}`;
+        logDiv.appendChild(entry);
+        
+        // Auto-scroll to bottom
+        const container = logDiv.parentElement;
+        container.scrollTop = container.scrollHeight;
+        
+        // Limit log entries to prevent memory issues
+        logEntries++;
+        if(logEntries > 100) {
+            logDiv.removeChild(logDiv.firstChild);
+            logEntries--;
+        }
+    }
+    
+    // Network logging function
+    function logNetwork(url, method = 'GET', status = 'MONITORING') {
+        const display = document.getElementById('network-display');
+        const entry = document.createElement('div');
+        entry.className = 'network-entry';
+        
+        // Truncate long URLs
+        const shortUrl = url.length > 50 ? url.substring(0, 50) + '...' : url;
+        
+        entry.innerHTML = `
+            <span style="color: #888">[${new Date().toTimeString().split(' ')[0]}]</span>
+            <span style="color: #0ff">${method}</span>
+            <span>${shortUrl}</span>
+        `;
+        
+        display.appendChild(entry);
+        
+        // Auto-scroll to bottom
+        const container = display.parentElement;
+        container.scrollTop = container.scrollHeight;
+        
+        // Limit network entries
+        networkEntries++;
+        if(networkEntries > 50) {
+            display.removeChild(display.firstChild);
+            networkEntries--;
+        }
+        
+        // Check for threats
+        if(url.includes('mine') || url.includes('coin') || url.includes('crypto')) {
+            entry.classList.add('threat');
+            showMatrixAlert('SUSPICIOUS CONNECTION BLOCKED');
+        }
+    }
+    
+    // Matrix-style alert
+    function showMatrixAlert(message) {
+        const alert = document.getElementById('alert-overlay');
+        alert.textContent = '⚠ ' + message + ' ⚠';
+        alert.style.display = 'block';
+        
+        log(message, 'threat');
+        
+        setTimeout(() => {
+            alert.style.display = 'none';
+        }, 3000);
+        
+        threatCount++;
+        document.getElementById('threat-count').textContent = threatCount;
+        document.getElementById('threats').textContent = threatCount;
+        document.getElementById('threat-led').classList.add('danger');
+        
+        matrix.addThreat(Math.random() * canvas.width);
+    }
+    
+    // CPU monitoring
+    function monitorCPU() {
+        let baseline = null;
+        
+        function measureCPU() {
+            const start = performance.now();
+            let x = 0;
+            for(let i = 0; i < 1000000; i++) {
+                x += Math.sqrt(i);
             }
-            
-            // Update learning progress
-            learningSystem.completeExercise(exerciseId, correct);
-            
-            return correct === total;
+            return performance.now() - start;
         }
         
-        // Toggle hint function
-        function toggleHint(hintId) {
-            const hint = document.getElementById(hintId);
-            hint.style.display = hint.style.display === 'block' ? 'none' : 'block';
-        }
+        baseline = measureCPU();
         
-        // Toggle lesson content
-        function toggleLesson(language) {
-            const lesson = document.getElementById(`lesson-${language}`);
-            const allLessons = document.querySelectorAll('.learning-content');
+        setInterval(() => {
+            const current = measureCPU();
+            const load = Math.min(100, (current / baseline - 1) * 100);
+            document.getElementById('cpu').textContent = `${Math.max(0, load).toFixed(1)}%`;
             
-            allLessons.forEach(l => {
-                if (l.id !== `lesson-${language}`) {
-                    l.classList.remove('active');
+            if(load > 50) {
+                log('High CPU usage detected', 'warning');
+                if(load > 80) {
+                    showMatrixAlert('POSSIBLE CRYPTO MINER DETECTED');
+                }
+            }
+        }, 3000);
+    }
+    
+    // Network monitoring
+    function monitorNetwork() {
+        // Override fetch
+        const originalFetch = window.fetch;
+        window.fetch = async (...args) => {
+            logNetwork(args[0], 'FETCH');
+            return originalFetch(...args);
+        };
+        
+        // Monitor resource timing
+        setInterval(() => {
+            const resources = performance.getEntriesByType('resource');
+            resources.forEach(resource => {
+                if(!resource.logged) {
+                    logNetwork(resource.name, 'GET');
+                    resource.logged = true;
                 }
             });
-            
-            lesson.classList.toggle('active');
-            
-            if (lesson.classList.contains('active')) {
-                learningSystem.progress[language] = Math.min(100, learningSystem.progress[language] + 5);
-                learningSystem.saveProgress();
-                learningSystem.updateDisplay();
+        }, 1000);
+    }
+    
+    // Memory monitoring
+    function monitorMemory() {
+        setInterval(() => {
+            if(performance.memory) {
+                const used = (performance.memory.usedJSHeapSize / 1048576).toFixed(1);
+                const total = (performance.memory.totalJSHeapSize / 1048576).toFixed(1);
+                document.getElementById('memory').textContent = `${used}/${total} MB`;
+                
+                const usage = (performance.memory.usedJSHeapSize / performance.memory.totalJSHeapSize) * 100;
+                if(usage > 80) {
+                    log('High memory usage warning', 'warning');
+                }
             }
-        }
-        
-        // Tab switching
-        function showTab(language, tab) {
-            const tabs = document.querySelectorAll(`#lesson-${language} .tab`);
-            tabs.forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const contents = document.querySelectorAll(`#lesson-${language} .tab-content`);
-            contents.forEach(c => c.classList.remove('active'));
-            document.getElementById(`${language}-${tab}`).classList.add('active');
-        }
-        
-        // Initialize on load
-        window.onload = function() {
-            learningSystem.init();
-        };
+        }, 2000);
+    }
+    
+    // Initialize all systems
+    log('INITIALIZING BROWSERSHARD MATRIX...');
+    log('Starting protection protocols...');
+    
+    setTimeout(() => {
+        monitorCPU();
+        monitorNetwork();
+        monitorMemory();
+        log('CPU monitoring active');
+        log('Network monitoring active');
+        log('Memory monitoring active');
+        log('ALL SYSTEMS ONLINE - YOU ARE PROTECTED');
+    }, 1000);
+    
+    // Simulate some activity for demo
+    setTimeout(() => {
+        log('Scanning for active threats...');
+    }, 3000);
+    
+    setTimeout(() => {
+        logNetwork('https://analytics.google.com/collect', 'POST');
+        log('Tracking attempt detected and logged');
+    }, 5000);
+    
+    setTimeout(() => {
+        logNetwork('https://suspicious-crypto-miner.com/worker.js', 'GET');
+    }, 8000);
     </script>
 </body>
 </html>
