@@ -312,7 +312,7 @@
 
     <script>
         // Initialize
-        let recentNames = JSON.parse(localStorage.getItem('quantumNames') || '[]');
+        const uniqueNames = JSON.parse(localStorage.getItem('quantumUniqueNames') || '[]');
         let loveCount = parseInt(localStorage.getItem('quantumLoveCount') || '0');
         let currentName = '';
 
@@ -362,9 +362,11 @@
             const container = document.getElementById('recentNames');
             container.innerHTML = '';
             
-            // Show last 5 unique names
-            const uniqueNames = [...new Set(recentNames)].slice(-5);
-            uniqueNames.forEach(name => {
+            // Get unique names from last 100 entries (no duplicates)
+            const allNames = JSON.parse(localStorage.getItem('quantumUniqueNames') || '[]');
+            const recentUnique = [...new Set(allNames)].slice(-5);
+            
+            recentUnique.forEach(name => {
                 const tag = document.createElement('div');
                 tag.className = 'name-tag';
                 tag.textContent = name;
@@ -391,10 +393,13 @@
                 return;
             }
 
-            // Add to recent names
-            recentNames.push(currentName);
-            if (recentNames.length > 20) recentNames.shift();
-            localStorage.setItem('quantumNames', JSON.stringify(recentNames));
+            // Update unique names list
+            const uniqueNames = JSON.parse(localStorage.getItem('quantumUniqueNames') || '[]');
+            if (!uniqueNames.includes(currentName)) {
+                uniqueNames.push(currentName);
+                if (uniqueNames.length > 100) uniqueNames.shift();
+                localStorage.setItem('quantumUniqueNames', JSON.stringify(uniqueNames));
+            }
             updateRecentNames();
 
             // Increment love count
