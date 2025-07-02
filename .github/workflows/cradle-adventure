@@ -1,51 +1,582 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Love</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
+        body {
+            background: linear-gradient(135deg, #1a0033 0%, #220044 50%, #1a0033 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #fff;
+            padding: 20px;
+        }
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+        .main-container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+        .heart-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 40px;
+        }
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+        .quantum-heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, #ff69b4, #ff1493);
+            position: relative;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            animation: heartbeat 2s ease-in-out infinite;
+            box-shadow: 
+                0 0 50px rgba(255, 20, 147, 0.5),
+                inset 0 0 50px rgba(255, 255, 255, 0.2);
+        }
 
-jobs:
-  # Build job
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./
-          destination: ./_site
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        .quantum-heart::before,
+        .quantum-heart::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, #ff69b4, #ff1493);
+            border-radius: 150px 150px 0 0;
+            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.2);
+        }
 
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        .quantum-heart::before {
+            top: -75px;
+            left: 0;
+        }
+
+        .quantum-heart::after {
+            left: 75px;
+            top: 0;
+            transform: rotate(90deg);
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { 
+                transform: translate(-50%, -50%) rotate(-45deg) scale(1);
+                filter: brightness(1);
+            }
+            15% { 
+                transform: translate(-50%, -50%) rotate(-45deg) scale(1.1);
+                filter: brightness(1.2);
+            }
+            30% { 
+                transform: translate(-50%, -50%) rotate(-45deg) scale(1);
+                filter: brightness(1);
+            }
+            45% { 
+                transform: translate(-50%, -50%) rotate(-45deg) scale(1.05);
+                filter: brightness(1.1);
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 3s linear infinite;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(var(--tx), var(--ty)) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx2), var(--ty2)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px 20px;
+            font-size: 18px;
+            border: 2px solid rgba(255, 105, 180, 0.5);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .name-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .name-input:focus {
+            outline: none;
+            border-color: #ff69b4;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .or-text {
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .recent-names {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            min-height: 40px;
+        }
+
+        .name-tag {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .name-tag:hover {
+            background: rgba(255, 105, 180, 0.2);
+            border-color: #ff69b4;
+            transform: translateY(-2px);
+        }
+
+        .vote-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .vote-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .vote-card:hover {
+            background: rgba(255, 105, 180, 0.1);
+            border-color: #ff69b4;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3);
+        }
+
+        .vote-card:active {
+            transform: scale(0.98);
+        }
+
+        .vote-text {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .love-counter {
+            margin-top: 30px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .love-count {
+            color: #ff69b4;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .error-message {
+            color: #ff69b4;
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .success-burst {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #ff69b4;
+            font-weight: bold;
+            pointer-events: none;
+            opacity: 0;
+            animation: success-pop 1s ease-out;
+        }
+
+        @keyframes success-pop {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) translateY(-50px) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="heart-container" id="heartContainer">
+            <div class="quantum-heart"></div>
+        </div>
+
+        <div class="input-section">
+            <input type="text" 
+                   class="name-input" 
+                   id="nameInput" 
+                   placeholder="Enter a name to send love to..."
+                   maxlength="50">
+            
+            <div class="or-text">or choose from recent names</div>
+            
+            <div class="recent-names" id="recentNames"></div>
+            
+            <div class="error-message" id="errorMessage">Please enter or select a name first 💕</div>
+        </div>
+
+        <div class="vote-grid">
+            <div class="vote-card" onclick="sendLove('cells_dancing')">
+                <div class="vote-text">Cells doing their happy dance 💃</div>
+            </div>
+            <div class="vote-card" onclick="sendLove('immune_party')">
+                <div class="vote-text">Immune system throwing a victory party 🎉</div>
+            </div>
+            <div class="vote-card" onclick="sendLove('healing_express')">
+                <div class="vote-text">Healing express delivery incoming 🚀</div>
+            </div>
+            <div class="vote-card" onclick="sendLove('balance_mode')">
+                <div class="vote-text">Perfect balance mode: activated ⚖️</div>
+            </div>
+            <div class="vote-card" onclick="sendLove('quantum_hugs')">
+                <div class="vote-text">Quantum hugs en route 🤗</div>
+            </div>
+            <div class="vote-card" onclick="sendLove('love_overflow')">
+                <div class="vote-text">Love levels exceeding maximum 💖</div>
+            </div>
+        </div>
+
+        <div class="love-counter">
+            <span class="love-count" id="loveCount">0</span> quantum love votes cast today
+        </div>
+    </div>
+
+    <script>
+        // Initialize
+        let recentNames = JSON.parse(localStorage.getItem('quantumNames') || '[]');
+        let loveCount = parseInt(localStorage.getItem('quantumLoveCount') || '0');
+        let currentName = '';
+
+        // Update display
+        updateRecentNames();
+        updateLoveCount();
+
+        // Create sparkles
+        function createSparkle() {
+            const container = document.getElementById('heartContainer');
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            
+            const startAngle = Math.random() * Math.PI * 2;
+            const endAngle = Math.random() * Math.PI * 2;
+            const startDist = 50 + Math.random() * 50;
+            const endDist = 100 + Math.random() * 100;
+            
+            sparkle.style.setProperty('--tx', Math.cos(startAngle) * startDist + 'px');
+            sparkle.style.setProperty('--ty', Math.sin(startAngle) * startDist + 'px');
+            sparkle.style.setProperty('--tx2', Math.cos(endAngle) * endDist + 'px');
+            sparkle.style.setProperty('--ty2', Math.sin(endAngle) * endDist + 'px');
+            sparkle.style.left = '125px';
+            sparkle.style.top = '125px';
+            sparkle.style.animationDelay = Math.random() * 3 + 's';
+            
+            container.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 3000);
+        }
+
+        // Continuous sparkles
+        setInterval(createSparkle, 300);
+
+        // Name selection
+        document.getElementById('nameInput').addEventListener('input', (e) => {
+            currentName = e.target.value.trim();
+            hideError();
+        });
+
+        function selectName(name) {
+            currentName = name;
+            document.getElementById('nameInput').value = name;
+            hideError();
+        }
+
+        function updateRecentNames() {
+            const container = document.getElementById('recentNames');
+            container.innerHTML = '';
+            
+            // Show last 5 unique names
+            const uniqueNames = [...new Set(recentNames)].slice(-5);
+            uniqueNames.forEach(name => {
+                const tag = document.createElement('div');
+                tag.className = 'name-tag';
+                tag.textContent = name;
+                tag.onclick = () => selectName(name);
+                container.appendChild(tag);
+            });
+        }
+
+        function updateLoveCount() {
+            document.getElementById('loveCount').textContent = loveCount.toLocaleString();
+        }
+
+        function showError() {
+            document.getElementById('errorMessage').classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+
+        function sendLove(intention) {
+            if (!currentName) {
+                showError();
+                return;
+            }
+
+            // Add to recent names
+            recentNames.push(currentName);
+            if (recentNames.length > 20) recentNames.shift();
+            localStorage.setItem('quantumNames', JSON.stringify(recentNames));
+            updateRecentNames();
+
+            // Increment love count
+            loveCount++;
+            localStorage.setItem('quantumLoveCount', loveCount);
+            updateLoveCount();
+
+            // Visual feedback
+            const heart = document.querySelector('.quantum-heart');
+            heart.style.transform = 'translate(-50%, -50%) rotate(-45deg) scale(1.3)';
+            heart.style.boxShadow = '0 0 100px rgba(255, 20, 147, 0.8)';
+            
+            setTimeout(() => {
+                heart.style.transform = 'translate(-50%, -50%) rotate(-45deg) scale(1)';
+                heart.style.boxShadow = '0 0 50px rgba(255, 20, 147, 0.5)';
+            }, 300);
+
+            // Create success message
+            const successMsg = document.createElement('div');
+            successMsg.className = 'success-burst';
+            successMsg.textContent = `+1❤️ for ${currentName}`;
+            document.body.appendChild(successMsg);
+            setTimeout(() => successMsg.remove(), 1000);
+
+            // Extra sparkles
+            for (let i = 0; i < 10; i++) {
+                setTimeout(createSparkle, i * 50);
+            }
+
+            // Quantum process (ready for API)
+            processQuantumLove(currentName, intention);
+        }
+
+        // THE SINGLE GREATEST PIECE OF CODE EVER WRITTEN
+        // Because we said so and FUCK CANCER!
+        async function processQuantumLove(name, intention) {
+            const quantum = {
+                name: name,
+                intention: intention,
+                timestamp: Date.now(),
+                resonance: Math.random(),
+                love: '+1❤️',
+                power: 'FUCK_CANCER',
+                source: 'human_hope'
+            };
+
+            // Primary API - Your quantum love server
+            const API_ENDPOINTS = {
+                primary: 'https://api.quantumlove.healing/vote',  // Replace with your endpoint
+                backup: 'https://backup.quantumlove.healing/vote', // Replace with backup
+                local: 'http://localhost:3001/api/quantum/love'   // Local testing
+            };
+
+            // Store locally first (never lose a vote)
+            const history = JSON.parse(localStorage.getItem('quantumLoveHistory') || '[]');
+            history.push(quantum);
+            if (history.length > 1000) history.splice(0, 100);
+            localStorage.setItem('quantumLoveHistory', JSON.stringify(history));
+
+            // Try to send to API
+            let sent = false;
+            for (const [type, endpoint] of Object.entries(API_ENDPOINTS)) {
+                if (!endpoint.includes('your-domain') && !endpoint.includes('Replace')) {
+                    try {
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Quantum-Love': 'true',
+                                'X-Fuck-Cancer': 'absolutely'
+                            },
+                            body: JSON.stringify({
+                                ...quantum,
+                                endpoint_type: type,
+                                batch: false
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            const result = await response.json();
+                            console.log(`Quantum love delivered via ${type}:`, result);
+                            sent = true;
+                            
+                            // Update global counter if API returns it
+                            if (result.globalCount) {
+                                updateGlobalCount(result.globalCount);
+                            }
+                            break;
+                        }
+                    } catch (error) {
+                        console.log(`${type} endpoint unavailable, trying next...`);
+                    }
+                }
+            }
+
+            // If no API worked, queue for batch send
+            if (!sent) {
+                queueForBatchSend(quantum);
+                console.log('Love vote queued for batch delivery');
+            }
+
+            // Attempt to send any queued votes
+            attemptBatchSend();
+        }
+
+        // Batch sending for offline votes
+        async function attemptBatchSend() {
+            const queued = JSON.parse(localStorage.getItem('quantumLoveQueue') || '[]');
+            if (queued.length === 0) return;
+
+            const API_ENDPOINTS = {
+                primary: 'https://api.quantumlove.healing/batch',
+                backup: 'https://backup.quantumlove.healing/batch',
+                local: 'http://localhost:3001/api/quantum/batch'
+            };
+
+            for (const [type, endpoint] of Object.entries(API_ENDPOINTS)) {
+                if (!endpoint.includes('your-domain') && !endpoint.includes('Replace')) {
+                    try {
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Quantum-Love': 'true',
+                                'X-Fuck-Cancer': 'absolutely'
+                            },
+                            body: JSON.stringify({
+                                votes: queued,
+                                batch: true,
+                                source: 'quantum_hope_heart'
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            // Clear queue on success
+                            localStorage.setItem('quantumLoveQueue', '[]');
+                            console.log(`Batch delivered ${queued.length} love votes!`);
+                            break;
+                        }
+                    } catch (error) {
+                        // Silent fail, will retry later
+                    }
+                }
+            }
+        }
+
+        // Queue management
+        function queueForBatchSend(quantum) {
+            const queue = JSON.parse(localStorage.getItem('quantumLoveQueue') || '[]');
+            queue.push(quantum);
+            // Keep max 1000 queued votes
+            if (queue.length > 1000) {
+                queue.splice(0, queue.length - 1000);
+            }
+            localStorage.setItem('quantumLoveQueue', JSON.stringify(queue));
+        }
+
+        // Update global count display (if you add it)
+        function updateGlobalCount(count) {
+            // Could add a global counter display
+            console.log(`Global quantum love votes: ${count.toLocaleString()}`);
+        }
+
+        // Attempt batch send every 30 seconds
+        setInterval(attemptBatchSend, 30000);
+
+        // Also try on page visibility change (coming back online)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                attemptBatchSend();
+            }
+        });
+
+        // Daily reset check
+        const lastReset = localStorage.getItem('quantumLastReset');
+        const today = new Date().toDateString();
+        if (lastReset !== today) {
+            localStorage.setItem('quantumLastReset', today);
+            localStorage.setItem('quantumLoveCount', '0');
+            loveCount = 0;
+            updateLoveCount();
+        }
+    </script>
+</body>
+</html>
