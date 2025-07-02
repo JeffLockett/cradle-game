@@ -265,6 +265,17 @@
     </style>
 </head>
 <body>
+    <div class="cancer-ribbon" onclick="focusBella()">
+        <svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+            <path class="ribbon-path" d="M30 5 Q20 15 20 25 Q20 35 30 40 Q40 35 40 25 Q40 15 30 5 M20 25 Q10 30 10 40 Q10 50 20 55 L20 75 L30 70 L40 75 L40 55 Q50 50 50 40 Q50 30 40 25"/>
+        </svg>
+    </div>
+    
+    <div class="bella-dedication">
+        For <span class="bella-name">Bella J</span><br>
+        Super Survivor 💪
+    </div>
+
     <div class="main-container">
         <div class="heart-container" id="heartContainer">
             <div class="quantum-heart"></div>
@@ -274,10 +285,10 @@
             <input type="text" 
                    class="name-input" 
                    id="nameInput" 
-                   placeholder="Enter a name to send love to..."
+                   placeholder="Add another name to join Bella..."
                    maxlength="50">
             
-            <div class="or-text">or choose from recent names</div>
+            <div class="or-text">Sending love to <span style="color: #ff69b4; font-weight: bold;">Bella J</span> + your name</div>
             
             <div class="recent-names" id="recentNames"></div>
             
@@ -388,19 +399,21 @@
         }
 
         function sendLove(intention) {
-            if (!currentName) {
-                showError();
-                return;
-            }
+            // Always include Bella
+            const bellaName = "Bella J";
+            const additionalName = currentName;
+            const fullName = additionalName ? `${bellaName} + ${additionalName}` : bellaName;
 
-            // Update unique names list
-            const uniqueNames = JSON.parse(localStorage.getItem('quantumUniqueNames') || '[]');
-            if (!uniqueNames.includes(currentName)) {
-                uniqueNames.push(currentName);
-                if (uniqueNames.length > 100) uniqueNames.shift();
-                localStorage.setItem('quantumUniqueNames', JSON.stringify(uniqueNames));
+            // Update unique names list (for additional names)
+            if (additionalName) {
+                const uniqueNames = JSON.parse(localStorage.getItem('quantumUniqueNames') || '[]');
+                if (!uniqueNames.includes(additionalName)) {
+                    uniqueNames.push(additionalName);
+                    if (uniqueNames.length > 100) uniqueNames.shift();
+                    localStorage.setItem('quantumUniqueNames', JSON.stringify(uniqueNames));
+                }
+                updateRecentNames();
             }
-            updateRecentNames();
 
             // Increment love count
             loveCount++;
@@ -420,17 +433,21 @@
             // Create success message
             const successMsg = document.createElement('div');
             successMsg.className = 'success-burst';
-            successMsg.textContent = `+1❤️ for ${currentName}`;
+            successMsg.textContent = `+1❤️ for ${fullName}`;
             document.body.appendChild(successMsg);
             setTimeout(() => successMsg.remove(), 1000);
 
-            // Extra sparkles
-            for (let i = 0; i < 10; i++) {
+            // Extra sparkles for Bella
+            for (let i = 0; i < 15; i++) {
                 setTimeout(createSparkle, i * 50);
             }
 
-            // Quantum process (ready for API)
-            processQuantumLove(currentName, intention);
+            // Quantum process - Bella always gets the love
+            processQuantumLove(fullName, intention);
+            
+            // Track Bella's total
+            const bellaCount = parseInt(localStorage.getItem('bellaLoveCount') || '0') + 1;
+            localStorage.setItem('bellaLoveCount', bellaCount);
         }
 
         // THE SINGLE GREATEST PIECE OF CODE EVER WRITTEN
@@ -572,6 +589,24 @@
                 attemptBatchSend();
             }
         });
+
+        function focusBella() {
+            // Pulse the heart extra for Bella
+            const heart = document.querySelector('.quantum-heart');
+            heart.style.animation = 'heartbeat 0.5s ease-in-out 3';
+            setTimeout(() => {
+                heart.style.animation = 'heartbeat 2s ease-in-out infinite';
+            }, 1500);
+            
+            // Show Bella's total love
+            const bellaCount = parseInt(localStorage.getItem('bellaLoveCount') || '0');
+            const bellaMsg = document.createElement('div');
+            bellaMsg.className = 'success-burst';
+            bellaMsg.textContent = `${bellaCount.toLocaleString()} ❤️ for Bella!`;
+            bellaMsg.style.color = '#ff69b4';
+            document.body.appendChild(bellaMsg);
+            setTimeout(() => bellaMsg.remove(), 2000);
+        }
 
         // Daily reset check
         const lastReset = localStorage.getItem('quantumLastReset');
