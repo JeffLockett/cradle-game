@@ -265,6 +265,11 @@
     </style>
 </head>
 <body>
+    <div class="vibe-feed" id="vibeFeed">
+        <h3>✨ Live Love Stream ✨</h3>
+        <div id="vibeList"></div>
+    </div>
+
     <div class="cancer-ribbon" onclick="focusBella()">
         <svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
             <path class="ribbon-path" d="M30 5 Q20 15 20 25 Q20 35 30 40 Q40 35 40 25 Q40 15 30 5 M20 25 Q10 30 10 40 Q10 50 20 55 L20 75 L30 70 L40 75 L40 55 Q50 50 50 40 Q50 30 40 25"/>
@@ -398,6 +403,113 @@
             document.getElementById('errorMessage').classList.remove('show');
         }
 
+        // Good vibe messages to make people smile
+        const goodVibeMessages = [
+            "is sending cosmic hugs",
+            "just activated beast mode healing",
+            "launched a love missile",
+            "is dancing for joy",
+            "sent quantum high-fives",
+            "is radiating pure light",
+            "just blessed the timeline",
+            "dropped a love bomb",
+            "is channeling superhero vibes",
+            "sent healing at light speed",
+            "is beaming sunshine rays",
+            "just multiplied the love",
+            "is creating miracles",
+            "sent a wave of awesome",
+            "is glowing with hope",
+            "just turbo-charged the healing",
+            "is spreading magic dust",
+            "sent a burst of joy",
+            "is amplifying the goodness",
+            "just lit up the universe"
+        ];
+
+        // Initialize vibe feed
+        loadVibeFeed();
+
+        function loadVibeFeed() {
+            const vibeFeed = JSON.parse(localStorage.getItem('quantumVibeFeed') || '[]');
+            updateVibeFeed(vibeFeed);
+        }
+
+        function updateVibeFeed(vibes) {
+            const vibeList = document.getElementById('vibeList');
+            vibeList.innerHTML = '';
+            
+            // Show last 10 vibes
+            vibes.slice(-10).reverse().forEach(vibe => {
+                const vibeEntry = document.createElement('div');
+                vibeEntry.className = 'vibe-entry';
+                vibeEntry.innerHTML = `
+                    <div class="vibe-name">${vibe.name}</div>
+                    <div class="vibe-message">${vibe.message}</div>
+                    <div class="vibe-time">${vibe.timeAgo}</div>
+                `;
+                vibeList.appendChild(vibeEntry);
+            });
+        }
+
+        function addToVibeFeed(name, intention) {
+            const vibeFeed = JSON.parse(localStorage.getItem('quantumVibeFeed') || '[]');
+            
+            // Get a random good vibe message
+            const message = goodVibeMessages[Math.floor(Math.random() * goodVibeMessages.length)];
+            
+            const newVibe = {
+                name: name,
+                message: message,
+                timestamp: Date.now(),
+                timeAgo: 'just now',
+                intention: intention
+            };
+            
+            vibeFeed.push(newVibe);
+            
+            // Keep only last 50 vibes
+            if (vibeFeed.length > 50) {
+                vibeFeed.splice(0, vibeFeed.length - 50);
+            }
+            
+            localStorage.setItem('quantumVibeFeed', JSON.stringify(vibeFeed));
+            updateVibeFeed(vibeFeed);
+            
+            // Share with others via API
+            if (window.processQuantumLove) {
+                shareVibe(newVibe);
+            }
+        }
+
+        // Update time ago for vibes
+        setInterval(() => {
+            const vibeFeed = JSON.parse(localStorage.getItem('quantumVibeFeed') || '[]');
+            const now = Date.now();
+            
+            vibeFeed.forEach(vibe => {
+                const diff = now - vibe.timestamp;
+                if (diff < 60000) {
+                    vibe.timeAgo = 'just now';
+                } else if (diff < 3600000) {
+                    vibe.timeAgo = Math.floor(diff / 60000) + ' min ago';
+                } else if (diff < 86400000) {
+                    vibe.timeAgo = Math.floor(diff / 3600000) + ' hours ago';
+                } else {
+                    vibe.timeAgo = Math.floor(diff / 86400000) + ' days ago';
+                }
+            });
+            
+            localStorage.setItem('quantumVibeFeed', JSON.stringify(vibeFeed));
+            updateVibeFeed(vibeFeed);
+        }, 30000); // Update every 30 seconds
+
+        // Share vibe with backend
+        async function shareVibe(vibe) {
+            // This will sync with your API to show vibes from all users
+            // Ready for when you want real-time global feed
+        }
+
         function sendLove(intention) {
             // Always include Bella
             const bellaName = "Bella J";
@@ -448,6 +560,9 @@
             // Track Bella's total
             const bellaCount = parseInt(localStorage.getItem('bellaLoveCount') || '0') + 1;
             localStorage.setItem('bellaLoveCount', bellaCount);
+            
+            // Add to vibe feed
+            addToVibeFeed(fullName, intention);
         }
 
         // THE SINGLE GREATEST PIECE OF CODE EVER WRITTEN
