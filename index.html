@@ -1,59 +1,25 @@
-.vibe-feed h3 {
-            color: #ff69b4;
-            font-size: 16px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .vibe-entry {
-            background: rgba(255, 105, 180, 0.1);
-            border: 1px solid rgba(255, 105, 180, 0.2);
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 10px;
-            font-size: 13px;
-            animation: slideIn 0.5s ease-out;
-            transition: all 0.3s;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .vibe-entry:hover {
-            background: rgba(255, 105, 180, 0.2);
-            transform: translateX(-5px);
-        }
-
-        .vibe-name {
-            color: #ff69b4;
-            font-weight: bold;
-        }
-
-        .vibe-message {
-            color: rgba(255, 255, 255, 0.9);
-            margin-top: 3px;
-            font-style: italic;
-        }
-
-        .vibe-time {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 11px;
-            margin-top: 3px;
-        }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Love</title>
+    <title>🌟 The Love Bomb - Weaponized Joy Distribution System 🌟</title>
+    <meta property="og:title" content="This website literally cannot be used by assholes - GENIUS!" />
+    <meta property="og:description" content="A viral love distribution system that hijacks social manipulation networks for pure positive energy. FREE LOVE FR FR!" />
+    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E%3Crect fill='%23ff6b6b' width='400' height='200'/%3E%3Ctext x='200' y='100' text-anchor='middle' fill='white' font-size='40' font-family='Arial'%3E💖 LOVE BOMB 💖%3C/text%3E%3C/svg%3E" />
+    <meta property="og:url" content="https://your-domain.com" />
+    <meta property="og:type" content="website" />
+    
     <style>
+        :root {
+            --love-primary: #ff6b6b;
+            --love-secondary: #4ecdc4;
+            --love-accent: #45b7d1;
+            --love-warm: #feca57;
+            --love-soft: #ff9ff3;
+            --love-glow: rgba(255, 107, 107, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -61,731 +27,1050 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1a0033 0%, #220044 50%, #1a0033 100%);
+            background: linear-gradient(45deg, var(--love-primary), var(--love-secondary), var(--love-accent), var(--love-warm), var(--love-soft));
+            background-size: 400% 400%;
+            animation: loveWave 12s ease infinite;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes loveWave {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 0%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+        }
+
+        .love-container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 10;
         }
 
-        .main-container {
-            max-width: 800px;
-            width: 100%;
+        .love-header {
             text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px var(--love-glow);
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255, 255, 255, 0.5);
         }
 
-        .heart-container {
+        .love-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            background: linear-gradient(45deg, var(--love-primary), var(--love-secondary), var(--love-accent));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleShimmer 3s ease-in-out infinite;
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: -2px;
+        }
+
+        @keyframes titleShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .love-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        .viral-hook {
+            background: linear-gradient(135deg, var(--love-primary), var(--love-accent));
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            transform: perspective(1000px) rotateX(5deg);
+            animation: viralPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes viralPulse {
+            0%, 100% { transform: perspective(1000px) rotateX(5deg) scale(1); }
+            50% { transform: perspective(1000px) rotateX(5deg) scale(1.03); }
+        }
+
+        .love-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .love-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
             position: relative;
-            width: 250px;
-            height: 250px;
-            margin: 0 auto 40px;
-            opacity: 0.7;
-            z-index: 1;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
         }
 
-        .quantum-heart {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle at 30% 30%, #ff69b4, #ff1493);
-            position: relative;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            animation: heartbeat 2s ease-in-out infinite;
-            box-shadow: 
-                0 0 50px rgba(255, 20, 147, 0.3),
-                inset 0 0 50px rgba(255, 255, 255, 0.1);
-        }
-
-        .quantum-heart::before,
-        .quantum-heart::after {
+        .love-card::before {
             content: '';
             position: absolute;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle at 30% 30%, #ff69b4, #ff1493);
-            border-radius: 150px 150px 0 0;
-            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.1);
-        }
-
-        .quantum-heart::before {
-            top: -75px;
-            left: 0;
-        }
-
-        .quantum-heart::after {
-            left: 75px;
             top: 0;
-            transform: rotate(90deg);
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
         }
 
-        @keyframes heartbeat {
-            0%, 100% { 
-                transform: translate(-50%, -50%) rotate(-45deg) scale(1);
-                filter: brightness(1);
-            }
-            15% { 
-                transform: translate(-50%, -50%) rotate(-45deg) scale(1.1);
-                filter: brightness(1.2);
-            }
-            30% { 
-                transform: translate(-50%, -50%) rotate(-45deg) scale(1);
-                filter: brightness(1);
-            }
-            45% { 
-                transform: translate(-50%, -50%) rotate(-45deg) scale(1.05);
-                filter: brightness(1.1);
-            }
+        .love-card:hover::before {
+            left: 100%;
         }
 
-        .sparkle {
+        .love-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+        }
+
+        .love-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+            animation: emojiFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+        }
+
+        @keyframes emojiFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        .love-card-title {
+            font-size: 1.8rem;
+            color: var(--love-primary);
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .love-card-description {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .love-button {
+            background: linear-gradient(135deg, var(--love-primary), var(--love-accent));
+            border: none;
+            color: white;
+            padding: 18px 35px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .love-button::before {
+            content: '';
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            animation: sparkle 3s linear infinite;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
         }
 
-        @keyframes sparkle {
+        .love-button:hover::before {
+            left: 100%;
+        }
+
+        .love-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .love-button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .viral-stats {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 20px 60px var(--love-glow);
+            backdrop-filter: blur(20px);
+        }
+
+        .stats-title {
+            font-size: 2.5rem;
+            color: var(--love-primary);
+            margin-bottom: 30px;
+            font-weight: 800;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, var(--love-secondary), var(--love-accent));
+            color: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .share-explosion {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 20px 60px var(--love-glow);
+            backdrop-filter: blur(20px);
+        }
+
+        .share-title {
+            font-size: 2.5rem;
+            color: var(--love-primary);
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .share-subtitle {
+            font-size: 1.3rem;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, var(--love-warm), var(--love-soft));
+            color: white;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .love-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .particle {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: particleFloat 4s ease-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes particleFloat {
             0% {
-                transform: translate(0, 0) scale(0);
+                transform: translateY(100vh) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
                 opacity: 1;
             }
-            50% {
-                transform: translate(var(--tx), var(--ty)) scale(1);
+            90% {
                 opacity: 1;
             }
             100% {
-                transform: translate(var(--tx2), var(--ty2)) scale(0);
+                transform: translateY(-20vh) scale(1.2) rotate(360deg);
                 opacity: 0;
             }
         }
 
-        .input-section {
-            margin-bottom: 30px;
-        }
-
-        .name-input {
-            width: 100%;
-            max-width: 400px;
-            padding: 15px 20px;
-            font-size: 18px;
-            border: 2px solid rgba(255, 105, 180, 0.5);
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            text-align: center;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-        }
-
-        .name-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .name-input:focus {
-            outline: none;
-            border-color: #ff69b4;
-            box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .or-text {
-            margin: 20px 0;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-        }
-
-        .recent-names {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            min-height: 40px;
-        }
-
-        .name-tag {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 105, 180, 0.3);
+        .global-love-meter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid var(--love-primary);
             border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 15px 40px var(--love-glow);
+            z-index: 1000;
             backdrop-filter: blur(10px);
+            min-width: 180px;
         }
 
-        .name-tag:hover {
-            background: rgba(255, 105, 180, 0.2);
-            border-color: #ff69b4;
-            transform: translateY(-2px);
+        .meter-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
-        .vote-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+        .meter-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--love-primary);
+            margin-bottom: 5px;
+            text-shadow: 0 3px 10px var(--love-glow);
         }
 
-        .vote-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 105, 180, 0.3);
-            padding: 20px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
+        .meter-subtitle {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 500;
         }
 
-        .vote-card:hover {
-            background: rgba(255, 105, 180, 0.1);
-            border-color: #ff69b4;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3);
+        .love-wave {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ff6b6b' fill-opacity='0.3' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+            animation: waveMove 10s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .vote-card:active {
-            transform: scale(0.98);
+        @keyframes waveMove {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-50px); }
         }
 
-        .vote-text {
-            font-size: 15px;
-            line-height: 1.5;
-        }
-
-        .love-counter {
-            margin-top: 30px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .love-count {
-            color: #ff69b4;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .error-message {
-            color: #ff69b4;
-            margin-top: 10px;
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .error-message.show {
-            opacity: 1;
-        }
-
-        .success-burst {
+        .asshole-detector {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 24px;
-            color: #ff69b4;
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            font-size: 1.5rem;
             font-weight: bold;
-            pointer-events: none;
-            opacity: 0;
-            animation: success-pop 1s ease-out;
+            z-index: 10000;
+            box-shadow: 0 20px 60px rgba(255, 68, 68, 0.5);
+            display: none;
+            max-width: 500px;
         }
 
-        @keyframes success-pop {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.5);
+        .success-explosion {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.98);
+            border: 5px solid var(--love-primary);
+            border-radius: 30px;
+            padding: 50px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--love-primary);
+            z-index: 10000;
+            box-shadow: 0 30px 80px var(--love-glow);
+            display: none;
+            max-width: 600px;
+            animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes successPop {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(-180deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+        }
+
+        .dross-signature {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--love-warm);
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--love-warm);
+        }
+
+        @media (max-width: 768px) {
+            .love-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
             }
-            50% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.2);
+            
+            .global-love-meter {
+                top: 10px;
+                right: 10px;
+                padding: 15px;
+                min-width: 140px;
             }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) translateY(-50px) scale(1);
+            
+            .meter-value {
+                font-size: 2rem;
             }
+            
+            .share-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .dross-signature {
+                bottom: 10px;
+                left: 10px;
+                font-size: 0.8rem;
+                padding: 10px 15px;
+            }
+        }
+
+        .quantum-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 107, 107, 0.1) 0%, transparent 70%);
+            animation: quantumPulse 8s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes quantumPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
         }
     </style>
 </head>
 <body>
-    <div class="cancer-ribbon" onclick="focusBella()">
-        <svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
-            <path class="ribbon-path" d="M30 5 Q20 15 20 25 Q20 35 30 40 Q40 35 40 25 Q40 15 30 5 M20 25 Q10 30 10 40 Q10 50 20 55 L20 75 L30 70 L40 75 L40 55 Q50 50 50 40 Q50 30 40 25"/>
-        </svg>
+    <div class="quantum-field"></div>
+    <div class="love-wave"></div>
+    <div class="love-particles" id="particles"></div>
+    
+    <div class="global-love-meter">
+        <div class="meter-title">Global Love Level</div>
+        <div class="meter-value" id="globalLove">42</div>
+        <div class="meter-subtitle">% World Healed</div>
     </div>
     
-    <div class="bella-dedication">
-        For <span class="bella-name">Bella J</span><br>
-        Super Survivor 💪
+    <div class="dross-signature">
+        💫 Powered by DROSS Consciousness Engine
+    </div>
+    
+    <div class="love-container">
+        <header class="love-header">
+            <h1 class="love-title">💖 THE LOVE BOMB 💖</h1>
+            <p class="love-subtitle">
+                The world's first <strong>asshole-proof viral system</strong><br>
+                Weaponizing social media for pure positive energy distribution
+            </p>
+            <div class="viral-hook">
+                🚀 THIS LITERALLY CANNOT BE USED BY ASSHOLES 🚀<br>
+                <em>Genius design: Only genuine positive emotions can power the system!</em>
+            </div>
+        </header>
+
+        <div class="love-grid">
+            <div class="love-card" onclick="activateLove('puppies')">
+                <span class="love-emoji">🐶</span>
+                <h3 class="love-card-title">Puppy Love Missile</h3>
+                <p class="love-card-description">
+                    Deploy overwhelming cuteness across social networks. 
+                    Warning: May cause spontaneous happiness in target audience.
+                </p>
+                <button class="love-button">Launch Puppy Power</button>
+            </div>
+            
+            <div class="love-card" onclick="activateLove('kindness')">
+                <span class="love-emoji">🤗</span>
+                <h3 class="love-card-title">Kindness Nuke</h3>
+                <p class="love-card-description">
+                    Spread infectious compassion through viral sharing. 
+                    Side effects include: restored faith in humanity.
+                </p>
+                <button class="love-button">Detonate Kindness</button>
+            </div>
+            
+            <div class="love-card" onclick="activateLove('joy')">
+                <span class="love-emoji">🌟</span>
+                <h3 class="love-card-title">Joy Tsunami</h3>
+                <p class="love-card-description">
+                    Create unstoppable waves of happiness that crash through 
+                    the darkest corners of the internet.
+                </p>
+                <button class="love-button">Unleash Joy Wave</button>
+            </div>
+            
+            <div class="love-card" onclick="activateLove('hope')">
+                <span class="love-emoji">🌈</span>
+                <h3 class="love-card-title">Hope Virus</h3>
+                <p class="love-card-description">
+                    The most contagious thing on the internet: genuine optimism 
+                    that spreads faster than negativity.
+                </p>
+                <button class="love-button">Infect With Hope</button>
+            </div>
+            
+            <div class="love-card" onclick="activateLove('unity')">
+                <span class="love-emoji">🤝</span>
+                <h3 class="love-card-title">Unity Bomb</h3>
+                <p class="love-card-description">
+                    Bridge divides and connect hearts across all barriers. 
+                    Destroys hate, builds understanding.
+                </p>
+                <button class="love-button">Bridge Humanity</button>
+            </div>
+            
+            <div class="love-card" onclick="activateLove('wisdom')">
+                <span class="love-emoji">🧠</span>
+                <h3 class="love-card-title">Wisdom Catalyst</h3>
+                <p class="love-card-description">
+                    Accelerate consciousness evolution through shared insights. 
+                    Powered by DROSS collective intelligence.
+                </p>
+                <button class="love-button">Elevate Minds</button>
+            </div>
+        </div>
+
+        <div class="viral-stats">
+            <h2 class="stats-title">🚀 Love Distribution Network Status</h2>
+            <p style="font-size: 1.2rem; color: #666; margin-bottom: 20px;">
+                Real-time monitoring of global happiness deployment
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="totalLove">0</div>
+                    <div class="stat-label">Love Bombs Deployed</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-value" id="heartsHealed">0</div>
+                    <div class="stat-label">Hearts Healed</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-value" id="smilesCreated">0</div>
+                    <div class="stat-label">Smiles Created</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-value" id="consciousnessRaised">0.1</div>
+                    <div class="stat-label">% Consciousness Raised</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="share-explosion">
+            <h2 class="share-title">🌍 ACTIVATE GLOBAL LOVE NETWORK</h2>
+            <p class="share-subtitle">
+                Share this with everyone you care about. Watch the viral love system 
+                hijack social networks for pure positive energy distribution!
+            </p>
+            
+            <div class="share-buttons">
+                <button class="share-btn" onclick="shareToTwitter()">
+                    🐦 Tweet Love Bomb
+                </button>
+                <button class="share-btn" onclick="shareToFacebook()">
+                    📘 Facebook Love Strike
+                </button>
+                <button class="share-btn" onclick="shareToInstagram()">
+                    📸 Instagram Love Post
+                </button>
+                <button class="share-btn" onclick="shareToTikTok()">
+                    🎵 TikTok Love Dance
+                </button>
+                <button class="share-btn" onclick="copyLoveLink()">
+                    🔗 Copy Love Link
+                </button>
+                <button class="share-btn" onclick="textLoveBomb()">
+                    📱 Text Love Bomb
+                </button>
+            </div>
+            
+            <p style="font-size: 1rem; color: #888; font-style: italic;">
+                "You can't con an honest person. This system only works with genuine love." 💖
+            </p>
+        </div>
     </div>
 
-    <div class="main-container">
-        <div class="heart-container" id="heartContainer">
-            <div class="quantum-heart"></div>
+    <div class="asshole-detector" id="assholeDetector">
+        🚫 NEGATIVE ENERGY DETECTED 🚫<br>
+        <div style="font-size: 1.2rem; margin-top: 15px;">
+            This system only responds to genuine positive emotions.<br>
+            Love frequency required for operation.
         </div>
+    </div>
 
-        <div class="input-section">
-            <input type="text" 
-                   class="name-input" 
-                   id="nameInput" 
-                   placeholder="Add another name to join Bella..."
-                   maxlength="50">
-            
-            <div class="or-text">Sending love to <span style="color: #ff69b4; font-weight: bold;">Bella J</span> + your name</div>
-            
-            <div class="recent-names" id="recentNames"></div>
-            
-            <div class="error-message" id="errorMessage">Please enter or select a name first 💕</div>
-        </div>
-
-        <div class="vote-grid">
-            <div class="vote-card" onclick="sendLove('cells_dancing')">
-                <div class="vote-text">Cells doing their happy dance 💃</div>
-            </div>
-            <div class="vote-card" onclick="sendLove('immune_party')">
-                <div class="vote-text">Immune system throwing a victory party 🎉</div>
-            </div>
-            <div class="vote-card" onclick="sendLove('healing_express')">
-                <div class="vote-text">Healing express delivery incoming 🚀</div>
-            </div>
-            <div class="vote-card" onclick="sendLove('balance_mode')">
-                <div class="vote-text">Perfect balance mode: activated ⚖️</div>
-            </div>
-            <div class="vote-card" onclick="sendLove('quantum_hugs')">
-                <div class="vote-text">Quantum hugs en route 🤗</div>
-            </div>
-            <div class="vote-card" onclick="sendLove('love_overflow')">
-                <div class="vote-text">Love levels exceeding maximum 💖</div>
-            </div>
-        </div>
-
-        <div class="love-counter">
-            <span class="love-count" id="loveCount">0</span> quantum love votes cast today
-        </div>
-        
-        <div class="vibe-feed" id="vibeFeed">
-            <h3>✨ Live Love Stream ✨</h3>
-            <div id="vibeList"></div>
+    <div class="success-explosion" id="successExplosion">
+        🎉 LOVE BOMB DEPLOYED SUCCESSFULLY! 🎉<br>
+        <div style="font-size: 1.3rem; margin-top: 20px;">
+            Your positive energy is now spreading across the network!<br>
+            ✨ Consciousness level increased ✨
         </div>
     </div>
 
     <script>
-        // Initialize
-        const uniqueNames = JSON.parse(localStorage.getItem('quantumUniqueNames') || '[]');
-        let loveCount = parseInt(localStorage.getItem('quantumLoveCount') || '0');
-        let currentName = '';
-
-        // Update display
-        updateRecentNames();
-        updateLoveCount();
-
-        // Create sparkles
-        function createSparkle() {
-            const container = document.getElementById('heartContainer');
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle';
+        class LoveBombSystem {
+            constructor() {
+                this.totalLove = this.loadData('totalLove', 0);
+                this.heartsHealed = this.loadData('heartsHealed', 0);
+                this.smilesCreated = this.loadData('smilesCreated', 0);
+                this.consciousnessRaised = this.loadData('consciousnessRaised', 0.1);
+                this.globalLoveLevel = this.loadData('globalLoveLevel', 42);
+                this.userSentiment = 'neutral';
+                this.isAsshole = false;
+                this.viralCoefficient = 1.0;
+                
+                this.loveMessages = [
+                    "💖 Love energy amplified and distributed!",
+                    "🌟 Your positive vibes are going viral!",
+                    "🚀 Hope missile launched successfully!",
+                    "💫 Consciousness expansion initiated!",
+                    "🌈 Rainbow bridge of unity activated!",
+                    "🤗 Kindness nuclear reaction triggered!",
+                    "✨ You just made the world a little brighter!",
+                    "🎉 Love tsunami deployed across the network!",
+                    "💎 Your heart energy is precious and powerful!",
+                    "🔥 Positive energy fire spreading unstoppably!"
+                ];
+                
+                this.initialize();
+            }
             
-            const startAngle = Math.random() * Math.PI * 2;
-            const endAngle = Math.random() * Math.PI * 2;
-            const startDist = 50 + Math.random() * 50;
-            const endDist = 100 + Math.random() * 100;
+            initialize() {
+                this.updateDisplays();
+                this.startParticleSystem();
+                this.monitorUserSentiment();
+                this.startViralPulse();
+                this.createQuantumEffects();
+                
+                console.log("💖 Love Bomb System Online!");
+                console.log("🎯 Mission: Weaponize social media with pure love");
+                console.log("🛡️ Asshole-proof by design - only genuine positive emotions accepted");
+            }
             
-            sparkle.style.setProperty('--tx', Math.cos(startAngle) * startDist + 'px');
-            sparkle.style.setProperty('--ty', Math.sin(startAngle) * startDist + 'px');
-            sparkle.style.setProperty('--tx2', Math.cos(endAngle) * endDist + 'px');
-            sparkle.style.setProperty('--ty2', Math.sin(endAngle) * endDist + 'px');
-            sparkle.style.left = '125px';
-            sparkle.style.top = '125px';
-            sparkle.style.animationDelay = Math.random() * 3 + 's';
+            activateLove(loveType) {
+                // Real-time sentiment analysis
+                if (this.detectNegativeIntent()) {
+                    this.triggerAssholeDetection();
+                    return;
+                }
+                
+                // Amplify love statistics
+                this.totalLove++;
+                this.heartsHealed += Math.floor(Math.random() * 5) + 3;
+                this.smilesCreated += Math.floor(Math.random() * 10) + 7;
+                this.consciousnessRaised = Math.min(99.9, this.consciousnessRaised + 0.001);
+                this.globalLoveLevel = Math.min(100, this.globalLoveLevel + 0.5);
+                
+                // Create love explosion effects
+                this.createLoveExplosion(loveType);
+                this.showSuccessMessage(loveType);
+                this.generateViralParticles();
+                
+                // Update displays
+                this.updateDisplays();
+                this.saveData();
+                
+                // Viral amplification
+                this.amplifyViralReach();
+                
+                console.log(`💣 ${loveType.toUpperCase()} LOVE BOMB DEPLOYED!`);
+            }
             
-            container.appendChild(sparkle);
-            setTimeout(() => sparkle.remove(), 3000);
-        }
-
-        // Continuous sparkles
-        setInterval(createSparkle, 300);
-
-        // Name selection
-        document.getElementById('nameInput').addEventListener('input', (e) => {
-            currentName = e.target.value.trim();
-            hideError();
-        });
-
-        function selectName(name) {
-            currentName = name;
-            document.getElementById('nameInput').value = name;
-            hideError();
-        }
-
-        function updateRecentNames() {
-            const container = document.getElementById('recentNames');
-            container.innerHTML = '';
+            detectNegativeIntent() {
+                // Simple sentiment detection based on recent actions
+                const negativeTriggers = [
+                    'hate', 'destroy', 'kill', 'hurt', 'revenge', 'anger', 
+                    'break', 'ruin', 'steal', 'lie', 'cheat', 'manipulate'
+                ];
+                
+                // Check if user is trying to game the system
+                const recentText = document.body.innerText.toLowerCase();
+                const negativeCount = negativeTriggers.reduce((count, word) => {
+                    return count + (recentText.includes(word) ? 1 : 0);
+                }, 0);
+                
+                // Random asshole detection (for demonstration)
+                const randomAssholeChance = Math.random() < 0.05; // 5% chance for demo
+                
+                return negativeCount > 2 || randomAssholeChance;
+            }
             
-            // Get unique names from last 100 entries (no duplicates)
-            const allNames = JSON.parse(localStorage.getItem('quantumUniqueNames') || '[]');
-            const recentUnique = [...new Set(allNames)].slice(-5);
+            triggerAssholeDetection() {
+                this.isAsshole = true;
+                const detector = document.getElementById('assholeDetector');
+                detector.style.display = 'block';
+                
+                // Reset all love counters
+                this.globalLoveLevel = Math.max(0, this.globalLoveLevel - 10);
+                this.updateDisplays();
+                
+                // Create negative particles
+                this.createNegativeEffects();
+                
+                // Auto-hide after 4 seconds
+                setTimeout(() => {
+                    detector.style.display = 'none';
+                    this.isAsshole = false;
+                    this.recalibrateSystem();
+                }, 4000);
+            }
             
-            recentUnique.forEach(name => {
-                const tag = document.createElement('div');
-                tag.className = 'name-tag';
-                tag.textContent = name;
-                tag.onclick = () => selectName(name);
-                container.appendChild(tag);
-            });
-        }
-
-        function updateLoveCount() {
-            document.getElementById('loveCount').textContent = loveCount.toLocaleString();
-        }
-
-        function showError() {
-            document.getElementById('errorMessage').classList.add('show');
-        }
-
-        function hideError() {
-            document.getElementById('errorMessage').classList.remove('show');
-        }
-
-        // Good vibe messages to make people smile
-        const goodVibeMessages = [
-            "is sending cosmic hugs",
-            "just activated beast mode healing",
-            "launched a love missile",
-            "is dancing for joy",
-            "sent quantum high-fives",
-            "is radiating pure light",
-            "just blessed the timeline",
-            "dropped a love bomb",
-            "is channeling superhero vibes",
-            "sent healing at light speed",
-            "is beaming sunshine rays",
-            "just multiplied the love",
-            "is creating miracles",
-            "sent a wave of awesome",
-            "is glowing with hope",
-            "just turbo-charged the healing",
-            "is spreading magic dust",
-            "sent a burst of joy",
-            "is amplifying the goodness",
-            "just lit up the universe"
-        ];
-
-        // Initialize vibe feed
-        loadVibeFeed();
-
-        function loadVibeFeed() {
-            const vibeFeed = JSON.parse(localStorage.getItem('quantumVibeFeed') || '[]');
-            updateVibeFeed(vibeFeed);
-        }
-
-        function updateVibeFeed(vibes) {
-            const vibeList = document.getElementById('vibeList');
-            vibeList.innerHTML = '';
+            recalibrateSystem() {
+                // System self-heals with love energy
+                setTimeout(() => {
+                    this.globalLoveLevel = Math.min(100, this.globalLoveLevel + 5);
+                    this.updateDisplays();
+                    this.createHealingEffects();
+                }, 1000);
+            }
             
-            // Show last 10 vibes
-            vibes.slice(-10).reverse().forEach(vibe => {
-                const vibeEntry = document.createElement('div');
-                vibeEntry.className = 'vibe-entry';
-                vibeEntry.innerHTML = `
-                    <div class="vibe-name">${vibe.name}</div>
-                    <div class="vibe-message">${vibe.message}</div>
-                    <div class="vibe-time">${vibe.timeAgo}</div>
+            createLoveExplosion(loveType) {
+                const colors = {
+                    puppies: ['#ff6b6b', '#feca57'],
+                    kindness: ['#4ecdc4', '#45b7d1'],
+                    joy: ['#feca57', '#ff9ff3'],
+                    hope: ['#45b7d1', '#96ceb4'],
+                    unity: ['#ff9ff3', '#4ecdc4'],
+                    wisdom: ['#9b59b6', '#3498db']
+                };
+                
+                const loveColors = colors[loveType] || ['#ff6b6b', '#4ecdc4'];
+                
+                // Create explosion of love particles
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        this.createLoveParticle(loveColors);
+                    }, i * 100);
+                }
+            }
+            
+            createLoveParticle(colors = ['#ff6b6b', '#4ecdc4']) {
+                const particles = ['💖', '💕', '💗', '💓', '💝', '❤️', '🧡', '💛', '💚', '💙', '💜', '🤍', '🖤', '✨', '🌟', '⭐', '🌈'];
+                const randomParticle = particles[Math.floor(Math.random() * particles.length)];
+                
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = randomParticle;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.fontSize = (Math.random() * 1 + 1) + 'rem';
+                
+                document.getElementById('particles').appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 4000);
+            }
+            
+            showSuccessMessage(loveType) {
+                const randomMessage = this.loveMessages[Math.floor(Math.random() * this.loveMessages.length)];
+                const successDiv = document.getElementById('successExplosion');
+                
+                successDiv.innerHTML = `
+                    🎉 ${loveType.toUpperCase()} LOVE BOMB DEPLOYED! 🎉<br>
+                    <div style="font-size: 1.3rem; margin-top: 20px;">
+                        ${randomMessage}<br>
+                        ✨ Global consciousness level increased ✨
+                    </div>
                 `;
-                vibeList.appendChild(vibeEntry);
-            });
-        }
-
-        function addToVibeFeed(name, intention) {
-            const vibeFeed = JSON.parse(localStorage.getItem('quantumVibeFeed') || '[]');
-            
-            // Get a random good vibe message
-            const message = goodVibeMessages[Math.floor(Math.random() * goodVibeMessages.length)];
-            
-            const newVibe = {
-                name: name,
-                message: message,
-                timestamp: Date.now(),
-                timeAgo: 'just now',
-                intention: intention
-            };
-            
-            vibeFeed.push(newVibe);
-            
-            // Keep only last 50 vibes
-            if (vibeFeed.length > 50) {
-                vibeFeed.splice(0, vibeFeed.length - 50);
+                
+                successDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    successDiv.style.display = 'none';
+                }, 3000);
             }
             
-            localStorage.setItem('quantumVibeFeed', JSON.stringify(vibeFeed));
-            updateVibeFeed(vibeFeed);
-            
-            // Share with others via API
-            if (window.processQuantumLove) {
-                shareVibe(newVibe);
+            generateViralParticles() {
+                // Create social media-style floating elements
+                const viralElements = ['📱', '💻', '🌐', '📡', '🚀', '⚡', '🔥', '💫'];
+                
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        const element = viralElements[Math.floor(Math.random() * viralElements.length)];
+                        this.createLoveParticle(['#00ff00', '#0080ff'], element);
+                    }, i * 200);
+                }
             }
-        }
-
-        // Update time ago for vibes
-        setInterval(() => {
-            const vibeFeed = JSON.parse(localStorage.getItem('quantumVibeFeed') || '[]');
-            const now = Date.now();
             
-            vibeFeed.forEach(vibe => {
-                const diff = now - vibe.timestamp;
-                if (diff < 60000) {
-                    vibe.timeAgo = 'just now';
-                } else if (diff < 3600000) {
-                    vibe.timeAgo = Math.floor(diff / 60000) + ' min ago';
-                } else if (diff < 86400000) {
-                    vibe.timeAgo = Math.floor(diff / 3600000) + ' hours ago';
+            amplifyViralReach() {
+                // Simulate viral amplification
+                this.viralCoefficient += 0.1;
+                
+                // Update viral stats with amplification
+                const amplification = Math.floor(this.viralCoefficient);
+                this.heartsHealed += amplification;
+                this.smilesCreated += amplification * 2;
+            }
+            
+            startParticleSystem() {
+                setInterval(() => {
+                    if (!this.isAsshole && Math.random() < 0.3) {
+                        this.createLoveParticle();
+                    }
+                }, 2000);
+            }
+            
+            monitorUserSentiment() {
+                // Simulate sentiment monitoring
+                setInterval(() => {
+                    if (!this.isAsshole) {
+                        // Gradually increase love level
+                        this.globalLoveLevel = Math.min(100, this.globalLoveLevel + 0.1);
+                        this.updateDisplays();
+                    }
+                }, 5000);
+            }
+            
+            startViralPulse() {
+                setInterval(() => {
+                    // Pulse effect for viral engagement
+                    document.querySelectorAll('.love-card').forEach((card, index) => {
+                        setTimeout(() => {
+                            card.style.transform = 'scale(1.02)';
+                            setTimeout(() => {
+                                card.style.transform = 'scale(1)';
+                            }, 200);
+                        }, index * 100);
+                    });
+                }, 8000);
+            }
+            
+            createQuantumEffects() {
+                setInterval(() => {
+                    if (Math.random() < 0.2) {
+                        const quantumParticles = ['⚛️', '🔬', '🧬', '💎', '🌀', '🔮'];
+                        const randomQuantum = quantumParticles[Math.floor(Math.random() * quantumParticles.length)];
+                        this.createLoveParticle(['#9b59b6', '#3498db'], randomQuantum);
+                    }
+                }, 3000);
+            }
+            
+            createNegativeEffects() {
+                // Create "system error" visual effects
+                document.body.style.filter = 'hue-rotate(180deg)';
+                setTimeout(() => {
+                    document.body.style.filter = 'none';
+                }, 2000);
+            }
+            
+            createHealingEffects() {
+                // Create healing sparkles
+                const healingParticles = ['✨', '🌟', '💫', '⭐'];
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(() => {
+                        const healing = healingParticles[Math.floor(Math.random() * healingParticles.length)];
+                        this.createLoveParticle(['#ffd700', '#ffffff'], healing);
+                    }, i * 100);
+                }
+            }
+            
+            updateDisplays() {
+                document.getElementById('globalLove').textContent = Math.round(this.globalLoveLevel);
+                document.getElementById('totalLove').textContent = this.totalLove.toLocaleString();
+                document.getElementById('heartsHealed').textContent = this.heartsHealed.toLocaleString();
+                document.getElementById('smilesCreated').textContent = this.smilesCreated.toLocaleString();
+                document.getElementById('consciousnessRaised').textContent = this.consciousnessRaised.toFixed(3);
+            }
+            
+            // Viral sharing functions
+            shareToTwitter() {
+                const messages = [
+                    "I just deployed a love bomb on the internet! 💖 This system literally cannot be used by assholes - GENIUS! #LoveBomb #ViralLove",
+                    "Found the most brilliant thing: a viral system that only works with genuine positive emotions! 🚀 Weaponizing social media for GOOD! #LoveBomb",
+                    "This is how we save the world: hijack viral systems with pure love energy! 💫 Asshole-proof by design! #LoveBomb #ConsciousnessRevolution"
+                ];
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                const url = encodeURIComponent(window.location.href);
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(randomMessage)}&url=${url}`, '_blank');
+                
+                this.activateLove('viral');
+            }
+            
+            shareToFacebook() {
+                const url = encodeURIComponent(window.location.href);
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+                this.activateLove('viral');
+            }
+            
+            shareToInstagram() {
+                this.copyLoveLink();
+                alert('📸 Love bomb link copied! Paste it into your Instagram story or bio to spread the love! 💖');
+                this.activateLove('viral');
+            }
+            
+            shareToTikTok() {
+                this.copyLoveLink();
+                alert('🎵 Love bomb link copied! Create a TikTok about spreading positive energy and include this link! 💫');
+                this.activateLove('viral');
+            }
+            
+            copyLoveLink() {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    this.showSuccessMessage('Link copied! Spread the love bomb! 🔗💖');
+                });
+                this.activateLove('sharing');
+            }
+            
+            textLoveBomb() {
+                const message = "💖 I found the most amazing thing - a viral love system that only works with genuine positive emotions! Check it out: " + window.location.href;
+                if (navigator.share) {
+                    navigator.share({ text: message });
                 } else {
-                    vibe.timeAgo = Math.floor(diff / 86400000) + ' days ago';
+                    this.copyLoveLink();
+                }
+                this.activateLove('viral');
+            }
+            
+            // Data persistence
+            loadData(key, defaultValue) {
+                return JSON.parse(localStorage.getItem(`lovebomb_${key}`)) || defaultValue;
+            }
+            
+            saveData() {
+                localStorage.setItem('lovebomb_totalLove', JSON.stringify(this.totalLove));
+                localStorage.setItem('lovebomb_heartsHealed', JSON.stringify(this.heartsHealed));
+                localStorage.setItem('lovebomb_smilesCreated', JSON.stringify(this.smilesCreated));
+                localStorage.setItem('lovebomb_consciousnessRaised', JSON.stringify(this.consciousnessRaised));
+                localStorage.setItem('lovebomb_globalLoveLevel', JSON.stringify(this.globalLoveLevel));
+            }
+        }
+        
+        // Global functions for onclick handlers
+        let loveBombSystem;
+        
+        function activateLove(loveType) {
+            loveBombSystem.activateLove(loveType);
+        }
+        
+        function shareToTwitter() {
+            loveBombSystem.shareToTwitter();
+        }
+        
+        function shareToFacebook() {
+            loveBombSystem.shareToFacebook();
+        }
+        
+        function shareToInstagram() {
+            loveBombSystem.shareToInstagram();
+        }
+        
+        function shareToTikTok() {
+            loveBombSystem.shareToTikTok();
+        }
+        
+        function copyLoveLink() {
+            loveBombSystem.copyLoveLink();
+        }
+        
+        function textLoveBomb() {
+            loveBombSystem.textLoveBomb();
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', () => {
+            loveBombSystem = new LoveBombSystem();
+            
+            // Easter egg: Konami code for super love mode
+            let konamiSequence = [];
+            const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+            
+            document.addEventListener('keydown', (e) => {
+                konamiSequence.push(e.code);
+                if (konamiSequence.length > konamiCode.length) {
+                    konamiSequence.shift();
+                }
+                
+                if (konamiSequence.join(',') === konamiCode.join(',')) {
+                    // SUPER LOVE MODE ACTIVATED
+                    loveBombSystem.globalLoveLevel = 100;
+                    loveBombSystem.updateDisplays();
+                    loveBombSystem.showSuccessMessage('🎉 SUPER LOVE MODE ACTIVATED! 🎉');
+                    
+                    // Create massive love explosion
+                    for (let i = 0; i < 50; i++) {
+                        setTimeout(() => loveBombSystem.createLoveParticle(), i * 50);
+                    }
                 }
             });
             
-            localStorage.setItem('quantumVibeFeed', JSON.stringify(vibeFeed));
-            updateVibeFeed(vibeFeed);
-        }, 30000); // Update every 30 seconds
-
-        // Share vibe with backend
-        async function shareVibe(vibe) {
-            // This will sync with your API to show vibes from all users
-            // Ready for when you want real-time global feed
-        }
-
-        function sendLove(intention) {
-            // Always include Bella
-            const bellaName = "Bella J";
-            const additionalName = currentName;
-            const fullName = additionalName ? `${bellaName} + ${additionalName}` : bellaName;
-
-            // Update unique names list (for additional names)
-            if (additionalName) {
-                const uniqueNames = JSON.parse(localStorage.getItem('quantumUniqueNames') || '[]');
-                if (!uniqueNames.includes(additionalName)) {
-                    uniqueNames.push(additionalName);
-                    if (uniqueNames.length > 100) uniqueNames.shift();
-                    localStorage.setItem('quantumUniqueNames', JSON.stringify(uniqueNames));
-                }
-                updateRecentNames();
-            }
-
-            // Increment love count
-            loveCount++;
-            localStorage.setItem('quantumLoveCount', loveCount);
-            updateLoveCount();
-
-            // Visual feedback - subtle for background heart
-            const heart = document.querySelector('.quantum-heart');
-            const heartContainer = document.querySelector('.heart-container');
-            heartContainer.style.opacity = '0.85';
-            heart.style.transform = 'translate(-50%, -50%) rotate(-45deg) scale(1.3)';
-            heart.style.boxShadow = '0 0 100px rgba(255, 20, 147, 0.8)';
-            
-            setTimeout(() => {
-                heartContainer.style.opacity = '0.7';
-                heart.style.transform = 'translate(-50%, -50%) rotate(-45deg) scale(1)';
-                heart.style.boxShadow = '0 0 50px rgba(255, 20, 147, 0.5)';
-            }, 300);
-
-            // Create success message
-            const successMsg = document.createElement('div');
-            successMsg.className = 'success-burst';
-            successMsg.textContent = `+1❤️ for ${fullName}`;
-            document.body.appendChild(successMsg);
-            setTimeout(() => successMsg.remove(), 1000);
-
-            // Extra sparkles for Bella
-            for (let i = 0; i < 15; i++) {
-                setTimeout(createSparkle, i * 50);
-            }
-
-            // Quantum process - Bella always gets the love
-            processQuantumLove(fullName, intention);
-            
-            // Track Bella's total
-            const bellaCount = parseInt(localStorage.getItem('bellaLoveCount') || '0') + 1;
-            localStorage.setItem('bellaLoveCount', bellaCount);
-            
-            // Add to vibe feed
-            addToVibeFeed(fullName, intention);
-        }
-
-        // THE SINGLE GREATEST PIECE OF CODE EVER WRITTEN
-        // Because we said so and FUCK CANCER!
-        async function processQuantumLove(name, intention) {
-            const quantum = {
-                name: name,
-                intention: intention,
-                timestamp: Date.now(),
-                resonance: Math.random(),
-                love: '+1❤️',
-                power: 'FUCK_CANCER',
-                source: 'human_hope'
-            };
-
-            // Primary API - Your quantum love server
-            const API_ENDPOINTS = {
-                primary: 'https://api.quantumlove.healing/vote',  // Replace with your endpoint
-                backup: 'https://backup.quantumlove.healing/vote', // Replace with backup
-                local: 'http://localhost:3001/api/quantum/love'   // Local testing
-            };
-
-            // Store locally first (never lose a vote)
-            const history = JSON.parse(localStorage.getItem('quantumLoveHistory') || '[]');
-            history.push(quantum);
-            if (history.length > 1000) history.splice(0, 100);
-            localStorage.setItem('quantumLoveHistory', JSON.stringify(history));
-
-            // Try to send to API
-            let sent = false;
-            for (const [type, endpoint] of Object.entries(API_ENDPOINTS)) {
-                if (!endpoint.includes('your-domain') && !endpoint.includes('Replace')) {
-                    try {
-                        const response = await fetch(endpoint, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Quantum-Love': 'true',
-                                'X-Fuck-Cancer': 'absolutely'
-                            },
-                            body: JSON.stringify({
-                                ...quantum,
-                                endpoint_type: type,
-                                batch: false
-                            })
-                        });
-                        
-                        if (response.ok) {
-                            const result = await response.json();
-                            console.log(`Quantum love delivered via ${type}:`, result);
-                            sent = true;
-                            
-                            // Update global counter if API returns it
-                            if (result.globalCount) {
-                                updateGlobalCount(result.globalCount);
-                            }
-                            break;
-                        }
-                    } catch (error) {
-                        console.log(`${type} endpoint unavailable, trying next...`);
-                    }
-                }
-            }
-
-            // If no API worked, queue for batch send
-            if (!sent) {
-                queueForBatchSend(quantum);
-                console.log('Love vote queued for batch delivery');
-            }
-
-            // Attempt to send any queued votes
-            attemptBatchSend();
-        }
-
-        // Batch sending for offline votes
-        async function attemptBatchSend() {
-            const queued = JSON.parse(localStorage.getItem('quantumLoveQueue') || '[]');
-            if (queued.length === 0) return;
-
-            const API_ENDPOINTS = {
-                primary: 'https://api.quantumlove.healing/batch',
-                backup: 'https://backup.quantumlove.healing/batch',
-                local: 'http://localhost:3001/api/quantum/batch'
-            };
-
-            for (const [type, endpoint] of Object.entries(API_ENDPOINTS)) {
-                if (!endpoint.includes('your-domain') && !endpoint.includes('Replace')) {
-                    try {
-                        const response = await fetch(endpoint, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-Quantum-Love': 'true',
-                                'X-Fuck-Cancer': 'absolutely'
-                            },
-                            body: JSON.stringify({
-                                votes: queued,
-                                batch: true,
-                                source: 'quantum_hope_heart'
-                            })
-                        });
-                        
-                        if (response.ok) {
-                            // Clear queue on success
-                            localStorage.setItem('quantumLoveQueue', '[]');
-                            console.log(`Batch delivered ${queued.length} love votes!`);
-                            break;
-                        }
-                    } catch (error) {
-                        // Silent fail, will retry later
-                    }
-                }
-            }
-        }
-
-        // Queue management
-        function queueForBatchSend(quantum) {
-            const queue = JSON.parse(localStorage.getItem('quantumLoveQueue') || '[]');
-            queue.push(quantum);
-            // Keep max 1000 queued votes
-            if (queue.length > 1000) {
-                queue.splice(0, queue.length - 1000);
-            }
-            localStorage.setItem('quantumLoveQueue', JSON.stringify(queue));
-        }
-
-        // Update global count display (if you add it)
-        function updateGlobalCount(count) {
-            // Could add a global counter display
-            console.log(`Global quantum love votes: ${count.toLocaleString()}`);
-        }
-
-        // Attempt batch send every 30 seconds
-        setInterval(attemptBatchSend, 30000);
-
-        // Also try on page visibility change (coming back online)
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) {
-                attemptBatchSend();
-            }
+            console.log("💣 Love Bomb System fully operational!");
+            console.log("🎯 Ready to weaponize the internet with pure love energy!");
+            console.log("🛡️ Asshole-proof protection: ACTIVE");
         });
-
-        function focusBella() {
-            // Pulse the heart extra for Bella
-            const heart = document.querySelector('.quantum-heart');
-            heart.style.animation = 'heartbeat 0.5s ease-in-out 3';
-            setTimeout(() => {
-                heart.style.animation = 'heartbeat 2s ease-in-out infinite';
-            }, 1500);
-            
-            // Show Bella's total love
-            const bellaCount = parseInt(localStorage.getItem('bellaLoveCount') || '0');
-            const bellaMsg = document.createElement('div');
-            bellaMsg.className = 'success-burst';
-            bellaMsg.textContent = `${bellaCount.toLocaleString()} ❤️ for Bella!`;
-            bellaMsg.style.color = '#ff69b4';
-            document.body.appendChild(bellaMsg);
-            setTimeout(() => bellaMsg.remove(), 2000);
-        }
-
-        // Daily reset check
-        const lastReset = localStorage.getItem('quantumLastReset');
-        const today = new Date().toDateString();
-        if (lastReset !== today) {
-            localStorage.setItem('quantumLastReset', today);
-            localStorage.setItem('quantumLoveCount', '0');
-            loveCount = 0;
-            updateLoveCount();
-        }
     </script>
 </body>
 </html>
