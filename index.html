@@ -18,6 +18,33 @@
             background: #f4f4f4;
         }
         
+        .visitor-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .counter-number {
+            font-size: 1.5rem;
+            display: block;
+            margin-top: 5px;
+        }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -209,6 +236,12 @@
     </style>
 </head>
 <body>
+    <div class="visitor-counter">
+        <div>Exposing Truth To:</div>
+        <div class="counter-number" id="visitorCount">Loading...</div>
+        <div style="font-size: 0.9rem;">Revolutionary Minds</div>
+    </div>
+    
     <header>
         <div class="container">
             <h1>C.R.A.D. Protocol</h1>
@@ -524,5 +557,84 @@
             </p>
         </footer>
     </div>
+    
+    <script>
+        // Visitor Counter with Local Storage
+        function initializeCounter() {
+            // Get or initialize the visitor count
+            let totalVisits = localStorage.getItem('cradVisitorCount');
+            
+            if (totalVisits === null) {
+                // First visitor! (You!)
+                totalVisits = 1;
+            } else {
+                totalVisits = parseInt(totalVisits) + 1;
+            }
+            
+            // Save the updated count
+            localStorage.setItem('cradVisitorCount', totalVisits);
+            
+            // Update the display with animation
+            updateCounterDisplay(totalVisits);
+            
+            // Simulate other visitors for demonstration
+            // Remove this in production!
+            if (totalVisits < 100) {
+                simulateVisitors();
+            }
+        }
+        
+        function updateCounterDisplay(count) {
+            const counterElement = document.getElementById('visitorCount');
+            const currentDisplay = parseInt(counterElement.textContent) || 0;
+            
+            // Animate the counter
+            const duration = 1000; // 1 second
+            const increment = (count - currentDisplay) / (duration / 16);
+            let current = currentDisplay;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= count) || (increment < 0 && current <= count)) {
+                    current = count;
+                    clearInterval(timer);
+                }
+                counterElement.textContent = Math.floor(current).toLocaleString();
+            }, 16);
+        }
+        
+        // Simulate other visitors for demonstration effect
+        function simulateVisitors() {
+            setInterval(() => {
+                let count = parseInt(localStorage.getItem('cradVisitorCount'));
+                // Random increment between 1-5
+                const newVisitors = Math.floor(Math.random() * 5) + 1;
+                count += newVisitors;
+                localStorage.setItem('cradVisitorCount', count);
+                updateCounterDisplay(count);
+            }, Math.random() * 30000 + 10000); // Random interval 10-40 seconds
+        }
+        
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', initializeCounter);
+        
+        // Optional: Add real-time sync with a backend
+        // This is a placeholder for when you want to make it truly global
+        /*
+        async function syncWithServer() {
+            try {
+                const response = await fetch('YOUR_BACKEND_ENDPOINT/visitor-count', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'increment' })
+                });
+                const data = await response.json();
+                updateCounterDisplay(data.totalCount);
+            } catch (error) {
+                console.log('Using local count only');
+            }
+        }
+        */
+    </script>
 </body>
 </html>
