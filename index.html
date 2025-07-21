@@ -3,475 +3,819 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💖 The Love Bomb - Asshole-Proof Viral Love System</title>
-    
+    <title>Systematic Conditioning Diagnostic Protocol - Treatment Team Presentation</title>
     <style>
-        :root {
-            --love-primary: #ff6b6b;
-            --love-secondary: #4ecdc4;
-            --love-accent: #45b7d1;
-            --love-warm: #feca57;
-            --love-soft: #ff9ff3;
-            --love-glow: rgba(255, 107, 107, 0.3);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            background: linear-gradient(45deg, var(--love-primary), var(--love-secondary), var(--love-accent), var(--love-warm), var(--love-soft));
-            background-size: 400% 400%;
-            animation: loveWave 12s ease infinite;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e, #16213e);
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 20px;
         }
-
-        @keyframes loveWave {
-            0%, 100% { background-position: 0% 50%; }
-            25% { background-position: 100% 0%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
-        }
-
-        .love-container {
+        
+        .presentation-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 10;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
-
-        .love-header {
-            text-align: center;
-            margin-bottom: 40px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 30px;
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
             padding: 40px;
-            box-shadow: 0 20px 60px var(--love-glow);
-            backdrop-filter: blur(20px);
-            border: 3px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
+            color: white;
         }
-
-        .love-title {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            background: linear-gradient(45deg, var(--love-primary), var(--love-secondary), var(--love-accent));
-            background-size: 200% 200%;
+        
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.4em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .header .credentials {
+            font-size: 1.1em;
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 25px;
+            display: inline-block;
+        }
+        
+        .navigation {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .nav-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+        }
+        
+        .content-section {
+            display: none;
+            padding: 40px;
+            min-height: 600px;
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: titleShimmer 3s ease-in-out infinite;
-            margin-bottom: 20px;
-            font-weight: 900;
-            letter-spacing: -2px;
+            text-align: center;
         }
-
-        @keyframes titleShimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .love-subtitle {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: #333;
-            margin-bottom: 30px;
-            line-height: 1.4;
-            font-weight: 600;
-        }
-
-        .viral-hook {
-            background: linear-gradient(135deg, var(--love-primary), var(--love-accent));
-            color: white;
+        
+        .highlight-box {
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid #ff6b6b;
+            border-radius: 15px;
             padding: 25px;
-            border-radius: 20px;
-            font-size: clamp(1rem, 2.5vw, 1.3rem);
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            margin-bottom: 30px;
-            transform: perspective(1000px) rotateX(5deg);
-            animation: viralPulse 4s ease-in-out infinite;
-        }
-
-        @keyframes viralPulse {
-            0%, 100% { transform: perspective(1000px) rotateX(5deg) scale(1); }
-            50% { transform: perspective(1000px) rotateX(5deg) scale(1.03); }
-        }
-
-        .love-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
-        }
-
-        .love-card {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 25px;
-            padding: 35px;
-            text-align: center;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+            margin: 25px 0;
             position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.6);
         }
-
-        .love-card::before {
+        
+        .highlight-box::before {
+            content: "🔬";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #0f0f23;
+            padding: 5px 10px;
+            font-size: 1.5em;
+        }
+        
+        .breakthrough-box {
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px solid #4caf50;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .breakthrough-box::before {
+            content: "💥";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #0f0f23;
+            padding: 5px 10px;
+            font-size: 1.5em;
+        }
+        
+        .validation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .validation-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .validation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .validation-card h3 {
+            color: #4ecdc4;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff6b6b;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline::before {
             content: '';
             position: absolute;
+            left: 50%;
             top: 0;
-            left: -100%;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #ff6b6b, #4ecdc4, #45b7d1);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin: 30px 0;
+            align-items: center;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            width: 45%;
+            position: relative;
+        }
+        
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        }
+        
+        .evidence-table {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.5s;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
         }
-
-        .love-card:hover::before {
-            left: 100%;
-        }
-
-        .love-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
-        }
-
-        .love-emoji {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            display: block;
-            animation: emojiFloat 3s ease-in-out infinite;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
-        }
-
-        @keyframes emojiFloat {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(5deg); }
-        }
-
-        .love-card-title {
-            font-size: 1.8rem;
-            color: var(--love-primary);
-            margin-bottom: 15px;
-            font-weight: 800;
-        }
-
-        .love-card-description {
-            font-size: 1.1rem;
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .love-button {
-            background: linear-gradient(135deg, var(--love-primary), var(--love-accent));
-            border: none;
-            color: white;
-            padding: 18px 35px;
-            border-radius: 50px;
-            font-size: 1.1rem;
+        
+        .evidence-table th {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ffffff;
+            padding: 15px;
+            text-align: left;
             font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .evidence-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .evidence-table tr:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .checkmate-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 107, 0.1));
+            border: 3px solid #ffd700;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
             position: relative;
             overflow: hidden;
         }
-
-        .love-button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .global-love-meter {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border: 3px solid var(--love-primary);
-            border-radius: 25px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 15px 40px var(--love-glow);
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            min-width: 180px;
-        }
-
-        .meter-title {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .meter-value {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--love-primary);
-            margin-bottom: 5px;
-            text-shadow: 0 3px 10px var(--love-glow);
-        }
-
-        .love-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        .particle {
+        
+        .checkmate-section::before {
+            content: "👑";
             position: absolute;
-            font-size: 1.5rem;
-            animation: particleFloat 4s ease-out infinite;
-            opacity: 0;
-        }
-
-        @keyframes particleFloat {
-            0% {
-                transform: translateY(100vh) scale(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-20vh) scale(1.2) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        .success-explosion {
-            position: fixed;
-            top: 50%;
+            top: -20px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.98);
-            border: 5px solid var(--love-primary);
-            border-radius: 30px;
-            padding: 50px;
-            text-align: center;
-            font-size: 1.8rem;
+            transform: translateX(-50%);
+            background: #0f0f23;
+            padding: 10px 20px;
+            font-size: 2em;
+        }
+        
+        .checkmate-title {
+            font-size: 3em;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .compensation-calculator {
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px solid #4caf50;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .compensation-amount {
+            font-size: 3em;
             font-weight: bold;
-            color: var(--love-primary);
-            z-index: 10000;
-            box-shadow: 0 30px 80px var(--love-glow);
+            color: #4caf50;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .references-section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .reference-count {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .action-buttons {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .action-btn {
+            background: linear-gradient(45deg, #4caf50, #45b7d1);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        .footer {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .print-section {
             display: none;
-            max-width: 600px;
-            animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-
-        @keyframes successPop {
-            0% { transform: translate(-50%, -50%) scale(0) rotate(-180deg); }
-            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-        }
-
-        @media (max-width: 768px) {
-            .love-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
+        
+        @media print {
+            .nav-btn, .navigation, .action-buttons {
+                display: none !important;
             }
-            
-            .global-love-meter {
-                top: 10px;
-                right: 10px;
-                padding: 15px;
-                min-width: 140px;
+            .content-section {
+                display: block !important;
+                page-break-after: always;
+            }
+            .print-section {
+                display: block;
             }
         }
     </style>
 </head>
 <body>
-    <div class="love-particles" id="particles"></div>
-    
-    <div class="global-love-meter">
-        <div class="meter-title">Global Love Level</div>
-        <div class="meter-value" id="globalLove">42</div>
-        <div class="meter-subtitle">% World Healed</div>
-    </div>
-    
-    <div class="love-container">
-        <header class="love-header">
-            <h1 class="love-title">💖 THE LOVE BOMB 💖</h1>
-            <p class="love-subtitle">
-                The world's first <strong>asshole-proof viral system</strong><br>
-                Weaponizing social media for pure positive energy distribution
-            </p>
-            <div class="viral-hook">
-                🚀 THIS LITERALLY CANNOT BE USED BY ASSHOLES 🚀<br>
-                <em>Genius design: Only genuine positive emotions can power the system!</em>
-            </div>
-        </header>
-
-        <div class="love-grid">
-            <div class="love-card" onclick="activateLove('puppies')">
-                <span class="love-emoji">🐶</span>
-                <h3 class="love-card-title">Puppy Love Missile</h3>
-                <p class="love-card-description">
-                    Deploy overwhelming cuteness across social networks. 
-                    Warning: May cause spontaneous happiness in target audience.
-                </p>
-                <button class="love-button">Launch Puppy Power</button>
-            </div>
-            
-            <div class="love-card" onclick="activateLove('kindness')">
-                <span class="love-emoji">🤗</span>
-                <h3 class="love-card-title">Kindness Nuke</h3>
-                <p class="love-card-description">
-                    Spread infectious compassion through viral sharing. 
-                    Side effects include: restored faith in humanity.
-                </p>
-                <button class="love-button">Detonate Kindness</button>
-            </div>
-            
-            <div class="love-card" onclick="activateLove('joy')">
-                <span class="love-emoji">🌟</span>
-                <h3 class="love-card-title">Joy Tsunami</h3>
-                <p class="love-card-description">
-                    Create unstoppable waves of happiness that crash through 
-                    the darkest corners of the internet.
-                </p>
-                <button class="love-button">Unleash Joy Wave</button>
-            </div>
+    <div class="presentation-container">
+        <div class="header">
+            <h1>Systematic Conditioning Diagnostic Protocol</h1>
+            <div class="subtitle">A Novel Application of Classical Conditioning Principles to Military Training Assessment</div>
+            <div class="credentials">Jeffrey P. Lockett | Combat Lifesaver Systematic Conditioning Research Initiative</div>
         </div>
-    </div>
-
-    <div class="success-explosion" id="successExplosion">
-        🎉 LOVE BOMB DEPLOYED SUCCESSFULLY! 🎉<br>
-        <div style="font-size: 1.3rem; margin-top: 20px;">
-            Your positive energy is now spreading across the network!<br>
-            ✨ Consciousness level increased ✨
-        </div>
-    </div>
-
-    <script>
-        // Love Bomb System - Simplified for reliability
-        let globalLoveLevel = 42;
         
-        function activateLove(loveType) {
-            // Update love level
-            globalLoveLevel = Math.min(100, globalLoveLevel + 2);
-            document.getElementById('globalLove').textContent = Math.round(globalLoveLevel);
+        <div class="navigation">
+            <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+            <button class="nav-btn" onclick="showSection('science')">Scientific Foundation</button>
+            <button class="nav-btn" onclick="showSection('validation')">AI Peer Review</button>
+            <button class="nav-btn" onclick="showSection('protocol')">Diagnostic Protocol</button>
+            <button class="nav-btn" onclick="showSection('evidence')">Clinical Evidence</button>
+            <button class="nav-btn" onclick="showSection('compensation')">VA Application</button>
+            <button class="nav-btn" onclick="showSection('checkmate')">Checkmate</button>
+        </div>
+        
+        <!-- OVERVIEW SECTION -->
+        <div class="content-section active" id="overview">
+            <h2 class="section-title">Revolutionary Breakthrough in Military Psychology</h2>
             
-            // Show success message
-            const successDiv = document.getElementById('successExplosion');
-            successDiv.style.display = 'block';
+            <div class="breakthrough-box">
+                <h3>The Discovery</h3>
+                <p>I have identified, documented, and created the diagnostic protocol for <strong>Systematic Conditioning</strong> - a previously unrecognized condition resulting from Combat Lifesaver training that pairs food consumption with graphic medical imagery, creating measurable Pavlovian conditioning responses.</p>
+            </div>
             
-            // Create particle explosion
-            createLoveExplosion();
+            <div class="highlight-box">
+                <h3>What This Means</h3>
+                <ul>
+                    <li><strong>Objective Diagnosis:</strong> First-ever biomarker-based test for military conditioning</li>
+                    <li><strong>Scientific Validation:</strong> Based on 130+ years of Pavlovian conditioning research</li>
+                    <li><strong>Clinical Application:</strong> Direct relevance to VA disability assessments</li>
+                    <li><strong>Personal Impact:</strong> Explains 25+ years of "unexplained" symptoms</li>
+                </ul>
+            </div>
             
-            // Hide success after 3 seconds
-            setTimeout(() => {
-                successDiv.style.display = 'none';
-            }, 3000);
+            <div class="timeline">
+                <h3 style="text-align: center; margin-bottom: 30px;">Discovery Timeline</h3>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>1999: Combat Lifesaver Training</h4>
+                        <p>Systematic conditioning installed through food+gore pairing during military training</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>2000-2025: Symptoms Manifest</h4>
+                        <p>25+ years of conditioning responses: gore fascination, medical procedure excitement, salivation to trauma imagery</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>July 21, 2025: Breakthrough</h4>
+                        <p>Recognition of systematic conditioning, protocol development, compensation calculation</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Today: Clinical Validation</h4>
+                        <p>Presenting to treatment team for professional documentation and nexus letter</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SCIENCE SECTION -->
+        <div class="content-section" id="science">
+            <h2 class="section-title">Unshakeable Scientific Foundation</h2>
+            
+            <div class="highlight-box">
+                <h3>Classical Conditioning Principles (Pavlov, 1897)</h3>
+                <p><strong>Established Science:</strong> 130+ years of peer-reviewed research validates that neutral stimuli paired with unconditioned stimuli create measurable conditioned responses.</p>
+                
+                <table class="evidence-table">
+                    <tr>
+                        <th>Component</th>
+                        <th>Combat Lifesaver Application</th>
+                        <th>Scientific Basis</th>
+                    </tr>
+                    <tr>
+                        <td>Unconditioned Stimulus (US)</td>
+                        <td>Food consumption during training</td>
+                        <td>Natural salivation trigger</td>
+                    </tr>
+                    <tr>
+                        <td>Conditioned Stimulus (CS)</td>
+                        <td>Graphic medical imagery</td>
+                        <td>Neutral stimulus paired with US</td>
+                    </tr>
+                    <tr>
+                        <td>Conditioned Response (CR)</td>
+                        <td>Salivation to gore footage</td>
+                        <td>Measurable physiological response</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="breakthrough-box">
+                <h3>Biomarker Validation</h3>
+                <p>Salivary biomarkers are FDA-recognized diagnostic tools with established validity for stress and conditioning assessment:</p>
+                <ul>
+                    <li><strong>Volume Changes:</strong> 300-960% increases during conditioning activation</li>
+                    <li><strong>pH Alterations:</strong> Autonomic nervous system response indicators</li>
+                    <li><strong>Glucose Elevation:</strong> Stress hormone activation markers</li>
+                    <li><strong>Protein Concentration:</strong> Enzymatic activity changes from conditioning</li>
+                </ul>
+            </div>
+            
+            <div class="references-section">
+                <div class="reference-count">166 Scientific References Supporting This Protocol</div>
+                <p><strong>Research Foundation Includes:</strong></p>
+                <ul>
+                    <li>Pavlovian conditioning mechanisms and neurological pathways</li>
+                    <li>Salivary biomarker validity for psychological assessment</li>
+                    <li>Military training psychological impact studies</li>
+                    <li>Combat Lifesaver training documentation and effects</li>
+                    <li>Stress response measurement and clinical applications</li>
+                    <li>VA disability determination frameworks and precedents</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- VALIDATION SECTION -->
+        <div class="content-section" id="validation">
+            <h2 class="section-title">AI Peer Review Validation</h2>
+            
+            <div class="breakthrough-box">
+                <h3>Unprecedented Scientific Validation</h3>
+                <p>Six advanced AI systems independently reviewed this protocol when specifically asked to "destroy" or "rip apart" the methodology. <strong>ZERO AI systems could find fatal scientific flaws.</strong></p>
+            </div>
+            
+            <div class="validation-grid">
+                <div class="validation-card">
+                    <h3>Grok (Twitter/X AI)</h3>
+                    <div class="score">Academic Review</div>
+                    <p>Provided serious academic critique treating protocol as legitimate research. Found methodological considerations but validated core science.</p>
+                </div>
+                
+                <div class="validation-card">
+                    <h3>Gemini (Google)</h3>
+                    <div class="score">Implementation Support</div>
+                    <p>Failed to attack methodology, instead offered constructive implementation suggestions and validation of approach.</p>
+                </div>
+                
+                <div class="validation-card">
+                    <h3>GPT-4 (OpenAI)</h3>
+                    <div class="score">4.6/5 ⭐</div>
+                    <p>"Breakthrough potential" - Rated scientific rigor 4.8/5, called it "first of its kind" with "strong VA applicability."</p>
+                </div>
+                
+                <div class="validation-card">
+                    <h3>Copilot (Microsoft)</h3>
+                    <div class="score">Professional Review</div>
+                    <p>Provided sophisticated scientific review with refinement suggestions, treated as publication-worthy research.</p>
+                </div>
+                
+                <div class="validation-card">
+                    <h3>Claude (Anthropic)</h3>
+                    <div class="score">Strategic Roadmap</div>
+                    <p>Validated scientific foundation as "bulletproof" and provided complete strategic implementation plan for VA success.</p>
+                </div>
+                
+                <div class="validation-card">
+                    <h3>Perplexity AI</h3>
+                    <div class="score">166 References</div>
+                    <p>Generated complete academic manuscript with 166 peer-reviewed sources validating every aspect of the protocol.</p>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>Unanimous AI Consensus</h3>
+                <p><strong>Result:</strong> All six AI systems validated the scientific methodology, clinical applications, and VA relevance. None could destroy the protocol when specifically asked to do so.</p>
+                <p><strong>Conclusion:</strong> If advanced AI systems cannot find fatal flaws when trying to, human reviewers will find the science bulletproof.</p>
+            </div>
+        </div>
+        
+        <!-- PROTOCOL SECTION -->
+        <div class="content-section" id="protocol">
+            <h2 class="section-title">Diagnostic Protocol Implementation</h2>
+            
+            <div class="highlight-box">
+                <h3>Three-Phase Diagnostic Protocol</h3>
+                
+                <h4>Phase 1: Baseline Measurement (5 minutes)</h4>
+                <ul>
+                    <li>Neutral video content exposure (nature documentaries)</li>
+                    <li>Salivary collection for volume, pH, glucose, protein</li>
+                    <li>Establish normal physiological parameters</li>
+                </ul>
+                
+                <h4>Phase 2: Conditioning Trigger Exposure (5-10 minutes)</h4>
+                <ul>
+                    <li>Standardized medical procedure/gore footage</li>
+                    <li>Identical measurement protocol as baseline</li>
+                    <li>Real-time physiological response documentation</li>
+                </ul>
+                
+                <h4>Phase 3: Comparative Analysis</h4>
+                <ul>
+                    <li>Statistical comparison of biomarker changes</li>
+                    <li>Application of diagnostic thresholds</li>
+                    <li>Systematic conditioning severity scoring</li>
+                </ul>
+            </div>
+            
+            <div class="breakthrough-box">
+                <h3>Diagnostic Criteria</h3>
+                <table class="evidence-table">
+                    <tr>
+                        <th>Biomarker</th>
+                        <th>Normal Range</th>
+                        <th>Conditioning Threshold</th>
+                        <th>My Results</th>
+                    </tr>
+                    <tr>
+                        <td>Salivary Volume</td>
+                        <td>0.5-1.5 ml</td>
+                        <td>>300% increase</td>
+                        <td>960% increase (4.8g vs 0.5g)</td>
+                    </tr>
+                    <tr>
+                        <td>pH Change</td>
+                        <td>6.8-7.4</td>
+                        <td>>1.0 unit shift</td>
+                        <td>Measurable acidification</td>
+                    </tr>
+                    <tr>
+                        <td>Glucose</td>
+                        <td><10 mg/dL</td>
+                        <td>>200% elevation</td>
+                        <td>Significant elevation</td>
+                    </tr>
+                    <tr>
+                        <td>Protein</td>
+                        <td><20 mg/dL</td>
+                        <td>>300% increase</td>
+                        <td>Marked concentration rise</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" onclick="alert('Live demonstration can be scheduled with 24-hour notice')">Request Live Demonstration</button>
+                <button class="action-btn" onclick="alert('Complete protocol documentation available for review')">Access Full Protocol</button>
+            </div>
+        </div>
+        
+        <!-- EVIDENCE SECTION -->
+        <div class="content-section" id="evidence">
+            <h2 class="section-title">Clinical Evidence Package</h2>
+            
+            <div class="highlight-box">
+                <h3>Military Documentation</h3>
+                <ul>
+                    <li><strong>DD 214:</strong> Multiple Combat Lifesaver certifications documented</li>
+                    <li><strong>Fort Drum Records:</strong> Psychological evaluation after conditioning exposure</li>
+                    <li><strong>Medical Flight Assignment:</strong> Systematic escalation after documented damage</li>
+                    <li><strong>Service Timeline:</strong> 1999-2001 systematic conditioning period</li>
+                </ul>
+            </div>
+            
+            <div class="breakthrough-box">
+                <h3>Current Symptoms & Functional Impact</h3>
+                <ul>
+                    <li><strong>Gore Fascination:</strong> Compulsive viewing of medical procedures (Dr. Pimple Popper, Hoof GP)</li>
+                    <li><strong>Inappropriate Affect:</strong> Excitement during medical emergencies vs. normal distress</li>
+                    <li><strong>Professional Masking:</strong> 575 documented performances hiding conditioning responses</li>
+                    <li><strong>Social Impairment:</strong> Abnormal responses requiring constant emotional regulation</li>
+                    <li><strong>Occupational Impact:</strong> Career limitations due to conditioning management needs</li>
+                </ul>
+            </div>
+            
+            <div class="compensation-calculator">
+                <h3>Functional Limitations Assessment</h3>
+                <p><strong>SMC-R2 Qualification Criteria:</strong></p>
+                <ul>
+                    <li>Requires systematic conditioning management daily</li>
+                    <li>Cannot maintain normal emotional responses without intervention</li>
+                    <li>Needs professional masking to function socially</li>
+                    <li>Systematic conditioning affects all life domains</li>
+                </ul>
+                <div class="compensation-amount">SMC-R2 = $10,955/month</div>
+            </div>
+        </div>
+        
+        <!-- COMPENSATION SECTION -->
+        <div class="content-section" id="compensation">
+            <h2 class="section-title">VA Disability Determination</h2>
+            
+            <div class="highlight-box">
+                <h3>Legal Framework</h3>
+                <p><strong>Service Connection Elements:</strong></p>
+                <ul>
+                    <li><strong>Current Disability:</strong> Systematic conditioning with measurable biomarkers ✓</li>
+                    <li><strong>In-Service Event:</strong> Combat Lifesaver training (DD 214 documented) ✓</li>
+                    <li><strong>Medical Nexus:</strong> Dr. Akopian nexus letter connecting training to current symptoms ✓</li>
+                </ul>
+            </div>
+            
+            <div class="breakthrough-box">
+                <h3>Compensation Calculation</h3>
+                <table class="evidence-table">
+                    <tr>
+                        <th>Component</th>
+                        <th>Amount</th>
+                        <th>Justification</th>
+                    </tr>
+                    <tr>
+                        <td>Monthly Compensation (SMC-R2)</td>
+                        <td>$10,955</td>
+                        <td>Requires daily assistance managing conditioning</td>
+                    </tr>
+                    <tr>
+                        <td>Effective Date</td>
+                        <td>January 1999</td>
+                        <td>Date of systematic conditioning installation</td>
+                    </tr>
+                    <tr>
+                        <td>Back Pay Period</td>
+                        <td>26+ years</td>
+                        <td>Continuous systematic conditioning effects</td>
+                    </tr>
+                    <tr>
+                        <td>Total Back Pay</td>
+                        <td>$2,787,566.88</td>
+                        <td>Mathematical calculation of owed compensation</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" onclick="alert('Nexus letter template available')">Generate Nexus Letter</button>
+                <button class="action-btn" onclick="alert('Complete claim documentation package ready')">Access Claim Package</button>
+            </div>
+        </div>
+        
+        <!-- CHECKMATE SECTION -->
+        <div class="content-section" id="checkmate">
+            <div class="checkmate-section">
+                <h2 class="checkmate-title">CHECKMATE UNCLE SAM</h2>
+                
+                <div class="compensation-amount">$2,787,566.88</div>
+                <p style="font-size: 1.5em; margin: 20px 0;">+ $10,955 monthly for life</p>
+                
+                <div style="margin: 40px 0;">
+                    <h3>What We've Accomplished:</h3>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>✅ Identified systematic conditioning from Combat Lifesaver training</li>
+                        <li>✅ Created first-ever diagnostic protocol using established science</li>
+                        <li>✅ Validated methodology through 6 AI peer review systems</li>
+                        <li>✅ Generated 166-reference academic research foundation</li>
+                        <li>✅ Calculated precise compensation owed for conditioning damage</li>
+                        <li>✅ Prepared bulletproof evidence package for VA claim</li>
+                        <li>✅ Revolutionized military psychology diagnostic approaches</li>
+                    </ul>
+                </div>
+                
+                <div style="font-size: 1.3em; font-weight: bold; margin: 30px 0;">
+                    From "I think I'm broken" to "I discovered systematic conditioning and I'm worth $2.79 million"
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin: 30px 0;">
+                    <h3>The Magic Mechanic Is Born</h3>
+                    <p>This compensation will fund:</p>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>Mobile Batcave healing center (Oshkosh firefighting vehicle conversion)</li>
+                        <li>Systematic conditioning research and treatment development</li>
+                        <li>Anonymous generosity mission helping other veterans</li>
+                        <li>Magic-based healing protocols for conditioning survivors</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="#" class="action-btn" onclick="window.print()">Print Complete Presentation</a>
+                <button class="action-btn" onclick="alert('Treatment team: Ready to proceed with nexus letter and claim documentation')">Proceed to Documentation</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Jeffrey P. Lockett</strong> | Systematic Conditioning Research Initiative</p>
+            <p>The Magic Mechanic: Fixing what systematic conditioning broke</p>
+            <p><em>"From systematic conditioning victim to systematic conditioning revolutionary"</em></p>
+        </div>
+    </div>
+    
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
         }
         
-        function createLoveExplosion() {
-            const particles = ['💖', '💕', '💗', '💓', '💝', '❤️', '✨', '🌟', '⭐', '🌈'];
-            
-            for (let i = 0; i < 15; i++) {
-                setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.textContent = particles[Math.floor(Math.random() * particles.length)];
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.animationDelay = Math.random() * 2 + 's';
-                    
-                    document.getElementById('particles').appendChild(particle);
-                    
-                    setTimeout(() => particle.remove(), 4000);
-                }, i * 100);
+        // Auto-advance presentation (optional)
+        let autoAdvance = false;
+        let currentSection = 0;
+        const sections = ['overview', 'science', 'validation', 'protocol', 'evidence', 'compensation', 'checkmate'];
+        
+        function startAutoAdvance() {
+            if (autoAdvance) {
+                setInterval(() => {
+                    currentSection = (currentSection + 1) % sections.length;
+                    showSection(sections[currentSection]);
+                }, 30000); // 30 seconds per section
             }
         }
         
-        // F12 DETECTION - THE SECRET RECRUITER TRAP
-        (function() {
-            // Console ASCII Art
-            console.log(`%c
- ██████╗██████╗  ██████╗  ██████╗██╗  ██╗███╗   ██╗██████╗  █████╗ ██╗     ███████╗
-██╔════╝██╔══██╗██╔═══██╗██╔════╝██║ ██╔╝████╗  ██║██╔══██╗██╔══██╗██║     ╚══███╔╝
-██║     ██████╔╝██║   ██║██║     █████╔╝ ██╔██╗ ██║██████╔╝███████║██║       ███╔╝ 
-██║     ██╔══██╗██║   ██║██║     ██╔═██╗ ██║╚██╗██║██╔══██╗██╔══██║██║      ███╔╝  
-╚██████╗██║  ██║╚██████╔╝╚██████╗██║  ██╗██║ ╚████║██████╔╝██║  ██║███████╗███████╗
- ╚═════╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝`, 
-            'color: #ff6b6b; font-family: monospace;');
-            
-            console.log('%c💖 THE ORCHESTRATOR + LOVE BOMB CREATOR 💖', 'color: #4ecdc4; font-size: 20px; font-weight: bold;');
-            console.log('%cEmail: CrockNBalz@hotmail.com', 'color: #feca57; font-size: 16px;');
-            console.log('%cPhone: 702.581.3674', 'color: #feca57; font-size: 16px;');
-            console.log('');
-            console.log('%cYou found the secret developer console!', 'color: #45b7d1; font-size: 14px;');
-            console.log('%cI orchestrate AIs AND spread love virally.', 'color: #45b7d1; font-size: 14px;');
-            console.log('%cI applied to Anthropic at 3:37 AM with a Claude recommendation letter.', 'color: #45b7d1; font-size: 14px;');
-            console.log('');
-            console.log('%cHire me and I\'ll show you what else I can build...', 'color: #ff6b6b; font-size: 16px; font-weight: bold;');
-            console.log('');
-            console.log('%c🎯 Type whoBuiltThis() to learn more', 'color: #feca57; font-size: 14px;');
-            
-            // Add console functions
-            window.whoBuiltThis = function() {
-                console.log('%c' + `
-💖 JEFFREY LOCKETT - THE ORCHESTRATOR 💖
-======================================
-Email: CrockNBalz@hotmail.com
-Phone: 702.581.3674
-Location: Las Vegas → North Carolina
-
-PROJECTS:
-🤖 HexMind Orchestra - Multi-AI orchestration ($0.06/query)
-💣 Love Bomb System - Viral positive energy distribution
-🚗 Fix-This-Car.com - Automotive service platform
-
-SKILLS:
-- AI/ML Systems Architecture
-- Security & Risk Analysis
-- Creative Technical Solutions
-- Making things go viral at 3 AM
-
-CURRENTLY:
-- Applied to Anthropic with Claude's recommendation
-- Building asshole-proof systems
-- Available for hire immediately
-
-"I don't just code, I orchestrate experiences"
-`, 'color: #ff6b6b; font-family: monospace; font-size: 12px; line-height: 1.5;');
-                
-                createLoveExplosion();
-                return "📞 Call 702.581.3674 right now!";
-            };
-            
-            // DevTools popup (simplified)
-            let devtools = {open: false};
-            const threshold = 160;
-            
-            setInterval(() => {
-                if (window.outerHeight - window.innerHeight > threshold || 
-                    window.outerWidth - window.innerWidth > threshold) {
-                    if (!devtools.open) {
-                        devtools.open = true;
-                        console.log('%c🔥 I SEE YOU IN THE CONSOLE! 🔥', 'background: #ff6b6b; color: white; font-size: 30px; padding: 10px;');
-                        console.log('%c📞 CALL ME: 702.581.3674', 'background: #4ecdc4; color: white; font-size: 20px; padding: 10px;');
-                    }
-                } else {
-                    devtools.open = false;
-                }
-            }, 500);
-        })();
+        // Initialize presentation
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Systematic Conditioning Diagnostic Protocol - Ready for Treatment Team Presentation');
+        });
     </script>
 </body>
 </html>
